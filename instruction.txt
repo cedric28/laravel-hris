@@ -1,0 +1,8 @@
+Steps
+
+1. set up your database configuration on .env file
+2. create database in mysql and name it "pos"
+3. run composer install in your command prompt under your project folder
+4. run npm run watch
+5. run php migrate:refresh --seed to populate data in your database
+6. run php artisan serve

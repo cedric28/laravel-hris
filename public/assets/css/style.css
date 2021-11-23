@@ -1,0 +1,96 @@
+header{
+	background: #f3f3f3;
+}
+
+.logo img{
+	max-width: 200px;
+}
+
+.table-responsive{
+	overflow-y: hidden;
+}
+
+.txt-white{
+	color: #FFF;
+}
+
+.small_text{
+	font-size: 11px;
+}
+
+.clear{
+	clear: both;
+}
+
+.ml10{
+	margin-left: 10px;
+}
+
+.mt10{
+	margin-top: 10px;
+}
+
+.mb20{
+	margin-bottom: 20px;
+}
+
+.gray_box{
+	border: 1px solid #CCC;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+.reports_center{
+	border: 1px solid #CCC;
+	padding: 50px;
+}
+
+.gray_box legend{
+	width: auto;
+	padding: 0 10px;
+}
+
+.table thead th{
+	font-size: 12px;
+}
+
+.select2-close-mask{
+    z-index: 2099;
+}
+.select2-dropdown{
+    z-index: 3051;
+}
+
+.top-nav > li > a{
+	color: #0264af;
+}
+
+.nav-tabs:not([class*="nav-tabs--"]) .nav-link.active{
+	color: #0264af;
+}
+
+.btn-success{
+	background-color: #59b210;
+}
+
+.btn-success:hover{
+	background-color: #60c012;
+}
+
+a.text-success, a.text-success{
+	color: #59b210;
+}
+
+a.text-success:focus, a.text-success:hover{
+	color: #60c012;
+}
+
+.paginate_button.current{
+	background-color: #0264af;
+}
+
+.center_box{
+	max-width: 500px;
+	margin: 0 auto;
+	text-align: center;
+}
