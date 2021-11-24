@@ -714,7 +714,7 @@ class StockFetchController extends Controller
 				$nestedData['content'] = $r->content;
 				$nestedData['name'] = $r->supplier->name;
 				$nestedData['delivery_at'] = date('m-d-Y',strtotime($r->delivery_at));
-				$nestedData['received_at'] = date('m-d-Y',strtotime($r->delivery_at));
+				$nestedData['received_at'] = date('m-d-Y',strtotime($r->received_at));
                 $nestedData['action'] = '
                     <button name="show" id="show" data-id="'.$r->id.'" class="btn bg-gradient-primary btn-sm">Show</button>
 					<button name="edit" id="edit" data-id="'.$r->id.'" class="btn bg-gradient-warning btn-sm">Edit</button>
