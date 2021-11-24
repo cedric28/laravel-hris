@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Category - {{ ucwords($category->name) }} Details</h1>
+            <h1>Discount - {{ ucwords($discount->discount_name) }} Details</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('category.index')}}">Categories</a></li>
-			  <li class="breadcrumb-item">{{ ucwords($category->category_name) }} Details</li>
+              <li class="breadcrumb-item"><a href="{{ route('discount.index')}}">Discounts</a></li>
+			  <li class="breadcrumb-item">{{ ucwords($discount->discount_name) }} Details</li>
             </ol>
           </div>
         </div>
@@ -30,8 +30,12 @@
 						<div class="card-body">
 							<table class="table table-bordered">
 								<tr>
-									<th>Category Name</th>
-									<td>{{ $category->category_name }}</td>
+									<th>Discount Name</th>
+									<td>{{ $discount->discount_name }}</td>
+								</tr>
+								<tr>
+									<th>Discount Rate</th>
+									<td>{{ $discount->discount_rate }}</td>
 								</tr>
 							</table>
 						</div>
