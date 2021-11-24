@@ -297,36 +297,26 @@ footer {
     
     <div id="invoice-bot">
       <div id="table">
-        <h2 class="title-table">Monthly Sales</h2>
+        <h2 class="title-table">Return of Medical Supplies and Product Reports</h2>
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">
-            <th>Invoice No</th>
-            <th>Customer Name</th>
-            <th>Total Price</th>
-            <th>Total Discount</th>
-            <th>Total Amount Due</th>
-            <th>Created At</th>
-        </tr>
+					<tr>
+                        <th>Supplier Name</th>
+                        <th>Product Name</th>
+                        <th>Qty</th>
+                        <th>Delivery Date</th>
+                    </tr>
+				</tr>
 			</thead>
-            @foreach ($sales as $sale)
-          <tr class="list-item">
-                      <td class="tableitem">{{$sale->or_no}}</td>
-                      <td class="tableitem">{{$sale->customer_fullname}}</td>
-                      <td class="tableitem">{{$sale->total_price}}</td>
-                      <td class="tableitem">{{$sale->total_discount}}</td>
-                      <td class="tableitem">{{$sale->total_amount_due}}</td>
-                      <td class="tableitem">{{$sale->created_at}}</td>
-          </tr>
-			@endforeach
-            <tr class="list-item total-row">
-                <td>Total Summary:</td>
-                <td></td>
-                <td class="tableitem">{{ number_format($totalPrice, 2) }}</td>
-                <td class="tableitem">{{ number_format($totalDiscount, 2) }}</td>
-                <td class="tableitem">{{ number_format($totalAmountDue, 2) }}</td>                            
-                <td></td>
-            </tr>
+                @foreach ($returnStocks as $stock)
+                <tr>
+                    <td>{{ $stock->return_stock->supplier->name }}</td>
+                    <td>{{ $stock->product->product_name }}</td>
+                    <td>{{$stock->qty }}</td>
+                    <td>{{$stock->return_stock->delivery_at }}</td>
+                </tr>
+                @endforeach
         </table>
       </div><!--End Table-->	
       

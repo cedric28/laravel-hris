@@ -111,6 +111,7 @@ Route::middleware('auth')->group(function () {
     Route::get('generate-pdf-delivery-schedule','PDF\PDFController@generateDeliverySchedule')->name('generateDeliverySchedule');
     Route::get('generate-pdf-customer-discount','PDF\PDFController@generateCustomerDiscount')->name('generateCustomerDiscount');
     Route::get('generate-pdf-daily-preventive','PDF\PDFController@generateDailyPreventive')->name('generateDailyPreventive');
+    Route::get('generate-pdf-return-products','PDF\PDFController@generateReturnStocks')->name('generateReturnStocks');
 
     //Reports
     Route::get('sales-report-yearly','Reports\SalesReportController@salesYearly')->name('salesYearly');
@@ -120,6 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::get('good-stocks-report','Reports\StockGoodsController@stockGoods')->name('stockGoods');
     Route::get('schedule-delivery','Reports\DeliveryScheduleController@deliverySchedule')->name('deliverySchedule');
     Route::get('daily-preventive-maintenance','Reports\DailyPreventiveController@dailyPreventive')->name('dailyPreventive');
+    Route::get('return-products','Reports\ReturnStocksController@returnStocks')->name('returnStocks');
 
     //Delivery Request
     Route::resource('delivery-request', 'Stock\DeliveryRequestController');

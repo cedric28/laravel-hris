@@ -189,6 +189,12 @@
                     <p>Daily Preventive Maintenance</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('returnStocks') }}" class="nav-link {{ (request()->is('return-products*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-table"></i>
+                    <p>Return Products</p>
+                </a>
+            </li>
             <li class="nav-header">SETTINGS</li>
             <li class="nav-item">
                 <a href="{{ route('user-profile')}}" class="nav-link {{ (request()->is('profile*')) ? 'nav-link active' : '' }}">

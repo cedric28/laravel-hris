@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Sale;
 use App\Stock;
 use App\DeliveryRequest;
+use App\ReturnStockItem;
 use App\Customer;
 use Carbon\Carbon;
 
@@ -185,5 +186,33 @@ class PDFController extends Controller
         $pdf = \PDF::loadView('pdf.daily_preventive', $deliveries);
 
         return $pdf->download("Daily-Preventive-".Carbon::now()->format('m-d-Y').".pdf");
+    }
+
+    public function generateReturnStocks(Request $request)
+    {
+        $returnStocks = new ReturnStockItem();
+      
+        if($request->start_date) {
+            $search = $request->start_date;
+           
+            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function($q) use ($search) {
+                $q->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
+            });
+        }
+
+        if($request->end_date) {
+            $search = $request->end_date;
+           
+            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function($q) use ($search) {
+                $q->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
+            });
+        }
+        
+        $returnStocks = $returnStocks->latest()->paginate(10);
+
+        view()->share('returnStocks',$returnStocks);
+        $pdf = \PDF::loadView('pdf.return_products', $returnStocks);
+
+        return $pdf->download("Return-Products-Report-".Carbon::now()->format('m-d-Y').".pdf");
     }
 }
