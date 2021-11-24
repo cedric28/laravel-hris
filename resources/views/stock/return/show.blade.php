@@ -41,7 +41,7 @@
 									<td>{{ $returnStock->delivery_at }}</td>
 								</tr>
 								<tr>
-									<th>Delivery Date</th>
+									<th>Received Date</th>
 									<td>{{ $returnStock->received_at }}</td>
 								</tr>
 							</table>
