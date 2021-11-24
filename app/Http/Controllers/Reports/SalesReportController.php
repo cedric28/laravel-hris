@@ -17,8 +17,8 @@ class SalesReportController extends Controller
             ];
             //validate request value
             $validator = Validator::make($request->all(), [
-                'end_date' => 'numeric',
-                'start_date' => 'numeric|lte:end_date',
+                'end_date' => '',
+                'start_date' => 'lte:end_date',
            ], $messages);
    
             if ($validator->fails()) {
@@ -56,8 +56,8 @@ class SalesReportController extends Controller
             ];
             //validate request value
             $validator = Validator::make($request->all(), [
-                'end_date' => 'numeric',
-                'start_date' => 'numeric|lte:end_date',
+                'end_date' => '',
+                'start_date' => 'lte:end_date',
            ], $messages);
    
             if ($validator->fails()) {
