@@ -28,11 +28,11 @@
 						<div class="card-body">
 						<table class="table table-hover table-striped" id="discount">
 								<thead>
-									<tr>
-										<th>Discount Name</th>
-                                        <th>Discount Rate</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+										<th>DISCOUNT NAME</th>
+                                        <th>DISCOUNT RATE</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -48,11 +48,11 @@
 									@endforeach
 								</tbody>
 								<tfoot>
-									<tr>
-                                        <th>Discount Name</th>
-                                        <th>Discount Rate</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+                                        <th>DISCOUNT NAME</th>
+                                        <th>DISCOUNT RATE</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -113,12 +113,46 @@
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
                 },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Discount-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : 'Discount-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : 'Discount-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"discount_name"},
                     {"data":"discount_rate"},
                     {"data":"created_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+                "columnDefs": [{
+					"targets": [1],   // target column
+					"className": "textRight",
+				}],
             });
 
 			$(document).on('click', '#show', function(){

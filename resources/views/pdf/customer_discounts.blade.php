@@ -304,7 +304,7 @@ footer {
 					<tr>
               <th>Customer Name</th>
               <th>Point</th>
-              <th>Created At</th>    
+              <th>DATE ADDED</th>    
           </tr>
 				</tr>
 			</thead>

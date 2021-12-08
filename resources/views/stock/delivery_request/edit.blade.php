@@ -49,21 +49,60 @@
 								</div>
 
                                 <div class="form-group row">
-										<label class="col-lg-3 col-form-label">Supplier:</label>
-										<div class="col-lg-9">
-											<select id="role-id" name="supplier_id" class="form-control select2">
-												<option value="">Select supplier</option>
-												@foreach ($suppliers as $supplier)
-													<option value="{{ $supplier->id }}"{{ ($supplier->id === old('supplier_id', $deliveryRequest->supplier_id)) ? ' selected' : '' }}>{{ ucwords($supplier->name) }}</option>
-												@endforeach
-											</select>
+									<label class="col-lg-3 col-form-label">Supplier:</label>
+									<div class="col-lg-9">
+										<select id="role-id" name="supplier_id" class="form-control select2">
+											<option value="">Select supplier</option>
+											@foreach ($suppliers as $supplier)
+												<option value="{{ $supplier->id }}"{{ ($supplier->id === old('supplier_id', $deliveryRequest->supplier_id)) ? ' selected' : '' }}>{{ ucwords($supplier->name) }}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Vehicle:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="vehicle" value="{{ old('vehicle',$deliveryRequest->vehicle) }}" class="@error('vehicle') is-invalid @enderror form-control" placeholder="e.g Mitsubishi" >
+									</div>
+								</div>
+
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Vehicle Plate Number:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="vehicle_plate" value="{{ old('vehicle_plate',$deliveryRequest->vehicle_plate) }}" class="@error('vehicle_plate') is-invalid @enderror form-control" placeholder="e.g NGD2889" >
+									</div>
+								</div>
+
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Driver Name:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="driver_name" value="{{ old('driver_name',$deliveryRequest->driver_name) }}" class="@error('driver_name') is-invalid @enderror form-control" placeholder="e.g Juan Dela Cruz" >
+									</div>
+								</div>
+
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Driver Phone No:</label>
+									<div class="col-lg-9">	
+										<div class="input-group mb-3">
+											<div class="input-group-prepend">
+												<span class="input-group-text">+63</span>
+											</div>
+											<input type="text" name="contact_number" value="{{ old('contact_number',$deliveryRequest->contact_number) }}" class="@error('contact_number') is-invalid @enderror form-control" placeholder="e.g 9389036501" >
 										</div>
+									</div>
+								</div>
+
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Received By:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="received_by" value="{{ old('received_by', $deliveryRequest->received_by) }}" class="@error('received_by') is-invalid @enderror form-control" placeholder="e.g Juan Dela Cruz" >
+									</div>
 								</div>
 
 
                                 <!-- Date -->
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Delivery Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date Delivered:</label>
 									<div class="col-lg-9">	
 										<div class="input-group date" id="reservationdate" data-target-input="nearest">
 											<input type="text" name="delivery_at" value="{{ old('delivery_at', date('m/d/Y', strtotime($deliveryRequest->delivery_at))) }}" class="@error('received_at') is-invalid @enderror form-control datetimepicker-input" data-target="#reservationdate"/>
@@ -73,9 +112,23 @@
 										</div>
 									</div>
                                 </div>
+
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Status:</label>
+									<div class="col-lg-9">
+										<select id="status" name="status" class="form-control select2">
+											<option value="">Select status</option>
+											@foreach ($deliveryStatus as $stat)
+												<option value="{{ $stat['status'] }}"{{ ($stat['status'] === old('status', $deliveryRequest['status'])) ? ' selected' : '' }}>{{ ucwords($stat['status']) }}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
 									
 								<div class="text-right">
-									<button type="submit" class="btn btn-success">Update <i class="icon-paperplane ml-2"></i></button>
+									
+									<button type="submit"  @if($deliveryRequest->status == "completed") disabled='disabled' @endif class="btn btn-success">Update <i class="icon-paperplane ml-2"></i></button>
+									
 								</div>
 							</form>
 						</div>
@@ -119,9 +172,9 @@
 										<input type="number" name="qty" value="{{ old('qty') }}" class="@error('qty') is-invalid @enderror form-control" placeholder="Quantity" >
 									</div>
 								</div>
-									
+								
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" @if($deliveryRequest->status == "completed") disabled='disabled' @endif class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</form>
 							<br/>
@@ -129,21 +182,23 @@
 								<div class="col-md-12">
 									<table id="delivery-request-items" class="table table-hover table-bordered table-striped">
 										<thead>
-											<tr>
-												<th>Reference No</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Delivery Date</th>
-												<th>Action</th>
+											<tr style="text-align:center;">
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
+												<th>RECEIVED QTY</th>
+												<th>DEFECTIVE QTY</th>
+												<th>EXPIRATION DATE</th>
+												<th>ACTION</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach ($deliveryRequestItem as $stock)
 												<tr>
-													<td>{{ $stock->delivery_request->reference_no }}</td>
 													<td>{{ $stock->product->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
-													<td>{{ $stock->delivery_request->delivery_at }}</td>
+													<td>{{ $stock->received_qty }}</td>
+													<td>{{ $stock->defectived_qty }}</td>
+													<td>{{ $stock->expired_at }}</td>
 													<td>
 														
 													</td>
@@ -151,12 +206,13 @@
 											@endforeach
 										</tbody>
 										<tfoot>
-											<tr>
-                                                <th>Reference No</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Delivery Date</th>
-												<th>Action</th>
+											<tr style="text-align:center;">
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
+												<th>RECEIVED QTY</th>
+												<th>DEFECTIVE QTY</th>
+												<th>EXPIRATION DATE</th>
+												<th>ACTION</th>
 											</tr>
 										</tfoot>
 									</table>
@@ -186,6 +242,52 @@
             </div>
         </div>
     </div>
+
+	<div id="editModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+			<form id="deliveryItems">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 align="center" class="w-100"><span id="productName"></span></h4>
+						<button type="button" class="close float-right" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<h5 align="center" class="w-100"><span class="text-danger" id="generalError"></span></h5>
+						<div class="form-group row">
+							<label class="col-lg-3 col-form-label">Received Quantity:</label>
+							<div class="col-lg-9 col-sm-9">	
+								<input type="number" id="received_qty" name="received_qty" class="@error('qty') is-invalid @enderror form-control" placeholder="e.g 1" >
+								<span class="text-danger" id="receivedQtyError"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-lg-3 col-form-label">Defective Quantity:</label>
+							<div class="col-lg-9 col-sm-9">	
+								<input type="number" id="defectived_qty" name="defectived_qty" class="@error('qty') is-invalid @enderror form-control" placeholder="e.g 1" >
+								<span class="text-danger" id="defectivedQtyError"></span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-lg-3 col-form-label">Expiration Date:</label>
+							<div class="col-lg-9">	
+								<div class="input-group date" id="expireddate" data-target-input="nearest">
+									<input type="text" id="expired_at" name="expired_at" value="{{ old('expired_at') }}" class="@error('expired_at') is-invalid @enderror form-control datetimepicker-input" data-target="#expireddate"/>
+									<div class="input-group-append" data-target="#expireddate" data-toggle="datetimepicker">
+										<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+									</div>
+								</div>
+								<span class="text-danger" id="expiredAtError"></span>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+					<button type="button" name="edit_button" id="edit_button" class="btn btn-danger">Save</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>
+				</div>
+			</form>
+        </div>
+    </div>
 	<!-- /page content -->
         @push('scripts')
         <!-- Javascript -->
@@ -212,6 +314,8 @@
 				filebrowserWindowWidth : '1000',
 				filebrowserWindowHeight : '700'
 			} );
+
+			let reference_no = {!! json_encode($deliveryRequest->reference_no) !!};
             var table = $('#delivery-request-items').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
@@ -228,19 +332,73 @@
 						"delivery_request_id": "<?= $deliveryRequest->id ?>"
 					}
                 },
+				"dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :`DELIVERY-ITEMS-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+								'title' :`DELIVERY-ITEMS-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+								'title' :`DELIVERY-ITEMS-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
-                    {"data":"reference_no"},
                     {"data":"product_name"},
                     {"data":"qty"},
-					{"data":"delivery_at"},
+					{"data":"received_qty"},
+					{"data":"defectived_qty"},
+					{"data":"expired_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+				"columnDefs": [{
+					"targets": [1,2,3],   // target column
+					"className": "textRight",
+				}]
             });
 
             var product_id;
             $(document).on('click', '#delete', function(){
                 product_id = $(this).attr('data-id');
                 $('#confirmModal').modal('show');
+            });
+
+			let qty = 0;
+			let received_qty = 0;
+			let defectived_qty = 0;
+			let productName;
+			let expired_at;
+            $(document).on('click', '#edit', function(){
+                product_id = $(this).attr('data-id');
+				qty = $(this).attr('data-qty');
+				received_qty = $(this).attr('data-received_qty');
+				defectived_qty = $(this).attr('data-defectived_qty');
+				expired_at = $(this).attr('data-expired_at');
+				productName = $(this).attr('data-productname');
+				$('#productName').html(productName);
+				$('#received_qty').val(received_qty);
+         		$('#defectived_qty').val(defectived_qty);
+				$('#expired_at').val(expired_at);
+                $('#editModal').modal('show');
             });
 			
             $('#ok_button').click(function(){
@@ -259,6 +417,57 @@
                         }, 2000);
 						
                     }
+                })
+            });
+			//edit products
+			$('#edit_button').click(function(){
+				let receivedQty = $("#received_qty").val();
+				let defectivedQty = $("#defectived_qty").val();
+				let expirationDate = $("#expired_at").val();
+                $.ajax({
+                    url: "<?= route('updateDeliveryRequestItem') ?>",
+					dataType:"json",
+                    type:"POST",
+                    data:{
+						"_token":"<?= csrf_token() ?>",
+						"product_id": product_id,
+						"delivery_request_id": "<?= $deliveryRequest->id ?>",
+						"received_qty" : receivedQty,
+						"defectived_qty" : defectivedQty,
+						"expired_at" : expirationDate
+					},
+                    beforeSend:function(){
+                        $('#edit_button').text('Saving...');
+                    },
+                    success:function(data)
+                    {
+						if(data.status == 'error'){
+							$('#generalError').text(data.message);
+							$('#receivedQtyError').text("");
+							$('#defectivedQtyError').text("");
+							$('#expiredAtError').text("");
+							$('#edit_button').text('Save');
+						} else {
+							setTimeout(function(){
+								$("#deliveryItems").trigger("reset");
+								$('#editModal').modal('hide');
+								table.ajax.reload();
+								$('#edit_button').text('Save');
+							}, 2000);
+						}			
+                    },
+					error:function(err){
+						console.log(err)
+						if(err.responseJSON){
+							let receivedMessage = err.responseJSON.data.received_qty ? err.responseJSON.data.received_qty : "";
+							let defectivedMessage = err.responseJSON.data.defectived_qty ? err.responseJSON.data.defectived_qty : "";
+							let expiredMessage = err.responseJSON.data.expired_at ? err.responseJSON.data.expired_at : "";
+							$('#receivedQtyError').text(receivedMessage);
+							$('#defectivedQtyError').text(defectivedMessage);
+							$('#expiredAtError').text(expiredMessage);
+							$('#generalError').text("");
+						}
+					}
                 })
             });
 		</script>

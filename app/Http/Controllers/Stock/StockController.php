@@ -121,7 +121,7 @@ class StockController extends Controller
             $stock->delivery_id = $request->delivery_id;
             $stock->product_id = $request->product_id;
             $stock->qty = $request->qty;
-            $stock->expired_at = Carbon::createFromFormat('m/d/Y', $request->expired_at)->format('Y-m-d');;
+            $stock->expired_at = Carbon::createFromFormat('m/d/Y', $request->expired_at)->format('Y-m-d');
             $stock->creator_id = $user;
             $stock->updater_id = $user;
             $stock->save();

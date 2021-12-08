@@ -28,18 +28,18 @@
 						<div class="card-body">
 						<table class="table table-hover table-striped" id="category">
 								<thead>
-									<tr>
-										<th>Re-Stock</th>
-                                        <th>Critical</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+										<th>RE-STOCK</th>
+                                        <th>CRITICAL</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 								<tbody>
 									@forelse ($inventoryLevels as $level)
 										<tr>
-											<td>{{ $level->re_stock }}</td>
-                                            <td>{{ $level->critical }}</td>
+											<td class="textRight">{{ $level->re_stock }}</td>
+                                            <td class="textRight">{{ $level->critical }}</td>
 											<td>{{ $level->created_at }}</td>
 											<td>
                                                 <a name="edit" id="edit" href="inventories-level/{{ $level->id }}/edit" class="btn bg-gradient-warning btn-sm">Edit</a>
@@ -54,11 +54,11 @@
 									@endforelse
 								</tbody>
 								<tfoot>
-									<tr>
-                                        <th>Re-Stock</th>
-                                        <th>Critical</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+                                        <th>RE-STOCK</th>
+                                        <th>CRITICAL</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</tfoot>
 							</table>

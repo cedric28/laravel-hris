@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Stock;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Stock;
+use App\DeliveryRequestItem;
 
 class StockInHistoryController extends Controller
 {
@@ -15,10 +16,10 @@ class StockInHistoryController extends Controller
      */
     public function index()
     {
-        $stocks = Stock::all();
+        $deliveryRequestItems = DeliveryRequestItem::all();
 
         return view('stock.history.index', [
-            'stocks' => $stocks
+            'deliveryRequestItems' => $deliveryRequestItems
         ]);
     }
 

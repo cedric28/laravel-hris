@@ -22,23 +22,23 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							<a type="button" href="{{ route('inventory.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-cart-plus mr-2"></i> Add Inventory</a>
+							<a type="button" href="{{ route('inventory.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-cart-plus mr-2"></i> Add Product</a>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-						<table class="table table-hover table-striped" id="inventory">
+						<table class="table table-hover table-striped display" style="width:100%" id="inventory">
 								<thead>
-									<tr>
-										<th>Product Name</th>
-                                        <th>Generic Name</th>
-                                        <th>Details</th>
-                                        <th>Category</th>
-                                        <th>Original Price</th>
-                                        <th>Selling Price</th>
-                                        <th>Stock</th>
-                                        <th>Status</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+										<th>PRODUCT NAME</th>
+                                        <th>GENERIC NAME</th>
+                                        <th>DETAILS</th>
+                                        <th>CATEGORY</th>
+                                        <th>ORIGINAL PRICE</th>
+                                        <th>SELLING PRICE</th>
+                                        <th>STOCK</th>
+                                        <th>STATUS</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -71,17 +71,17 @@
 									@endforeach
 								</tbody>
 								<tfoot>
-                                    <tr>
-										<th>Product Name</th>
-                                        <th>Generic Name</th>
-                                        <th>Details</th>
-                                        <th>Category</th>
-                                        <th>Original Price</th>
-                                        <th>Selling Price</th>
-                                        <th>Stock</th>
-                                        <th>Status</th>
-										<th>Created At</th>
-										<th>Action</th>
+                                    <tr style="text-align:center;">
+										<th>PRODUCT NAME</th>
+                                        <th>GENERIC NAME</th>
+                                        <th>DETAILS</th>
+                                        <th>CATEGORY</th>
+                                        <th>ORIGINAL PRICE</th>
+                                        <th>SELLING PRICE</th>
+                                        <th>STOCK</th>
+                                        <th>STATUS</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -128,12 +128,52 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 		<script>
-
+            var buttonCommon = {
+                exportOptions: {
+                    format: {
+                        body: function ( data, row, column, node ) {
+                            // Strip $ from salary column to make it numeric
+                            return column === 5 ?
+                                data.replace( /[$,]/g, '' ) :
+                                data;
+                        }
+                    }
+                }
+            };
             var table = $('#inventory').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
-      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :'Inventory Products',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6,7,8]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :'Inventory Products',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6,7,8]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :'Inventory Products',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6,7,8]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -153,7 +193,11 @@
                     {"data":"status"},
                     {"data":"created_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+                "columnDefs": [{
+					"targets": [4,5,6],   // target column
+					"className": "textRight",
+				}]
             });
 
 			$(document).on('click', '#show', function(){

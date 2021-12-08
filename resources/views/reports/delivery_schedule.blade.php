@@ -65,11 +65,11 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
-                                            <tr>
-                                                <th>Reference No</th>
-                                                <th>Supplier</th>
-                                                <th>Notes</th>
-                                                <th>Delivery Date</th>
+                                            <tr style="text-align:center;">
+                                                <th>REFERENCE NO</th>
+                                                <th>SUPPLIER</th>
+                                                <th>NOTES</th>
+                                                <th>DATE DELIVERED</th>
                                             </tr>
                                         </thead>
                                         <tbody>

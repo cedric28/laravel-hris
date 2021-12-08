@@ -28,14 +28,14 @@
 						<div class="card-body">
 						<table class="table table-hover table-striped" id="customer">
 								<thead>
-									<tr>
-										<th>Reference No</th>
-                                        <th>FullName</th>
-                                        <th>Contact No</th>
-                                        <th>Email</th>
-                                        <th>Address</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+										<th>REFERENCE NO</th>
+                                        <th>FULLNAME</th>
+                                        <th>CONTACT NO</th>
+                                        <th>EMAIL</th>
+                                        <th>ADDRESS</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -54,14 +54,14 @@
 									@endforeach
 								</tbody>
 								<tfoot>
-									<tr>
-                                        <th>Reference No</th>
-                                        <th>FullName</th>
-                                        <th>Contact No</th>
-                                        <th>Email</th>
-                                        <th>Address</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+                                        <th>REFERENCE NO</th>
+                                        <th>FULLNAME</th>
+                                        <th>CONTACT NO</th>
+                                        <th>EMAIL</th>
+                                        <th>ADDRESS</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -122,6 +122,36 @@
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
                 },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Customer-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : 'Customer-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : 'Customer-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"reference_no"},
                     {"data":"name"},

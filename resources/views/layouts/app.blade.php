@@ -84,6 +84,10 @@
 		.highcharts-data-table tr:hover {
 		background: #f1f7ff;
 		}
+
+		table td.textRight {
+			text-align : right;
+		}
 	</style>
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/series-label.js"></script>

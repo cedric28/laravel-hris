@@ -81,8 +81,8 @@
 							<table id="customerpoints" class="table table-hover table-bordered table-striped">
 								<thead>
 									<tr>
-										<th>Point</th>
-										<th>Created At</th>
+										<th>POINT</th>
+										<th>DATE ADDED</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -95,8 +95,8 @@
 								</tbody>
 								<tfoot>
 									<tr>
-										<th>Point</th>
-										<th>Created At</th>
+										<th>POINT</th>
+										<th>DATE ADDED</th>
 									</tr>
 								</tfoot>
 							</table>

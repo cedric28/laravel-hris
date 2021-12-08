@@ -310,8 +310,18 @@ footer {
                         </tr>
                         <tr>
                             <td><span>Date:</span><label id="payment_term">{{ date("F j, Y",strtotime($sales->created_at)) }}</label></td>
-                            <!-- <td><span>Invoice Type</span><label id="invoice_type">EXP REP INV</label></td> -->
                         </tr>
+                        @if($sales->customer_point)
+                        <tr>
+                            <td><span>Customer:</span><label id="invoice_type">{{ $sales->customer_point->customer->name }}</label></td>
+                        </tr>
+                        <tr>
+                            <td><span>Reference No:</span><label id="invoice_type">{{ $sales->customer_point->customer->reference_no }}</label></td>
+                        </tr>
+                        <tr>
+                            <td><span>Points Earned:</span><label id="invoice_type">{{ $sales->customer_point->point }}</label></td>
+                        </tr>
+                        @endif
                         <!-- <tr><td colspan="2"><span>Note</span>#<label id="note">None</label></td></tr> -->
                     </tbody>
                 </table>

@@ -158,9 +158,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      > Usage
      | // Each of the following examples create a canvas
      | // that is 320px wide by 200px high.
-     | // Canvas is created at the viewport’s 10,50 coordinate.
+     | // Canvas is DATE ADDED the viewport’s 10,50 coordinate.
      | var paper = Raphael(10, 50, 320, 200);
-     | // Canvas is created at the top left corner of the #notepad element
+     | // Canvas is DATE ADDED the top left corner of the #notepad element
      | // (or its top right corner in dir="rtl" elements)
      | var paper = Raphael(document.getElementById("notepad"), 320, 200);
      | // Same as above

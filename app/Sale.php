@@ -12,4 +12,8 @@ class Sale extends Model
     public function items(){
         return $this->hasMany(SaleItem::class, 'sale_id','id')->withTrashed();
     }
+
+    public function customer_point(){
+        return $this->hasOne(CustomerPoint::class, 'sale_id','id')->withTrashed();
+    }
 }

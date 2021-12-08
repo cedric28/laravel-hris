@@ -49,22 +49,33 @@
             </li>
             @can('isAdmin')
             <li class="nav-item">
-                <a href="{{ route('product.index')}}" class="nav-link {{ (request()->is('product*')) ? 'nav-link active' : '' }}">
-                <i class="nav-icon fas fa-prescription-bottle-alt"></i>
-                    <p>Product</p>
+                <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    Contents
+                    <i class="fas fa-angle-left right"></i>
+                </p>
                 </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('category.index')}}" class="nav-link {{ (request()->is('category*')) ? 'nav-link active' : '' }}">
-                    <i class="nav-icon fas fa-object-ungroup"></i>
-                    <p>Category</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('supplier.index')}}" class="nav-link {{ (request()->is('supplier*')) ? 'nav-link active' : '' }}">
-                    <i class="nav-icon fas fa-truck-loading"></i>
-                    <p>Supplier</p>
-                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('product.index')}}" class="nav-link {{ (request()->is('product*')) ? 'nav-link active' : '' }}">
+                        <i class="nav-icon fas fa-prescription-bottle-alt"></i>
+                            <p>Product</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('category.index')}}" class="nav-link {{ (request()->is('category*')) ? 'nav-link active' : '' }}">
+                            <i class="nav-icon fas fa-object-ungroup"></i>
+                            <p>Category</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('supplier.index')}}" class="nav-link {{ (request()->is('supplier*')) ? 'nav-link active' : '' }}">
+                            <i class="nav-icon fas fa-truck-loading"></i>
+                            <p>Supplier</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <li class="nav-item">
@@ -76,12 +87,12 @@
                 </p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a href="{{ route('stock.index')}}" class="nav-link {{ (request()->is('stock*')) ? 'nav-link active' : '' }}">
                                 <i class="nav-icon fas fa-box-open"></i>
                                 <p>Stock Entry</p>
                             </a>
-                    </li>
+                    </li> -->
     
                     <li class="nav-item">
                         <a href="{{ route('history-stock-in.index')}}" class="nav-link {{ (request()->is('history-stock-in*')) ? 'nav-link active' : '' }}">
@@ -103,18 +114,35 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
-                <a href="{{ route('inventory.index')}}" class="nav-link {{ (request()->is('inventory*')) ? 'nav-link active' : '' }}">
-                    <i class="nav-icon fas fa-box"></i>
-                    <p>Inventory</p>
-                </a>
-            </li>
 
             <li class="nav-item">
-                <a href="{{ route('inventories-level.index')}}" class="nav-link {{ (request()->is('inventories-level*')) ? 'nav-link active' : '' }}">
-                    <i class="nav-icon fas fa-chart-line"></i>
-                    <p>Inventory Level</p>
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-boxes"></i>
+                    <p>
+                        Inventory
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
                 </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('inventory.index')}}" class="nav-link {{ (request()->is('inventory*')) ? 'nav-link active' : '' }}">
+                            <i class="nav-icon fas fa-box"></i>
+                            <p>Inventory Product Entry</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('productAdjustmentLogs')}}" class="nav-link {{ (request()->is('product-adjustment-logs*')) ? 'nav-link active' : '' }}">
+                            <i class="nav-icon fas fa-book"></i>
+                            <p>Inventory Adjustment Logs</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('inventories-level.index')}}" class="nav-link {{ (request()->is('inventories-level*')) ? 'nav-link active' : '' }}">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Inventory Level</p>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <li class="nav-item">

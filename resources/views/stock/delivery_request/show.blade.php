@@ -33,7 +33,43 @@
 									<td>{!! $deliveryRequest->content !!}</td>
 								</tr>
 								<tr>
-									<th>Delivery Date</th>
+									<th>Supplier</th>
+									<td>{{ $deliveryRequest->supplier->name }}</td>
+								</tr>
+								<tr>
+									<th>Received By</th>
+									<td>{{ $deliveryRequest->received_by }}</td>
+								</tr>
+								<tr>
+									<th>Vehicle</th>
+									<td>{{ $deliveryRequest->vehicle }}</td>
+								</tr>
+								<tr>
+									<th>Vehicle Plate Number</th>
+									<td>{{ $deliveryRequest->vehicle_plate }}</td>
+								</tr>
+								<tr>
+									<th>Driver Name</th>
+									<td>{{ $deliveryRequest->driver_name }}</td>
+								</tr>
+								<tr>
+									<th>Driver Contact Number</th>
+									<td>{{ $deliveryRequest->contact_number }}</td>
+								</tr>
+								<tr>
+									<th>Status</th>
+									<td>
+										@if($deliveryRequest->status == 'pending')
+											<span title="Pending" class="badge bg-warning">PENDING</span>
+										@elseif($deliveryRequest->status == 'cancel')
+											<span title="Cancel" class="badge bg-danger">CANCEL</span>
+										@else
+											<span title="Completed" class="badge bg-success">COMPLETED</span>
+										@endif
+									</td>
+								</tr>
+								<tr>
+									<th>Date Delivered</th>
 									<td>{{ $deliveryRequest->delivery_at }}</td>
 								</tr>
 							</table>
@@ -56,34 +92,32 @@
 								<div class="col-md-12">
 									<table id="delivery-request-items" class="table table-hover table-bordered table-striped">
 										<thead>
-											<tr>
-												<th>Reference No</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Delivery Date</th>
-												<th>Action</th>
+											<tr style="text-align:center;">
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
+												<th>RECEIVED QTY</th>
+												<th>DEFECTIVE QTY</th>
+												<th>EXPIRATION DATE</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach ($deliveryRequestItem as $stock)
 												<tr>
-													<td>{{ $stock->delivery_request->reference_no }}</td>
 													<td>{{ $stock->product->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
-													<td>{{ $stock->delivery_request->delivery_date }}</td>
-													<td>
-														
-													</td>
+													<td>{{ $stock->received_qty }}</td>
+													<td>{{ $stock->defectived_qty }}</td>
+													<td>{{ $stock->expired_at }}</td>
 												</tr>
 											@endforeach
 										</tbody>
 										<tfoot>
-											<tr>
-                                                <th>Reference No</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Delivery Date</th>
-												<th>Action</th>
+											<tr style="text-align:center;">
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
+												<th>RECEIVED QTY</th>
+												<th>DEFECTIVE QTY</th>
+												<th>EXPIRATION DATE</th>
 											</tr>
 										</tfoot>
 									</table>
@@ -139,11 +173,11 @@
 				filebrowserWindowWidth : '1000',
 				filebrowserWindowHeight : '700'
 			} );
+			let reference_no = {!! json_encode($deliveryRequest->reference_no) !!};
             var table = $('#delivery-request-items').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
-      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -155,13 +189,47 @@
 						"delivery_request_id": "<?= $deliveryRequest->id ?>"
 					}
                 },
+				"dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                 'title' :`DELIVERY-ITEMS-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                 'title' :`DELIVERY-ITEMS-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                 'title' :`DELIVERY-ITEMS-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
-                    {"data":"reference_no"},
                     {"data":"product_name"},
                     {"data":"qty"},
-					{"data":"delivery_at"},
-                    {"data":"action","searchable":false,"orderable":false}
-                ]
+					{"data":"received_qty"},
+					{"data":"defectived_qty"},
+					{"data":"expired_at"}
+                ],
+				"columnDefs": [{
+					"targets": [1,2,3],   // target column
+					"className": "textRight",
+				}]
             });
 
             var product_id;

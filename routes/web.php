@@ -81,6 +81,8 @@ Route::middleware('auth')->group(function () {
     Route::post('inventory/fetch/q','Inventory\InventoryFetchController@fetchInventory')->name('activeInventory');
     Route::get('inventory/destroy/{id}', 'Inventory\InventoryController@destroy');
     Route::get('inventories/fetch/q','Inventory\InventoryFetchController@fetchInventoryProducts');
+    Route::get('product-adjustment-logs', 'Inventory\InventoryController@productAdjustmentLogs')->name('productAdjustmentLogs');
+    Route::post('product-adjustment-logs/fetch/q', 'Inventory\InventoryFetchController@getInventoryAdjustmentProducts')->name('getInventoryAdjustmentProducts');
 
     //Users
     Route::resource('/user', 'User\UserController');
@@ -126,6 +128,7 @@ Route::middleware('auth')->group(function () {
     //Delivery Request
     Route::resource('delivery-request', 'Stock\DeliveryRequestController');
     Route::post('delivery-request/add-products','Stock\DeliveryRequestController@addProduct')->name('addDeliveryRequestItem');
+    Route::post('delivery-request/update-products','Stock\DeliveryRequestController@updateProduct')->name('updateDeliveryRequestItem');
     Route::get('delivery-request/destroy/{id}', 'Stock\DeliveryRequestController@destroy');
     Route::get('delivery-request-item/destroy/{id}', 'Stock\DeliveryRequestController@removeProduct');
     //Return Stock

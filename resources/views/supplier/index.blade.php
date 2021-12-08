@@ -26,16 +26,16 @@
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-						<table class="table table-hover table-striped" id="supplier">
+						<table class="table table-hover table-bordered table-striped" id="supplier">
 								<thead>
-									<tr>
-										<th>Name</th>
-                                        <th>Short Name</th>
-                                        <th>Contact No</th>
-                                        <th>Email</th>
-                                        <th>Address</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+										<th>SUPPLIER NAME</th>
+                                        <th>SHORT NAME</th>
+                                        <th>CONTACT NO</th>
+                                        <th>EMAIL</th>
+                                        <th>ADDRESS</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -54,14 +54,14 @@
 									@endforeach
 								</tbody>
 								<tfoot>
-									<tr>
-										<th>Name</th>
-                                        <th>Short Name</th>
-                                        <th>Contact No</th>
-                                        <th>Email</th>
-                                        <th>Address</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+										<th>NAME</th>
+                                        <th>SHORT NAME</th>
+                                        <th>CONTACT NO</th>
+                                        <th>EMAIL</th>
+                                        <th>ADDRESS</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -113,7 +113,6 @@
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
-      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -122,6 +121,36 @@
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
                 },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :'Suppliers',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :'Suppliers',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :'Suppliers',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"name"},
                     {"data":"short_name"},

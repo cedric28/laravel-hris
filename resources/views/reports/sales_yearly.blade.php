@@ -65,13 +65,13 @@
                                 <div class="table-responsive">
                                 <table class="table">
                                     <thead>
-                                        <tr>
-                                            <th>Invoice No</th>
-                                            <th>Customer Name</th>
-                                            <th>Total Price</th>
-                                            <th>Total Discount</th>
-                                            <th>Total Amount Due</th>
-                                            <th>Created At</th>
+                                        <tr style="text-align:center;">
+                                            <th>INVOICE NO</th>
+                                            <th>CUSTOMER NAME</th>
+                                            <th>TOTAL PRICE</th>
+                                            <th>TOTAL DISCOUNT</th>
+                                            <th>TOTAL AMOUNT DUE</th>
+                                            <th>DATE ADDED</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -79,20 +79,20 @@
                                         <tr>
                                             <td>{{$sale->or_no}}</td>
                                             <td>{{$sale->customer_fullname}}</td>
-                                            <td>{{$sale->total_price}}</td>
-                                            <td>{{$sale->total_discount}}</td>
-                                            <td>{{$sale->total_amount_due}}</td>
+                                            <td class="textRight">{{$sale->total_price}}</td>
+                                            <td class="textRight">{{$sale->total_discount}}</td>
+                                            <td class="textRight">{{$sale->total_amount_due}}</td>
                                             <td>{{$sale->created_at}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <th>Total Summary:</th>
+                                        <tr style="text-align:center;">
+                                            <th>TOTAL SUMMARY:</th>
                                             <th></th>
-                                            <th>{{ number_format($totalPrice, 2) }}</th>
-                                            <th>{{ number_format($totalDiscount, 2) }}</th>
-                                            <th>{{ number_format($totalAmountDue, 2) }}</th>                            
+                                            <th style="text-align:right;">{{ number_format($totalPrice, 2) }}</th>
+                                            <th style="text-align:right;">{{ number_format($totalDiscount, 2) }}</th>
+                                            <th style="text-align:right;">{{ number_format($totalAmountDue, 2) }}</th>                            
                                             <th></th>
                                         </tr>
                                     </tfoot>

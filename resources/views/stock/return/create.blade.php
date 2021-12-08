@@ -46,7 +46,7 @@
 								</div>
 
                                 <div class="form-group row">
-									<label class="col-form-label col-lg-3">Note:</label>
+									<label class="col-form-label col-lg-3">Notes:</label>
 									<div class="col-lg-9">
 										<textarea rows="3" cols="3" name="content" class="@error('content') is-invalid @enderror form-control" placeholder="Content"></textarea>
 									</div>
@@ -54,7 +54,7 @@
 
                                 <!-- Date -->
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Delivery Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date Returned:</label>
 									<div class="col-lg-9">	
 										<div class="input-group date" id="reservationdate" data-target-input="nearest">
 											<input type="text" name="delivery_at" class="@error('delivery_at') is-invalid @enderror form-control datetimepicker-input" data-target="#reservationdate"/>
@@ -66,7 +66,7 @@
                                 </div>
 
 								<div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Received Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date Received:</label>
 									<div class="col-lg-9">	
 										<div class="input-group date" id="receiveddate" data-target-input="nearest">
 											<input type="text" name="received_at" class="@error('received_at') is-invalid @enderror form-control datetimepicker-input" data-target="#receiveddate"/>
@@ -78,7 +78,7 @@
                                 </div>
 
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" class="btn btn-primary">NEXT <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</div>
 						</div>

@@ -306,7 +306,7 @@ footer {
             <th>Total Price</th>
             <th>Total Discount</th>
             <th>Total Amount Due</th>
-            <th>Created At</th>
+            <th>DATE ADDED</th>
         </tr>
 			</thead>
             @foreach ($sales as $sale)

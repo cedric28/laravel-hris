@@ -28,12 +28,13 @@
                         <div class="card-body">
                             <table id="delivery" class="table table-hover table-bordered table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>Reference No</th>
-                                        <th>Supplier</th>
-                                        <th>Notes</th>
-                                        <th>Delivery Date</th>
-                                        <th>Action</th>
+                                    <tr style="text-align:center;">
+                                        <th>REFERENCE NO</th>
+                                        <th>SUPPLIER</th>
+                                        <th>NOTES</th>
+                                        <th>STATUS</th>
+                                        <th>DATE DELIVERED</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -42,6 +43,7 @@
                                             <td>{{ $delivery->reference_no }}</td>
                                             <td>{{ $delivery->supplier->name }}</td>
                                             <td>{!! $delivery->content !!}</td>
+                                            <td>{{ $delivery->status }}</td>
                                             <td>{{ $delivery->delivery_at }}</td>
                                             <td>
                                                 
@@ -50,12 +52,13 @@
                                     @endforeach
                                 </tbody>
                                 <tfoot>
-                                    <tr>
-                                        <th>Reference No</th>
-                                        <th>Supplier</th>
-                                        <th>Notes</th>
-                                        <th>Delivery Date</th>
-                                        <th>Action</th>
+                                    <tr style="text-align:center;">
+                                        <th>REFERENCE NO</th>
+                                        <th>SUPPLIER</th>
+                                        <th>NOTES</th>
+                                        <th>STATUS</th>
+                                        <th>DATE DELIVERED</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -116,6 +119,7 @@
                     {"data":"reference_no"},
                     {"data":"name"},
                     {"data":"content"},
+                    {"data":"status"},
                     {"data":"delivery_at"},
                     {"data":"action","searchable":false,"orderable":false}
                 ]

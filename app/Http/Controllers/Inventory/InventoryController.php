@@ -214,6 +214,7 @@ class InventoryController extends Controller
 
                 $inventoryAdjustment = new InventoryAdjustment();
                 $inventoryAdjustment->inventory_id = $inventory->id;
+                $inventoryAdjustment->adjusted_quantity = $request->adjusted_quantity;
                 $inventoryAdjustment->inventory_adjustment_type_id = $request->inventory_adjustment_type_id;
                 $inventoryAdjustment->reason = $request->reason;
                 $inventoryAdjustment->creator_id = $user;
@@ -243,5 +244,13 @@ class InventoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function productAdjustmentLogs(Request $request)
+    {
+        $inventoryAdjustments = InventoryAdjustment::all();
+        return view("inventory.history.index",[
+            'inventoryAdjustments' => $inventoryAdjustments
+        ]);
     }
 }

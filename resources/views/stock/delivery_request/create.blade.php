@@ -54,7 +54,7 @@
 
                                 <!-- Date -->
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Delivery Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date Delivered:</label>
 									<div class="col-lg-9">	
 										<div class="input-group date" id="reservationdate" data-target-input="nearest">
 											<input type="text" name="delivery_at" class="@error('delivery_at') is-invalid @enderror form-control datetimepicker-input" data-target="#reservationdate"/>
@@ -65,8 +65,20 @@
 									</div>
                                 </div>
 
+								<!-- <div class="form-group row">
+									<label class="col-lg-3 col-form-label">Status:</label>
+									<div class="col-lg-9">
+										<select id="status-id" name="status" class="@error('status') is-invalid @enderror form-control select2">
+											<option value="">Select status</option>
+											@foreach ($deliveryStatus as $stat)
+												<option value="{{ $stat['status'] }}"{{ ($stat['status'] === old('status')) ? ' selected' : '' }}>{{ ucwords($stat['status']) }}</option> 
+											@endforeach
+										</select>
+									</div>
+								</div> -->
+
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" class="btn btn-primary">NEXT <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</div>
 						</div>

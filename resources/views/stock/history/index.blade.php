@@ -31,35 +31,41 @@
 								<div class="col-md-12">
 									<table id="stock-in-history" class="table table-hover table-bordered table-striped">
 										<thead>
-											<tr>
-												<th>Reference No</th>
-												<th>Received By</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Expiration Date</th>
-												<th>Created At</th>
+											<tr style="text-align:center;">
+												<th>REFERENCE NO</th>
+												<th>SUPPLIER</th>
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
+												<th>RECEIVED QTY</th>
+												<th>DEFECTIVE QTY</th>
+												<th>EXPIRATION DATE</th>
+												<th>DATE ADDED</th>
 											</tr>
 										</thead>
 										<tbody>
-											@foreach ($stocks as $stock)
+											@foreach ($deliveryRequestItems as $deliveryRequestItem)
 												<tr>
-													<td>{{ $stock->delivery->reference_no }}</td>
-													<td>{{ $stock->delivery->received_by }}</td>
-													<td>{{ $stock->product->product_name }}</td>
-													<td>{{ $stock->qty }}</td>
-													<td>{{ $stock->expired_at }}</td>
-													<td>{{ $stock->created_at }}</td>
+													<td>{{ $deliveryRequestItem->delivery_request->reference_no }}</td>
+													<td>{{ $deliveryRequestItem->delivery_request->supplier->name }}</td>
+													<td>{{ $deliveryRequestItem->product->product_name }}</td>
+													<td style="text-align:right;">{{ $deliveryRequestItem->qty }}</td>
+													<td style="text-align:right;">{{ $deliveryRequestItem->received_qty }}</td>
+													<td style="text-align:right;">{{ $deliveryRequestItem->defectived_qty }}</td>
+													<td>{{ $deliveryRequestItem->expired_at }}</td>
+													<td>{{ $deliveryRequestItem->created_at }}</td>
 												</tr>
 											@endforeach
 										</tbody>
 										<tfoot>
-											<tr>
-												<th>Reference No</th>
-												<th>Received By</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Expiration Date</th>
-												<th>Created At</th>
+											<tr style="text-align:center;">
+												<th>REFERENCE NO</th>
+												<th>SUPPLIER</th>
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
+												<th>RECEIVED QTY</th>
+												<th>DEFECTIVE QTY</th>
+												<th>EXPIRATION DATE</th>
+												<th>DATE ADDED</th>
 											</tr>
 										</tfoot>
 									</table>
@@ -111,7 +117,6 @@
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
-      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -122,14 +127,50 @@
 						"_token":"<?= csrf_token() ?>"
 					}
                 },
+				"dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :'Stock In History',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6,7]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :'Stock In History',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6,7]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :'Stock In History',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6,7]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"reference_no"},
-                    {"data":"received_by"},
+                    {"data":"supplier"},
                     {"data":"product_name"},
                     {"data":"qty"},
+					{"data":"received_qty"},
+					{"data":"defective_qty"},
                     {"data":"expired_at"},
-					{"data":"received_at"}
-                ]
+					{"data":"created_at"}
+                ],
+				"columnDefs": [{
+					"targets": [3,4,5],   // target column
+					"className": "textRight",
+				}]
             });
 		</script>
 		<script>

@@ -162,20 +162,16 @@
 									<table id="stock-product" class="table table-hover table-bordered table-striped">
 										<thead>
 											<tr>
-												<th>Reference No</th>
-												<th>Received By</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Expiration Date</th>
-												<th>Created At</th>
-												<th>Action</th>
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
+												<th>EXPIRATION DATE</th>
+												<th>DATE ADDED</th>
+												<th>ACTION</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach ($stocks as $stock)
 												<tr>
-													<td>{{ $stock->delivery->reference_no }}</td>
-													<td>{{ $stock->delivery->received_by }}</td>
 													<td>{{ $stock->product->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
 													<td>{{ $stock->expired_at }}</td>
@@ -188,13 +184,11 @@
 										</tbody>
 										<tfoot>
 											<tr>
-												<th>Reference No</th>
-												<th>Received By</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Expiration Date</th>
-												<th>Created At</th>
-												<th>Action</th>
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
+												<th>EXPIRATION DATE</th>
+												<th>DATE ADDED</th>
+												<th>ACTION</th>
 											</tr>
 										</tfoot>
 									</table>
@@ -242,11 +236,11 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 		<script>
+			let reference_no = {!! json_encode($delivery->reference_no) !!};
             var table = $('#stock-product').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
-      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -258,9 +252,37 @@
 						"delivery_id": "<?= $delivery->id ?>"
 					}
                 },
+				"dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :`Stock In Entry Products Ref No#${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : `Stock In Entry Products Ref No#${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : `Stock In Entry Products Ref No#${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
-                    {"data":"reference_no"},
-                    {"data":"received_by"},
                     {"data":"product_name"},
                     {"data":"qty"},
                     {"data":"expired_at"},

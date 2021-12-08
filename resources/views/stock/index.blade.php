@@ -29,10 +29,10 @@
                             <table id="delivery" class="table table-hover table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Reference No</th>
-                                        <th>Received By</th>
-                                        <th>Date Received</th>
-                                        <th>Action</th>
+                                        <th>REFERENCE NO</th>
+                                        <th>RECEIVED BY</th>
+                                        <th>DATE RECEIVED</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -49,10 +49,10 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Reference No</th>
-                                        <th>Received By</th>
-                                        <th>Date Received</th>
-                                        <th>Action</th>
+                                        <th>REFERENCE NO</th>
+                                        <th>RECEIVED BY</th>
+                                        <th>DATE RECEIVED</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -99,8 +99,6 @@
 		<script>
 			 var table = $('#delivery').DataTable({
 				"responsive": true, "lengthChange": false, "autoWidth": false,
-                // "dom": 'Blfrtip',
-      			// "buttons": ["csv", "excel", "pdf", "print", "colvis"],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -109,6 +107,36 @@
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
                 },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :'Stock In Entry',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :'Stock In Entry',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :'Stock In Entry',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"reference_no"},
                     {"data":"received_by"},

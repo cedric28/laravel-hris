@@ -41,8 +41,8 @@ class Cart extends Component {
         this.setCustomerReferenceNo = this.setCustomerReferenceNo.bind(this);
         this.handleCheckCustomer = this.handleCheckCustomer.bind(this);
         this.handleSubmitOrder = this.handleSubmitOrder.bind(this);
-        this.handleCancelOrder = this.handleCancelOrder.bind(this);
-        // this.handleClickSubmit = this.handleClickSubmit.bind(this)
+        this.handleResetCart = this.handleResetCart.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
     componentDidMount() {
@@ -50,7 +50,22 @@ class Cart extends Component {
         this.loadCart();
         this.loadProducts();
         this.loadNormalDiscounts();
-        this.loadPointDiscount();   
+        this.loadPointDiscount();
+
+        window.addEventListener('keydown', this.handleKeyDown);
+
+        // cleanup this component
+        return () => {
+          window.removeEventListener('keydown', this.handleKeyDown);
+        };
+    }
+
+    handleKeyDown (event) {
+       if(event.keyCode == 116){
+           this.handleSubmitOrder();
+       } else if(event.keyCode == 117){
+           this.handleCancelOrder();
+       }
     }
 
     loadProducts() {
@@ -137,6 +152,12 @@ class Cart extends Component {
     {
         const checked = e.target.checked;
         if(checked){
+            let tempDiscount = {...this.state.discount};
+            this.setState({
+                selectedNormalDiscount: false,
+                selectedCustomerDiscount: true,
+            })
+
             Swal.fire({
                 title: 'Enter Customer Reference No',
                 input: 'number',
@@ -164,7 +185,6 @@ class Cart extends Component {
                 if (result.value) {
                     const { customerInfo, discount } = result.value;
                     let tempCustomerInfo = {...this.state.customer_point_info};
-                    let tempDiscount = {...this.state.discount};
                     tempCustomerInfo = customerInfo;
                     tempDiscount = discount[0];
                     this.setState({
@@ -172,16 +192,13 @@ class Cart extends Component {
                         discount: tempDiscount
                     })
                 }else if(result.dismiss == 'cancel'){
+                    tempDiscount = [];
                     this.setState({
-                        selectedCustomerDiscount: false
+                        selectedCustomerDiscount: false,
+                        discount: tempDiscount,
                     })
                  }
             });
-
-            this.setState({
-                selectedNormalDiscount: false,
-                selectedCustomerDiscount: true,
-            })
         }
     }
 
@@ -335,24 +352,23 @@ class Cart extends Component {
     handleSubmitOrder()
     {
         const { cart,customer_point_info,discount, customerFullName, cash_tendered, customer_point_earner} = this.state;
-        http.post('/pos', {cart, customer_point_info, discount , customerFullName, cash_tendered, customer_point_earner}).then(res => {
-            if(res.data.status === "success"){
-                const sales = res.data.sales;
-                let a= document.createElement('a');
-                a.target= '_blank';
-                a.href= "/invoice/" + sales.id; 
-                a.click();
-    
-                this.handleResetCart();
-            }
-        }).catch(err => {
-            Swal.fire("Error!", err.response.data.message, "error");
-        })
-    }
-    
-    handleCancelOrder()
-    {
-        this.handleResetCart();
+        if(cash_tendered < this.getTotalAmountDue){
+            Swal.fire("Error!", "Please check your cash tendered amount", "error");
+        } else {
+            http.post('/pos', {cart, customer_point_info, discount , customerFullName, cash_tendered, customer_point_earner}).then(res => {
+                if(res.data.status === "success"){
+                    const sales = res.data.sales;
+                    let a= document.createElement('a');
+                    a.target= '_blank';
+                    a.href= "/invoice/" + sales.id; 
+                    a.click();
+        
+                    this.handleResetCart();
+                }
+            }).catch(err => {
+                Swal.fire("Error!", err.response.data.message, "error");
+            })
+        }
     }
 
     handleResetCart(){
@@ -426,7 +442,7 @@ class Cart extends Component {
                                     <div className="col-lg-9">	
                                         <input 
                                             type="text"
-                                            className="form-control" placeholder="Customer Name" 
+                                            className="form-control" placeholder="e.g Juan Dela Cruz" 
                                             value={customerFullName} 
                                             onChange={this.setCustomerFullName} 
                                         />
@@ -437,7 +453,7 @@ class Cart extends Component {
                                     <div className="col-lg-6">	
                                         <input 
                                             type="text"
-                                            className="form-control" placeholder="Customer Reference No (Optional)" 
+                                            className="form-control" placeholder="e.g 9890368664 (Optional)" 
                                             value={customerReferenceNo} 
                                             onChange={this.setCustomerReferenceNo} 
                                         />
@@ -448,10 +464,10 @@ class Cart extends Component {
                                 </div>
                                 { Object.keys(customer_point_earner).length > 0 && (
                                     <React.Fragment>
-                                    <div className="form-group">
+                                    {/* <div className="form-group">
                                         <label className="col-lg-3 col-form-label">Reference No:</label>
                                         <label className="col-lg-9 col-form-label">{customer_point_earner.reference_no}</label>
-                                    </div>
+                                    </div> */}
                                     <div className="form-group">
                                         <label className="col-lg-3 col-form-label">Fullname:</label>
                                         <label className="col-lg-9 col-form-label">{customer_point_earner.name}</label>
@@ -503,11 +519,16 @@ class Cart extends Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {cart.map(c => (
+                                            {cart.length != 0 ? 
+                                            cart.map(c => (
                                                 <tr key={c.id}>
                                                     <td>{c.product_name}</td>
-                                                    <td>₱{c.selling_price}</td>
-                                                    <td>
+                                                    <td style={{
+                                                textAlign:"right"
+                                            }}>₱{c.selling_price}</td>
+                                                    <td style={{
+                                                textAlign:"right"
+                                            }}>
                                                         {c.item_quantity}
                                                         <button 
                                                             className="btn bg-gradient-danger btn-sm mr-2 ml-2"
@@ -520,7 +541,9 @@ class Cart extends Component {
                                                             onClick={() => this.handleChangeQty(c, 1)}
                                                         ><i className="fa fa-plus"></i></button>
                                                     </td>
-                                                    <td>
+                                                    <td style={{
+                                                textAlign:"right"
+                                            }}>
                                                         ₱{(
                                                             c.selling_price * c.item_quantity
                                                         ).toFixed(2)
@@ -534,7 +557,14 @@ class Cart extends Component {
                                                     </td>
                                                 </tr>
 
-                                            ))}
+                                            )) : 
+                                            <React.Fragment>
+                                                <tr>
+                                                    <td colSpan="5" style={{textAlign: "center"}}>No Data Available</td>
+                                                </tr>
+                                            </React.Fragment>
+
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
@@ -626,7 +656,7 @@ class Cart extends Component {
                                 </div>
                                 <div className="form-group row">
                                     <div className="col-lg-12">
-                                        <button type="button" onClick={this.handleCancelOrder} className="btn btn-warning btn-block" disabled={cashTendered}><i className="fa fa-bell"></i> CANCEL ORDER</button>
+                                        <button type="button" onClick={this.handleResetCart} className="btn btn-warning btn-block" disabled={cashTendered}><i className="fa fa-bell"></i> CANCEL ORDER</button>
                                     </div>
                                 </div>
                             </div>

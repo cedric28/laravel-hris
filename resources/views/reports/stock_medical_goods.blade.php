@@ -65,22 +65,22 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
-                                            <tr>
-                                                <th>Reference No</th>
-                                                <th>Product Name</th>
-                                                <th>Qty</th>
-                                                <th>Expiration Date</th>
-                                                <th>Received Date</th>
+                                            <tr style="text-align:center;">
+                                                <th>REFERENCE NO</th>
+                                                <th>PRODUCT NAME</th>
+                                                <th>QTY</th>
+                                                <th>EXPIRATION DATE</th>
+                                                <th>DATE RECEIVED</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($deliveries as $stock)
                                             <tr>
-                                                <td>{{$stock->delivery->reference_no }}</td>
+                                                <td>{{$stock->delivery_request->reference_no }}</td>
                                                 <td>{{ $stock->product->product_name }}</td>
-                                                <td>{{$stock->qty }}</td>
+                                                <td class="textRight">{{$stock->received_qty }}</td>
                                                 <td>{{ $stock->expired_at }}</td>
-                                                <td>{{$stock->delivery->received_at }}</td>
+                                                <td>{{$stock->delivery_request->delivery_at }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

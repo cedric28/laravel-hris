@@ -65,11 +65,11 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
-                                            <tr>
-                                                <th>Supplier Name</th>
-                                                <th>Product Name</th>
-                                                <th>Qty</th>
-                                                <th>Delivery Date</th>
+                                            <tr style="text-align:center;">
+                                                <th>SUPPLIER NAME</th>
+                                                <th>PRODUCT NAME</th>
+                                                <th>QTY</th>
+                                                <th>DATE DELIVERED</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -77,7 +77,7 @@
                                             <tr>
                                                 <td>{{ $stock->return_stock->supplier->name }}</td>
                                                 <td>{{ $stock->product->product_name }}</td>
-                                                <td>{{$stock->qty }}</td>
+                                                <td class="textRight">{{$stock->qty }}</td>
                                                 <td>{{$stock->return_stock->delivery_at }}</td>
                                             </tr>
                                             @endforeach

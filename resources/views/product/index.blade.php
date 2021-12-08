@@ -28,15 +28,15 @@
 						<div class="card-body">
 							<table id="product" class="table table-hover table-bordered table-striped">
 								<thead>
-									<tr>
-										<th>Product Name</th>
-                                        <th>Generic Name</th>
+									<tr style="text-align:center;">
+										<th>PRODUCT NAME</th>
+                                        <th>GENERIC NAME</th>
                                         <th>SKU</th>
-                                        <th>Category</th>
-										<th>Content</th>
-										<th>Image</th>
-										<th>Created At</th>
-										<th>Action</th>
+                                        <th>CATEGORY</th>
+										<th>CONTENT</th>
+										<th>IMAGE</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -44,7 +44,7 @@
 										<tr>
 											<td>{{ $product->product_name }}</td>
                                             <td>{{ $product->generic_name }}</td>
-                                            <td>{{ $product->sku }}</td>
+                                            <td style="text-align: right;">{{ $product->sku }}</td>
                                             <td>{{ $product->categories[0]->category_name }}</td>
 											<td>{{ $product->content }}</td>
 											<td>{{ $product->image }}</td>
@@ -56,15 +56,15 @@
 									@endforeach
 								</tbody>
 								<tfoot>
-									<tr>
-										<th>Product Name</th>
-                                        <th>Generic Name</th>
+									<tr style="text-align:center;">
+										<th>PRODUCT NAME</th>
+                                        <th>GENERIC</th>
                                         <th>SKU</th>
-                                        <th>Category</th>
-										<th>Content</th>
-										<th>Image</th>
-										<th>Created At</th>
-										<th>Action</th>
+                                        <th>CATEGORY</th>
+										<th>CONTENT</th>
+										<th>IMAGE</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -113,7 +113,6 @@
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
-      			"buttons": ["csv", "excel", "pdf", "print"],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -122,6 +121,36 @@
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
                 },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :'Products',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,6]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :'Products',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,6]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :'Products',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,6]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"product_name"},
                     {"data":"generic_name"},
@@ -131,7 +160,11 @@
 					{"data":"image"},
                     {"data":"created_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+                "columnDefs": [{
+					"targets": [2],   // target column
+					"className": "textRight",
+				}]
             });
 
 			$(document).on('click', '#show', function(){

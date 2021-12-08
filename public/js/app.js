@@ -78441,29 +78441,45 @@ var Cart = /*#__PURE__*/function (_Component) {
     _this.setCustomerReferenceNo = _this.setCustomerReferenceNo.bind(_assertThisInitialized(_this));
     _this.handleCheckCustomer = _this.handleCheckCustomer.bind(_assertThisInitialized(_this));
     _this.handleSubmitOrder = _this.handleSubmitOrder.bind(_assertThisInitialized(_this));
-    _this.handleCancelOrder = _this.handleCancelOrder.bind(_assertThisInitialized(_this)); // this.handleClickSubmit = this.handleClickSubmit.bind(this)
-
+    _this.handleResetCart = _this.handleResetCart.bind(_assertThisInitialized(_this));
+    _this.handleKeyDown = _this.handleKeyDown.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Cart, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      var _this2 = this;
+
       // load user cart
       this.loadCart();
       this.loadProducts();
       this.loadNormalDiscounts();
       this.loadPointDiscount();
+      window.addEventListener('keydown', this.handleKeyDown); // cleanup this component
+
+      return function () {
+        window.removeEventListener('keydown', _this2.handleKeyDown);
+      };
+    }
+  }, {
+    key: "handleKeyDown",
+    value: function handleKeyDown(event) {
+      if (event.keyCode == 116) {
+        this.handleSubmitOrder();
+      } else if (event.keyCode == 117) {
+        this.handleCancelOrder();
+      }
     }
   }, {
     key: "loadProducts",
     value: function loadProducts() {
-      var _this2 = this;
+      var _this3 = this;
 
       _services_httpService__WEBPACK_IMPORTED_MODULE_2__["default"].get('inventories/fetch/q').then(function (res) {
         var products = res.data.inventories;
 
-        _this2.setState({
+        _this3.setState({
           products: products
         });
       });
@@ -78471,12 +78487,12 @@ var Cart = /*#__PURE__*/function (_Component) {
   }, {
     key: "loadNormalDiscounts",
     value: function loadNormalDiscounts() {
-      var _this3 = this;
+      var _this4 = this;
 
       _services_httpService__WEBPACK_IMPORTED_MODULE_2__["default"].get('normal-discounts/fetch/q').then(function (res) {
         var normal_discounts = res.data.normalDiscounts;
 
-        _this3.setState({
+        _this4.setState({
           normal_discounts: normal_discounts
         });
       });
@@ -78484,12 +78500,12 @@ var Cart = /*#__PURE__*/function (_Component) {
   }, {
     key: "loadPointDiscount",
     value: function loadPointDiscount() {
-      var _this4 = this;
+      var _this5 = this;
 
       _services_httpService__WEBPACK_IMPORTED_MODULE_2__["default"].get('customer-points/fetch/q').then(function (res) {
         var point_discount = res.data.customerPoints;
 
-        _this4.setState({
+        _this5.setState({
           point_discount: point_discount
         });
       });
@@ -78538,7 +78554,7 @@ var Cart = /*#__PURE__*/function (_Component) {
   }, {
     key: "handleCheckCustomer",
     value: function handleCheckCustomer(event) {
-      var _this5 = this;
+      var _this6 = this;
 
       event.preventDefault();
       var _this$state = this.state,
@@ -78561,7 +78577,7 @@ var Cart = /*#__PURE__*/function (_Component) {
           var customerBalance = res.data.balance;
           tempCustomerInfo = res.data.customerInfo;
 
-          _this5.setState({
+          _this6.setState({
             customer_point_earner: tempCustomerInfo,
             customer_earner_balance: customerBalance
           });
@@ -78571,7 +78587,7 @@ var Cart = /*#__PURE__*/function (_Component) {
 
         tempCustomerInfo = {};
 
-        _this5.setState({
+        _this6.setState({
           customerReferenceNo: "",
           customer_point_earner: tempCustomerInfo,
           customer_earner_balance: ""
@@ -78583,11 +78599,17 @@ var Cart = /*#__PURE__*/function (_Component) {
   }, {
     key: "handleSelectCustomerPoint",
     value: function handleSelectCustomerPoint(e) {
-      var _this6 = this;
+      var _this7 = this;
 
       var checked = e.target.checked;
 
       if (checked) {
+        var tempDiscount = _objectSpread({}, this.state.discount);
+
+        this.setState({
+          selectedNormalDiscount: false,
+          selectedCustomerDiscount: true
+        });
         sweetalert2__WEBPACK_IMPORTED_MODULE_4___default.a.fire({
           title: 'Enter Customer Reference No',
           input: 'number',
@@ -78620,26 +78642,23 @@ var Cart = /*#__PURE__*/function (_Component) {
                 customerInfo = _result$value.customerInfo,
                 discount = _result$value.discount;
 
-            var tempCustomerInfo = _objectSpread({}, _this6.state.customer_point_info);
-
-            var tempDiscount = _objectSpread({}, _this6.state.discount);
+            var tempCustomerInfo = _objectSpread({}, _this7.state.customer_point_info);
 
             tempCustomerInfo = customerInfo;
             tempDiscount = discount[0];
 
-            _this6.setState({
+            _this7.setState({
               customer_point_info: tempCustomerInfo,
               discount: tempDiscount
             });
           } else if (result.dismiss == 'cancel') {
-            _this6.setState({
-              selectedCustomerDiscount: false
+            tempDiscount = [];
+
+            _this7.setState({
+              selectedCustomerDiscount: false,
+              discount: tempDiscount
             });
           }
-        });
-        this.setState({
-          selectedNormalDiscount: false,
-          selectedCustomerDiscount: true
         });
       }
     }
@@ -78763,7 +78782,7 @@ var Cart = /*#__PURE__*/function (_Component) {
   }, {
     key: "handleChangeQty",
     value: function handleChangeQty(payload, quantity) {
-      var _this7 = this;
+      var _this8 = this;
 
       var _this$state4 = this.state,
           cart = _this$state4.cart,
@@ -78787,7 +78806,7 @@ var Cart = /*#__PURE__*/function (_Component) {
             tempCart[index].item_quantity = qty;
             tempCart[index].quantity = qtyProduct;
 
-            _this7.setState({
+            _this8.setState({
               cart: tempCart,
               products: tempProducts
             });
@@ -78798,7 +78817,7 @@ var Cart = /*#__PURE__*/function (_Component) {
               products: tempProducts
             }));
 
-            _this7.setState({
+            _this8.setState({
               cart: tempCart
             });
           }
@@ -78831,7 +78850,7 @@ var Cart = /*#__PURE__*/function (_Component) {
   }, {
     key: "handleSubmitOrder",
     value: function handleSubmitOrder() {
-      var _this8 = this;
+      var _this9 = this;
 
       var _this$state5 = this.state,
           cart = _this$state5.cart,
@@ -78840,31 +78859,31 @@ var Cart = /*#__PURE__*/function (_Component) {
           customerFullName = _this$state5.customerFullName,
           cash_tendered = _this$state5.cash_tendered,
           customer_point_earner = _this$state5.customer_point_earner;
-      _services_httpService__WEBPACK_IMPORTED_MODULE_2__["default"].post('/pos', {
-        cart: cart,
-        customer_point_info: customer_point_info,
-        discount: discount,
-        customerFullName: customerFullName,
-        cash_tendered: cash_tendered,
-        customer_point_earner: customer_point_earner
-      }).then(function (res) {
-        if (res.data.status === "success") {
-          var sales = res.data.sales;
-          var a = document.createElement('a');
-          a.target = '_blank';
-          a.href = "/invoice/" + sales.id;
-          a.click();
 
-          _this8.handleResetCart();
-        }
-      })["catch"](function (err) {
-        sweetalert2__WEBPACK_IMPORTED_MODULE_4___default.a.fire("Error!", err.response.data.message, "error");
-      });
-    }
-  }, {
-    key: "handleCancelOrder",
-    value: function handleCancelOrder() {
-      this.handleResetCart();
+      if (cash_tendered < this.getTotalAmountDue) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_4___default.a.fire("Error!", "Please check your cash tendered amount", "error");
+      } else {
+        _services_httpService__WEBPACK_IMPORTED_MODULE_2__["default"].post('/pos', {
+          cart: cart,
+          customer_point_info: customer_point_info,
+          discount: discount,
+          customerFullName: customerFullName,
+          cash_tendered: cash_tendered,
+          customer_point_earner: customer_point_earner
+        }).then(function (res) {
+          if (res.data.status === "success") {
+            var sales = res.data.sales;
+            var a = document.createElement('a');
+            a.target = '_blank';
+            a.href = "/invoice/" + sales.id;
+            a.click();
+
+            _this9.handleResetCart();
+          }
+        })["catch"](function (err) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_4___default.a.fire("Error!", err.response.data.message, "error");
+        });
+      }
     }
   }, {
     key: "handleResetCart",
@@ -78903,7 +78922,7 @@ var Cart = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this9 = this;
+      var _this10 = this;
 
       var _this$state7 = this.state,
           cart = _this$state7.cart,
@@ -78949,7 +78968,7 @@ var Cart = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         className: "form-control",
-        placeholder: "Customer Name",
+        placeholder: "e.g Juan Dela Cruz",
         value: customerFullName,
         onChange: this.setCustomerFullName
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -78961,7 +78980,7 @@ var Cart = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         className: "form-control",
-        placeholder: "Customer Reference No (Optional)",
+        placeholder: "e.g 9890368664 (Optional)",
         value: customerReferenceNo,
         onChange: this.setCustomerReferenceNo
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -78973,12 +78992,6 @@ var Cart = /*#__PURE__*/function (_Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "fa fa-search"
       })))), Object.keys(customer_point_earner).length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "form-group"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        className: "col-lg-3 col-form-label"
-      }, "Reference No:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        className: "col-lg-9 col-form-label"
-      }, customer_point_earner.reference_no)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "col-lg-3 col-form-label"
@@ -79004,7 +79017,7 @@ var Cart = /*#__PURE__*/function (_Component) {
         value: options.label,
         options: options,
         onChange: function onChange(option) {
-          return _this9.setInventoryId(option.value);
+          return _this10.setInventoryId(option.value);
         }
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-3"
@@ -79032,14 +79045,22 @@ var Cart = /*#__PURE__*/function (_Component) {
         style: {
           textAlign: "center"
         }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "ITEM NAME"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "PRICE PER UNIT"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "QTY"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "TOTAL PRICE"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "ACTION"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, cart.map(function (c) {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "ITEM NAME"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "PRICE PER UNIT"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "QTY"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "TOTAL PRICE"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "ACTION"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, cart.length != 0 ? cart.map(function (c) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: c.id
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, c.product_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "\u20B1", c.selling_price), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, c.item_quantity, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, c.product_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+          style: {
+            textAlign: "right"
+          }
+        }, "\u20B1", c.selling_price), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+          style: {
+            textAlign: "right"
+          }
+        }, c.item_quantity, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "btn bg-gradient-danger btn-sm mr-2 ml-2",
           disabled: c.item_quantity <= 1,
           onClick: function onClick() {
-            return _this9.handleChangeQty(c, -1);
+            return _this10.handleChangeQty(c, -1);
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "fa fa-minus"
@@ -79047,19 +79068,28 @@ var Cart = /*#__PURE__*/function (_Component) {
           className: "btn bg-gradient-danger btn-sm",
           disabled: c.quantity == 0,
           onClick: function onClick() {
-            return _this9.handleChangeQty(c, 1);
+            return _this10.handleChangeQty(c, 1);
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "fa fa-plus"
-        }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "\u20B1", (c.selling_price * c.item_quantity).toFixed(2)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+          style: {
+            textAlign: "right"
+          }
+        }, "\u20B1", (c.selling_price * c.item_quantity).toFixed(2)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "btn bg-gradient-danger btn-sm",
           onClick: function onClick() {
-            return _this9.handleRemoveCartItem(c);
+            return _this10.handleRemoveCartItem(c);
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "fa fa-trash"
         }))));
-      })))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+        colSpan: "5",
+        style: {
+          textAlign: "center"
+        }
+      }, "No Data Available")))))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "col-md-4"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
@@ -79092,7 +79122,7 @@ var Cart = /*#__PURE__*/function (_Component) {
           type: "radio",
           name: discount.point_name,
           value: discount.id,
-          onChange: _this9.handleSelectCustomerPoint,
+          onChange: _this10.handleSelectCustomerPoint,
           id: "customerPoint",
           checked: selectedCustomerDiscount
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -79110,7 +79140,7 @@ var Cart = /*#__PURE__*/function (_Component) {
           className: "custom-control-input",
           name: discount,
           value: discount.id,
-          onChange: _this9.handleSelectNormalDiscount,
+          onChange: _this10.handleSelectNormalDiscount,
           id: discount.id,
           checked: selectedNormalDiscount
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -79177,7 +79207,7 @@ var Cart = /*#__PURE__*/function (_Component) {
         className: "col-lg-12"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "button",
-        onClick: this.handleCancelOrder,
+        onClick: this.handleResetCart,
         className: "btn btn-warning btn-block",
         disabled: cashTendered
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {

@@ -13,7 +13,9 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
+          @if($totalNotification > 0 )
           <span class="badge badge-warning navbar-badge">{{ $totalNotification }}</span>
+          @endif
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header">{{ $totalNotification }} Notifications</span>

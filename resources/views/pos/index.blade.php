@@ -24,20 +24,14 @@
     <script src="/js/app.js"></script>
     <script>
 			$(function () {
-				$('.select2').select2()
-
         $("#product-id").on('change', function(e) {
           // console.log($(this).select2('data')[0]);
           console.log($(this).attr('data-product'));
         })
 				//Date picker
-				$('#reservationdate').datetimepicker({
-					format: 'L'
-				});
+			
 
-				$('#expireddate').datetimepicker({
-					format: 'L'
-				});
+			
 			});
 		</script>
     @endpush('scripts')

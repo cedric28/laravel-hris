@@ -65,17 +65,17 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
-                                            <tr>
-                                                <th>Product Name</th>
-                                                <th>Qty</th>
-                                                <th>Expiration Date</th>
+                                            <tr style="text-align:center;">
+                                                <th>PRODUCT NAME</th>
+                                                <th>QTY</th>
+                                                <th>EXPIRATION DATE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($deliveries as $stock)
                                             <tr>
                                                 <td>{{ $stock->product->product_name }}</td>
-                                                <td>{{$stock->qty }}</td>
+                                                <td class="textRight">{{$stock->received_qty }}</td>
                                                 <td>{{ $stock->expired_at }}</td>
                                             </tr>
                                             @endforeach

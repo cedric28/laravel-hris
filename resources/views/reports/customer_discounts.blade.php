@@ -65,17 +65,17 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
-                                            <tr>
-                                                <th>Customer Name</th>
-                                                <th>Point</th>
-                                                <th>Created At</th>
+                                            <tr style="text-align:center;">
+                                                <th>CUSTOMER NAME</th>
+                                                <th>POINT</th>
+                                                <th>DATE ADDED</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($customerPoint as $point)
                                             <tr>
                                                 <td>{{$point->name}}</td>
-                                                <td>{{$point->total() }}</td>
+                                                <td class="textRight">{{$point->total() }}</td>
                                                 <td>{{ $point->created_at }}</td>
                                             </tr>
                                             @endforeach

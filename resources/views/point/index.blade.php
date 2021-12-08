@@ -28,14 +28,14 @@
 						<div class="card-body">
 						<table class="table table-hover table-striped" id="example">
 								<thead>
-									<tr>
-										<th>Point Name</th>
-                                        <th>Discount Rate</th>
-                                        <th>Point To Be Earn</th>
-                                        <th>Price Per Point</th>
-                                        <th>Total Needed Point</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+										<th>POINT NAME</th>
+                                        <th>DISCOUNT RATE</th>
+                                        <th>POINT TO BE EARN</th>
+                                        <th>PRICE PER POINT</th>
+                                        <th>TOTAL NEEDED POINT</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -54,14 +54,14 @@
 									@endforeach
 								</tbody>
 								<tfoot>
-									<tr>
-                                        <th>Point Name</th>
-                                        <th>Discount Rate</th>
-                                        <th>Point To Be Earn</th>
-                                        <th>Price Per Point</th>
-                                        <th>Total Needed Point</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+                                        <th>POINT NAME</th>
+                                        <th>DISCOUNT RATE</th>
+                                        <th>POINT TO BE EARN</th>
+                                        <th>PRICE PER POINT</th>
+                                        <th>TOTAL NEEDED POINT</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -122,6 +122,36 @@
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
                 },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Point-Discount-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : 'Point-Discount-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : 'Point-Discount-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"point_name"},
                     {"data":"discount_rate"},
@@ -130,7 +160,11 @@
                     {"data":"total_needed_point"},
                     {"data":"created_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+                "columnDefs": [{
+					"targets": [1,2,3,4],   // target column
+					"className": "textRight",
+				}],
             });
 
 			$(document).on('click', '#show', function(){

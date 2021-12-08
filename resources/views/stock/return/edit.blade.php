@@ -42,7 +42,7 @@
 								</div>
 
                                 <div class="form-group row">
-                                    <label class="col-form-label col-lg-3">Content</label>
+                                    <label class="col-form-label col-lg-3">Notes</label>
                                     <div class="col-lg-9">
                                     <textarea rows="3" cols="3" name="content" class="@error('content') is-invalid @enderror form-control" placeholder="Content">{{ $returnStock->content}}</textarea>
                                     </div>
@@ -63,7 +63,7 @@
 
                                 <!-- Date -->
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Delivery Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date Returned:</label>
 									<div class="col-lg-9">	
 										<div class="input-group date" id="reservationdate" data-target-input="nearest">
 											<input type="text" name="delivery_at" value="{{ old('delivery_at', date('m/d/Y', strtotime($returnStock->delivery_at))) }}" class="@error('received_at') is-invalid @enderror form-control datetimepicker-input" data-target="#reservationdate"/>
@@ -75,7 +75,7 @@
                                 </div>
 
 								<div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Received Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date Received:</label>
 									<div class="col-lg-9">	
 										<div class="input-group date" id="receiveddate" data-target-input="nearest">
 											<input type="text" name="received_at" value="{{ old('received_at', date('m/d/Y', strtotime($returnStock->received_at))) }}" class="@error('received_at') is-invalid @enderror form-control datetimepicker-input" data-target="#receiveddate"/>
@@ -141,23 +141,17 @@
 								<div class="col-md-12">
 									<table id="delivery-request-items" class="table table-hover table-bordered table-striped">
 										<thead>
-											<tr>
-												<th>Reference No</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Delivery Date</th>
-												<th>Received Date</th>
+											<tr style="text-align:center;">
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
 												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach ($returnStockItems as $returnStockItem)
 												<tr>
-													<td>{{ $returnStockItem->return_stock->reference_no }}</td>
 													<td>{{ $returnStockItem->product->product_name }}</td>
 													<td>{{ $returnStockItem->qty }}</td>
-													<td>{{ $returnStockItem->return_stock->delivery_at }}</td>
-													<td>{{ $returnStockItem->return_stock->received_at }}</td>
 													<td>
 														
 													</td>
@@ -165,12 +159,9 @@
 											@endforeach
 										</tbody>
 										<tfoot>
-											<tr>
-												<th>Reference No</th>
-												<th>Product Name</th>
-												<th>Qty</th>
-												<th>Delivery Date</th>
-												<th>Received Date</th>
+											<tr style="text-align:center;">
+												<th>PRODUCT NAME</th>
+												<th>QTY</th>
 												<th>Action</th>
 											</tr>
 										</tfoot>
@@ -227,11 +218,11 @@
 				filebrowserWindowWidth : '1000',
 				filebrowserWindowHeight : '700'
 			} );
+			let reference_no = {!! json_encode($returnStock->reference_no) !!};
             var table = $('#delivery-request-items').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
-      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -243,14 +234,45 @@
 						"return_stock_id": "<?= $returnStock->id ?>"
 					}
                 },
+				"dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :`Return-Stock-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :`Return-Stock-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :`Return-Stock-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
-                    {"data":"reference_no"},
                     {"data":"product_name"},
                     {"data":"qty"},
-					{"data":"delivery_at"},
-					{"data":"received_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+				"columnDefs": [{
+					"targets": [1],   // target column
+					"className": "textRight",
+				}]
             });
 
             var product_id;

@@ -16,6 +16,7 @@ class CreateInventoryAdjustmentsTable extends Migration
         Schema::create('inventory_adjustments', function (Blueprint $table) {
             $table->id();
             $table->integer('inventory_id')->unsigned()->index();
+            $table->integer('adjusted_quantity');
             $table->integer('inventory_adjustment_type_id')->unsigned()->index();
             $table->longText("reason");
             $table->integer('creator_id')->unsigned()->index();

@@ -28,13 +28,13 @@
                         <div class="card-body">
                             <table id="delivery" class="table table-hover table-bordered table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>Reference No</th>
-                                        <th>Supplier</th>
-                                        <th>Notes</th>
-                                        <th>Delivery Date</th>
-                                        <th>Received Date</th>
-                                        <th>Action</th>
+                                    <tr style="text-align:center;">
+                                        <th>REFERENCE NO</th>
+                                        <th>SUPPLIER</th>
+                                        <th>NOTES</th>
+                                        <th>DATE RETURNED</th>
+                                        <th>DATE RECEIVED</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -44,7 +44,7 @@
                                             <td>{{ $returnStock->supplier->name }}</td>
                                             <td>{!! $returnStock->content !!}</td>
                                             <td>{{ $returnStock->delivery_at }}</td>
-                                            <td>{{ $returnStock->created_at }}</td>
+                                            <td>{{ $returnStock->received_at }}</td>
                                             <td>
                                                 
                                             </td>
@@ -52,13 +52,13 @@
                                     @endforeach
                                 </tbody>
                                 <tfoot>
-                                    <tr>
-                                        <th>Reference No</th>
-                                        <th>Supplier</th>
-                                        <th>Notes</th>
-                                        <th>Delivery Date</th>
-                                        <th>Received Date</th>
-                                        <th>Action</th>
+                                    <tr style="text-align:center;">
+                                        <th>REFERENCE NO</th>
+                                        <th>SUPPLIER</th>
+                                        <th>NOTES</th>
+                                        <th>DATE RETURNED</th>
+                                        <th>DATE RECEIVED</th>
+                                        <th>ACTION</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -115,6 +115,36 @@
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
                 },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :'Return Stock',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :'Return Stock',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :'Return Stock',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"reference_no"},
                     {"data":"name"},

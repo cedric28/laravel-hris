@@ -37,11 +37,11 @@
 									<td>{{ $returnStock->supplier->name }}</td>
 								</tr>
 								<tr>
-									<th>Delivery Date</th>
+									<th>Date Returned</th>
 									<td>{{ $returnStock->delivery_at }}</td>
 								</tr>
 								<tr>
-									<th>Received Date</th>
+									<th>Date Received</th>
 									<td>{{ $returnStock->received_at }}</td>
 								</tr>
 							</table>
@@ -64,23 +64,17 @@
 								<div class="col-md-12">
 									<table id="delivery-request-items" class="table table-hover table-bordered table-striped">
 										<thead>
-											<tr>
-												<th>Reference No</th>
-												<th>Product Name</th>
+											<tr style="text-align:center;">
+												<th>PRODUCT NAME</th>
 												<th>Qty</th>
-												<th>Delivery Date</th>
-												<th>Received Date</th>
 												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach ($returnStockItems as $returnStockItem)
 												<tr>
-													<td>{{ $returnStockItem->return_stock->reference_no }}</td>
 													<td>{{ $returnStockItem->product->product_name }}</td>
 													<td>{{ $returnStockItem->qty }}</td>
-													<td>{{ $returnStockItem->return_stock->delivery_at }}</td>
-													<td>{{ $returnStockItem->return_stock->received_at }}</td>
 													<td>
 														
 													</td>
@@ -88,12 +82,9 @@
 											@endforeach
 										</tbody>
 										<tfoot>
-											<tr>
-                                                <th>Reference No</th>
-												<th>Product Name</th>
+											<tr style="text-align:center;">
+												<th>PRODUCT NAME</th>
 												<th>Qty</th>
-												<th>Delivery Date</th>
-												<th>Received Date</th>
 												<th>Action</th>
 											</tr>
 										</tfoot>
@@ -150,6 +141,7 @@
 				filebrowserWindowWidth : '1000',
 				filebrowserWindowHeight : '700'
 			} );
+			let reference_no = {!! json_encode($returnStock->reference_no) !!};
             var table = $('#delivery-request-items').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
@@ -165,14 +157,45 @@
 						"return_stock_id": "<?= $returnStock->id ?>"
 					}
                 },
+				"dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :`Return-Stock-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :`Return-Stock-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :`Return-Stock-${reference_no}`,
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
-                    {"data":"reference_no"},
                     {"data":"product_name"},
                     {"data":"qty"},
-					{"data":"delivery_at"},
-					{"data":"received_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+				"columnDefs": [{
+					"targets": [1],   // target column
+					"className": "textRight",
+				}]
             });
 
             var product_id;

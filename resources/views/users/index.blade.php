@@ -28,13 +28,13 @@
 						<div class="card-body">
 						<table class="table table-hover table-striped" id="users">
 								<thead>
-									<tr>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+                                        <th>FIRSTNAME</th>
+                                        <th>LASTNAME</th>
+                                        <th>EMAIL</th>
+                                        <th>ROLE</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -52,13 +52,13 @@
 									@endforeach
 								</tbody>
 								<tfoot>
-									<tr>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-										<th>Created At</th>
-										<th>Action</th>
+									<tr style="text-align:center;">
+                                        <th>FIRSTNAME</th>
+                                        <th>LASTNAME</th>
+                                        <th>EMAIL</th>
+                                        <th>ROLE</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
 									</tr>
 								</tfoot>
 							</table>
@@ -119,6 +119,36 @@
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
                 },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Users-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : 'Users-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : 'Users-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            }
+                        ],
+                    }
+                ],
                 "columns":[
                     {"data":"first_name"},
                     {"data":"last_name"},
