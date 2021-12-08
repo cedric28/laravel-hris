@@ -64,7 +64,7 @@ class Cart extends Component {
        if(event.keyCode == 116){
            this.handleSubmitOrder();
        } else if(event.keyCode == 117){
-           this.handleCancelOrder();
+           this.handleResetCart();
        }
     }
 
