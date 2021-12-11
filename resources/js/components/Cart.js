@@ -350,9 +350,12 @@ class Cart extends Component {
     }
 
     handleSubmitOrder()
-    {
+    {   
         const { cart,customer_point_info,discount, customerFullName, cash_tendered, customer_point_earner} = this.state;
-        if(cash_tendered < this.getTotalAmountDue){
+        let getTotalAmountDue = this.getTotalAmountDue();
+        console.log("Cash Tendered", cash_tendered);
+        console.log("Total Amount Due", getTotalAmountDue);
+        if(cash_tendered < getTotalAmountDue){
             Swal.fire("Error!", "Please check your cash tendered amount", "error");
         } else {
             http.post('/pos', {cart, customer_point_info, discount , customerFullName, cash_tendered, customer_point_earner}).then(res => {

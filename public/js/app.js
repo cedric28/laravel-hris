@@ -78859,8 +78859,11 @@ var Cart = /*#__PURE__*/function (_Component) {
           customerFullName = _this$state5.customerFullName,
           cash_tendered = _this$state5.cash_tendered,
           customer_point_earner = _this$state5.customer_point_earner;
+      var getTotalAmountDue = this.getTotalAmountDue();
+      console.log("Cash Tendered", cash_tendered);
+      console.log("Total Amount Due", getTotalAmountDue);
 
-      if (cash_tendered < this.getTotalAmountDue) {
+      if (cash_tendered < getTotalAmountDue) {
         sweetalert2__WEBPACK_IMPORTED_MODULE_4___default.a.fire("Error!", "Please check your cash tendered amount", "error");
       } else {
         _services_httpService__WEBPACK_IMPORTED_MODULE_2__["default"].post('/pos', {
