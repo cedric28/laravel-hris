@@ -210,7 +210,6 @@ class InventoryController extends Controller
                 }
 
                 $inventory->quantity = $newTotalQty;
-                $inventory->save();
 
                 $inventoryAdjustment = new InventoryAdjustment();
                 $inventoryAdjustment->inventory_id = $inventory->id;
@@ -221,6 +220,8 @@ class InventoryController extends Controller
                 $inventoryAdjustment->updater_id = $user;
                 $inventoryAdjustment->save();
             }
+
+            $inventory->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
