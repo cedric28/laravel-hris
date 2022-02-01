@@ -93,12 +93,6 @@
 										</tr>
 									@endforeach
 								</tbody>
-								<tfoot>
-									<tr>
-										<th>POINT</th>
-										<th>DATE ADDED</th>
-									</tr>
-								</tfoot>
 							</table>
 						</div>
 						<!-- /.card-body -->

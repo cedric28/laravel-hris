@@ -53,17 +53,6 @@
 										</tr>
 									@endforeach
 								</tbody>
-								<tfoot>
-									<tr style="text-align:center;">
-                                        <th>REFERENCE NO</th>
-                                        <th>FULLNAME</th>
-                                        <th>CONTACT NO</th>
-                                        <th>EMAIL</th>
-                                        <th>ADDRESS</th>
-										<th>DATE ADDED</th>
-										<th>ACTION</th>
-									</tr>
-								</tfoot>
 							</table>
 						</div>
 						<!-- /.card-body -->

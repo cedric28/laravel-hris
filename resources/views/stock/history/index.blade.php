@@ -56,18 +56,6 @@
 												</tr>
 											@endforeach
 										</tbody>
-										<tfoot>
-											<tr style="text-align:center;">
-												<th>REFERENCE NO</th>
-												<th>SUPPLIER</th>
-												<th>PRODUCT NAME</th>
-												<th>QTY</th>
-												<th>RECEIVED QTY</th>
-												<th>DEFECTIVE QTY</th>
-												<th>EXPIRATION DATE</th>
-												<th>DATE ADDED</th>
-											</tr>
-										</tfoot>
 									</table>
 								</div>
 							</div>

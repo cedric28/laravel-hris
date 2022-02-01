@@ -158,13 +158,6 @@
 												</tr>
 											@endforeach
 										</tbody>
-										<tfoot>
-											<tr style="text-align:center;">
-												<th>PRODUCT NAME</th>
-												<th>QTY</th>
-												<th>Action</th>
-											</tr>
-										</tfoot>
 									</table>
 								</div>
 							</div>

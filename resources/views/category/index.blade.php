@@ -45,13 +45,6 @@
 										</tr>
 									@endforeach
 								</tbody>
-								<tfoot>
-									<tr style="text-align:center;">
-										<th>CATEGORY</th>
-										<th>DATE ADDED</th>
-										<th>ACTION</th>
-									</tr>
-								</tfoot>
 							</table>
 						</div>
 						<!-- /.card-body -->

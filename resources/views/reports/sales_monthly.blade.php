@@ -86,16 +86,6 @@
                                             </tr>
                                             @endforeach
                                         </tbody>
-                                        <tfoot>
-                                            <tr style="text-align:center;">
-                                                <th>TOTAL SUMMARY:</th>
-                                                <th></th>
-                                                <th style="text-align:right;">{{ number_format($totalPrice, 2) }}</th>
-                                                <th style="text-align:right;">{{ number_format($totalDiscount, 2) }}</th>
-                                                <th style="text-align:right;">{{ number_format($totalAmountDue, 2) }}</th>                            
-                                                <th></th>
-                                            </tr>
-                                        </tfoot>
                                     </table>
                                     {{ $sales->render() }}
                                 </div>

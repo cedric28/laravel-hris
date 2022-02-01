@@ -51,16 +51,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot>
-                                    <tr style="text-align:center;">
-                                        <th>REFERENCE NO</th>
-                                        <th>SUPPLIER</th>
-                                        <th>NOTES</th>
-                                        <th>STATUS</th>
-                                        <th>DATE DELIVERED</th>
-                                        <th>ACTION</th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                         <!-- /.card-body -->

@@ -90,15 +90,6 @@
 												</tr>
 											@endforeach
 										</tbody>
-										<tfoot>
-											<tr>
-												<th>PRODUCT NAME</th>
-												<th>QTY</th>
-												<th>EXPIRATION DATE</th>
-												<th>DATE ADDED</th>
-												
-											</tr>
-										</tfoot>
 									</table>
 								</div>
 							</div>

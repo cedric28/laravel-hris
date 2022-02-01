@@ -205,16 +205,6 @@
 												</tr>
 											@endforeach
 										</tbody>
-										<tfoot>
-											<tr style="text-align:center;">
-												<th>PRODUCT NAME</th>
-												<th>QTY</th>
-												<th>RECEIVED QTY</th>
-												<th>DEFECTIVE QTY</th>
-												<th>EXPIRATION DATE</th>
-												<th>ACTION</th>
-											</tr>
-										</tfoot>
 									</table>
 								</div>
 							</div>

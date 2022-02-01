@@ -47,14 +47,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>REFERENCE NO</th>
-                                        <th>RECEIVED BY</th>
-                                        <th>DATE RECEIVED</th>
-                                        <th>ACTION</th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                         <!-- /.card-body -->

@@ -70,20 +70,6 @@
 										</tr>
 									@endforeach
 								</tbody>
-								<tfoot>
-                                    <tr style="text-align:center;">
-										<th>PRODUCT NAME</th>
-                                        <th>GENERIC NAME</th>
-                                        <th>DETAILS</th>
-                                        <th>CATEGORY</th>
-                                        <th>ORIGINAL PRICE</th>
-                                        <th>SELLING PRICE</th>
-                                        <th>STOCK</th>
-                                        <th>STATUS</th>
-										<th>DATE ADDED</th>
-										<th>ACTION</th>
-									</tr>
-								</tfoot>
 							</table>
 						</div>
 						<!-- /.card-body -->
