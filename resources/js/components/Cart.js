@@ -654,7 +654,7 @@ class Cart extends Component {
                                 </div>
                                 <div className="form-group row">
                                     <div className="col-lg-12">
-                                        <button type="button" onClick={this.handleSubmitOrder} className="btn btn-success btn-block" disabled={cashTendered}><i className="fa fa-bell"></i> COMPLETE ORDER</button>
+                                        <button type="button" onClick={this.handleSubmitOrder} className="btn btn-success btn-block" disabled={cashTendered}><i className="fa fa-bell"></i> COMPLETE ORDER (F5)</button>
                                     </div>
                                 </div>
                                 <div className="form-group row">
