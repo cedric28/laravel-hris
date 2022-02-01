@@ -34,7 +34,7 @@
 							<form action="{{ route('inventory.store')}}" method="POST">
 								@csrf
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Products:</label>
+									<label class="col-lg-3 col-form-label">Product:</label>
 									<div class="col-lg-9 col-sm-12">
 										<select id="role-id" name="product_id" class="form-control select2" style="width: 100%;">
 											<option value="">Select Product</option>

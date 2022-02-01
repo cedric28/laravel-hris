@@ -22,7 +22,7 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							<a type="button" href="{{ route('inventory.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-cart-plus mr-2"></i> Add Product</a>
+							<a type="button" href="{{ route('inventory.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-cart-plus mr-2"></i> Add Item</a>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
