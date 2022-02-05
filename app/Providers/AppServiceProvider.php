@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 use App\DeliveryRequestItem;
 use App\DeliveryRequest;
 use Carbon\Carbon;
@@ -45,6 +46,12 @@ class AppServiceProvider extends ServiceProvider
             'totalNotification' => $totalNotification
 
         ]);
+        
         Schema::defaultStringLength(191);
+
+        Str::macro('currency', function ($price)
+        {
+            return number_format($price, 2);
+        });
     }
 }

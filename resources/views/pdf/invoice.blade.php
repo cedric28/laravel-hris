@@ -348,30 +348,30 @@ footer {
 				<tr class="list-item">
 					<td data-label="Type" class="tableitem">{{ $item->item_sku }}</td>
 					<td data-label="Description" class="tableitem">{{ $item->item_name }}</td>
-					<td data-label="Unit Price" class="tableitem">{{ $item->quantity}}</td>
-					<td data-label="Quantity" class="tableitem">{{ $item->price }}</td>
-					<td data-label="Total" class="tableitem">{{ $item->price * $item->quantity }}</td>
+					<td data-label="Quantity" class="tableitem">{{ $item->quantity}}</td>
+					<td data-label="Unit-Price" class="tableitem">{{ Config::get('app.currency') }}{{ $item->price }}</td>
+					<td data-label="Total" class="tableitem peso">{{ Config::get('app.currency') }}{{ Str::currency($item->price * $item->quantity) }}</td>
 				</tr>
 			@endforeach
             <tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Total</th>
-                <td data-label="Grand Total" class="tableitem">{{ $sales->total_price }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->total_price }}</td>
             </tr>
 			<tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Total Discount</th>
-                <td data-label="Grand Total" class="tableitem">{{ $sales->total_discount }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->total_discount }}</td>
             </tr>
 			<tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Total Amount Due</th>
-                <td data-label="Grand Total" class="tableitem">{{ $sales->total_amount_due }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->total_amount_due }}</td>
             </tr>
 			<tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Cash Tendered</th>
-                <td data-label="Grand Total" class="tableitem">{{ $sales->cash_tendered }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->cash_tendered }}</td>
             </tr>
 			<tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Change</th>
-                <td data-label="Grand Total" class="tableitem">{{ $sales->cash_change }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->cash_change }}</td>
             </tr>
         </table>
       </div><!--End Table-->	

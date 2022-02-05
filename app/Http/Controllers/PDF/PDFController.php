@@ -10,6 +10,7 @@ use App\DeliveryRequest;
 use App\ReturnStockItem;
 use App\Customer;
 use Carbon\Carbon;
+use PDF;
 
 class PDFController extends Controller
 {
@@ -21,7 +22,7 @@ class PDFController extends Controller
         // ]);
         // share data to view
         view()->share('sales',$sales);
-        $pdf = \PDF::loadView('pdf.invoice', $sales);
+        $pdf = PDF::loadView('pdf.invoice', $sales);
   
         return $pdf->stream("sales_invoice_".$sales->or_no.".pdf");
     }
