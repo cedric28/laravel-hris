@@ -91,7 +91,7 @@ class POSController extends Controller
 
             $sales = new Sale();
             $sales->or_no = $this->generateUniqueCode();
-            $sales->customer_fullname = $customerFullName ?? "";
+            $sales->customer_fullname = ucwords($customerFullName) ?? "";
             $sales->total_price = $totalPrice;
             $sales->discount_rate = $discountRate;
             $sales->total_discount = $totalDiscount;

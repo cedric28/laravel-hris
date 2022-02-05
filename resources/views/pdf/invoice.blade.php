@@ -32,7 +32,7 @@ h1{
   font-size: 1.5em;
   color: #444;
 }
-h2{font-size: .9em;}
+h2{font-size: .8em;}
 h3{
   font-size: 1.2em;
   font-weight: 300;
@@ -100,19 +100,21 @@ a {
 #message{margin-bottom: 30px; display: block;}
 h2 {
     margin-bottom: 5px;
-    color: #444;
 }
 .col-right td {
-    color: #666;
+    /* color: #666; */
     padding: 5px 8px;
     border: 0;
-    font-size: 0.75em;
+    /* font-size: 0.75em; */
     border-bottom: 1px solid #eeeeee;
+}
+.col-right span{
+    font-weight: bold;
 }
 .col-right td label {
     margin-left: 5px;
-    font-weight: 600;
-    color: #444;
+    /* font-weight: 600; */
+    /* color: #444; */
 }
 .cta-group a {
     display: inline-block;
@@ -298,28 +300,28 @@ footer {
             <div class="col-left">
                 <div class="clientlogo"><img src="dist/img/card.png" alt="Sup" /></div>
                 <div class="clientinfo">
-                    <h2 id="supplier">{{ $sales->customer_fullname }}</h2>
+                    <h2 id="customer">{{ ucwords($sales->customer_fullname) }}</h2>
                 </div>
             </div>
             <div class="col-right">
                 <table class="table">
                     <tbody>
                         <tr>
-                            <td><span>Invoice#</span><label id="invoice_total">{{ $sales->or_no }}</label></td>
+                            <td><span class="invoice-label">Invoice#</span><label id="invoice_total">{{ $sales->or_no }}</label></td>
                             <!-- <td><span>Customer Points Earner Ref:</span><label id="currency">EUR</label></td> -->
                         </tr>
                         <tr>
-                            <td><span>Date:</span><label id="payment_term">{{ date("F j, Y",strtotime($sales->created_at)) }}</label></td>
+                            <td><span class="invoice-label">Date:</span><label id="payment_term">{{ date("F j, Y",strtotime($sales->created_at)) }}</label></td>
                         </tr>
                         @if($sales->customer_point)
                         <tr>
-                            <td><span>Customer:</span><label id="invoice_type">{{ $sales->customer_point->customer->name }}</label></td>
+                            <td><span class="invoice-label">Customer:</span><label id="invoice_type">{{ $sales->customer_point->customer->name }}</label></td>
                         </tr>
                         <tr>
-                            <td><span>Reference No:</span><label id="invoice_type">{{ $sales->customer_point->customer->reference_no }}</label></td>
+                            <td><span class="invoice-label">Reference No:</span><label id="invoice_type">{{ $sales->customer_point->customer->reference_no }}</label></td>
                         </tr>
                         <tr>
-                            <td><span>Points Earned:</span><label id="invoice_type">{{ $sales->customer_point->point }}</label></td>
+                            <td><span class="invoice-label">Points Earned:</span><label id="invoice_type">{{ $sales->customer_point->point }}</label></td>
                         </tr>
                         @endif
                         <!-- <tr><td colspan="2"><span>Note</span>#<label id="note">None</label></td></tr> -->

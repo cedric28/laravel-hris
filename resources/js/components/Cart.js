@@ -119,7 +119,7 @@ class Cart extends Component {
     handleCheckCustomer(event)
     {
         event.preventDefault();
-        let { customerReferenceNo, customer_point_earner, customer_earner_balance } = this.state;
+        let { customerReferenceNo, customer_point_earner, customer_earner_balance, customerFullName } = this.state;
         if (!customerReferenceNo) {
             let error = 'Customer Reference No field is required';
             Swal.fire("Error!", error, "error");
@@ -130,10 +130,11 @@ class Cart extends Component {
                 let tempCustomerInfo = {...customer_point_earner};
                 let customerBalance = res.data.balance;
                 tempCustomerInfo = res.data.customerInfo;
-                
+
                 this.setState({
                     customer_point_earner: tempCustomerInfo,
-                    customer_earner_balance: customerBalance
+                    customer_earner_balance: customerBalance,
+                    customerFullName: tempCustomerInfo.name
                 })
             }
         }).catch(err => {
@@ -440,7 +441,7 @@ class Cart extends Component {
                     <div className="col-md-8">
                         <div className="card">
                             <div className="card-body">
-                                <div className="form-group row">
+                                {/* <div className="form-group row">
                                     <label className="col-lg-3 col-form-label">Customer Name:</label>
                                     <div className="col-lg-9">	
                                         <input 
@@ -450,9 +451,9 @@ class Cart extends Component {
                                             onChange={this.setCustomerFullName} 
                                         />
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="form-group row">
-                                    <label className="col-lg-3 col-form-label">Customer Reference No:</label>
+                                    <label className="col-lg-4 col-form-label">Customer Reference No:</label>
                                     <div className="col-lg-6">	
                                         <input 
                                             type="text"
@@ -461,7 +462,7 @@ class Cart extends Component {
                                             onChange={this.setCustomerReferenceNo} 
                                         />
                                     </div>
-                                    <div className="col-lg-3">
+                                    <div className="col-lg-2">
                                         <button type="submit" onClick={this.handleCheckCustomer} className="btn btn-primary"><i className="fa fa-search"></i></button>
                                     </div>	
                                 </div>
@@ -659,7 +660,7 @@ class Cart extends Component {
                                 </div>
                                 <div className="form-group row">
                                     <div className="col-lg-12">
-                                        <button type="button" onClick={this.handleResetCart} className="btn btn-warning btn-block" disabled={cashTendered}><i className="fa fa-bell"></i> CANCEL ORDER</button>
+                                        <button type="button" onClick={this.handleResetCart} className="btn btn-warning btn-block" disabled={cashTendered}><i className="fa fa-bell"></i> CANCEL ORDER (F6)</button>
                                     </div>
                                 </div>
                             </div>
