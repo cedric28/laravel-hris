@@ -167,7 +167,11 @@
                     {"data":"qty"},
                     {"data":"expired_at"},
 					{"data":"received_at"},
-                ]
+                ],
+				"columnDefs": [{
+					"targets": [2,3],   // target column
+					"className": "textCenter",
+				}]
             });
 
 			// $(document).on('click', '#show', function(){

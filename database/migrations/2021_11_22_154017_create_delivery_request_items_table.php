@@ -19,6 +19,7 @@ class CreateDeliveryRequestItemsTable extends Migration
             $table->integer('delivery_request_id')->unsigned()->index();
             $table->integer('product_id')->unsigned()->index();
             $table->integer("qty");
+            $table->longText("note")->nullable();
             $table->integer("received_qty")->default(0);
             $table->integer("defectived_qty")->default(0);
             $table->date('expired_at')->default(Carbon::now());

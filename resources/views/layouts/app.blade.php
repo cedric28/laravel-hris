@@ -88,6 +88,9 @@
 		table td.textRight {
 			text-align : right;
 		}
+		table td.textCenter {
+			text-align : center;
+		}
 	</style>
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/series-label.js"></script>

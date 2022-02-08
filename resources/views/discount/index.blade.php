@@ -144,7 +144,10 @@
                 "columnDefs": [{
 					"targets": [1],   // target column
 					"className": "textRight",
-				}],
+				},{
+					"targets": [2],   // target column
+					"className": "textCenter",
+				}]
             });
 
 			$(document).on('click', '#show', function(){

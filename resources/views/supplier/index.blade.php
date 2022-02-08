@@ -148,7 +148,11 @@
                     {"data":"address"},
                     {"data":"created_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+                "columnDefs": [{
+					"targets": [5],   // target column
+					"className": "textCenter",
+				}]
             });
 
 			$(document).on('click', '#show', function(){

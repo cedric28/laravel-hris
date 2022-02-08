@@ -51,7 +51,7 @@
                                 <div class="form-group row">
 									<label class="col-lg-3 col-form-label">Supplier:</label>
 									<div class="col-lg-9">
-										<select id="role-id" name="supplier_id" class="form-control select2">
+										<select  id="supplier" name="supplier_id" class="form-control select2">
 											<option value="">Select supplier</option>
 											@foreach ($suppliers as $supplier)
 												<option value="{{ $supplier->id }}"{{ ($supplier->id === old('supplier_id', $deliveryRequest->supplier_id)) ? ' selected' : '' }}>{{ ucwords($supplier->name) }}</option>
@@ -62,21 +62,21 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">Vehicle:</label>
 									<div class="col-lg-9">	
-										<input type="text" name="vehicle" value="{{ old('vehicle',$deliveryRequest->vehicle) }}" class="@error('vehicle') is-invalid @enderror form-control" placeholder="e.g Mitsubishi" >
+										<input type="text" id="vehicle" name="vehicle" @if($deliveryRequest->status != "completed") disabled='disabled' @endif value="{{ old('vehicle',$deliveryRequest->vehicle) }}" class="@error('vehicle') is-invalid @enderror form-control" placeholder="e.g Mitsubishi" >
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">Vehicle Plate Number:</label>
 									<div class="col-lg-9">	
-										<input type="text" name="vehicle_plate" value="{{ old('vehicle_plate',$deliveryRequest->vehicle_plate) }}" class="@error('vehicle_plate') is-invalid @enderror form-control" placeholder="e.g NGD2889" >
+										<input type="text" id="plate_number" @if($deliveryRequest->status != "completed") disabled='disabled' @endif name="vehicle_plate" value="{{ old('vehicle_plate',$deliveryRequest->vehicle_plate) }}" class="@error('vehicle_plate') is-invalid @enderror form-control" placeholder="e.g NGD2889" >
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">Driver Name:</label>
 									<div class="col-lg-9">	
-										<input type="text" name="driver_name" value="{{ old('driver_name',$deliveryRequest->driver_name) }}" class="@error('driver_name') is-invalid @enderror form-control" placeholder="e.g Juan Dela Cruz" >
+										<input type="text" id="driver_name" @if($deliveryRequest->status != "completed") disabled='disabled' @endif name="driver_name" value="{{ old('driver_name',$deliveryRequest->driver_name) }}" class="@error('driver_name') is-invalid @enderror form-control" placeholder="e.g Juan Dela Cruz" >
 									</div>
 								</div>
 
@@ -87,7 +87,7 @@
 											<div class="input-group-prepend">
 												<span class="input-group-text">+63</span>
 											</div>
-											<input type="text" name="contact_number" value="{{ old('contact_number',$deliveryRequest->contact_number) }}" class="@error('contact_number') is-invalid @enderror form-control" placeholder="e.g 9389036501" >
+											<input type="text" id="driver_phone_number" @if($deliveryRequest->status != "completed") disabled='disabled' @endif name="contact_number" value="{{ old('contact_number',$deliveryRequest->contact_number) }}" class="@error('contact_number') is-invalid @enderror form-control" placeholder="e.g 9389036501" >
 										</div>
 									</div>
 								</div>
@@ -95,7 +95,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">Received By:</label>
 									<div class="col-lg-9">	
-										<input type="text" name="received_by" value="{{ old('received_by', $deliveryRequest->received_by) }}" class="@error('received_by') is-invalid @enderror form-control" placeholder="e.g Juan Dela Cruz" >
+										<input type="text" id="received_by" @if($deliveryRequest->status != "completed") disabled='disabled' @endif  name="received_by" value="{{ old('received_by', $deliveryRequest->received_by) }}" class="@error('received_by') is-invalid @enderror form-control" placeholder="e.g Juan Dela Cruz" >
 									</div>
 								</div>
 
@@ -116,7 +116,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">Status:</label>
 									<div class="col-lg-9">
-										<select id="status" name="status" class="form-control select2">
+										<select id="status"  @if($deliveryRequest->status == "completed") disabled='disabled' @endif name="status" class="form-control select2">
 											<option value="">Select status</option>
 											@foreach ($deliveryStatus as $stat)
 												<option value="{{ $stat['status'] }}"{{ ($stat['status'] === old('status', $deliveryRequest['status'])) ? ' selected' : '' }}>{{ ucwords($stat['status']) }}</option>
@@ -127,7 +127,7 @@
 									
 								<div class="text-right">
 									
-									<button type="submit"  @if($deliveryRequest->status == "completed") disabled='disabled' @endif class="btn btn-success">Update <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" @if($deliveryRequest->status == "completed") disabled='disabled' @endif class="btn btn-success">Update <i class="icon-paperplane ml-2"></i></button>
 									
 								</div>
 							</form>
@@ -172,6 +172,13 @@
 										<input type="number" name="qty" value="{{ old('qty') }}" class="@error('qty') is-invalid @enderror form-control" placeholder="Quantity" >
 									</div>
 								</div>
+
+								<div class="form-group row">
+									<label class="col-form-label col-lg-3">Notes:</label>
+									<div class="col-lg-9">
+										<textarea rows="3" cols="3" name="note" class="@error('note') is-invalid @enderror form-control" placeholder="e.i special request"></textarea>
+									</div>
+								</div>
 								
 								<div class="text-right">
 									<button type="submit" @if($deliveryRequest->status == "completed") disabled='disabled' @endif class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
@@ -188,6 +195,7 @@
 												<th>RECEIVED QTY</th>
 												<th>DEFECTIVE QTY</th>
 												<th>EXPIRATION DATE</th>
+												<th>NOTE</th>
 												<th>ACTION</th>
 											</tr>
 										</thead>
@@ -199,6 +207,7 @@
 													<td>{{ $stock->received_qty }}</td>
 													<td>{{ $stock->defectived_qty }}</td>
 													<td>{{ $stock->expired_at }}</td>
+													<td>{{ $stock->note }}</td>
 													<td>
 														
 													</td>
@@ -269,6 +278,14 @@
 								<span class="text-danger" id="expiredAtError"></span>
 							</div>
 						</div>
+						
+						<div class="form-group row">
+							<label class="col-form-label col-lg-3">Notes:</label>
+							<div class="col-lg-9">
+								<textarea rows="3" id="note" cols="3" name="note" class="@error('note') is-invalid @enderror form-control" placeholder="e.i special request"></textarea>
+							</div>
+						</div>
+						
 					</div>
 					<div class="modal-footer">
 					<button type="button" name="edit_button" id="edit_button" class="btn btn-danger">Save</button>
@@ -296,6 +313,37 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 		<script>
+			if($("#status").val() == "completed"){
+				$('#vehicle').prop("disabled", false); 
+				$('#plate_number').prop("disabled", false); 
+				$('#driver_name').prop("disabled", false); 
+				$('#driver_phone_number').prop("disabled", false); 
+				$('#received_by').prop("disabled", false); 	
+			
+			}else {
+				$('#vehicle').prop("disabled", true); 
+				$('#plate_number').prop("disabled", true); 
+				$('#driver_name').prop("disabled", true); 
+				$('#driver_phone_number').prop("disabled", true); 
+				$('#received_by').prop("disabled", true); 
+			}
+
+			$('#status').on('change', function() {
+				if(this.value == "completed"){
+					$('#vehicle').prop("disabled", false); 
+					$('#plate_number').prop("disabled", false); 
+					$('#driver_name').prop("disabled", false); 
+					$('#driver_phone_number').prop("disabled", false); 
+					$('#received_by').prop("disabled", false); 
+				} else {
+					$('#vehicle').prop("disabled", true); 
+					$('#plate_number').prop("disabled", true); 
+					$('#driver_name').prop("disabled", true); 
+					$('#driver_phone_number').prop("disabled", true); 
+					$('#received_by').prop("disabled", true); 
+				}
+			});
+
             CKEDITOR.replace( 'content', {
 				filebrowserBrowseUrl: '/js/ckfinder/ckfinder.html',
 				filebrowserImageBrowseUrl: '/js/ckfinder/ckfinder.html?Type=Images',
@@ -332,21 +380,21 @@
                                 "extend": 'csv',
                                 'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             },
                             {
                                 "extend": 'pdf',
 								'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             },
                             {
                                 "extend": 'print',
 								'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             }
                         ],
@@ -358,12 +406,18 @@
 					{"data":"received_qty"},
 					{"data":"defectived_qty"},
 					{"data":"expired_at"},
+					{"data":"note"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
 				"columnDefs": [{
 					"targets": [1,2,3],   // target column
 					"className": "textRight",
-				}]
+				},
+				{
+					"targets": [4],   // target column
+					"className": "textCenter",
+				}
+				]
             });
 
             var product_id;
@@ -377,6 +431,7 @@
 			let defectived_qty = 0;
 			let productName;
 			let expired_at;
+			let note = "";
             $(document).on('click', '#edit', function(){
                 product_id = $(this).attr('data-id');
 				qty = $(this).attr('data-qty');
@@ -384,10 +439,12 @@
 				defectived_qty = $(this).attr('data-defectived_qty');
 				expired_at = $(this).attr('data-expired_at');
 				productName = $(this).attr('data-productname');
+				note = $(this).attr('data-note');
 				$('#productName').html(productName);
 				$('#received_qty').val(received_qty);
          		$('#defectived_qty').val(defectived_qty);
 				$('#expired_at').val(expired_at);
+				$('#note').val(note);
                 $('#editModal').modal('show');
             });
 			
@@ -414,6 +471,7 @@
 				let receivedQty = $("#received_qty").val();
 				let defectivedQty = $("#defectived_qty").val();
 				let expirationDate = $("#expired_at").val();
+				let note = $("#note").val();
                 $.ajax({
                     url: "<?= route('updateDeliveryRequestItem') ?>",
 					dataType:"json",
@@ -424,7 +482,8 @@
 						"delivery_request_id": "<?= $deliveryRequest->id ?>",
 						"received_qty" : receivedQty,
 						"defectived_qty" : defectivedQty,
-						"expired_at" : expirationDate
+						"expired_at" : expirationDate,
+						"note" : note
 					},
                     beforeSend:function(){
                         $('#edit_button').text('Saving...');

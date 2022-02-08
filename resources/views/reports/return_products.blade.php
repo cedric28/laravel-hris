@@ -78,7 +78,7 @@
                                                 <td>{{ $stock->return_stock->supplier->name }}</td>
                                                 <td>{{ $stock->product->product_name }}</td>
                                                 <td class="textRight">{{$stock->qty }}</td>
-                                                <td>{{$stock->return_stock->delivery_at }}</td>
+                                                <td class="textCenter">{{$stock->return_stock->delivery_at }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

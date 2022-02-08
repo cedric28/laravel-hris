@@ -174,8 +174,8 @@
 												<tr>
 													<td>{{ $stock->product->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
-													<td>{{ $stock->expired_at }}</td>
-													<td>{{ $stock->created_at }}</td>
+													<td class="textCenter">{{ $stock->expired_at }}</td>
+													<td class="textCenter">{{ $stock->created_at }}</td>
 													<td>
 														
 													</td>

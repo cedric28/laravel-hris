@@ -316,7 +316,7 @@ footer {
                       <td class="tableitem">{{$sale->total_price}}</td>
                       <td class="tableitem">{{$sale->total_discount}}</td>
                       <td class="tableitem">{{$sale->total_amount_due}}</td>
-                      <td class="tableitem">{{$sale->created_at}}</td>
+                      <td class="tableitem textCenter">{{$sale->created_at}}</td>
           </tr>
 			@endforeach
             <tr class="list-item total-row">

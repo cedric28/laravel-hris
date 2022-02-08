@@ -152,6 +152,10 @@
                 "columnDefs": [{
 					"targets": [2],   // target column
 					"className": "textRight",
+				},
+                {
+					"targets": [6],   // target column
+					"className": "textCenter",
 				}]
             });
 

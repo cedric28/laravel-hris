@@ -78,7 +78,7 @@
                                                 <td>{{$delivery->reference_no}}</td>
                                                 <td>{{$delivery->supplier->name }}</td>
                                                 <td>{!! $delivery->content !!}</td>
-                                                <td>{{$delivery->delivery_at}}</td>
+                                                <td class="textCenter">{{$delivery->delivery_at}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

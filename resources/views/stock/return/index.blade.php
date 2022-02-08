@@ -142,7 +142,11 @@
                     {"data":"delivery_at"},
                     {"data":"received_at"},
                     {"data":"action","searchable":false,"orderable":false}
-                ]
+                ],
+                "columnDefs": [{
+					"targets": [3,4],   // target column
+					"className": "textCenter",
+				}]
             });
 
 			$(document).on('click', '#show', function(){

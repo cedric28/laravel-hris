@@ -76,7 +76,7 @@
                                             <tr>
                                                 <td>{{ $stock->product->product_name }}</td>
                                                 <td class="textRight">{{$stock->received_qty }}</td>
-                                                <td>{{ $stock->expired_at }}</td>
+                                                <td class="textCenter">{{ $stock->expired_at }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

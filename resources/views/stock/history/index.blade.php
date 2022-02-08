@@ -158,7 +158,12 @@
 				"columnDefs": [{
 					"targets": [3,4,5],   // target column
 					"className": "textRight",
-				}]
+				},
+				{
+					"targets": [6,7],   // target column
+					"className": "textCenter",
+				}
+				]
             });
 		</script>
 		<script>

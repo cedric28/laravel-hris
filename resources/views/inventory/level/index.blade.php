@@ -40,7 +40,7 @@
 										<tr>
 											<td class="textRight">{{ $level->re_stock }}</td>
                                             <td class="textRight">{{ $level->critical }}</td>
-											<td>{{ $level->created_at }}</td>
+											<td  class="textCenter">{{ $level->created_at }}</td>
 											<td>
                                                 <a name="edit" id="edit" href="inventories-level/{{ $level->id }}/edit" class="btn bg-gradient-warning btn-sm">Edit</a>
 											</td>

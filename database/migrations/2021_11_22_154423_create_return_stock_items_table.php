@@ -18,6 +18,7 @@ class CreateReturnStockItemsTable extends Migration
             $table->integer('return_stock_id')->unsigned()->index();
             $table->integer('product_id')->unsigned()->index();
             $table->integer("qty");
+            $table->longText("note")->nullable();
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();
             $table->softDeletes();

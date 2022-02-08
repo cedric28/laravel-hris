@@ -312,7 +312,7 @@ footer {
           <tr>
               <td>{{$point->name}}</td>
               <td>{{$point->total() }}</td>
-              <td>{{ $point->created_at }}</td>
+              <td  class="textCenter">{{ $point->created_at }}</td>
           </tr>
         @endforeach
         </table>

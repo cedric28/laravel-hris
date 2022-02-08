@@ -32,13 +32,13 @@ class AppServiceProvider extends ServiceProvider
     {
         $stocks = new DeliveryRequestItem();
         $stockNearToExpire = $stocks->where('expired_at', '<=', Carbon::now()->addDays(7)->format('Y-m-d'))
-                        ->whereHas("delivery_request", function($q){
-                            $q->where("status","=","completed");
-                        })
-                        ->count();
+            ->whereHas("delivery_request", function ($q) {
+                $q->where("status", "=", "completed");
+            })
+            ->count();
 
         $deliveries = new DeliveryRequest();
-        $totalDeliveries = $deliveries->where('delivery_at', '<=', Carbon::now()->addDays(7)->format('Y-m-d'))->where('status','pending')->count();
+        $totalDeliveries = $deliveries->where('delivery_at', '<=', Carbon::now()->addDays(7)->format('Y-m-d'))->where('status', 'pending')->count();
         $totalNotification = $totalDeliveries + $stockNearToExpire;
         View::share([
             'expiredProducts' => $stockNearToExpire,
@@ -46,11 +46,10 @@ class AppServiceProvider extends ServiceProvider
             'totalNotification' => $totalNotification
 
         ]);
-        
+
         Schema::defaultStringLength(191);
 
-        Str::macro('currency', function ($price)
-        {
+        Str::macro('currency', function ($price) {
             return number_format($price, 2);
         });
     }

@@ -127,7 +127,11 @@
                 "columnDefs": [{
 					"targets": [1],   // target column
 					"className": "textRight",
-				}],
+				},{
+					"targets": [4],   // target column
+					"className": "textCenter",
+				}
+                ],
             });
 		</script>
         @endpush('scripts')

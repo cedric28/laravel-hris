@@ -82,7 +82,7 @@
                                                 <td class="textRight">{{$sale->total_price}}</td>
                                                 <td class="textRight">{{$sale->total_discount}}</td>
                                                 <td class="textRight">{{$sale->total_amount_due}}</td>
-                                                <td>{{$sale->created_at}}</td>
+                                                <td class="textCenter">{{$sale->created_at}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

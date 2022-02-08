@@ -137,7 +137,12 @@
                 "columns":[
                     {"data":"point"},
 					{"data":"created_at"},
-                ]
+                ],
+				"columnDefs": [
+				{
+					"targets": [1],   // target column
+					"className": "textCenter",
+				}]
             });
 		</script>
         @endpush('scripts')

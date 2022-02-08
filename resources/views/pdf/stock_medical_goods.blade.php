@@ -301,23 +301,22 @@ footer {
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">
-					<tr>
-              <th>Reference No</th>
-              <th>Product Name</th>
-              <th>Qty</th>
-              <th>Expiration Date</th>
-              <th>Received Date</th>
-            </tr>
-				</tr>
+          <tr>
+            <th>REFERENCE NO</th>
+            <th>PRODUCT NAME</th>
+            <th>QTY</th>
+            <th>EXPIRATION DATE</th>
+            <th>DATE RECEIVED</th>
+          </tr>
 			</thead>
           @foreach ($deliveries as $stock)
-            <tr>
-                <td>{{$stock->delivery->reference_no }}</td>
-                <td>{{ $stock->product->product_name }}</td>
-                <td>{{$stock->qty }}</td>
-                <td>{{ $stock->expired_at }}</td>
-                <td>{{$stock->delivery->received_at }}</td>
-            </tr>
+          <tr>
+              <td>{{$stock->delivery_request->reference_no }}</td>
+              <td>{{ $stock->product->product_name }}</td>
+              <td class="textRight">{{$stock->received_qty }}</td>
+              <td class="textCenter">{{ $stock->expired_at }}</td>
+              <td class="textCenter">{{$stock->delivery_request->delivery_at }}</td>
+          </tr>
           @endforeach
         </table>
       </div><!--End Table-->	

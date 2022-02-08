@@ -183,7 +183,12 @@
                 "columnDefs": [{
 					"targets": [4,5,6],   // target column
 					"className": "textRight",
-				}]
+				},
+                {
+					"targets": [8],   // target column
+					"className": "textCenter",
+				}
+                ]
             });
 
 			$(document).on('click', '#show', function(){

@@ -314,7 +314,7 @@ footer {
                     <td>{{ $stock->return_stock->supplier->name }}</td>
                     <td>{{ $stock->product->product_name }}</td>
                     <td>{{$stock->qty }}</td>
-                    <td>{{$stock->return_stock->delivery_at }}</td>
+                    <td class="textCenter">{{$stock->return_stock->delivery_at }}</td>
                 </tr>
                 @endforeach
         </table>

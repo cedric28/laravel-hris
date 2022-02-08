@@ -13,7 +13,7 @@ use Validator;
 
 class ReturnStockController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -36,7 +36,7 @@ class ReturnStockController extends Controller
     public function create()
     {
         $suppliers = Supplier::all();
-        return view("stock.return.create",[
+        return view("stock.return.create", [
             'suppliers' => $suppliers
         ]);
     }
@@ -49,7 +49,7 @@ class ReturnStockController extends Controller
      */
     public function store(Request $request)
     {
-         /*
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -62,14 +62,14 @@ class ReturnStockController extends Controller
                 'delivery_at' => 'required|string|max:50',
                 'received_at' => 'required|string|max:50',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-            
+
             //save data in the delivery table
             $returnStock = new ReturnStock();
             $returnStock->reference_no = $this->generateUniqueCode();
@@ -86,12 +86,11 @@ class ReturnStockController extends Controller
             \DB::commit();
 
             return redirect()->route('return-stock.edit', $returnStock->id);
-         
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -105,7 +104,7 @@ class ReturnStockController extends Controller
         $returnStock = ReturnStock::withTrashed()->findOrFail($id);
         $products = Product::all();
         $suppliers = Supplier::all();
-        $returnStockItems = ReturnStockItem::where('return_stock_id',$id)->get();
+        $returnStockItems = ReturnStockItem::where('return_stock_id', $id)->get();
 
         return view('stock.return.show', [
             'returnStock' => $returnStock,
@@ -126,7 +125,7 @@ class ReturnStockController extends Controller
         $returnStock = ReturnStock::withTrashed()->findOrFail($id);
         $products = Product::all();
         $suppliers = Supplier::all();
-        $returnStockItems = ReturnStockItem::where('return_stock_id',$id)->get();
+        $returnStockItems = ReturnStockItem::where('return_stock_id', $id)->get();
 
         return view('stock.return.edit', [
             'returnStock' => $returnStock,
@@ -145,7 +144,7 @@ class ReturnStockController extends Controller
      */
     public function update(Request $request, $id)
     {
-         /*
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -158,17 +157,17 @@ class ReturnStockController extends Controller
             $returnStock = ReturnStock::withTrashed()->findOrFail($id);
             //validate request value
             $validator = Validator::make($request->all(), [
-                'reference_no' => 'required|string|unique:return_stocks,reference_no,'.$returnStock->id,
+                'reference_no' => 'required|string|unique:return_stocks,reference_no,' . $returnStock->id,
                 'content' => 'required|string|max:255',
                 'supplier_id' => 'required|integer',
                 'delivery_at' => 'required|string|max:50',
                 'received_at' => 'required|string|max:50',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //save data in the delivery table
             $returnStock->reference_no = $request->reference_no;
             $returnStock->content = $request->content;
@@ -182,13 +181,12 @@ class ReturnStockController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg","Return Stock {$returnStock->reference_no} Update Successfully");
-         
-        } catch(\Exception $e) {
+            return back()->with("successMsg", "Return Stock {$returnStock->reference_no} Update Successfully");
+        } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -207,15 +205,15 @@ class ReturnStockController extends Controller
     public function generateUniqueCode()
     {
         do {
-            $reference_no = 'DR'.random_int(1000000000, 9999999999);
+            $reference_no = 'DR' . random_int(1000000000, 9999999999);
         } while (ReturnStock::where("reference_no", "=", $reference_no)->first());
-  
+
         return $reference_no;
     }
 
     public function addProduct(Request $request)
     {
-         /*
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -226,35 +224,46 @@ class ReturnStockController extends Controller
                 'product_id' => 'required|integer',
                 'qty' => 'required|numeric|gt:0',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-            
+
             //save data in the delivery table
-            $stock = new ReturnStockItem();
-            $stock->return_stock_id = $request->return_stock_id;
-            $stock->product_id = $request->product_id;
-            $stock->qty = $request->qty;
-            $stock->creator_id = $user;
-            $stock->updater_id = $user;
+            $stock = ReturnStockItem::firstOrNew(
+                [
+                    'return_stock_id' => $request->return_stock_id,
+                    'product_id' =>  $request->product_id,
+                    'creator_id' => $user,
+                    'updater_id' => $user
+                ]
+            );
+            $stock->note = $request->note;
+            $stock->qty += $request->qty;
             $stock->save();
+            // $stock = new ReturnStockItem();
+            // $stock->return_stock_id = $request->return_stock_id;
+            // $stock->product_id = $request->product_id;
+            // $stock->qty = $request->qty;
+            // $stock->note = $request->note;
+            // $stock->creator_id = $user;
+            // $stock->updater_id = $user;
+            // $stock->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
             \DB::commit();
 
             return redirect()->route('return-stock.edit', $stock->return_stock_id)
-                        ->with('successMsg','Product Data Save Successful');
-         
-        } catch(\Exception $e) {
+                ->with('successMsg', 'Product Data Save Successful');
+        } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        } 
+        }
     }
 
     public function removeProduct($id)

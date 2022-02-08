@@ -27,31 +27,31 @@ class StockGoodsController extends Controller
         }
 
         $deliveries = new DeliveryRequestItem();
-      
-        if($request->start_date) {
+
+        if ($request->start_date) {
             $search = $request->start_date;
-           
-            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function($q) use ($search) {
+
+            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($search) {
                 $q->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
             });
         }
 
-        if($request->end_date) {
+        if ($request->end_date) {
             $search = $request->end_date;
-           
-            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function($q) use ($search) {
+
+            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($search) {
                 $q->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
             });
         }
 
-        $deliveries = $deliveries->whereHas("delivery_request", function($q){
-            $q->where("status","=","completed");
+        $deliveries = $deliveries->whereHas("delivery_request", function ($q) {
+            $q->where("status", "=", "completed");
         });
-    
-        $deliveries = $deliveries->latest()->paginate(10);
-       
 
-        return view("reports.stock_medical_goods",[
+        $deliveries = $deliveries->latest()->paginate(10);
+
+
+        return view("reports.stock_medical_goods", [
             'deliveries' => $deliveries
         ]);
     }
