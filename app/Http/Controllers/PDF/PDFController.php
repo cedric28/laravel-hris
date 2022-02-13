@@ -134,13 +134,7 @@ class PDFController extends Controller
     public function generateDeliverySchedule(Request $request)
     {
         $deliveries = new DeliveryRequest();
-        $deliveries = $deliveries->whereBetween(
-            'delivery_at',
-            [
-                Carbon::now()->format('Y-m-d'),
-                Carbon::now()->addDays(7)->format('Y-m-d')
-            ]
-        )->orderBy('supplier_id', 'asc');
+        $deliveries = $deliveries->orderBy('supplier_id', 'asc');
 
         if ($request->start_date) {
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
@@ -149,7 +143,7 @@ class PDFController extends Controller
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-        $deliveries = $deliveries->oldest()->get();
+        $deliveries = $deliveries->where('status', 'pending')->oldest()->get();
         view()->share('deliveries', $deliveries);
 
         $pdf = \PDF::loadView('pdf.delivery_schedule', $deliveries);

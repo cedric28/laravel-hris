@@ -27,13 +27,7 @@ class DeliveryScheduleController extends Controller
         }
 
         $deliveries = new DeliveryRequest();
-        $deliveries = $deliveries->whereBetween(
-            'delivery_at',
-            [
-                Carbon::now()->format('Y-m-d'),
-                Carbon::now()->addDays(7)->format('Y-m-d')
-            ]
-        )->orderBy('supplier_id', 'asc');
+        $deliveries = $deliveries->orderBy('supplier_id', 'asc');
 
         if ($request->start_date) {
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
@@ -42,7 +36,7 @@ class DeliveryScheduleController extends Controller
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-        $deliveries = $deliveries->latest()->paginate(10);
+        $deliveries = $deliveries->where('status', 'pending')->oldest()->paginate(10);
 
         return view("reports.delivery_schedule", [
             'deliveries' => $deliveries
