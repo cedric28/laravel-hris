@@ -69,7 +69,7 @@
                                                 <th>SUPPLIER NAME</th>
                                                 <th>PRODUCT NAME</th>
                                                 <th>QTY</th>
-                                                <th>DATE DELIVERED</th>
+                                                <th>DATE RETURNED</th>
                                             </tr>
                                         </thead>
                                         <tbody>

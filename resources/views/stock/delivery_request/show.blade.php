@@ -97,6 +97,7 @@
 												<th>QTY</th>
 												<th>RECEIVED QTY</th>
 												<th>DEFECTIVE QTY</th>
+												<th>NOTE</th>
 												<th>EXPIRATION DATE</th>
 											</tr>
 										</thead>
@@ -107,6 +108,7 @@
 													<td>{{ $stock->qty }}</td>
 													<td>{{ $stock->received_qty }}</td>
 													<td>{{ $stock->defectived_qty }}</td>
+													<td>{{ $stock->note }}</td>
 													<td>{{ $stock->expired_at }}</td>
 												</tr>
 											@endforeach
@@ -190,21 +192,21 @@
                                 "extend": 'csv',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             },
                             {
                                 "extend": 'print',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             }
                         ],
@@ -215,6 +217,7 @@
                     {"data":"qty"},
 					{"data":"received_qty"},
 					{"data":"defectived_qty"},
+					{"data":"note"},
 					{"data":"expired_at"}
                 ],
 				"columnDefs": [{
@@ -222,7 +225,7 @@
 					"className": "textRight",
 				},
 				{
-					"targets": [4],   // target column
+					"targets": [5],   // target column
 					"className": "textCenter",
 				}
 				]

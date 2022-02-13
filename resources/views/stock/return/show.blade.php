@@ -67,7 +67,8 @@
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
 												<th>Qty</th>
-												<th>Action</th>
+												<th>Note</th>
+												{{-- <th>Action</th> --}}
 											</tr>
 										</thead>
 										<tbody>
@@ -75,9 +76,10 @@
 												<tr>
 													<td>{{ $returnStockItem->product->product_name }}</td>
 													<td>{{ $returnStockItem->qty }}</td>
-													<td>
+													<td>{{ $returnStockItem->note }}</td>
+													{{-- <td>
 														
-													</td>
+													</td> --}}
 												</tr>
 											@endforeach
 										</tbody>
@@ -160,21 +162,21 @@
                                 "extend": 'csv',
                                 'title' :`Return-Stock-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1]
+                                    "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' :`Return-Stock-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1]
+                                    "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' :`Return-Stock-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1]
+                                    "columns": [0,1,2]
                                 }
                             }
                         ],
@@ -183,7 +185,8 @@
                 "columns":[
                     {"data":"product_name"},
                     {"data":"qty"},
-                    {"data":"action","searchable":false,"orderable":false}
+					{"data":"note"},
+                    // {"data":"action","searchable":false,"orderable":false}
                 ],
 				"columnDefs": [{
 					"targets": [1],   // target column
