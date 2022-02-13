@@ -194,6 +194,14 @@ class DeliveryRequestController extends Controller
                 if ($validator->fails()) {
                     return back()->withErrors($validator->errors())->withInput();
                 }
+            } else if ($request->status == "cancel") {
+                $validator = Validator::make($request->all(), [
+                    'reason_for_cancel' => 'required|string|max:50'
+                ]);
+
+                if ($validator->fails()) {
+                    return back()->withErrors($validator->errors())->withInput();
+                }
             }
             //save data in the delivery table
             $delivery->reference_no = $request->reference_no;
@@ -204,6 +212,7 @@ class DeliveryRequestController extends Controller
             $delivery->vehicle_plate = $request->vehicle_plate;
             $delivery->driver_name = $request->driver_name;
             $delivery->contact_number = $request->contact_number;
+            $delivery->reason_for_cancel = $request->reason_for_cancel;
             $delivery->delivery_at = Carbon::createFromFormat('m/d/Y', $request->delivery_at)->format('Y-m-d');
             $delivery->supplier_id = $request->supplier_id;
             $delivery->updater_id = $user->id;

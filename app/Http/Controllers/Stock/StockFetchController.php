@@ -585,7 +585,7 @@ class StockFetchController extends Controller
 				$nestedData['name'] = $r->supplier->name;
 				$nestedData['status'] = $status;
 				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
-				if ($r->status == "completed") {
+				if ($r->status == "completed" || $r->status == "cancel") {
 					$nestedData['action'] = '
                     <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
 					<button name="edit"  disabled="disabled" class="btn bg-gradient-warning btn-sm">Edit</button>

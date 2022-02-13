@@ -72,6 +72,12 @@
 									<th>Date Delivered</th>
 									<td>{{ $deliveryRequest->delivery_at }}</td>
 								</tr>
+								@if($deliveryRequest->status == 'cancel')
+								<tr>
+									<th>Reason for Cancelling</th>
+									<td>{{ $deliveryRequest->reason_for_cancel }}</td>
+								</tr>
+								@endif
 							</table>
 						</div>
 					<!-- /.card-body -->

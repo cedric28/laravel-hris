@@ -15,14 +15,15 @@ class CreateDeliveryRequestsTable extends Migration
     {
         Schema::create('delivery_requests', function (Blueprint $table) {
             $table->id();
-            $table->string("reference_no",50)->unique();
+            $table->string("reference_no", 50)->unique();
             $table->longText("content");
             $table->date('delivery_at');
             $table->string("status")->default('pending');
-            $table->string("received_by",100)->default("")->nullable();
-            $table->string("vehicle",100)->default("")->nullable();
-            $table->string("vehicle_plate",100)->default("")->nullable();
-            $table->string("driver_name",100)->default("")->nullable();
+            $table->longText("reason_for_cancel")->nullable();
+            $table->string("received_by", 100)->default("")->nullable();
+            $table->string("vehicle", 100)->default("")->nullable();
+            $table->string("vehicle_plate", 100)->default("")->nullable();
+            $table->string("driver_name", 100)->default("")->nullable();
             $table->string("contact_number")->default("")->nullable();
             $table->integer('supplier_id')->unsigned()->index();
             $table->integer('creator_id')->unsigned()->index();

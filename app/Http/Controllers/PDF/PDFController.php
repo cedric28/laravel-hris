@@ -173,13 +173,7 @@ class PDFController extends Controller
     public function generateDailyPreventive(Request $request)
     {
         $deliveries = new DeliveryRequestItem();
-        $deliveries = $deliveries->whereBetween(
-            'expired_at',
-            [
-                Carbon::now()->format('Y-m-d'),
-                Carbon::now()->addDays(7)->format('Y-m-d')
-            ]
-        )->orderBy('expired_at', 'asc');
+        $deliveries = $deliveries->orderBy('expired_at', 'asc');
 
         if ($request->start_date) {
             $search = $request->start_date;

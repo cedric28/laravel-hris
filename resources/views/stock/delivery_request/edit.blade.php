@@ -124,10 +124,17 @@
 										</select>
 									</div>
 								</div>
+
+								<div class="form-group row" id="reason_for_cancel">
+									<label class="col-form-label col-lg-3">Reason for cancelling:</label>
+									<div class="col-lg-9">
+										<textarea rows="3" cols="3" name="reason_for_cancel" class="@error('reason_for_cancel') is-invalid @enderror form-control" placeholder="e.i double entry">{{ $deliveryRequest->reason_for_cancel}}</textarea>
+									</div>
+								</div>
 									
 								<div class="text-right">
 									
-									<button type="submit" @if($deliveryRequest->status == "completed") disabled='disabled' @endif class="btn btn-success">Update <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" @if($deliveryRequest->status == "completed" || $deliveryRequest->status == "cancel") disabled='disabled' @endif class="btn btn-success">Update <i class="icon-paperplane ml-2"></i></button>
 									
 								</div>
 							</form>
@@ -181,7 +188,7 @@
 								</div>
 								
 								<div class="text-right">
-									<button type="submit" @if($deliveryRequest->status == "completed") disabled='disabled' @endif class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" @if($deliveryRequest->status == "completed" || $deliveryRequest->status == "cancel") disabled='disabled' @endif class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</form>
 							<br/>
@@ -313,6 +320,7 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 		<script>
+			$("#reason_for_cancel").hide();
 			if($("#status").val() == "completed"){
 				$('#vehicle').prop("disabled", false); 
 				$('#plate_number').prop("disabled", false); 
@@ -326,6 +334,10 @@
 				$('#driver_name').prop("disabled", true); 
 				$('#driver_phone_number').prop("disabled", true); 
 				$('#received_by').prop("disabled", true); 
+				$("#reason_for_cancel").hide();
+				if($("#status").val() == "cancel"){
+					$("#reason_for_cancel").show();
+				}
 			}
 
 			$('#status').on('change', function() {
@@ -341,6 +353,10 @@
 					$('#driver_name').prop("disabled", true); 
 					$('#driver_phone_number').prop("disabled", true); 
 					$('#received_by').prop("disabled", true); 
+					$("#reason_for_cancel").hide();
+					if($("#status").val() == "cancel"){
+						$("#reason_for_cancel").show();
+					}
 				}
 			});
 
