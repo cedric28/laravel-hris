@@ -220,11 +220,16 @@ class DeliveryRequestController extends Controller
                 if ($delivery->status === "completed") {
                     $id = $delivery->id;
                     $deliveryItems = DeliveryRequestItem::where("delivery_request_id", $id)->get();
-                    $totalReceivedQty = $deliveryItems->sum('received_qty');
-                    $totalDefectivedQty = $deliveryItems->sum('defectived_qty');
-                    if ($totalReceivedQty <= 0 && $totalDefectivedQty <= 0) {
-                        return back()->with('delete', 'Please Update Received and Defective Quantity or Add Product before changing the status to COMPLETED');
+                    foreach ($deliveryItems as $key => $value) {
+                        if ($value->received_qty <= 0 && $value->defectived_qty <= 0) {
+                            return back()->with('delete', 'Please Update Received and Defective Quantity or Add Product before changing the status to COMPLETED');
+                        }
                     }
+                    // $totalReceivedQty = $deliveryItems->sum('received_qty');
+                    // $totalDefectivedQty = $deliveryItems->sum('defectived_qty');
+                    // if ($totalReceivedQty <= 0 && $totalDefectivedQty <= 0) {
+                    //     return back()->with('delete', 'Please Update Received and Defective Quantity or Add Product before changing the status to COMPLETED');
+                    // }
 
                     foreach ($deliveryItems as $key => $value) {
                         if ($value->received_qty > 0) {
