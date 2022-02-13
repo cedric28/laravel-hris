@@ -507,6 +507,7 @@
                     success:function(data)
                     {
 						if(data.status == 'error'){
+							console.log(data.responseJSON);
 							$('#generalError').text(data.message);
 							$('#receivedQtyError').text("");
 							$('#defectivedQtyError').text("");
@@ -522,15 +523,16 @@
 						}			
                     },
 					error:function(err){
-						console.log(err)
 						if(err.responseJSON){
 							let receivedMessage = err.responseJSON.data.received_qty ? err.responseJSON.data.received_qty : "";
 							let defectivedMessage = err.responseJSON.data.defectived_qty ? err.responseJSON.data.defectived_qty : "";
 							let expiredMessage = err.responseJSON.data.expired_at ? err.responseJSON.data.expired_at : "";
+							let generalMessage = err.responseJSON.data.note ? err.responseJSON.data.note : "";
 							$('#receivedQtyError').text(receivedMessage);
 							$('#defectivedQtyError').text(defectivedMessage);
 							$('#expiredAtError').text(expiredMessage);
-							$('#generalError').text("");
+							$('#generalError').text(generalMessage);
+							$('#edit_button').text('Save');
 						}
 					}
                 })

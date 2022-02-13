@@ -350,8 +350,7 @@ class DeliveryRequestController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'data' => $validator->errors(),
-                    'message' => ''
+                    'data' => $validator->errors()
                 ], 422);
             }
 
