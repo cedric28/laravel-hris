@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Yearly Sales</title>
+	<title>Delivery Schedule Report</title>
 <style>
 	@import url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,900,700,500,300,100);
 *{
