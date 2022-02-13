@@ -39,7 +39,7 @@ class PDFController extends Controller
             $sales = $sales->whereYear('created_at', '<=', $request->end_date);
         }
 
-        $sales = $sales->latest()->paginate(10);
+        $sales = $sales->latest()->get();
 
         $totalAmountDue = $sales->sum('total_amount_due');
         $totalDiscount = $sales->sum('total_discount');
@@ -79,7 +79,7 @@ class PDFController extends Controller
             $sales = $sales->whereYear('created_at', '<=', $yearNow);
         }
 
-        $sales = $sales->latest()->paginate(10);
+        $sales = $sales->latest()->get();
 
         $totalAmountDue = $sales->sum('total_amount_due');
         $totalDiscount = $sales->sum('total_discount');
@@ -123,7 +123,7 @@ class PDFController extends Controller
             $q->where("status", "=", "completed");
         });
 
-        $deliveries = $deliveries->latest()->paginate(10);
+        $deliveries = $deliveries->latest()->get();
 
         view()->share('deliveries', $deliveries);
         $pdf = \PDF::loadView('pdf.stock_medical_goods', $deliveries);
@@ -134,6 +134,13 @@ class PDFController extends Controller
     public function generateDeliverySchedule(Request $request)
     {
         $deliveries = new DeliveryRequest();
+        $deliveries = $deliveries->whereBetween(
+            'delivery_at',
+            [
+                Carbon::now()->format('Y-m-d'),
+                Carbon::now()->addDays(7)->format('Y-m-d')
+            ]
+        )->orderBy('supplier_id', 'asc');
 
         if ($request->start_date) {
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
@@ -142,7 +149,7 @@ class PDFController extends Controller
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-        $deliveries = $deliveries->latest()->paginate(10);
+        $deliveries = $deliveries->oldest()->get();
         view()->share('deliveries', $deliveries);
 
         $pdf = \PDF::loadView('pdf.delivery_schedule', $deliveries);
@@ -161,7 +168,7 @@ class PDFController extends Controller
             $customerPoint = $customerPoint->whereDate('created_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-        $customerPoint = $customerPoint->latest()->paginate(10);
+        $customerPoint = $customerPoint->latest()->get();
 
         view()->share('customerPoint', $customerPoint);
         $pdf = \PDF::loadView('pdf.customer_discounts', $customerPoint);
@@ -171,8 +178,15 @@ class PDFController extends Controller
 
     public function generateDailyPreventive(Request $request)
     {
-        $deliveries = new Stock();
-        $deliveries = $deliveries->where('expired_at', '<=', Carbon::now()->addDays(7)->format('Y-m-d'));
+        $deliveries = new DeliveryRequestItem();
+        $deliveries = $deliveries->whereBetween(
+            'expired_at',
+            [
+                Carbon::now()->format('Y-m-d'),
+                Carbon::now()->addDays(7)->format('Y-m-d')
+            ]
+        )->orderBy('expired_at', 'asc');
+
         if ($request->start_date) {
             $search = $request->start_date;
 
@@ -185,7 +199,11 @@ class PDFController extends Controller
             $deliveries = $deliveries->with('product')->whereDate('expired_at', '<=', Carbon::parse($search)->format('Y-m-d'));
         }
 
-        $deliveries = $deliveries->latest()->paginate(10);
+        $deliveries->whereHas("delivery_request", function ($q) {
+            $q->where('status', '=', 'completed');
+        });
+
+        $deliveries = $deliveries->get();
 
         view()->share('deliveries', $deliveries);
         $pdf = \PDF::loadView('pdf.daily_preventive', $deliveries);
@@ -213,7 +231,7 @@ class PDFController extends Controller
             });
         }
 
-        $returnStocks = $returnStocks->latest()->paginate(10);
+        $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
 
         view()->share('returnStocks', $returnStocks);
         $pdf = \PDF::loadView('pdf.return_products', $returnStocks);

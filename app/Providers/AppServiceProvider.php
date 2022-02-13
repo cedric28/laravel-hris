@@ -31,17 +31,29 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $stocks = new DeliveryRequestItem();
-        $stockNearToExpire = $stocks->where('expired_at', '<=', Carbon::now()->addDays(7)->format('Y-m-d'))
+        $stocks = $stocks->whereBetween(
+            'expired_at',
+            [
+                Carbon::now()->format('Y-m-d'),
+                Carbon::now()->addDays(7)->format('Y-m-d')
+            ]
+        )
             ->whereHas("delivery_request", function ($q) {
                 $q->where("status", "=", "completed");
             })
             ->count();
 
         $deliveries = new DeliveryRequest();
-        $totalDeliveries = $deliveries->where('delivery_at', '<=', Carbon::now()->addDays(7)->format('Y-m-d'))->where('status', 'pending')->count();
-        $totalNotification = $totalDeliveries + $stockNearToExpire;
+        $totalDeliveries = $deliveries->whereBetween(
+            'delivery_at',
+            [
+                Carbon::now()->format('Y-m-d'),
+                Carbon::now()->addDays(7)->format('Y-m-d')
+            ]
+        )->where('status', 'pending')->count();
+        $totalNotification = $totalDeliveries + $stocks;
         View::share([
-            'expiredProducts' => $stockNearToExpire,
+            'expiredProducts' => $stocks,
             'totalDeliveries' => $totalDeliveries,
             'totalNotification' => $totalNotification
 

@@ -305,7 +305,7 @@ footer {
                         <th>Supplier Name</th>
                         <th>Product Name</th>
                         <th>Qty</th>
-                        <th>Delivery Date</th>
+                        <th>Date Returned</th>
                     </tr>
 				</tr>
 			</thead>

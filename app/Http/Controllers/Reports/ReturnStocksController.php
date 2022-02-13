@@ -27,26 +27,27 @@ class ReturnStocksController extends Controller
         }
 
         $returnStocks = new ReturnStockItem();
-      
-        if($request->start_date) {
+
+        if ($request->start_date) {
             $search = $request->start_date;
-           
-            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function($q) use ($search) {
+
+            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function ($q) use ($search) {
                 $q->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
             });
         }
 
-        if($request->end_date) {
+        if ($request->end_date) {
             $search = $request->end_date;
-           
-            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function($q) use ($search) {
+
+            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function ($q) use ($search) {
                 $q->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
             });
         }
-        
-        $returnStocks = $returnStocks->latest()->paginate(10);
 
-        return view("reports.return_products",[
+        $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->paginate(10);
+
+
+        return view("reports.return_products", [
             'returnStocks' => $returnStocks
         ]);
     }

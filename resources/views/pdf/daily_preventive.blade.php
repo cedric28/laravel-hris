@@ -311,7 +311,7 @@ footer {
         @foreach ($deliveries as $stock)
           <tr>
               <td>{{ $stock->product->product_name }}</td>
-              <td>{{$stock->qty }}</td>
+              <td>{{$stock->received_qty }}</td>
               <td>{{ $stock->expired_at }}</td>
           </tr>
         @endforeach
