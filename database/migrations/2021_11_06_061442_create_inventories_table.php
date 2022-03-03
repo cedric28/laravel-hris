@@ -15,7 +15,12 @@ class CreateInventoriesTable extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id')->unsigned()->index();
+            $table->string("product_name")->unique();
+            $table->string("generic_name");
+            $table->string("sku")->unique();
+            $table->longText("content");
+            $table->longText("image")->nullable();
+            $table->integer('supplier_id')->unsigned()->index();
             $table->decimal('original_price', 8, 2)->default(0);
             $table->decimal('selling_price', 8, 2)->default(0);
             $table->integer('quantity');

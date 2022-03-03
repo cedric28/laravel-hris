@@ -45,13 +45,6 @@
 									</div>
 								</div>
 
-                                <div class="form-group row">
-									<label class="col-form-label col-lg-3">Notes:</label>
-									<div class="col-lg-9">
-										<textarea rows="3" cols="3" name="content" class="@error('content') is-invalid @enderror form-control" placeholder="Content"></textarea>
-									</div>
-								</div>
-
                                 <!-- Date -->
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Date Returned:</label>
@@ -94,6 +87,36 @@
 	<!-- Javascript -->
 	<!-- Vendors -->
 	<script>
+		$(document).ready(function(){
+			let row_number = {{ count(old('products', [''])) }};
+			$("#add_row").click(function(e){
+				e.preventDefault();
+				let new_row_number = row_number - 1;
+				$('#product' + row_number).html($('#product' + new_row_number).html()).find('td:first-child');
+				$('#products_table').append('<tr id="product' + (row_number + 1) + '"></tr>');
+				row_number++;
+			});
+			$(document).on('click',"#delete_row", function(e)
+    		{
+				e.preventDefault();
+				if(row_number > 1){
+					
+					$(this).closest('tr').remove();
+					// $("#product" + (row_number - 1)).html('');
+					// $(this).closest("tbody").find("#product" + (row_number - 1)).html('');
+					// row_number--;
+				}
+    		});
+			// $("#delete_row").click(function(e){
+			// 	e.preventDefault();
+			// 	if(row_number > 1){
+			// 	// 	console.log(row_number);
+			// 		$("#product" + (row_number - 1)).html('');
+			// 		row_number--;
+					
+			// 	}
+			// });
+		});
 		$(function () {
             $('.select2').select2()
 

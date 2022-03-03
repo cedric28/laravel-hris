@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Inventory;
 use App\InventoryAdjustment;
 use App\InventoryLevel;
+use App\SaleItem;
 
 class InventoryFetchController extends Controller
 {
@@ -41,11 +42,9 @@ class InventoryFetchController extends Controller
 		if(empty($request->input('search.value'))){
 			//get all the inventory data
             $posts = DB::table('inventories')
-                        ->leftJoin('products', 'inventories.product_id', '=', 'products.id')
-                        ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'products.id')
+                        ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
                         ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
-                        ->select('inventories.*', 'products.product_name','products.generic_name',
-                        'products.content','categories.category_name')
+                        ->select('inventories.*','categories.category_name')
                         ->offset($start)
                         ->limit($limit)
                         ->orderBy($order,$dir)
@@ -53,28 +52,24 @@ class InventoryFetchController extends Controller
 			
 			//total number of filtered data
 			$totalFiltered = DB::table('inventories')
-                                ->leftJoin('products', 'inventories.product_id', '=', 'products.id')
-                                ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'products.id')
+                                ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
                                 ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
-                                ->select('inventories.*', 'products.product_name','products.generic_name',
-                                'products.content','categories.category_name')
+                                ->select('inventories.*','categories.category_name')
                                 ->count();
 		}else{
             $search = $request->input('search.value');
             
 			$posts = DB::table('inventories')
-                        ->leftJoin('products', 'inventories.product_id', '=', 'products.id')
-                        ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'products.id')
+                        ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
                         ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
-                        ->select('inventories.*', 'products.product_name','products.generic_name',
-                        'products.content','categories.category_name')
+                        ->select('inventories.*','categories.category_name')
                         ->orWhere('inventories.original_price','like',"%{$search}%")
                         ->orWhere('inventories.selling_price','like',"%{$search}%")
                         ->orWhere('inventories.quantity','like',"%{$search}%")
                         ->orWhere('inventories.created_at','like',"%{$search}%")
-                        ->orWhere('products.product_name','like',"%{$search}%")
-                        ->orWhere('products.generic_name','like',"%{$search}%")
-                        ->orWhere('products.content','like',"%{$search}%")
+                        ->orWhere('inventories.product_name','like',"%{$search}%")
+                        ->orWhere('inventories.generic_name','like',"%{$search}%")
+                        ->orWhere('inventories.content','like',"%{$search}%")
                         ->orWhere('categories.category_name','like',"%{$search}%")
                         ->offset($start)
                         ->limit($limit)
@@ -83,18 +78,16 @@ class InventoryFetchController extends Controller
 
 			//total number of filtered data matching the search value request in the product table	
             $totalFiltered = DB::table('inventories')
-                            ->leftJoin('products', 'inventories.product_id', '=', 'products.id')
-                            ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'products.id')
+                            ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
                             ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
-                            ->select('inventories.*', 'products.product_name','products.generic_name',
-                            'products.content','categories.category_name')
+                            ->select('inventories.*','categories.category_name')
                             ->orWhere('inventories.original_price','like',"%{$search}%")
                             ->orWhere('inventories.selling_price','like',"%{$search}%")
                             ->orWhere('inventories.quantity','like',"%{$search}%")
                             ->orWhere('inventories.created_at','like',"%{$search}%")
-                            ->orWhere('products.product_name','like',"%{$search}%")
-                            ->orWhere('products.generic_name','like',"%{$search}%")
-                            ->orWhere('products.content','like',"%{$search}%")
+                            ->orWhere('inventories.product_name','like',"%{$search}%")
+                            ->orWhere('inventories.generic_name','like',"%{$search}%")
+                            ->orWhere('inventories.content','like',"%{$search}%")
                             ->orWhere('categories.category_name','like',"%{$search}%")
 							->count();
 		}		
@@ -146,11 +139,9 @@ class InventoryFetchController extends Controller
     public function fetchInventoryProducts(){
         try {
             $inventories = DB::table('inventories')
-                                ->leftJoin('products', 'inventories.product_id', '=', 'products.id')
-                                ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'products.id')
+                                ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
                                 ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
-                                ->select('inventories.*', 'products.product_name','products.sku', 'products.generic_name',
-                                'products.content','categories.category_name')
+                                ->select('inventories.*','categories.category_name')
                                 ->where('inventories.quantity','>',0)
                                 ->get();
 
@@ -193,9 +184,8 @@ class InventoryFetchController extends Controller
 			//get all the inventory data
             $posts = DB::table('inventory_adjustments')
                         ->leftJoin('inventories','inventory_adjustments.inventory_id','=','inventories.id')
-                        ->leftJoin('products','inventories.product_id','=','products.id')
                         ->leftJoin('inventory_adjustment_types','inventory_adjustments.inventory_adjustment_type_id','=','inventory_adjustment_types.id')
-                        ->select('inventory_adjustments.*', 'products.product_name','inventory_adjustment_types.type')
+                        ->select('inventory_adjustments.*', 'inventories.product_name','inventory_adjustment_types.type')
                         ->offset($start)
                         ->limit($limit)
                         ->orderBy($order,$dir)
@@ -204,19 +194,17 @@ class InventoryFetchController extends Controller
 			//total number of filtered data
 			$totalFiltered =  DB::table('inventory_adjustments')
                                 ->leftJoin('inventories','inventory_adjustments.inventory_id','=','inventories.id')
-                                ->leftJoin('products','inventories.product_id','=','products.id')
                                 ->leftJoin('inventory_adjustment_types','inventory_adjustments.inventory_adjustment_type_id','=','inventory_adjustment_types.id')
-                                ->select('inventory_adjustments.*', 'products.product_name','inventory_adjustment_types.type')
+                                ->select('inventory_adjustments.*', 'inventories.product_name','inventory_adjustment_types.type')
                                 ->count();
 		}else{
             $search = $request->input('search.value');
             
 			$posts =  DB::table('inventory_adjustments')
                         ->leftJoin('inventories','inventory_adjustments.inventory_id','=','inventories.id')
-                        ->leftJoin('products','inventories.product_id','=','products.id')
                         ->leftJoin('inventory_adjustment_types','inventory_adjustments.inventory_adjustment_type_id','=','inventory_adjustment_types.id')
                         ->select('inventory_adjustments.*', 'products.product_name','inventory_adjustment_types.type')
-                        ->orWhere('products.product_name','like',"%{$search}%")
+                        ->orWhere('inventories.product_name','like',"%{$search}%")
                         ->orWhere('inventory_adjustments.adjusted_quantity','like',"%{$search}%")
                         ->orWhere('inventory_adjustment_types.type','like',"%{$search}%")
                         ->orWhere('inventory_adjustments.reason','like',"%{$search}%")
@@ -229,10 +217,9 @@ class InventoryFetchController extends Controller
 			//total number of filtered data matching the search value request in the product table	
             $totalFiltered = DB::table('inventory_adjustments')
                             ->leftJoin('inventories','inventory_adjustments.inventory_id','=','inventories.id')
-                            ->leftJoin('products','inventories.product_id','=','products.id')
                             ->leftJoin('inventory_adjustment_types','inventory_adjustments.inventory_adjustment_type_id','=','inventory_adjustment_types.id')
                             ->select('inventory_adjustments.*', 'products.product_name','inventory_adjustment_types.type')
-                            ->orWhere('products.product_name','like',"%{$search}%")
+                            ->orWhere('inventories.product_name','like',"%{$search}%")
                             ->orWhere('inventory_adjustments.adjusted_quantity','like',"%{$search}%")
                             ->orWhere('inventory_adjustment_types.type','like',"%{$search}%")
                             ->orWhere('inventory_adjustments.reason','like',"%{$search}%")
@@ -250,6 +237,96 @@ class InventoryFetchController extends Controller
 				$nestedData['adjusted_quantity'] = $r->adjusted_quantity;
 				$nestedData['type'] = $r->type;
 				$nestedData['reason'] = $r->reason;
+				$nestedData['created_at'] = date('d-m-Y',strtotime($r->created_at));
+				$data[] = $nestedData;
+			}
+		}
+		
+		$json_data = array(
+			"draw"			    => intval($request->input('draw')),
+			"recordsTotal"	    => intval($totalData),
+			"recordsFiltered"   => intval($totalFiltered),
+			"data"			    => $data
+		);
+		
+		//return the data in json response
+		return response()->json($json_data);
+    }
+
+    public function getSalesLogs(Request $request)
+    {
+        //column list in the table Prpducts
+        $columns = array(
+			0 => 'product_name',
+			1 => 'quantity',
+			2 => 'price',
+			4 => 'created_at'
+		);
+		
+		//get the total number of data in Inventory table
+		$totalData = SaleItem::count();
+		//total number of data that will show in the datatable default 10
+		$limit = $request->input('length');
+		//start number for pagination ,default 0
+		$start = $request->input('start');
+		//order list of the column
+		$order = $columns[$request->input('order.0.column')];
+		//order by ,default asc 
+		$dir = $request->input('order.0.dir');
+		//check if user search for a value in the inventory datatable
+		if(empty($request->input('search.value'))){
+			//get all the inventory data
+            $posts = DB::table('sale_items')
+                        ->leftJoin('inventories','sale_items.inventory_id','=','inventories.id')
+                        ->select('sale_items.*', 'inventories.product_name')
+                        ->offset($start)
+                        ->limit($limit)
+                        ->orderBy($order,$dir)
+                        ->get();
+			
+			//total number of filtered data
+			$totalFiltered =  DB::table('sale_items')
+                                ->leftJoin('inventories','sale_items.inventory_id','=','inventories.id')
+                                ->select('sale_items.*', 'inventories.product_name')
+                                ->count();
+		}else{
+            $search = $request->input('search.value');
+            
+			$posts =  DB::table('sale_items')
+                        ->leftJoin('inventories','sale_items.inventory_id','=','inventories.id')
+                        ->select('sale_items.*', 'inventories.product_name')
+                        ->orWhere('inventories.product_name','like',"%{$search}%")
+                        ->orWhere('sale_items.quantity','like',"%{$search}%")
+                        ->orWhere('sale_items.price','like',"%{$search}%")
+                        ->orWhere('sale_items.created_at','like',"%{$search}%")
+                        ->offset($start)
+                        ->limit($limit)
+                        ->orderBy($order, $dir)
+                        ->get();
+
+			//total number of filtered data matching the search value request in the product table	
+            $totalFiltered =  DB::table('sale_items')
+                                ->leftJoin('inventories','sale_items.inventory_id','=','inventories.id')
+                                ->select('sale_items.*', 'inventories.product_name')
+                                ->orWhere('inventories.product_name','like',"%{$search}%")
+                                ->orWhere('sale_items.quantity','like',"%{$search}%")
+                                ->orWhere('sale_items.price','like',"%{$search}%")
+                                ->orWhere('sale_items.created_at','like',"%{$search}%")
+							    ->count();
+		}		
+					
+		
+		$data = array();
+		
+		if($posts){
+			//loop posts collection to transfer in another array $nestedData
+			foreach($posts as $r){
+                $total_sales_price = $r->price * $r->quantity;
+
+				$nestedData['product_name'] = $r->product_name;
+				$nestedData['quantity'] = $r->quantity;
+				$nestedData['price'] = $r->price;
+				$nestedData['total_sales_price'] = number_format($total_sales_price,2);
 				$nestedData['created_at'] = date('d-m-Y',strtotime($r->created_at));
 				$data[] = $nestedData;
 			}

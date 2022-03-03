@@ -42,13 +42,6 @@
 								</div>
 
                                 <div class="form-group row">
-                                    <label class="col-form-label col-lg-3">Notes</label>
-                                    <div class="col-lg-9">
-                                    <textarea rows="3" cols="3" name="content" class="@error('content') is-invalid @enderror form-control" placeholder="Content">{{ $returnStock->content}}</textarea>
-                                    </div>
-								</div>
-
-                                <div class="form-group row">
 										<label class="col-lg-3 col-form-label">Supplier:</label>
 										<div class="col-lg-9">
 											<select id="role-id" name="supplier_id" class="form-control select2">
@@ -131,9 +124,21 @@
 										<input type="number" name="qty" value="{{ old('qty') }}" class="@error('qty') is-invalid @enderror form-control" placeholder="Quantity" >
 									</div>
 								</div>
+								
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Remark:</label>
+									<div class="col-lg-9">
+										<select id="status" name="remark" class="form-control">
+											<option value="">Select remark</option>
+											@foreach ($itemStatus as $stat)
+												<option value="{{ $stat['status'] }}"{{ ($stat['status'] === old('remark')) ? ' selected' : '' }}>{{ ucwords($stat['status']) }}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
 
 								<div class="form-group row">
-									<label class="col-form-label col-lg-3">Notes:</label>
+									<label class="col-form-label col-lg-3">Other Reason:</label>
 									<div class="col-lg-9">
 										<textarea rows="3" cols="3" name="note" class="@error('note') is-invalid @enderror form-control" placeholder="e.i expired"></textarea>
 									</div>
@@ -151,6 +156,7 @@
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
 												<th>QTY</th>
+												<th>REMARK</th>
 												<th>NOTE</th>
 												<th>Action</th>
 											</tr>
@@ -160,6 +166,7 @@
 												<tr>
 													<td>{{ $returnStockItem->product->product_name }}</td>
 													<td>{{ $returnStockItem->qty }}</td>
+													<td>{{ $returnStockItem->remark }}</td>
 													<td>{{ $returnStockItem->note }}</td>
 													<td>
 														
@@ -246,21 +253,21 @@
                                 "extend": 'csv',
                                 'title' :`Return-Stock-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1,2.3]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' :`Return-Stock-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' :`Return-Stock-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1,2,3]
                                 }
                             }
                         ],
@@ -269,6 +276,7 @@
                 "columns":[
                     {"data":"product_name"},
                     {"data":"qty"},
+					{"data":"remark"},
 					{"data":"note"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],

@@ -16,7 +16,6 @@ class CreateDeliveryRequestsTable extends Migration
         Schema::create('delivery_requests', function (Blueprint $table) {
             $table->id();
             $table->string("reference_no", 50)->unique();
-            $table->longText("content");
             $table->date('delivery_at');
             $table->string("status")->default('pending');
             $table->longText("reason_for_cancel")->nullable();

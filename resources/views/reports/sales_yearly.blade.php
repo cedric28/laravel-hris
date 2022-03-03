@@ -68,9 +68,9 @@
                                         <tr style="text-align:center;">
                                             <th>INVOICE NO</th>
                                             <th>CUSTOMER NAME</th>
-                                            <th>TOTAL PRICE</th>
-                                            <th>TOTAL DISCOUNT</th>
-                                            <th>TOTAL AMOUNT DUE</th>
+                                            <th>(₱) TOTAL PRICE</th>
+                                            <th>(₱) TOTAL DISCOUNT</th>
+                                            <th>(₱) TOTAL AMOUNT DUE</th>
                                             <th>DATE ADDED</th>
                                         </tr>
                                     </thead>
@@ -78,7 +78,7 @@
                                         @foreach ($sales as $sale)
                                         <tr>
                                             <td>{{$sale->or_no}}</td>
-                                            <td>{{$sale->customer_fullname}}</td>
+                                            <td>{{$sale->customer_fullname ? $sale->customer_fullname : '-'}}</td>
                                             <td class="textRight">{{$sale->total_price}}</td>
                                             <td class="textRight">{{$sale->total_discount}}</td>
                                             <td class="textRight">{{$sale->total_amount_due}}</td>

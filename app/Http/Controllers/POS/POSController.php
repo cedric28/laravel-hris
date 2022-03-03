@@ -22,11 +22,9 @@ class POSController extends Controller
     public function index()
     {
         $inventories = DB::table('inventories')
-                        ->leftJoin('products', 'inventories.product_id', '=', 'products.id')
-                        ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'products.id')
+                        ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
                         ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
-                        ->select('inventories.*','products.id as productId' ,'products.sku','products.product_name','products.generic_name',
-                        'products.content','categories.category_name')
+                        ->select('inventories.*', 'inventories.id as productId','categories.category_name')
                         ->get();
         return view("pos.index",[
             'inventories' => $inventories

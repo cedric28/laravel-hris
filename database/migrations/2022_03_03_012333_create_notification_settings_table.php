@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductsTable extends Migration
+class CreateNotificationSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('notification_settings', function (Blueprint $table) {
             $table->id();
-            $table->string("product_name")->unique();
-            $table->string("generic_name");
-            $table->string("sku")->unique();
-            $table->longText("content");
-            $table->longText("image")->nullable();
-            $table->integer('supplier_id')->unsigned()->index();
+            $table->boolean('deliver_schedule_notif')->default(0);
+            $table->boolean('near_expiry_notif')->default(0);
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();
             $table->softDeletes();
@@ -35,6 +31,6 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('notification_settings');
     }
 }

@@ -10,7 +10,7 @@ class DeliveryRequestItem extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'delivery_request_id', 'product_id', 'creator_id','updater_id', 
+        'delivery_request_id', 'product_id','qty', 'creator_id','updater_id', 
     ];
 
     public function delivery_request() {
@@ -18,6 +18,6 @@ class DeliveryRequestItem extends Model
     }
 
     public function product() {
-        return $this->belongsTo(Product::class)->withTrashed();
+        return $this->belongsTo(Inventory::class)->withTrashed();
     }
 }

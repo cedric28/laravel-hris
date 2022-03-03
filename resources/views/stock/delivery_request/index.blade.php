@@ -31,7 +31,6 @@
                                     <tr style="text-align:center;">
                                         <th>REFERENCE NO</th>
                                         <th>SUPPLIER</th>
-                                        <th>NOTES</th>
                                         <th>STATUS</th>
                                         <th>DATE DELIVERED</th>
                                         <th>ACTION</th>
@@ -42,7 +41,6 @@
                                         <tr>
                                             <td>{{ $delivery->reference_no }}</td>
                                             <td>{{ $delivery->supplier->name }}</td>
-                                            <td>{!! $delivery->content !!}</td>
                                             <td>{{ $delivery->status }}</td>
                                             <td>{{ $delivery->delivery_at }}</td>
                                             <td>
@@ -108,13 +106,12 @@
                 "columns":[
                     {"data":"reference_no"},
                     {"data":"name"},
-                    {"data":"content"},
                     {"data":"status"},
                     {"data":"delivery_at"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
                 "columnDefs": [{
-					"targets": [4],   // target column
+					"targets": [3],   // target column
 					"className": "textCenter",
 				}]
             });

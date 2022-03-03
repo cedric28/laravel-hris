@@ -84,6 +84,9 @@ Route::middleware('auth')->group(function () {
     Route::get('product-adjustment-logs', 'Inventory\InventoryController@productAdjustmentLogs')->name('productAdjustmentLogs');
     Route::post('product-adjustment-logs/fetch/q', 'Inventory\InventoryFetchController@getInventoryAdjustmentProducts')->name('getInventoryAdjustmentProducts');
 
+    Route::get('sales-logs', 'Inventory\InventoryController@salesLog')->name('salesLog');
+    Route::post('sales-logs/fetch/q', 'Inventory\InventoryFetchController@getSalesLogs')->name('getSalesLogs');
+
     //Users
     Route::resource('/user', 'User\UserController');
     Route::post('user/{id}/restore', 'User\UserController@restore');
@@ -93,6 +96,7 @@ Route::middleware('auth')->group(function () {
     //Profile
     Route::get('/profile', 'User\ProfileController@viewProfile')->name('user-profile');
     Route::patch('/profile-update', 'User\ProfileController@updateProfile')->name('update-profile');
+    Route::patch('/notification-update', 'User\ProfileController@updateNotification')->name('update-notification');
 
     //Points
     Route::resource('/point', 'Points\PointsController');

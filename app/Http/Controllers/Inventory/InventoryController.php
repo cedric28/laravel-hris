@@ -9,6 +9,10 @@ use App\InventoryLevel;
 use App\Product;
 use App\InventoryAdjustmentType;
 use App\InventoryAdjustment;
+use App\Category;
+use App\Supplier;
+use App\CategoryPerProduct;
+use App\SaleItem;
 use Validator;
 
 class InventoryController extends Controller
@@ -38,9 +42,13 @@ class InventoryController extends Controller
         //prevent other user to access to this page
         $this->authorize("isAdmin");
         $products = Product::all();
+        $categories = Category::all();
+        $suppliers = Supplier::all();
 
          return view("inventory.create",[
-            'products' => $products
+            'products' => $products,
+            'categories' => $categories,
+            'suppliers' => $suppliers
          ]);
     }
 
@@ -63,7 +71,13 @@ class InventoryController extends Controller
                 'lt' => 'The :attribute must be less than Selling price.',
             ];
             $validator = Validator::make($request->all(), [
-                'product_id' => 'required|integer|unique:inventories,product_id',
+                'product_name' => 'required|string|max:50|unique:inventories,product_name',
+                'generic_name' => 'required|string|max:50',
+                'sku' => 'required|numeric|unique:inventories,sku',
+                'content' => 'required|string|max:255',
+                'image' => 'mimes:jpeg,jpg,png,gif|max:10000',
+                'supplier_id' => 'required|integer',
+                'category_id' => 'required|integer',
                 'selling_price' => 'required|numeric|gt:0',
                 'original_price' => 'required|numeric|gt:0|lt:selling_price',
                 'quantity' => 'required|numeric|gt:0'
@@ -76,15 +90,38 @@ class InventoryController extends Controller
             //check current user
             $user = \Auth::user()->id;
             
+            $originalImage= $request->file('image');
+            $photo = time().$originalImage->getClientOriginalName();
+            
             //save data in the inventory table
             $inventory = new Inventory();
-            $inventory->product_id = $request->product_id;
+            // $inventory->product_id = $request->product_id;
+            $inventory->product_name = $request->product_name;
+            $inventory->generic_name = $request->generic_name;
+            $inventory->sku = $request->sku;
+            $inventory->content = $request->content;
+            $inventory->image = $photo;
+            $inventory->supplier_id = $request->supplier_id;
             $inventory->original_price = $request->original_price;
             $inventory->selling_price = $request->selling_price;
             $inventory->quantity = $request->quantity;
             $inventory->creator_id = $user;
             $inventory->updater_id = $user;
-            $inventory->save();
+            if($inventory->save()){
+                $photoPath = public_path('images/'.$inventory->id.'/');
+
+                if (!file_exists($photoPath)) {
+                    mkdir($photoPath, 0777, true);
+                }
+                // create instance
+                $img = \Image::make($originalImage->getRealPath());
+    
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath.$photo);
+            }
+            
+            $inventory->categories()->sync($request->category_id);
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -120,13 +157,18 @@ class InventoryController extends Controller
     public function edit($id)
     {
         $inventory = Inventory::withTrashed()->findOrFail($id);
-        $products = Product::all();
         $inventoryAdjustmentTypes = InventoryAdjustmentType::all();
+        $product_category = CategoryPerProduct::where('product_id',$inventory->id)->pluck('category_id')->all();
+        
+        $categories = Category::all();
+        $suppliers = Supplier::all();
 
         return view('inventory.edit', [
             'inventory' => $inventory,
-            'products' => $products,
-            'inventoryAdjustmentTypes' => $inventoryAdjustmentTypes
+            'inventoryAdjustmentTypes' => $inventoryAdjustmentTypes,
+            'categoryId' => $product_category[0],
+            'categories' => $categories,
+            'suppliers' => $suppliers
         ]);
     }
 
@@ -154,11 +196,17 @@ class InventoryController extends Controller
             //validate the request value
             $messages = [
                 'lt' => 'The :attribute must be less than Selling price.',
-                'product_id.unique' => 'The Product '. $inventory->product->product_name .' has already been taken.',
-                'product_id.required' => 'The Product field is required.'
+                'product_name.unique' => 'The Product '. $inventory->product_name .' has already been taken.',
+                'product_name.required' => 'The Product field is required.'
             ];
             $validator = Validator::make($request->all(), [
-                'product_id' => 'required|integer|unique:inventories,product_id,'.$inventory->id,
+                'product_name' => 'required|string|unique:inventories,product_name,'.$inventory->id,
+                'generic_name' => 'required|string|max:50',
+                'sku' => 'required|numeric|unique:inventories,sku,'.$inventory->id,
+                'content' => 'required|string',
+                'image' => 'mimes:jpeg,jpg,png,gif|max:10000',
+                'category_id' => 'required|integer',
+                'supplier_id' => 'required|integer',
                 'quantity' => 'numeric:gt:0',
                 'selling_price' => 'required|numeric|gt:0',
                 'original_price' => 'required|numeric|gt:0|lt:selling_price',
@@ -172,7 +220,35 @@ class InventoryController extends Controller
             $user = \Auth::user()->id;
 
             //save the update value
-            $inventory->product_id = $request->product_id;
+            $originalImage= $request->file('image');
+            $currentPhoto = $inventory->image;
+            $photo = "";
+            if($originalImage){
+                $photo = time().$originalImage->getClientOriginalName();
+                $productPhoto = public_path('images/'.$inventory->id.'/').$currentPhoto;
+                $photoPath = public_path('images/'.$inventory->id.'/');
+                if (!file_exists($productPhoto)) {
+                    mkdir($photoPath, 0777, true);
+                } else {
+                    @unlink($productPhoto);
+                }
+                // create instance
+                $img = \Image::make($originalImage->getRealPath());
+    
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath.$photo);
+
+            } else {
+                $photo = $currentPhoto;
+            }
+
+            $inventory->product_name = $request->product_name;
+            $inventory->generic_name = $request->generic_name;
+            $inventory->sku = $request->sku;
+            $inventory->content = $request->content;
+            $inventory->image = $photo;
+            $inventory->supplier_id = $request->supplier_id;
             $inventory->selling_price = $request->selling_price;
             $inventory->original_price = $request->original_price;
             $inventory->updater_id = $user;
@@ -222,6 +298,8 @@ class InventoryController extends Controller
             }
 
             $inventory->save();
+
+            $inventory->categories()->sync($request->category_id);
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -252,6 +330,14 @@ class InventoryController extends Controller
         $inventoryAdjustments = InventoryAdjustment::all();
         return view("inventory.history.index",[
             'inventoryAdjustments' => $inventoryAdjustments
+        ]);
+    }
+
+    public function salesLog(Request $request)
+    {
+        $salesLogs = SaleItem::all();
+        return view("inventory.sales_logs.index",[
+            'salesLogs' => $salesLogs
         ]);
     }
 }

@@ -32,7 +32,7 @@
 										<th>POINT NAME</th>
                                         <th>DISCOUNT RATE</th>
                                         <th>POINT TO BE EARN</th>
-                                        <th>PRICE PER POINT</th>
+                                        <th>(₱) PRICE PER POINT</th>
                                         <th>TOTAL NEEDED POINT</th>
 										<th>DATE ADDED</th>
 										<th>ACTION</th>

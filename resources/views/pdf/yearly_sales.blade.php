@@ -304,18 +304,18 @@ footer {
 				<tr class="tabletitle">
 					<th>Invoice No</th>
 					<th>Customer Name</th>
-					<th>Total Price</th>
-					<th>Total Discount</th>
-					<th>Total Amount Due</th>
-          <th>Total Cash Tendered</th>
-          <th>Total Cash Change</th>
+					<th>(₱) Total Price</th>
+					<th>(₱) Total Discount</th>
+					<th>(₱) Total Amount Due</th>
+          <th>(₱) Total Cash Tendered</th>
+          <th>(₱) Total Cash Change</th>
           <th>DATE ADDED</th>
 				</tr>
 			</thead>
             @foreach ($sales as $sale)
             <tr class="list-item">
               <td data-label="Type" class="tableitem">{{ $sale->or_no }}</td>
-              <td data-label="Description" class="tableitem">{{ $sale->customer_fullname }}</td>
+              <td data-label="Description" class="tableitem">{{ $sale->customer_fullname ? $sale->customer_fullname : '-'}}</td>
               <td data-label="Unit Price" class="tableitem">{{ $sale->total_price}}</td>
               <td data-label="Quantity" class="tableitem">{{ $sale->total_discount }}</td>
               <td data-label="Quantity" class="tableitem">{{ $sale->total_amount_due }}</td>
@@ -327,11 +327,11 @@ footer {
             <tr class="list-item total-row">
                 <td>Total Summary:</td>
                 <td></td>
-                <td  class="tableitem">{{ number_format($totalPrice, 2) }}</td>               
-                <td  class="tableitem">{{ number_format($totalDiscount, 2) }}</td>
-                <td  class="tableitem">{{ number_format($totalAmountDue, 2) }}</td>
-                <td  class="tableitem">{{ number_format($totalCashTendered, 2) }}</td>
-                <td  class="tableitem">{{ number_format($totalCashChange, 2 )}}</td>
+                <td  class="tableitem">(₱) {{ number_format($totalPrice, 2) }}</td>               
+                <td  class="tableitem">(₱) {{ number_format($totalDiscount, 2) }}</td>
+                <td  class="tableitem">(₱) {{ number_format($totalAmountDue, 2) }}</td>
+                <td  class="tableitem">(₱) {{ number_format($totalCashTendered, 2) }}</td>
+                <td  class="tableitem">(₱) {{ number_format($totalCashChange, 2 )}}</td>
                 <td></td>
             </tr>
         </table>

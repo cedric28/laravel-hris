@@ -31,7 +31,6 @@
                                     <tr style="text-align:center;">
                                         <th>REFERENCE NO</th>
                                         <th>SUPPLIER</th>
-                                        <th>NOTES</th>
                                         <th>DATE RETURNED</th>
                                         <th>DATE RECEIVED</th>
                                         <th>ACTION</th>
@@ -42,7 +41,6 @@
                                         <tr>
                                             <td>{{ $returnStock->reference_no }}</td>
                                             <td>{{ $returnStock->supplier->name }}</td>
-                                            <td>{!! $returnStock->content !!}</td>
                                             <td>{{ $returnStock->delivery_at }}</td>
                                             <td>{{ $returnStock->received_at }}</td>
                                             <td>
@@ -115,21 +113,21 @@
                                 "extend": 'csv',
                                 'title' :'Return Stock',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' :'Return Stock',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' :'Return Stock',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3]
                                 }
                             }
                         ],
@@ -138,7 +136,6 @@
                 "columns":[
                     {"data":"reference_no"},
                     {"data":"name"},
-                    {"data":"content"},
                     {"data":"delivery_at"},
                     {"data":"received_at"},
                     {"data":"action","searchable":false,"orderable":false}

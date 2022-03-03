@@ -35,7 +35,7 @@
 												<th>REFERENCE NO</th>
 												<th>SUPPLIER</th>
 												<th>PRODUCT NAME</th>
-												<th>QTY</th>
+												<th>REQUESTED QTY</th>
 												<th>RECEIVED QTY</th>
 												<th>DEFECTIVE QTY</th>
 												<th>EXPIRATION DATE</th>

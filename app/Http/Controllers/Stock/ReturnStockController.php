@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\ReturnStock;
 use App\ReturnStockItem;
+use App\Inventory;
 use App\Supplier;
 use App\Product;
 use Carbon\Carbon;
@@ -36,8 +37,16 @@ class ReturnStockController extends Controller
     public function create()
     {
         $suppliers = Supplier::all();
+        $products = Inventory::all();
+        $itemStatus = [
+            ['status' => 'expired'],
+            ['status' => 'damage'],
+            ['status' => 'wrong item']
+        ];
         return view("stock.return.create", [
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
+            'products' => $products,
+            'item_status' => $itemStatus
         ]);
     }
 
@@ -57,7 +66,6 @@ class ReturnStockController extends Controller
         try {
             //validate request value
             $validator = Validator::make($request->all(), [
-                'content' => 'required|string|max:255',
                 'supplier_id' => 'required|integer',
                 'delivery_at' => 'required|string|max:50',
                 'received_at' => 'required|string|max:50',
@@ -73,7 +81,6 @@ class ReturnStockController extends Controller
             //save data in the delivery table
             $returnStock = new ReturnStock();
             $returnStock->reference_no = $this->generateUniqueCode();
-            $returnStock->content = $request->content;
             $returnStock->delivery_at = Carbon::createFromFormat('m/d/Y', $request->delivery_at)->format('Y-m-d');
             $returnStock->received_at = Carbon::createFromFormat('m/d/Y', $request->received_at)->format('Y-m-d');
             $returnStock->supplier_id = $request->supplier_id;
@@ -123,15 +130,21 @@ class ReturnStockController extends Controller
     public function edit($id)
     {
         $returnStock = ReturnStock::withTrashed()->findOrFail($id);
-        $products = Product::all();
+        $products = Inventory::all();
         $suppliers = Supplier::all();
+        $itemStatus = [
+            ['status' => 'expired'],
+            ['status' => 'damage'],
+            ['status' => 'wrong item']
+        ];
         $returnStockItems = ReturnStockItem::where('return_stock_id', $id)->get();
 
         return view('stock.return.edit', [
             'returnStock' => $returnStock,
             'products' => $products,
             'returnStockItems' => $returnStockItems,
-            'suppliers' => $suppliers
+            'suppliers' => $suppliers,
+            'itemStatus' => $itemStatus
         ]);
     }
 
@@ -158,7 +171,6 @@ class ReturnStockController extends Controller
             //validate request value
             $validator = Validator::make($request->all(), [
                 'reference_no' => 'required|string|unique:return_stocks,reference_no,' . $returnStock->id,
-                'content' => 'required|string|max:255',
                 'supplier_id' => 'required|integer',
                 'delivery_at' => 'required|string|max:50',
                 'received_at' => 'required|string|max:50',
@@ -170,7 +182,6 @@ class ReturnStockController extends Controller
 
             //save data in the delivery table
             $returnStock->reference_no = $request->reference_no;
-            $returnStock->content = $request->content;
             $returnStock->delivery_at = Carbon::createFromFormat('m/d/Y', $request->delivery_at)->format('Y-m-d');
             $returnStock->received_at = Carbon::createFromFormat('m/d/Y', $request->received_at)->format('Y-m-d');
             $returnStock->supplier_id = $request->supplier_id;
@@ -222,6 +233,8 @@ class ReturnStockController extends Controller
             //validate request value
             $validator = Validator::make($request->all(), [
                 'product_id' => 'required|integer',
+                'remark' => 'nullable',
+                'note' => 'sometimes|required_without:remark',
                 'qty' => 'required|numeric|gt:0',
             ]);
 
@@ -241,6 +254,8 @@ class ReturnStockController extends Controller
                     'updater_id' => $user
                 ]
             );
+            
+            $stock->remark = $request->remark;
             $stock->note = $request->note;
             $stock->qty += $request->qty;
             $stock->save();

@@ -16,7 +16,6 @@ class CreateReturnStocksTable extends Migration
         Schema::create('return_stocks', function (Blueprint $table) {
             $table->id();
             $table->string("reference_no",50)->unique();
-            $table->longText("content");
             $table->date('received_at');
             $table->date('delivery_at');
             $table->integer('supplier_id')->unsigned()->index();

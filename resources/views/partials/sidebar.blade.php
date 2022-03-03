@@ -57,12 +57,12 @@
                 </p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a href="{{ route('product.index')}}" class="nav-link {{ (request()->is('product*')) ? 'nav-link active' : '' }}">
                         <i class="nav-icon fas fa-prescription-bottle-alt"></i>
                             <p>Product</p>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <a href="{{ route('category.index')}}" class="nav-link {{ (request()->is('category*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-object-ungroup"></i>
@@ -134,6 +134,12 @@
                         <a href="{{ route('productAdjustmentLogs')}}" class="nav-link {{ (request()->is('product-adjustment-logs*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-book"></i>
                             <p>Inventory Adjustment Logs</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('salesLog')}}" class="nav-link {{ (request()->is('sales-logs*')) ? 'nav-link active' : '' }}">
+                            <i class="nav-icon fas fa-book"></i>
+                            <p>Sales Logs</p>
                         </a>
                     </li>
                     <li class="nav-item">

@@ -42,13 +42,6 @@
 								</div>
 
                                 <div class="form-group row">
-                                    <label class="col-form-label col-lg-3">Content</label>
-                                    <div class="col-lg-9">
-                                    <textarea rows="3" cols="3" name="content" class="@error('content') is-invalid @enderror form-control" placeholder="Content">{{ $deliveryRequest->content}}</textarea>
-                                    </div>
-								</div>
-
-                                <div class="form-group row">
 									<label class="col-lg-3 col-form-label">Supplier:</label>
 									<div class="col-lg-9">
 										<select  id="supplier" name="supplier_id" class="form-control select2">
@@ -198,10 +191,11 @@
 										<thead>
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
-												<th>QTY</th>
+												<th>REQUEST QTY</th>
 												<th>RECEIVED QTY</th>
 												<th>DEFECTIVE QTY</th>
 												<th>EXPIRATION DATE</th>
+												<th>REMARK</th>
 												<th>NOTE</th>
 												<th>ACTION</th>
 											</tr>
@@ -209,11 +203,12 @@
 										<tbody>
 											@foreach ($deliveryRequestItem as $stock)
 												<tr>
-													<td>{{ $stock->product->product_name }}</td>
+													<td>{{ $stock->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
 													<td>{{ $stock->received_qty }}</td>
 													<td>{{ $stock->defectived_qty }}</td>
 													<td>{{ $stock->expired_at }}</td>
+													<td>{{ $stock->remark }}</td>
 													<td>{{ $stock->note }}</td>
 													<td>
 														
@@ -396,21 +391,21 @@
                                 "extend": 'csv',
                                 'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5]
+                                    "columns": [0,1,2,3,4,5,6]
                                 }
                             },
                             {
                                 "extend": 'pdf',
 								'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5]
+                                    "columns": [0,1,2,3,4,5,6]
                                 }
                             },
                             {
                                 "extend": 'print',
 								'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5]
+                                    "columns": [0,1,2,3,4,5,6]
                                 }
                             }
                         ],
@@ -422,6 +417,7 @@
 					{"data":"received_qty"},
 					{"data":"defectived_qty"},
 					{"data":"expired_at"},
+					{"data":"remark"},
 					{"data":"note"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],

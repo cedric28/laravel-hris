@@ -340,7 +340,7 @@ footer {
 					<th>SKU</th>
 					<th>Product Name</th>
 					<th>Quantity</th>
-					<th>Unit Price</th>
+					<th>(P) Unit Price</th>
 					<th>Total</th>
 				</tr>
 			</thead>

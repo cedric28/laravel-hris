@@ -11,7 +11,7 @@ class DeliveryRequest extends Model
 
     public function delivery_request_items()
     {
-        return $this->hasMany(DeliveryRequestItem::class,'delivery_request_id')->withTrashed();
+        return $this->belongsToMany(DeliveryRequestItem::class)->withTrashed();
     }
 
     public function supplier() {

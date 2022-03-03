@@ -21,7 +21,7 @@
       	<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
-					<div class="card">
+					<div class="card card-primary card-outline">
 						<div class="card-header">
 							@include('partials.message')
 							@include('partials.errors')
@@ -45,13 +45,6 @@
 									</div>
 								</div>
 
-                                <div class="form-group row">
-									<label class="col-form-label col-lg-3">Note:</label>
-									<div class="col-lg-9">
-										<textarea rows="3" cols="3" name="content" class="@error('content') is-invalid @enderror form-control" placeholder="Content"></textarea>
-									</div>
-								</div>
-
                                 <!-- Date -->
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Date Delivered:</label>
@@ -65,20 +58,57 @@
 									</div>
                                 </div>
 
-								<!-- <div class="form-group row">
-									<label class="col-lg-3 col-form-label">Status:</label>
-									<div class="col-lg-9">
-										<select id="status-id" name="status" class="@error('status') is-invalid @enderror form-control select2">
-											<option value="">Select status</option>
-											@foreach ($deliveryStatus as $stat)
-												<option value="{{ $stat['status'] }}"{{ ($stat['status'] === old('status')) ? ' selected' : '' }}>{{ ucwords($stat['status']) }}</option> 
-											@endforeach
-										</select>
+								<div class="card card-primary">
+									<div class="card-header">
+										Products
 									</div>
-								</div> -->
+
+									<div class="card-body">
+										<table class="table" id="products_table">
+											<thead>
+												<tr>
+													<th>Product</th>
+													<th>Quantity</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach (old('products', ['']) as $index => $oldProduct)
+													<tr id="product{{ $index }}">
+														<td>
+															<select name="products[]" class="form-control">
+																<option value="">-- Select Product --</option>
+																@foreach ($products as $product)
+																	<option value="{{ $product->id }}"{{ $oldProduct == $product->id ? ' selected' : '' }}>
+																		{{ $product->product_name }}
+																	</option>
+																@endforeach
+															</select>
+														</td>
+														<td>
+															<input type="number" name="quantities[]" class="form-control" value="{{ old('quantities.' . $index) ?? '1' }}" />
+														</td>
+														<td>
+															<a id="delete_row" class="btn btn-danger">Delete</a>
+														</td>
+													</tr>
+												@endforeach
+												<tr id="product{{ count(old('products', [''])) }}"></tr>
+											</tbody>
+										</table>
+
+										<div class="row">
+											<div class="col-md-12">
+										
+												<!-- <button id="delete_row" class="btn btn-danger">Delete</button> -->
+											
+												<button id="add_row" class="btn btn-success">+ Add Row</button>
+											</div>
+										</div>
+									</div>
+								</div>
 
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">NEXT <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" class="btn btn-primary">SAVE <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</div>
 						</div>
@@ -94,6 +124,38 @@
 	<!-- Javascript -->
 	<!-- Vendors -->
 	<script>
+		$(document).ready(function(){
+			let row_number = {{ count(old('products', [''])) }};
+			$("#add_row").click(function(e){
+				e.preventDefault();
+				let new_row_number = row_number - 1;
+				$('#product' + row_number).html($('#product' + new_row_number).html()).find('td:first-child');
+				$('#products_table').append('<tr id="product' + (row_number + 1) + '"></tr>');
+				row_number++;
+			});
+			$(document).on('click',"#delete_row", function(e)
+    		{
+				e.preventDefault();
+				if(row_number > 1){
+					
+					$(this).closest('tr').remove();
+					// $("#product" + (row_number - 1)).html('');
+					// $(this).closest("tbody").find("#product" + (row_number - 1)).html('');
+					// row_number--;
+				}
+    		});
+			// $("#delete_row").click(function(e){
+			// 	e.preventDefault();
+			// 	if(row_number > 1){
+			// 	// 	console.log(row_number);
+			// 		$("#product" + (row_number - 1)).html('');
+			// 		row_number--;
+					
+			// 	}
+			// });
+		});
+
+		
 		$(function () {
             $('.select2').select2()
 

@@ -125,8 +125,8 @@ class StockFetchController extends Controller
 			//get all the Stock data
 			$posts = DB::table('stocks')
 				->leftJoin('deliveries', 'stocks.delivery_id', '=', 'deliveries.id')
-				->leftJoin('products', 'stocks.product_id', '=', 'products.id')
-				->select('stocks.*', 'products.product_name', 'deliveries.reference_no', 'deliveries.received_by')
+				->leftJoin('inventories', 'stocks.product_id', '=', 'inventories.id')
+				->select('stocks.*', 'inventories.product_name', 'deliveries.reference_no', 'deliveries.received_by')
 				->where([
 					['stocks.delivery_id', $delivery_id],
 					['stocks.deleted_at', '=', null]
@@ -139,8 +139,8 @@ class StockFetchController extends Controller
 			//total number of filtered data
 			$totalFiltered = DB::table('stocks')
 				->leftJoin('deliveries', 'stocks.delivery_id', '=', 'deliveries.id')
-				->leftJoin('products', 'stocks.product_id', '=', 'products.id')
-				->select('stocks.*', 'products.product_name', 'deliveries.reference_no', 'deliveries.received_by')
+				->leftJoin('inventories', 'stocks.product_id', '=', 'inventories.id')
+				->select('stocks.*', 'inventories.product_name', 'deliveries.reference_no', 'deliveries.received_by')
 				->where([
 					['stocks.delivery_id', $delivery_id],
 					['stocks.deleted_at', '=', null]
@@ -151,11 +151,11 @@ class StockFetchController extends Controller
 
 			$posts = DB::table('stocks')
 				->leftJoin('deliveries', 'stocks.delivery_id', '=', 'deliveries.id')
-				->leftJoin('products', 'stocks.product_id', '=', 'products.id')
-				->select('stocks.*', 'products.product_name', 'deliveries.reference_no', 'deliveries.received_by')
+				->leftJoin('inventories', 'stocks.product_id', '=', 'inventories.id')
+				->select('stocks.*', 'inventories.product_name', 'deliveries.reference_no', 'deliveries.received_by')
 				->orWhere('deliveries.reference_no', 'like', "%{$search}%")
 				->orWhere('deliveries.received_by', 'like', "%{$search}%")
-				->orWhere('products.product_name', 'like', "%{$search}%")
+				->orWhere('inventories.product_name', 'like', "%{$search}%")
 				->orWhere('stocks.qty', 'like', "%{$search}%")
 				->orWhere('stocks.expired_at', 'like', "%{$search}%")
 				->orWhere('deliveries.received_at', 'like', "%{$search}%")
@@ -171,11 +171,11 @@ class StockFetchController extends Controller
 			//total number of filtered data matching the search value request in the Supplier table	
 			$totalFiltered = DB::table('stocks')
 				->leftJoin('deliveries', 'stocks.delivery_id', '=', 'deliveries.id')
-				->leftJoin('products', 'stocks.product_id', '=', 'products.id')
-				->select('stocks.*', 'products.product_name', 'deliveries.reference_no', 'deliveries.received_by')
+				->leftJoin('inventories', 'stocks.product_id', '=', 'inventories.id')
+				->select('stocks.*', 'inventories.product_name', 'deliveries.reference_no', 'deliveries.received_by')
 				->orWhere('deliveries.reference_no', 'like', "%{$search}%")
 				->orWhere('deliveries.received_by', 'like', "%{$search}%")
-				->orWhere('products.product_name', 'like', "%{$search}%")
+				->orWhere('inventories.product_name', 'like', "%{$search}%")
 				->orWhere('stocks.qty', 'like', "%{$search}%")
 				->orWhere('stocks.expired_at', 'like', "%{$search}%")
 				->orWhere('deliveries.received_at', 'like', "%{$search}%")
@@ -246,8 +246,8 @@ class StockFetchController extends Controller
 			$posts = DB::table('delivery_request_items')
 				->leftJoin('delivery_requests', 'delivery_request_items.delivery_request_id', '=', 'delivery_requests.id')
 				->leftJoin('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
-				->leftJoin('products', 'delivery_request_items.product_id', '=', 'products.id')
-				->select('delivery_request_items.*', 'products.product_name', 'delivery_requests.reference_no', 'suppliers.name')
+				->leftJoin('inventories', 'delivery_request_items.product_id', '=', 'inventories.id')
+				->select('delivery_request_items.*', 'inventories.product_name', 'delivery_requests.reference_no', 'suppliers.name')
 				->where([
 					['delivery_request_items.deleted_at', '=', null],
 					['delivery_requests.status', '=', 'completed']
@@ -261,8 +261,8 @@ class StockFetchController extends Controller
 			$totalFiltered = DB::table('delivery_request_items')
 				->leftJoin('delivery_requests', 'delivery_request_items.delivery_request_id', '=', 'delivery_requests.id')
 				->leftJoin('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
-				->leftJoin('products', 'delivery_request_items.product_id', '=', 'products.id')
-				->select('delivery_request_items.*', 'products.product_name', 'delivery_requests.reference_no', 'suppliers.name')
+				->leftJoin('inventories', 'delivery_request_items.product_id', '=', 'inventories.id')
+				->select('delivery_request_items.*', 'inventories.product_name', 'delivery_requests.reference_no', 'suppliers.name')
 				->where([
 					['delivery_request_items.deleted_at', '=', null],
 					['delivery_requests.status', '=', 'completed']
@@ -274,12 +274,12 @@ class StockFetchController extends Controller
 			$posts = DB::table('delivery_request_items')
 				->leftJoin('delivery_requests', 'delivery_request_items.delivery_request_id', '=', 'delivery_requests.id')
 				->leftJoin('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
-				->leftJoin('products', 'delivery_request_items.product_id', '=', 'products.id')
-				->select('delivery_request_items.*', 'products.product_name', 'delivery_requests.reference_no', 'suppliers.name')
+				->leftJoin('inventories', 'delivery_request_items.product_id', '=', 'inventories.id')
+				->select('delivery_request_items.*', 'inventories.product_name', 'delivery_requests.reference_no', 'suppliers.name')
 				->where(function ($query) use ($search) {
 					$query->where('delivery_requests.reference_no', 'like', '%' . $search . '%')
 						->orWhere('suppliers.name', 'like', "%{$search}%")
-						->orWhere('products.product_name', 'like', "%{$search}%")
+						->orWhere('inventories.product_name', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.received_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.defectived_qty', 'like', "%{$search}%")
@@ -299,12 +299,12 @@ class StockFetchController extends Controller
 			$totalFiltered = DB::table('delivery_request_items')
 				->leftJoin('delivery_requests', 'delivery_request_items.delivery_request_id', '=', 'delivery_requests.id')
 				->leftJoin('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
-				->leftJoin('products', 'delivery_request_items.product_id', '=', 'products.id')
-				->select('delivery_request_items.*', 'products.product_name', 'delivery_requests.reference_no', 'suppliers.name')
+				->leftJoin('inventories', 'delivery_request_items.product_id', '=', 'inventories.id')
+				->select('delivery_request_items.*', 'inventories.product_name', 'delivery_requests.reference_no', 'suppliers.name')
 				->where(function ($query) use ($search) {
 					$query->where('delivery_requests.reference_no', 'like', '%' . $search . '%')
 						->orWhere('suppliers.name', 'like', "%{$search}%")
-						->orWhere('products.product_name', 'like', "%{$search}%")
+						->orWhere('inventories.product_name', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.received_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.defectived_qty', 'like', "%{$search}%")
@@ -358,8 +358,9 @@ class StockFetchController extends Controller
 			3 => 'received_qty',
 			4 => 'defectived_qty',
 			5 => 'expired_at',
-			6 => 'note',
-			7 => 'action'
+			6 => 'remark',
+			7 => 'note',
+			8 => 'action'
 		);
 
 		$delivery_request_id = $request->delivery_request_id;
@@ -383,8 +384,8 @@ class StockFetchController extends Controller
 			//get all the Stock data
 			$posts = DB::table('delivery_request_items')
 				->leftJoin('delivery_requests', 'delivery_request_items.delivery_request_id', '=', 'delivery_requests.id')
-				->leftJoin('products', 'delivery_request_items.product_id', '=', 'products.id')
-				->select('delivery_request_items.*', 'products.product_name', 'delivery_requests.reference_no', 'delivery_requests.delivery_at', 'delivery_requests.status')
+				->leftJoin('inventories', 'delivery_request_items.product_id', '=', 'inventories.id')
+				->select('delivery_request_items.*', 'inventories.product_name', 'delivery_requests.reference_no', 'delivery_requests.delivery_at', 'delivery_requests.status')
 				->Where([
 					['delivery_request_items.delivery_request_id', $delivery_request_id],
 					['delivery_request_items.deleted_at', '=', null]
@@ -397,8 +398,8 @@ class StockFetchController extends Controller
 			//total number of filtered data
 			$totalFiltered = DB::table('delivery_request_items')
 				->leftJoin('delivery_requests', 'delivery_request_items.delivery_request_id', '=', 'delivery_requests.id')
-				->leftJoin('products', 'delivery_request_items.product_id', '=', 'products.id')
-				->select('delivery_request_items.*', 'products.product_name', 'delivery_requests.reference_no', 'delivery_requests.delivery_at', 'delivery_requests.status')
+				->leftJoin('inventories', 'delivery_request_items.product_id', '=', 'inventories.id')
+				->select('delivery_request_items.*', 'inventories.product_name', 'delivery_requests.reference_no', 'delivery_requests.delivery_at', 'delivery_requests.status')
 				->Where([
 					['delivery_request_items.delivery_request_id', $delivery_request_id],
 					['delivery_request_items.deleted_at', '=', null]
@@ -409,16 +410,17 @@ class StockFetchController extends Controller
 
 			$posts = DB::table('delivery_request_items')
 				->leftJoin('delivery_requests', 'delivery_request_items.delivery_request_id', '=', 'delivery_requests.id')
-				->leftJoin('products', 'delivery_request_items.product_id', '=', 'products.id')
-				->select('delivery_request_items.*', 'products.product_name', 'delivery_requests.reference_no', 'delivery_requests.delivery_at', 'delivery_requests.status')
+				->leftJoin('inventories', 'delivery_request_items.product_id', '=', 'inventories.id')
+				->select('delivery_request_items.*', 'inventories.product_name', 'delivery_requests.reference_no', 'delivery_requests.delivery_at', 'delivery_requests.status')
 				->where(function ($query) use ($search) {
 					$query->where('delivery_requests.reference_no', 'like', '%' . $search . '%')
 						->orWhere('delivery_requests.reference_no', 'like', "%{$search}%")
-						->orWhere('products.product_name', 'like', "%{$search}%")
+						->orWhere('inventories.product_name', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.received_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.defectived_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.expired_at', 'like', "%{$search}%")
+						->orWhere('delivery_request_items.remark', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.note', 'like', "%{$search}%");
 				})
 				->Where([
@@ -434,16 +436,17 @@ class StockFetchController extends Controller
 			//total number of filtered data matching the search value request in the Supplier table	
 			$totalFiltered = DB::table('delivery_request_items')
 				->leftJoin('delivery_requests', 'delivery_request_items.delivery_request_id', '=', 'delivery_requests.id')
-				->leftJoin('products', 'delivery_request_items.product_id', '=', 'products.id')
-				->select('delivery_request_items.*', 'products.product_name', 'delivery_requests.reference_no', 'delivery_requests.delivery_at', 'delivery_requests.status')
+				->leftJoin('inventories', 'delivery_request_items.product_id', '=', 'inventories.id')
+				->select('delivery_request_items.*', 'inventories.product_name', 'delivery_requests.reference_no', 'delivery_requests.delivery_at', 'delivery_requests.status')
 				->where(function ($query) use ($search) {
 					$query->where('delivery_requests.reference_no', 'like', '%' . $search . '%')
 						->orWhere('delivery_requests.reference_no', 'like', "%{$search}%")
-						->orWhere('products.product_name', 'like', "%{$search}%")
+						->orWhere('inventories.product_name', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.received_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.defectived_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.expired_at', 'like', "%{$search}%")
+						->orWhere('delivery_request_items.remark', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.note', 'like', "%{$search}%");
 				})
 				->Where([
@@ -465,6 +468,7 @@ class StockFetchController extends Controller
 				$nestedData['received_qty'] = $r->received_qty;
 				$nestedData['defectived_qty'] = $r->defectived_qty;
 				$nestedData['expired_at'] = date('m-d-Y', strtotime($r->expired_at));
+				$nestedData['remark'] = $r->remark;
 				$nestedData['note'] = $r->note;
 				if ($r->status != "completed") {
 					$nestedData['action'] = '
@@ -513,10 +517,9 @@ class StockFetchController extends Controller
 		$columns = array(
 			0 => 'reference_no',
 			1 => 'name',
-			2 => 'content',
-			3 => 'status',
-			4 => 'delivery_at',
-			5 => 'action'
+			2 => 'status',
+			3 => 'delivery_at',
+			4 => 'action'
 		);
 
 		//get the total number of data in Product table
@@ -547,7 +550,6 @@ class StockFetchController extends Controller
 				->orWhereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-				->orWhere('content', 'like', "%{$search}%")
 				->orWhere('status', 'like', "%{$search}%")
 				->orWhere('delivery_at', 'like', "%{$search}%")
 				->offset($start)
@@ -560,7 +562,6 @@ class StockFetchController extends Controller
 				->orWhereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-				->orWhere('content', 'like', "%{$search}%")
 				->orWhere('status', 'like', "%{$search}%")
 				->orWhere('delivery_at', 'like', "%{$search}%")
 				->count();
@@ -581,7 +582,6 @@ class StockFetchController extends Controller
 					$status = '<span title="Success" class="badge bg-success">COMPLETED</span>';
 				}
 				$nestedData['reference_no'] = $r->reference_no;
-				$nestedData['content'] = $r->content;
 				$nestedData['name'] = $r->supplier->name;
 				$nestedData['status'] = $status;
 				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
@@ -622,10 +622,11 @@ class StockFetchController extends Controller
 			0 => 'reference_no',
 			1 => 'product_name',
 			2 => 'qty',
-			3 => 'note',
-			4 => 'received_at',
-			5 => 'delivery_at',
-			6 => 'action'
+			4 => 'remark',
+			5 => 'note',
+			6 => 'received_at',
+			7 => 'delivery_at',
+			8 => 'action'
 		);
 
 		$return_stock_id = $request->return_stock_id;
@@ -649,8 +650,8 @@ class StockFetchController extends Controller
 			//get all the Stock data
 			$posts = DB::table('return_stock_items')
 				->leftJoin('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')
-				->leftJoin('products', 'return_stock_items.product_id', '=', 'products.id')
-				->select('return_stock_items.*', 'products.product_name', 'return_stocks.reference_no', 'return_stocks.delivery_at', 'return_stocks.received_at')
+				->leftJoin('inventories', 'return_stock_items.product_id', '=', 'inventories.id')
+				->select('return_stock_items.*', 'inventories.product_name','return_stocks.reference_no','return_stock_items.remark', 'return_stocks.delivery_at', 'return_stocks.received_at')
 				->Where([
 					['return_stock_items.return_stock_id', $return_stock_id],
 					['return_stock_items.deleted_at', '=', null]
@@ -663,8 +664,8 @@ class StockFetchController extends Controller
 			//total number of filtered data
 			$totalFiltered = DB::table('return_stock_items')
 				->leftJoin('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')
-				->leftJoin('products', 'return_stock_items.product_id', '=', 'products.id')
-				->select('return_stock_items.*', 'products.product_name', 'return_stocks.reference_no', 'return_stocks.delivery_at', 'return_stocks.received_at')
+				->leftJoin('inventories', 'return_stock_items.product_id', '=', 'inventories.id')
+				->select('return_stock_items.*', 'inventories.product_name', 'return_stock_items.remark','return_stocks.reference_no', 'return_stocks.delivery_at', 'return_stocks.received_at')
 				->Where([
 					['return_stock_items.return_stock_id', $return_stock_id],
 					['return_stock_items.deleted_at', '=', null]
@@ -675,11 +676,12 @@ class StockFetchController extends Controller
 
 			$posts =  DB::table('return_stock_items')
 				->leftJoin('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')
-				->leftJoin('products', 'return_stock_items.product_id', '=', 'products.id')
-				->select('return_stock_items.*', 'products.product_name', 'return_stocks.reference_no', 'return_stocks.delivery_at', 'return_stocks.received_at')
+				->leftJoin('inventories', 'return_stock_items.product_id', '=', 'inventories.id')
+				->select('return_stock_items.*', 'inventories.product_name','return_stock_items.remark', 'return_stocks.reference_no', 'return_stocks.delivery_at', 'return_stocks.received_at')
 				->where(function ($query) use ($search) {
 					$query->where('return_stocks.reference_no', 'like', '%' . $search . '%')
-						->orWhere('products.product_name', 'like', "%{$search}%")
+						->orWhere('inventories.product_name', 'like', "%{$search}%")
+						->orWhere('return_stock_items.remark', 'like', "%{$search}%")
 						->orWhere('return_stock_items.qty', 'like', "%{$search}%")
 						->orWhere('return_stock_items.note', 'like', "%{$search}%")
 						->orWhere('return_stocks.delivery_at', 'like', "%{$search}%")
@@ -697,11 +699,12 @@ class StockFetchController extends Controller
 			//total number of filtered data matching the search value request in the Supplier table	
 			$totalFiltered = DB::table('return_stock_items')
 				->leftJoin('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')
-				->leftJoin('products', 'return_stock_items.product_id', '=', 'products.id')
-				->select('return_stock_items.*', 'products.product_name', 'return_stocks.reference_no', 'return_stocks.delivery_at', 'return_stocks.received_at')
+				->leftJoin('inventories', 'return_stock_items.product_id', '=', 'inventories.id')
+				->select('return_stock_items.*', 'inventories.product_name','return_stock_items.remark', 'return_stocks.reference_no', 'return_stocks.delivery_at', 'return_stocks.received_at')
 				->where(function ($query) use ($search) {
 					$query->where('return_stocks.reference_no', 'like', '%' . $search . '%')
-						->orWhere('products.product_name', 'like', "%{$search}%")
+						->orWhere('inventories.product_name', 'like', "%{$search}%")
+						->orWhere('return_stock_items.remark', 'like', "%{$search}%")
 						->orWhere('return_stock_items.qty', 'like', "%{$search}%")
 						->orWhere('return_stock_items.note', 'like', "%{$search}%")
 						->orWhere('return_stocks.delivery_at', 'like', "%{$search}%")
@@ -723,6 +726,7 @@ class StockFetchController extends Controller
 				$nestedData['reference_no'] = $r->reference_no;
 				$nestedData['product_name'] = $r->product_name;
 				$nestedData['qty'] = $r->qty;
+				$nestedData['remark'] = ucwords($r->remark);
 				$nestedData['note'] = $r->note;
 				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
 				$nestedData['received_at'] = date('m-d-Y', strtotime($r->received_at));

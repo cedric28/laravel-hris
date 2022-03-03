@@ -33,8 +33,8 @@
                                         <th>GENERIC NAME</th>
                                         <th>DETAILS</th>
                                         <th>CATEGORY</th>
-                                        <th>ORIGINAL PRICE</th>
-                                        <th>SELLING PRICE</th>
+                                        <th>(₱) ORIGINAL PRICE</th>
+                                        <th>(₱) SELLING PRICE</th>
                                         <th>STOCK</th>
                                         <th>STATUS</th>
 										<th>DATE ADDED</th>
@@ -45,10 +45,10 @@
 									@foreach ($inventories as $inventory)
 
 										<tr>
-											<td>{{ $inventory->product->product_name }}</td>
-											<td>{{ $inventory->product->generic_name }}</td>
-                                            <td>{{ $inventory->product->content }}</td>
-                                            <td>{{ $inventory->product->categories[0]->category_name }}</td>
+											<td>{{ $inventory->product_name }}</td>
+											<td>{{ $inventory->generic_name }}</td>
+                                            <td>{{ $inventory->content }}</td>
+                                            <td>{{ $inventory->categories[0]->category_name }}</td>
 											<td>{{ $inventory->original_price }}</td>
                                             <td>{{ $inventory->selling_price }}</td>
 											<td>{{ $inventory->quantity }}</td>
@@ -126,6 +126,7 @@
                     }
                 }
             };
+            
             var table = $('#inventory').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
@@ -180,14 +181,15 @@
                     {"data":"created_at"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
-                "columnDefs": [{
-					"targets": [4,5,6],   // target column
-					"className": "textRight",
-				},
-                {
-					"targets": [8],   // target column
-					"className": "textCenter",
-				}
+                "columnDefs": [
+                    {
+					    "targets": [4,5,6],   // target column
+					    "className": "textRight",
+				    },
+                    {
+					    "targets": [8],   // target column
+					    "className": "textCenter",
+				    }
                 ]
             });
 
@@ -201,8 +203,6 @@
                 window.location.href = 'inventory/'+id+'/edit';
             });
 
-            
-   
             var inventory_id;
             $(document).on('click', '#delete', function(){
                 inventory_id = $(this).attr('data-id');

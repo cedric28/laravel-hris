@@ -10,7 +10,7 @@ class ReturnStockItem extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'return_stock_id', 'product_id', 'qty', 'note', 'creator_id', 'updater_id'
+        'return_stock_id', 'product_id', 'qty', 'creator_id', 'updater_id'
     ];
 
     public function return_stock()
@@ -20,6 +20,6 @@ class ReturnStockItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class)->withTrashed();
+        return $this->belongsTo(Inventory::class)->withTrashed();
     }
 }

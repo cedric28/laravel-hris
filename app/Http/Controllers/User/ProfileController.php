@@ -5,14 +5,19 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator, Hash, DB;
+use App\NotificationSetting;
 
 class ProfileController extends Controller
 {
     public function viewProfile()
     {
         $user = \Auth::user();
-
-        return view('users.editprofile', compact('user'));
+        $notificationSetup = NotificationSetting::withTrashed()->findOrFail(1);
+       
+        return view('users.editprofile', [
+            'user' => $user,
+            "notificationSetup" => $notificationSetup
+        ]);
     }
 
     public function updateProfile(Request $request)
@@ -52,6 +57,35 @@ class ProfileController extends Controller
             \DB::commit();
 
             return back()->with('successMsg','User Data update Successfully');
+
+        } catch(\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function updateNotification(Request $request)
+    {
+        /*
+        | @Begin Transaction
+        |---------------------------------------------*/
+        \DB::beginTransaction();
+
+        try {
+            $user = \Auth::user();
+            
+            $notificationSetup = NotificationSetting::withTrashed()->findOrFail(1);
+            $notificationSetup->deliver_schedule_notif = $request->deliver_schedule_notif ?? 0;
+            $notificationSetup->near_expiry_notif = $request->near_expiry_notif ?? 0;
+            $notificationSetup->updater_id = $user->id;
+            $notificationSetup->save();
+        
+            /*
+            | @End Transaction
+            |---------------------------------------------*/
+            \DB::commit();
+
+            return back()->with('successMsg','Notification update Successfully');
 
         } catch(\Exception $e) {
             \DB::rollback();

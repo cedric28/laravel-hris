@@ -100,9 +100,10 @@
 										<thead>
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
-												<th>QTY</th>
+												<th>REQUEST QTY</th>
 												<th>RECEIVED QTY</th>
 												<th>DEFECTIVE QTY</th>
+												<th>REMARK</th>
 												<th>NOTE</th>
 												<th>EXPIRATION DATE</th>
 											</tr>
@@ -110,10 +111,11 @@
 										<tbody>
 											@foreach ($deliveryRequestItem as $stock)
 												<tr>
-													<td>{{ $stock->product->product_name }}</td>
+													<td>{{ $stock->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
 													<td>{{ $stock->received_qty }}</td>
 													<td>{{ $stock->defectived_qty }}</td>
+													<td>{{ $stock->remark }}</td>
 													<td>{{ $stock->note }}</td>
 													<td>{{ $stock->expired_at }}</td>
 												</tr>
@@ -198,21 +200,21 @@
                                 "extend": 'csv',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5]
+                                    "columns": [0,1,2,3,4,5,6]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5]
+                                    "columns": [0,1,2,3,4,5,6]
                                 }
                             },
                             {
                                 "extend": 'print',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5]
+                                    "columns": [0,1,2,3,4,5,6]
                                 }
                             }
                         ],
@@ -223,6 +225,7 @@
                     {"data":"qty"},
 					{"data":"received_qty"},
 					{"data":"defectived_qty"},
+					{"data":"remark"},
 					{"data":"note"},
 					{"data":"expired_at"}
                 ],
@@ -231,7 +234,7 @@
 					"className": "textRight",
 				},
 				{
-					"targets": [5],   // target column
+					"targets": [6],   // target column
 					"className": "textCenter",
 				}
 				]

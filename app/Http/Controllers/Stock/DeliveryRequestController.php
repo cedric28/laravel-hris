@@ -37,6 +37,7 @@ class DeliveryRequestController extends Controller
     public function create()
     {
         $suppliers = Supplier::all();
+        $products = Inventory::all();
         $deliveryStatus = [
             ['status' => 'cancel'],
             ['status' => 'pending'],
@@ -44,7 +45,8 @@ class DeliveryRequestController extends Controller
         ];
         return view("stock.delivery_request.create", [
             'suppliers' => $suppliers,
-            'deliveryStatus' => $deliveryStatus
+            'deliveryStatus' => $deliveryStatus,
+            'products' => $products
         ]);
     }
 
@@ -62,13 +64,23 @@ class DeliveryRequestController extends Controller
         \DB::beginTransaction();
 
         try {
+
+            $messages = [
+                'supplier_id.required' => 'Please select a Supplier',
+                'products.*.required' => 'Please Add atleast 1 product',
+                'quantities.*.integer' => 'Please set a whole number in quantity field',
+                'quantities.*.gt' => 'The quantity must be greater than 0',
+                'delivery_at.required' => 'Please set delivery date',
+            ];
             //validate request value
             $validator = Validator::make($request->all(), [
-                'content' => 'required|string|max:255',
                 'supplier_id' => 'required|integer',
+                'products.*' => 'required|integer',
+                'products' => 'array',
+                'quantities.*' => 'required|integer|gt:0',
                 // 'status' => 'required|in:cancel,pending,completed',
                 'delivery_at' => 'required|string|max:50',
-            ]);
+            ], $messages);
 
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
@@ -80,19 +92,34 @@ class DeliveryRequestController extends Controller
             //save data in the delivery table
             $delivery = new DeliveryRequest();
             $delivery->reference_no = $this->generateUniqueCode();
-            $delivery->content = $request->content;
-            // $delivery->status = $request->status;
             $delivery->delivery_at = Carbon::createFromFormat('m/d/Y', $request->delivery_at)->format('Y-m-d');
             $delivery->supplier_id = $request->supplier_id;
             $delivery->creator_id = $user;
             $delivery->updater_id = $user;
             $delivery->save();
+
+            $products = $request->input('products', []);
+            $quantities = $request->input('quantities', []);
+            for ($product=0; $product < count($products); $product++) {
+                if ($products[$product] != '') {
+                    $stock = DeliveryRequestItem::firstOrNew([
+                        'delivery_request_id' => $delivery->id,
+                        'product_id' => $products[$product]
+                    ]);
+                    $stock->qty = ($stock->qty + $quantities[$product]);
+                    $stock->note = $request->note ?? '';
+                    $stock->creator_id = $user;
+                    $stock->updater_id = $user;
+                    $stock->save();
+                }
+            }
+    
             /*
             | @End Transaction
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('delivery-request.edit', $delivery->id);
+            return redirect()->route('delivery-request.create')->with('successMsg', 'Successfully create Delivery Request');;
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
@@ -130,7 +157,7 @@ class DeliveryRequestController extends Controller
     public function edit($id)
     {
         $deliveryRequest = DeliveryRequest::withTrashed()->findOrFail($id);
-        $products = Product::all();
+        $products = Inventory::all();
         $suppliers = Supplier::all();
         $deliveryRequestItem = DeliveryRequestItem::where('delivery_request_id', $id)->get();
         $deliveryStatus = [
@@ -171,7 +198,6 @@ class DeliveryRequestController extends Controller
             //validate request value
             $validator = Validator::make($request->all(), [
                 'reference_no' => 'required|string|unique:delivery_requests,reference_no,' . $delivery->id,
-                'content' => 'required|string|max:255',
                 'status' => 'required|in:cancel,pending,completed',
                 'supplier_id' => 'required|integer',
                 'delivery_at' => 'required|string|max:50',
@@ -205,7 +231,6 @@ class DeliveryRequestController extends Controller
             }
             //save data in the delivery table
             $delivery->reference_no = $request->reference_no;
-            $delivery->content = $request->content;
             $delivery->status = $request->status;
             $delivery->received_by = $request->received_by;
             $delivery->vehicle = $request->vehicle;
@@ -360,16 +385,29 @@ class DeliveryRequestController extends Controller
             $deliveryItem = DeliveryRequestItem::findOrFail($request->product_id);
 
             $totalItems = $request->received_qty + $request->defectived_qty;
-
+           
             if ($totalItems > $deliveryItem->qty) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Received and Defective Quantity must be equal to Request Quantity'
                 ], 200);
+            } 
+            
+            $totalIncomplete = $deliveryItem->qty - $totalItems; 
+            $remark = "";
+            if($totalIncomplete){
+                $remark = "Incomplete (".$totalIncomplete.") Product/s";
+            } else {
+                if($request->defectived_qty > 0){
+                    $remark = "Complete Product/s with (".$request->defectived_qty.") defective";
+                } else {
+                    $remark = "Complete Product/s";
+                }
             }
-
+            
             $deliveryItem->received_qty = (int)$request->received_qty;
             $deliveryItem->defectived_qty = (int)$request->defectived_qty;
+            $deliveryItem->remark = $remark;
             $deliveryItem->note = $request->note;
             $deliveryItem->expired_at = Carbon::createFromFormat('m/d/Y', $request->expired_at)->format('Y-m-d');
             $deliveryItem->updater_id = $user;

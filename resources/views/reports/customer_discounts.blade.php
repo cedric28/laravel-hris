@@ -76,7 +76,7 @@
                                             <tr>
                                                 <td>{{$point->name}}</td>
                                                 <td class="textRight">{{$point->total() }}</td>
-                                                <td>{{ $point->created_at }}</td>
+                                                <td class="textCenter">{{ $point->created_at }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

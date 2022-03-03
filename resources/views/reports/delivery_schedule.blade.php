@@ -68,7 +68,6 @@
                                             <tr style="text-align:center;">
                                                 <th>REFERENCE NO</th>
                                                 <th>SUPPLIER</th>
-                                                <th>NOTES</th>
                                                 <th>DATE DELIVERED</th>
                                             </tr>
                                         </thead>
@@ -77,7 +76,6 @@
                                             <tr>
                                                 <td>{{$delivery->reference_no}}</td>
                                                 <td>{{$delivery->supplier->name }}</td>
-                                                <td>{!! $delivery->content !!}</td>
                                                 <td class="textCenter">{{$delivery->delivery_at}}</td>
                                             </tr>
                                             @endforeach

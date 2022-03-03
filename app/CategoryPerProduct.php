@@ -9,8 +9,8 @@ class CategoryPerProduct extends Model
 {
     use SoftDeletes;
 
-    public function product() {
-        return $this->belongsTo(Product::class, 'product_id')->withTrashed();
+    public function inventory() {
+        return $this->belongsTo(Inventory::class, 'inventory_id')->withTrashed();
     }
 
     public function category() {

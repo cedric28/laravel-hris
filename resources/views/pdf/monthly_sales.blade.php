@@ -303,16 +303,16 @@ footer {
 				<tr class="tabletitle">
             <th>Invoice No</th>
             <th>Customer Name</th>
-            <th>Total Price</th>
-            <th>Total Discount</th>
-            <th>Total Amount Due</th>
+            <th>(₱) Total Price</th>
+            <th>(₱) Total Discount</th>
+            <th>(₱) Total Amount Due</th>
             <th>DATE ADDED</th>
         </tr>
 			</thead>
             @foreach ($sales as $sale)
           <tr class="list-item">
                       <td class="tableitem">{{$sale->or_no}}</td>
-                      <td class="tableitem">{{$sale->customer_fullname}}</td>
+                      <td class="tableitem">{{$sale->customer_fullname ? $sale->customer_fullname : '-'}}</td>
                       <td class="tableitem">{{$sale->total_price}}</td>
                       <td class="tableitem">{{$sale->total_discount}}</td>
                       <td class="tableitem">{{$sale->total_amount_due}}</td>
@@ -322,9 +322,9 @@ footer {
             <tr class="list-item total-row">
                 <td>Total Summary:</td>
                 <td></td>
-                <td class="tableitem">{{ number_format($totalPrice, 2) }}</td>
-                <td class="tableitem">{{ number_format($totalDiscount, 2) }}</td>
-                <td class="tableitem">{{ number_format($totalAmountDue, 2) }}</td>                            
+                <td class="tableitem">(₱) {{ number_format($totalPrice, 2) }}</td>
+                <td class="tableitem">(₱) {{ number_format($totalDiscount, 2) }}</td>
+                <td class="tableitem">(₱) {{ number_format($totalAmountDue, 2) }}</td>                            
                 <td></td>
             </tr>
         </table>
