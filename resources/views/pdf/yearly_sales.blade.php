@@ -298,7 +298,7 @@ footer {
     <div id="invoice-bot">
       
       <div id="table">
-        <h2 class="title-table">Yearly Sales</h2>
+        <h2 class="title-table">Yearly Sales Reports</h2>
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">

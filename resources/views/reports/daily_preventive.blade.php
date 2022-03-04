@@ -29,9 +29,10 @@
 						<div class="card-body">
                             <div class="row col-md-12">
                                 <div class="col-md-7">
-                                    <div class="col-md-4">
-                                        <a href="/generate-pdf-daily-preventive?start_date={{request('start_date')}}&end_date={{request('end_date')}}" class="btn btn-danger" id="generateYearlySales">Generate PDF</a>
-                                    </div>
+                                   
+                                    <a href="/generate-pdf-daily-preventive?start_date={{request('start_date')}}&end_date={{request('end_date')}}" class="btn btn-danger" id="generateDailyPreventive">Generate PDF</a>
+                                    <a href="/print-daily-preventive?start_date={{request('start_date')}}&end_date={{request('end_date')}}" class="btn btn-primary" id="printDailyPreventive">Print</a>
+                                    
                                 </div>
                                 <div class="col-md-5">
                                     <form action="{{ route('dailyPreventive')}}">
@@ -93,6 +94,12 @@
     @push('scripts')
 	<!-- Javascript -->
 	<!-- Vendors -->
+    <script src="{{ asset('dist/js/jquery.printPage.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#printDailyPreventive').printPage();
+        });
+    </script>
 	<script>
 		$(function () {
         	//Date picker

@@ -297,7 +297,7 @@ footer {
     
     <div id="invoice-bot">
       <div id="table">
-        <h2 class="title-table">Stock of Medical and HealthCare Goods</h2>
+        <h2 class="title-table">Stock of Medical and HealthCare Goods Reports</h2>
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">

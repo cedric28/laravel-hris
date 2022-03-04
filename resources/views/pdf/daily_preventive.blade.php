@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>DAily Preventive Maintenance Report</title>
+	<title>DAily Preventive Maintenance Reports</title>
 <style>
 	@import url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,900,700,500,300,100);
 *{
@@ -297,7 +297,7 @@ footer {
     
     <div id="invoice-bot">
       <div id="table">
-        <h2 class="title-table">Daily Preventive</h2>
+        <h2 class="title-table">Daily Preventive Reports</h2>
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">

@@ -119,6 +119,14 @@ Route::middleware('auth')->group(function () {
     Route::get('generate-pdf-daily-preventive', 'PDF\PDFController@generateDailyPreventive')->name('generateDailyPreventive');
     Route::get('generate-pdf-return-products', 'PDF\PDFController@generateReturnStocks')->name('generateReturnStocks');
 
+    //PRINT
+    Route::get('print-yearly-sales', 'PDF\PDFController@printSalesYearly')->name('printSalesYearly');
+    Route::get('print-monthly-sales', 'PDF\PDFController@printSalesMonthly')->name('printSalesMonthly');
+    Route::get('print-stocks-medical-goods', 'PDF\PDFController@printStockMedicalGoods')->name('printStockMedicalGoods');
+    Route::get('print-delivery-schedule', 'PDF\PDFController@printDeliverySchedule')->name('printDeliverySchedule');
+    Route::get('print-customer-discount', 'PDF\PDFController@printCustomerDiscount')->name('printCustomerDiscount');
+    Route::get('print-daily-preventive', 'PDF\PDFController@printDailyPreventive')->name('printDailyPreventive');
+    Route::get('print-return-products', 'PDF\PDFController@printReturnStocks')->name('printReturnStocks');
     //Reports
     Route::get('sales-report-yearly', 'Reports\SalesReportController@salesYearly')->name('salesYearly');
     Route::get('sales-report-monthly', 'Reports\SalesReportController@salesMonthly')->name('salesMonthly');

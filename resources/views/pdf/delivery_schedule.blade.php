@@ -297,14 +297,14 @@ footer {
     
     <div id="invoice-bot">
       <div id="table">
-        <h2 class="title-table">Delivery Schedule</h2>
+        <h2 class="title-table">Delivery Schedule Reports</h2>
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">
 					<tr>
             <th>Reference No</th>
             <th>Supplier</th>
-            <th>Notes</th>
+            <th>Status</th>
             <th>Delivery Date</th>
           </tr>
 				</tr>
@@ -313,7 +313,7 @@ footer {
           <tr>
               <td>{{$delivery->reference_no}}</td>
               <td>{{$delivery->supplier->name }}</td>
-              <td>{!! $delivery->content !!}</td>
+              <td>{{ $delivery->status }}</td>
               <td  class="textCenter">{{$delivery->delivery_at}}</td>
           </tr>
         @endforeach
@@ -330,7 +330,9 @@ footer {
     </footer>
   </div><!--End Invoice-->
 </div><!-- End Invoice Holder-->
-  
+
+	<!-- Javascript -->
+	<!-- Vendors -->
   
 
 </body>
