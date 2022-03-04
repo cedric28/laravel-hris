@@ -267,7 +267,7 @@ class InventorySeeder extends Seeder
                     'updater_id' => 1
                 ]);
 
-                $inventoryObj->categories()->sync(1);
+                $inventoryObj->categories()->sync($inventory['category_id']);
 
                 echo $inventoryObj->product_name . ' | ';
 

@@ -37,14 +37,34 @@ class InventoryFetchController extends Controller
 		$order = $columns[$request->input('order.0.column')];
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
-		
+
+       
+	
 		//check if user search for a value in the inventory datatable
 		if(empty($request->input('search.value'))){
+             //search dropdown
+            $productName = $request->input('columns.0.search.value');
+            $genericName = $request->input('columns.1.search.value');
+            $categoryName = $request->input('columns.2.search.value');
+            $details = $request->input('columns.3.search.value');
+            $originalPrice = $request->input('columns.4.search.value');
+            $sellingPrice = $request->input('columns.5.search.value');
+            $stock = $request->input('columns.6.search.value');
+            $status = $request->input('columns.7.search.value');
+            $dateAdded = $request->input('columns.8.search.value');
 			//get all the inventory data
             $posts = DB::table('inventories')
                         ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
                         ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
                         ->select('inventories.*','categories.category_name')
+                        ->orWhere('inventories.product_name','like',"%{$productName}%")
+                        ->orWhere('inventories.generic_name','like',"%{$genericName}%")
+                        ->orWhere('categories.category_name','like',"%{$categoryName}%")
+                        ->orWhere('inventories.content','like',"%{$details}%")
+                        ->orWhere('inventories.original_price','like',"%{$originalPrice}%")
+                        ->orWhere('inventories.selling_price','like',"%{$sellingPrice}%")
+                        ->orWhere('inventories.quantity','like',"%{$stock}%")
+                        ->orWhere('inventories.created_at','like',"%{$dateAdded}%")
                         ->offset($start)
                         ->limit($limit)
                         ->orderBy($order,$dir)
@@ -55,6 +75,14 @@ class InventoryFetchController extends Controller
                                 ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
                                 ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
                                 ->select('inventories.*','categories.category_name')
+                                ->orWhere('inventories.product_name','like',"%{$productName}%")
+                                ->orWhere('inventories.generic_name','like',"%{$genericName}%")
+                                ->orWhere('categories.category_name','like',"%{$categoryName}%")
+                                ->orWhere('inventories.content','like',"%{$details}%")
+                                ->orWhere('inventories.original_price','like',"%{$originalPrice}%")
+                                ->orWhere('inventories.selling_price','like',"%{$sellingPrice}%")
+                                ->orWhere('inventories.quantity','like',"%{$stock}%")
+                                ->orWhere('inventories.created_at','like',"%{$dateAdded}%")
                                 ->count();
 		}else{
             $search = $request->input('search.value');
@@ -129,7 +157,8 @@ class InventoryFetchController extends Controller
 			"draw"			    => intval($request->input('draw')),
 			"recordsTotal"	    => intval($totalData),
 			"recordsFiltered"   => intval($totalFiltered),
-			"data"			    => $data
+			"data"			    => $data,
+            'categoryName' => $categoryName
 		);
 		
 		//return the data in json response

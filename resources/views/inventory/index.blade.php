@@ -31,8 +31,8 @@
 									<tr style="text-align:center;">
 										<th>PRODUCT NAME</th>
                                         <th>GENERIC NAME</th>
-                                        <th>DETAILS</th>
                                         <th>CATEGORY</th>
+                                        <th>DETAILS</th>
                                         <th>(₱) ORIGINAL PRICE</th>
                                         <th>(₱) SELLING PRICE</th>
                                         <th>STOCK</th>
@@ -47,8 +47,8 @@
 										<tr>
 											<td>{{ $inventory->product_name }}</td>
 											<td>{{ $inventory->generic_name }}</td>
-                                            <td>{{ $inventory->content }}</td>
                                             <td>{{ $inventory->categories[0]->category_name }}</td>
+                                            <td>{{ $inventory->content }}</td>
 											<td>{{ $inventory->original_price }}</td>
                                             <td>{{ $inventory->selling_price }}</td>
 											<td>{{ $inventory->quantity }}</td>
@@ -70,6 +70,20 @@
 										</tr>
 									@endforeach
 								</tbody>
+                                <tfoot>
+									<tr style="text-align:center;">
+										<th>PRODUCT NAME</th>
+                                        <th>GENERIC NAME</th>
+                                        <th>DETAILS</th>
+                                        <th>CATEGORY</th>
+                                        <th>(₱) ORIGINAL PRICE</th>
+                                        <th>(₱) SELLING PRICE</th>
+                                        <th>STOCK</th>
+                                        <th>STATUS</th>
+										<th>DATE ADDED</th>
+										<th>ACTION</th>
+									</tr>
+								</tfoot>
 							</table>
 						</div>
 						<!-- /.card-body -->
@@ -167,19 +181,41 @@
                     "url":"<?= route('activeInventory') ?>",
                     "dataType":"json",
                     "type":"POST",
-                    "data":{"_token":"<?= csrf_token() ?>"}
+                    "data": function (d){
+                        d._token = "<?= csrf_token() ?>"
+                    }
+                },
+                initComplete: function () {
+                    this.api().columns().every( function () {
+                        var column = this;
+                        var select = $('<select><option value=""></option></select>')
+                            .appendTo( $(column.footer()).empty() )
+                            .on( 'change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+        
+                                column
+                                    .search( val ? val : '', true, false )
+                                    .draw();
+                            } );
+        
+                        column.data().unique().sort().each( function ( d, j ) {
+                            select.append( '<option value="'+d+'">'+d+'</option>' )
+                        } );
+                    } );
                 },
                 "columns":[
                     {"data":"product_name"},
                     {"data":"generic_name"},
-                    {"data":"content"},
                     {"data":"category_name"},
+                    {"data":"content"},
                     {"data":"original_price"},
                     {"data":"selling_price"},
                     {"data":"quantity"},
                     {"data":"status"},
                     {"data":"created_at"},
-                    {"data":"action","searchable":false,"orderable":false}
+                    {"data":"action","searchable":true,"orderable":false}
                 ],
                 "columnDefs": [
                     {
