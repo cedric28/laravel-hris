@@ -74,6 +74,30 @@ a {
 	width: 110px;
     overflow: hidden;
 }
+
+.header{
+      display:flex;
+      justify-content:space-between;
+      flex-direction:row;
+}
+
+.prepared-by{
+  display: flex;
+  flex-direction: column;
+}
+
+#prepared-name{
+  color: #444;
+  font-size: .9em;
+  font-weight: bold;
+}
+
+#date-created{
+  color: #444;
+  font-size: .9em;
+  font-weight: bold;
+}
+
 .info{
     display: inline-block;
     vertical-align: middle;
@@ -185,6 +209,11 @@ footer {
 }
 
 @media screen and (max-width: 767px) {
+  .header{
+    flex-direction:column;
+    text-align:center;
+  }
+
     h1 {
         font-size: .9em;
     }
@@ -296,7 +325,17 @@ footer {
     </div><!--End InvoiceTop-->
     
     <div id="invoice-bot">
-      
+      <div class="header">
+        <div class="prepared-by">
+          <span id="prepared-name">Prepared By: {{ $fullName }}</span>
+        </div>
+  
+      </div>
+      <div class="header">
+        <div class="prepared-by">
+          <span id="date-created">Date: {{ $dateToday }}</span>
+        </div>
+      </div>
       <div id="table">
         <h2 class="title-table">Yearly Sales Reports</h2>
         <table class="table-main">
@@ -304,11 +343,11 @@ footer {
 				<tr class="tabletitle">
 					<th>Invoice No</th>
 					<th>Customer Name</th>
-					<th>(₱) Total Price</th>
-					<th>(₱) Total Discount</th>
-					<th>(₱) Total Amount Due</th>
-          <th>(₱) Total Cash Tendered</th>
-          <th>(₱) Total Cash Change</th>
+					<th>(P) Total Price</th>
+					<th>(P) Total Discount</th>
+					<th>(P) Total Amount Due</th>
+          <th>(P) Total Cash Tendered</th>
+          <th>(P) Total Cash Change</th>
           <th>DATE ADDED</th>
 				</tr>
 			</thead>
@@ -327,11 +366,11 @@ footer {
             <tr class="list-item total-row">
                 <td>Total Summary:</td>
                 <td></td>
-                <td  class="tableitem">(₱) {{ number_format($totalPrice, 2) }}</td>               
-                <td  class="tableitem">(₱) {{ number_format($totalDiscount, 2) }}</td>
-                <td  class="tableitem">(₱) {{ number_format($totalAmountDue, 2) }}</td>
-                <td  class="tableitem">(₱) {{ number_format($totalCashTendered, 2) }}</td>
-                <td  class="tableitem">(₱) {{ number_format($totalCashChange, 2 )}}</td>
+                <td  class="tableitem">(P) {{ number_format($totalPrice, 2) }}</td>               
+                <td  class="tableitem">(P) {{ number_format($totalDiscount, 2) }}</td>
+                <td  class="tableitem">(P) {{ number_format($totalAmountDue, 2) }}</td>
+                <td  class="tableitem">(P) {{ number_format($totalCashTendered, 2) }}</td>
+                <td  class="tableitem">(P) {{ number_format($totalCashChange, 2 )}}</td>
                 <td></td>
             </tr>
         </table>

@@ -74,6 +74,30 @@ a {
 	width: 110px;
     overflow: hidden;
 }
+
+.header{
+      display:flex;
+      justify-content:space-between;
+      flex-direction:row;
+}
+
+.prepared-by{
+  display: flex;
+  flex-direction: column;
+}
+
+#prepared-name{
+  color: #444;
+  font-size: .9em;
+  font-weight: bold;
+}
+
+#date-created{
+  color: #444;
+  font-size: .9em;
+  font-weight: bold;
+}
+
 .info{
     display: inline-block;
     vertical-align: middle;
@@ -185,6 +209,10 @@ footer {
 }
 
 @media screen and (max-width: 767px) {
+  .header{
+    flex-direction:column;
+    text-align:center;
+  }
     h1 {
         font-size: .9em;
     }
@@ -296,6 +324,17 @@ footer {
     </div><!--End InvoiceTop-->
     
     <div id="invoice-bot">
+      <div class="header">
+        <div class="prepared-by">
+          <span id="prepared-name">Prepared By: {{ $fullName }}</span>
+        </div>
+  
+      </div>
+      <div class="header">
+        <div class="prepared-by">
+          <span id="date-created">Date: {{ $dateToday }}</span>
+        </div>
+      </div>
       <div id="table">
         <h2 class="title-table">Return of Medical Supplies and Product Reports</h2>
         <table class="table-main">

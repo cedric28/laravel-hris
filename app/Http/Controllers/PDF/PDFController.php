@@ -47,6 +47,12 @@ class PDFController extends Controller
         $totalCashChange = $sales->sum('cash_change');
         $totalCashTendered = $sales->sum('cash_tendered');
 
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
         view()->share('sales', $sales);
         $pdf = \PDF::loadView('pdf.yearly_sales', [
             'sales' => $sales,
@@ -54,7 +60,9 @@ class PDFController extends Controller
             'totalDiscount' => $totalDiscount,
             'totalPrice' => $totalPrice,
             'totalCashChange' => $totalCashChange,
-            'totalCashTendered' => $totalCashTendered
+            'totalCashTendered' => $totalCashTendered,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
 
         return $pdf->download("Yearly-Sales-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -79,13 +87,21 @@ class PDFController extends Controller
         $totalCashChange = $sales->sum('cash_change');
         $totalCashTendered = $sales->sum('cash_tendered');
 
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
         return view('pdf.yearly_sales', [
             'sales' => $sales,
             'totalAmountDue' => $totalAmountDue,
             'totalDiscount' => $totalDiscount,
             'totalPrice' => $totalPrice,
             'totalCashChange' => $totalCashChange,
-            'totalCashTendered' => $totalCashTendered
+            'totalCashTendered' => $totalCashTendered,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
     }
 
@@ -115,13 +131,21 @@ class PDFController extends Controller
         $totalPrice = $sales->sum('total_price');
         $totalCashChange = $sales->sum('cash_change');
 
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
         view()->share('sales', $sales);
         $pdf = \PDF::loadView('pdf.monthly_sales', [
             'sales' => $sales,
             'totalAmountDue' => $totalAmountDue,
             'totalDiscount' => $totalDiscount,
             'totalPrice' => $totalPrice,
-            'totalCashChange' => $totalCashChange
+            'totalCashChange' => $totalCashChange,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
 
         return $pdf->download("Monthly-Sales-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -152,13 +176,20 @@ class PDFController extends Controller
         $totalDiscount = $sales->sum('total_discount');
         $totalPrice = $sales->sum('total_price');
         $totalCashChange = $sales->sum('cash_change');
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
         return view('pdf.monthly_sales', [
             'sales' => $sales,
             'totalAmountDue' => $totalAmountDue,
             'totalDiscount' => $totalDiscount,
             'totalPrice' => $totalPrice,
-            'totalCashChange' => $totalCashChange
+            'totalCashChange' => $totalCashChange,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
     }
 
@@ -189,8 +220,22 @@ class PDFController extends Controller
 
         $deliveries = $deliveries->latest()->get();
 
-        view()->share('deliveries', $deliveries);
-        $pdf = \PDF::loadView('pdf.stock_medical_goods', $deliveries);
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        view()->share('deliveries', [
+            "deliveries" => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
+        $pdf = \PDF::loadView('pdf.stock_medical_goods', [
+            "deliveries" => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
 
         return $pdf->download("Stocks-Medical-Goods-" . Carbon::now()->format('m-d-Y') . ".pdf");
     }
@@ -222,8 +267,16 @@ class PDFController extends Controller
 
         $deliveries = $deliveries->latest()->get();
 
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
         return view('pdf.stock_medical_goods', [
-            "deliveries" => $deliveries
+            "deliveries" => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
     }
 
@@ -240,9 +293,24 @@ class PDFController extends Controller
         }
 
         $deliveries = $deliveries->where('status', 'pending')->oldest()->get();
-        view()->share('deliveries', $deliveries);
 
-        $pdf = \PDF::loadView('pdf.delivery_schedule', $deliveries);
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        view()->share('deliveries', [
+            "deliveries" => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
+
+        $pdf = \PDF::loadView('pdf.delivery_schedule', [
+            "deliveries" => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
 
         return $pdf->download("Delivery-Schedule-" . Carbon::now()->format('m-d-Y') . ".pdf");
     }
@@ -261,8 +329,16 @@ class PDFController extends Controller
 
         $deliveries = $deliveries->where('status', 'pending')->oldest()->get();
 
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
         return view("pdf.delivery_schedule",[
-            'deliveries' => $deliveries
+            'deliveries' => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
     }
 
@@ -278,9 +354,22 @@ class PDFController extends Controller
         }
 
         $customerPoint = $customerPoint->latest()->get();
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
 
-        view()->share('customerPoint', $customerPoint);
-        $pdf = \PDF::loadView('pdf.customer_discounts', $customerPoint);
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        view()->share('customerPoint', [
+            "customerPoint" => $customerPoint,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
+        $pdf = \PDF::loadView('pdf.customer_discounts',[
+            "customerPoint" => $customerPoint,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
 
         return $pdf->download("Customer-Discount-" . Carbon::now()->format('m-d-Y') . ".pdf");
     }
@@ -296,10 +385,18 @@ class PDFController extends Controller
             $customerPoint = $customerPoint->whereDate('created_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
+         //check current user
+         $user = \Auth::user();
+         $fullName = $user->last_name.", ". $user->first_name;
+
         $customerPoint = $customerPoint->latest()->get();
 
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
         return view("pdf.customer_discounts",[
-            'customerPoint' => $customerPoint
+            "customerPoint" => $customerPoint,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
     }
 
@@ -326,8 +423,22 @@ class PDFController extends Controller
 
         $deliveries = $deliveries->get();
 
-        view()->share('deliveries', $deliveries);
-        $pdf = \PDF::loadView('pdf.daily_preventive', $deliveries);
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        view()->share('deliveries', [
+            "deliveries" => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
+        $pdf = \PDF::loadView('pdf.daily_preventive', [
+            "deliveries" => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
 
         return $pdf->download("Daily-Preventive-" . Carbon::now()->format('m-d-Y') . ".pdf");
     }
@@ -355,8 +466,16 @@ class PDFController extends Controller
 
         $deliveries = $deliveries->get();
 
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
         return view('pdf.daily_preventive', [
-            "deliveries" => $deliveries
+            "deliveries" => $deliveries,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
     }
 
@@ -382,8 +501,22 @@ class PDFController extends Controller
 
         $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
 
-        view()->share('returnStocks', $returnStocks);
-        $pdf = \PDF::loadView('pdf.return_products', $returnStocks);
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        view()->share('returnStocks', [
+            "returnStocks" => $returnStocks,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
+        $pdf = \PDF::loadView('pdf.return_products', [
+            "returnStocks" => $returnStocks,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
+        ]);
 
         return $pdf->download("Return-Products-Report-" . Carbon::now()->format('m-d-Y') . ".pdf");
     }
@@ -410,8 +543,16 @@ class PDFController extends Controller
 
         $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
 
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name.", ". $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
         return view('pdf.return_products', [
-            "returnStocks" => $returnStocks
+            "returnStocks" => $returnStocks,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName
         ]);
     }
 }
