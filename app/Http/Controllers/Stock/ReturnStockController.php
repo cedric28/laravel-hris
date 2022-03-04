@@ -8,7 +8,6 @@ use App\ReturnStock;
 use App\ReturnStockItem;
 use App\Inventory;
 use App\Supplier;
-use App\Product;
 use Carbon\Carbon;
 use Validator;
 
@@ -109,7 +108,7 @@ class ReturnStockController extends Controller
     public function show($id)
     {
         $returnStock = ReturnStock::withTrashed()->findOrFail($id);
-        $products = Product::all();
+        $products = Inventory::all();
         $suppliers = Supplier::all();
         $returnStockItems = ReturnStockItem::where('return_stock_id', $id)->get();
 
@@ -254,7 +253,7 @@ class ReturnStockController extends Controller
                     'updater_id' => $user
                 ]
             );
-            
+
             $stock->remark = $request->remark;
             $stock->note = $request->note;
             $stock->qty += $request->qty;

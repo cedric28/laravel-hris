@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\DeliveryRequest;
 use App\DeliveryRequestItem;
 use App\Supplier;
-use App\Product;
 use App\Inventory;
 use Carbon\Carbon;
 use Validator;
@@ -100,7 +99,7 @@ class DeliveryRequestController extends Controller
 
             $products = $request->input('products', []);
             $quantities = $request->input('quantities', []);
-            for ($product=0; $product < count($products); $product++) {
+            for ($product = 0; $product < count($products); $product++) {
                 if ($products[$product] != '') {
                     $stock = DeliveryRequestItem::firstOrNew([
                         'delivery_request_id' => $delivery->id,
@@ -113,7 +112,7 @@ class DeliveryRequestController extends Controller
                     $stock->save();
                 }
             }
-    
+
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -136,7 +135,7 @@ class DeliveryRequestController extends Controller
     public function show($id)
     {
         $deliveryRequest = DeliveryRequest::withTrashed()->findOrFail($id);
-        $products = Product::all();
+        $products = Inventory::all();
         $suppliers = Supplier::all();
         $deliveryRequestItem = DeliveryRequestItem::where('delivery_request_id', $id)->get();
 
@@ -385,26 +384,26 @@ class DeliveryRequestController extends Controller
             $deliveryItem = DeliveryRequestItem::findOrFail($request->product_id);
 
             $totalItems = $request->received_qty + $request->defectived_qty;
-           
+
             if ($totalItems > $deliveryItem->qty) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Received and Defective Quantity must be equal to Request Quantity'
                 ], 200);
-            } 
-            
-            $totalIncomplete = $deliveryItem->qty - $totalItems; 
+            }
+
+            $totalIncomplete = $deliveryItem->qty - $totalItems;
             $remark = "";
-            if($totalIncomplete){
-                $remark = "Incomplete (".$totalIncomplete.") Product/s";
+            if ($totalIncomplete) {
+                $remark = "Incomplete (" . $totalIncomplete . ") Product/s";
             } else {
-                if($request->defectived_qty > 0){
-                    $remark = "Complete Product/s with (".$request->defectived_qty.") defective";
+                if ($request->defectived_qty > 0) {
+                    $remark = "Complete Product/s with (" . $request->defectived_qty . ") defective";
                 } else {
                     $remark = "Complete Product/s";
                 }
             }
-            
+
             $deliveryItem->received_qty = (int)$request->received_qty;
             $deliveryItem->defectived_qty = (int)$request->defectived_qty;
             $deliveryItem->remark = $remark;
