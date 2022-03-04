@@ -258,7 +258,7 @@ class DeliveryRequestController extends Controller
                     foreach ($deliveryItems as $key => $value) {
                         if ($value->received_qty > 0) {
                             $inventory = Inventory::firstOrNew([
-                                'product_id' => $value->product_id
+                                'id' => $value->product_id
                             ]);
 
                             $inventory->quantity = ($inventory->quantity + $value->received_qty);;
