@@ -156,7 +156,7 @@ class InventoryController extends Controller
     {
         $inventory = Inventory::withTrashed()->findOrFail($id);
         $inventoryAdjustmentTypes = InventoryAdjustmentType::all();
-        $product_category = CategoryPerInventorywhere('product_id', $inventory->id)->pluck('category_id')->all();
+        $product_category = CategoryPerProduct::where('product_id', $inventory->id)->pluck('category_id')->all();
 
         $categories = Category::all();
         $suppliers = Supplier::all();
