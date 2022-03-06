@@ -49,7 +49,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -89,7 +89,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -133,7 +133,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -178,7 +178,7 @@ class PDFController extends Controller
         $totalCashChange = $sales->sum('cash_change');
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -222,7 +222,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -269,7 +269,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -292,11 +292,11 @@ class PDFController extends Controller
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-        $deliveries = $deliveries->where('status', 'pending')->oldest()->get();
+        $deliveries = $deliveries->orderBy("status", 'desc')->oldest()->get();
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -331,11 +331,11 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
-        return view("pdf.delivery_schedule",[
+        return view("pdf.delivery_schedule", [
             'deliveries' => $deliveries,
             "dateToday" => $dateToday,
             'fullName' => $fullName
@@ -356,7 +356,7 @@ class PDFController extends Controller
         $customerPoint = $customerPoint->latest()->get();
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -365,7 +365,7 @@ class PDFController extends Controller
             "dateToday" => $dateToday,
             'fullName' => $fullName
         ]);
-        $pdf = \PDF::loadView('pdf.customer_discounts',[
+        $pdf = \PDF::loadView('pdf.customer_discounts', [
             "customerPoint" => $customerPoint,
             "dateToday" => $dateToday,
             'fullName' => $fullName
@@ -385,15 +385,15 @@ class PDFController extends Controller
             $customerPoint = $customerPoint->whereDate('created_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-         //check current user
-         $user = \Auth::user();
-         $fullName = $user->last_name.", ". $user->first_name;
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $customerPoint = $customerPoint->latest()->get();
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
-        return view("pdf.customer_discounts",[
+        return view("pdf.customer_discounts", [
             "customerPoint" => $customerPoint,
             "dateToday" => $dateToday,
             'fullName' => $fullName
@@ -425,7 +425,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -468,7 +468,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -503,7 +503,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
@@ -545,7 +545,7 @@ class PDFController extends Controller
 
         //check current user
         $user = \Auth::user();
-        $fullName = $user->last_name.", ". $user->first_name;
+        $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 

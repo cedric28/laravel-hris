@@ -36,7 +36,7 @@ class DeliveryScheduleController extends Controller
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-        $deliveries = $deliveries->where('status', 'pending')->oldest()->paginate(10);
+        $deliveries = $deliveries->orderBy("status", 'desc')->oldest()->paginate(10);
 
         return view("reports.delivery_schedule", [
             'deliveries' => $deliveries
