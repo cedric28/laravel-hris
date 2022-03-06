@@ -8,6 +8,7 @@ use App\Sale;
 use App\Stock;
 use App\DeliveryRequest;
 use App\ReturnStockItem;
+use App\ReturnStock;
 use App\DeliveryRequestItem;
 use App\Customer;
 use Carbon\Carbon;
@@ -220,6 +221,8 @@ class PDFController extends Controller
 
         $deliveries = $deliveries->latest()->get();
 
+        $deliveriesCount = $deliveries->count();
+
         //check current user
         $user = \Auth::user();
         $fullName = $user->last_name . ", " . $user->first_name;
@@ -229,12 +232,14 @@ class PDFController extends Controller
         view()->share('deliveries', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "deliveriesCount" => $deliveriesCount
         ]);
         $pdf = \PDF::loadView('pdf.stock_medical_goods', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "deliveriesCount" => $deliveriesCount
         ]);
 
         return $pdf->download("Stocks-Medical-Goods-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -266,6 +271,7 @@ class PDFController extends Controller
         });
 
         $deliveries = $deliveries->latest()->get();
+        $deliveriesCount = $deliveries->count();
 
         //check current user
         $user = \Auth::user();
@@ -276,7 +282,8 @@ class PDFController extends Controller
         return view('pdf.stock_medical_goods', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "deliveriesCount" => $deliveriesCount
         ]);
     }
 
@@ -293,6 +300,7 @@ class PDFController extends Controller
         }
 
         $deliveries = $deliveries->orderBy("status", 'desc')->oldest()->get();
+        $deliveriesCount = $deliveries->count();
 
         //check current user
         $user = \Auth::user();
@@ -303,13 +311,15 @@ class PDFController extends Controller
         view()->share('deliveries', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            'deliveriesCount' => $deliveriesCount
         ]);
 
         $pdf = \PDF::loadView('pdf.delivery_schedule', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            'deliveriesCount' => $deliveriesCount
         ]);
 
         return $pdf->download("Delivery-Schedule-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -327,7 +337,8 @@ class PDFController extends Controller
             $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-        $deliveries = $deliveries->where('status', 'pending')->oldest()->get();
+        $deliveries = $deliveries->orderBy("status", 'desc')->oldest()->get();
+        $deliveriesCount = $deliveries->count();
 
         //check current user
         $user = \Auth::user();
@@ -338,7 +349,8 @@ class PDFController extends Controller
         return view("pdf.delivery_schedule", [
             'deliveries' => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            'deliveriesCount' => $deliveriesCount
         ]);
     }
 
@@ -354,6 +366,7 @@ class PDFController extends Controller
         }
 
         $customerPoint = $customerPoint->latest()->get();
+        $customerCount = $customerPoint->count();
         //check current user
         $user = \Auth::user();
         $fullName = $user->last_name . ", " . $user->first_name;
@@ -363,12 +376,14 @@ class PDFController extends Controller
         view()->share('customerPoint', [
             "customerPoint" => $customerPoint,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "customerCount" => $customerCount
         ]);
         $pdf = \PDF::loadView('pdf.customer_discounts', [
             "customerPoint" => $customerPoint,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "customerCount" => $customerCount
         ]);
 
         return $pdf->download("Customer-Discount-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -391,12 +406,15 @@ class PDFController extends Controller
 
         $customerPoint = $customerPoint->latest()->get();
 
+        $customerCount = $customerPoint->count();
+
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
         return view("pdf.customer_discounts", [
             "customerPoint" => $customerPoint,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "customerCount" => $customerCount
         ]);
     }
 
@@ -422,6 +440,7 @@ class PDFController extends Controller
         });
 
         $deliveries = $deliveries->get();
+        $deliveriesCount = $deliveries->count();
 
         //check current user
         $user = \Auth::user();
@@ -432,12 +451,14 @@ class PDFController extends Controller
         view()->share('deliveries', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "deliveriesCount" => $deliveriesCount
         ]);
         $pdf = \PDF::loadView('pdf.daily_preventive', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "deliveriesCount" => $deliveriesCount
         ]);
 
         return $pdf->download("Daily-Preventive-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -465,6 +486,7 @@ class PDFController extends Controller
         });
 
         $deliveries = $deliveries->get();
+        $deliveriesCount = $deliveries->count();
 
         //check current user
         $user = \Auth::user();
@@ -475,31 +497,30 @@ class PDFController extends Controller
         return view('pdf.daily_preventive', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "deliveriesCount" => $deliveriesCount
         ]);
     }
 
     public function generateReturnStocks(Request $request)
     {
-        $returnStocks = new ReturnStockItem();
+        $returnStocks = new ReturnStock();
 
         if ($request->start_date) {
             $search = $request->start_date;
 
-            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
-            });
+            $returnStocks = $returnStocks->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
         }
 
         if ($request->end_date) {
             $search = $request->end_date;
 
-            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
-            });
+            $returnStocks = $returnStocks->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
         }
 
-        $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
+        // $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
+        $returnStocks = $returnStocks->oldest()->get();
+        $returnCount = $returnStocks->count();
 
         //check current user
         $user = \Auth::user();
@@ -510,12 +531,14 @@ class PDFController extends Controller
         view()->share('returnStocks', [
             "returnStocks" => $returnStocks,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "returnCount" => $returnCount
         ]);
         $pdf = \PDF::loadView('pdf.return_products', [
             "returnStocks" => $returnStocks,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "returnCount" => $returnCount
         ]);
 
         return $pdf->download("Return-Products-Report-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -523,25 +546,23 @@ class PDFController extends Controller
 
     public function printReturnStocks(Request $request)
     {
-        $returnStocks = new ReturnStockItem();
+        $returnStocks = new ReturnStock();
 
         if ($request->start_date) {
             $search = $request->start_date;
 
-            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
-            });
+            $returnStocks = $returnStocks->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
         }
 
         if ($request->end_date) {
             $search = $request->end_date;
 
-            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
-            });
+            $returnStocks = $returnStocks->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
         }
 
-        $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
+        // $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
+        $returnStocks = $returnStocks->oldest()->get();
+        $returnCount = $returnStocks->count();
 
         //check current user
         $user = \Auth::user();
@@ -552,7 +573,8 @@ class PDFController extends Controller
         return view('pdf.return_products', [
             "returnStocks" => $returnStocks,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "returnCount" => $returnCount
         ]);
     }
 }

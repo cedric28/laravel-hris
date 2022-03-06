@@ -335,15 +335,20 @@ footer {
           <span id="date-created">Date: {{ $dateToday }}</span>
         </div>
       </div>
+      <div class="header">
+        <div class="prepared-by">
+          <span id="date-created">Total Item/s: {{ $deliveriesCount }}</span>
+        </div>
+      </div>
       <div id="table">
         <h2 class="title-table">Daily Preventive Reports</h2>
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">
 					<tr>
-            <th>Product Name</th>
-            <th>Qty</th>
-            <th>Expiration Date</th>
+            <th>PRODUCT NAME</th>
+            <th>QUANTITY</th>
+            <th>EXPIRATION DATE</th>
           </tr>
 				</tr>
 			</thead>

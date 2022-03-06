@@ -65,19 +65,19 @@
                                     <table class="table">
                                         <thead>
                                             <tr style="text-align:center;">
+                                                <th>REFERENCE NO</th>
                                                 <th>SUPPLIER NAME</th>
-                                                <th>PRODUCT NAME</th>
-                                                <th>QTY</th>
+                                                <th>TOTAL QUANTITY RETURNED</th>
                                                 <th>DATE RETURNED</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($returnStocks as $stock)
                                             <tr>
-                                                <td>{{ $stock->return_stock->supplier->name }}</td>
-                                                <td>{{ $stock->product->product_name }}</td>
-                                                <td class="textRight">{{$stock->qty }}</td>
-                                                <td class="textCenter">{{$stock->return_stock->delivery_at }}</td>
+                                                <td>{{ $stock->reference_no }}</td>
+                                                <td>{{ $stock->supplier->name }}</td>
+                                                <td class="textRight">{{ count($stock->return_stock_items) }}</td>
+                                                <td class="textCenter">{{$stock->delivery_at }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

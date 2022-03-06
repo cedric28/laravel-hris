@@ -341,13 +341,13 @@ footer {
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">
-					<th>Invoice No</th>
-					<th>Customer Name</th>
-					<th>(P) Total Price</th>
-					<th>(P) Total Discount</th>
-					<th>(P) Total Amount Due</th>
-          <th>(P) Total Cash Tendered</th>
-          <th>(P) Total Cash Change</th>
+					<th>INVOICE NO</th>
+					<th>CUSTOMER NAME</th>
+					<th>(P) TOTAL PRICE</th>
+					<th>(P) TOTAL DISCOUNT</th>
+					<th>(P) TOTAL AMOUNT DUE</th>
+          <th>(P) TOTAL CASH TENDERED</th>
+          <th>(P) TOTAL CASH CHANGED</th>
           <th>DATE ADDED</th>
 				</tr>
 			</thead>

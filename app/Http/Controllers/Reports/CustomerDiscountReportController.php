@@ -27,18 +27,17 @@ class CustomerDiscountReportController extends Controller
         }
 
         $customerPoint = new Customer();
-      
-        if($request->start_date) {
+
+        if ($request->start_date) {
             $customerPoint = $customerPoint->whereDate('created_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
-          
         }
-        if($request->end_date) {
+        if ($request->end_date) {
             $customerPoint = $customerPoint->whereDate('created_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
-        
+
         $customerPoint = $customerPoint->latest()->paginate(10);
 
-        return view("reports.customer_discounts",[
+        return view("reports.customer_discounts", [
             'customerPoint' => $customerPoint
         ]);
     }
