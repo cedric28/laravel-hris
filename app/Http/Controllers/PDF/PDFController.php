@@ -10,6 +10,8 @@ use App\DeliveryRequest;
 use App\ReturnStockItem;
 use App\ReturnStock;
 use App\DeliveryRequestItem;
+use App\Inventory;
+use App\InventoryLevel;
 use App\Customer;
 use Carbon\Carbon;
 use PDF;
@@ -575,6 +577,71 @@ class PDFController extends Controller
             "dateToday" => $dateToday,
             'fullName' => $fullName,
             "returnCount" => $returnCount
+        ]);
+    }
+
+    public function generateOrderReport(Request $request)
+    {
+        $inventoryLevel = InventoryLevel::all();
+        $reStock = $inventoryLevel[0]->re_stock;
+        $critical = $inventoryLevel[0]->critical;
+        $orderReports = Inventory::where(function ($query) use ($reStock, $critical) {
+            $query->where("quantity", "=", 0)
+                ->orWhere("quantity", "<", $reStock)
+                ->orWhere("quantity", "=", $critical);
+        })->get();
+
+        $orderCount = $orderReports->count();
+
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name . ", " . $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        view()->share('orderReports', [
+            "orderReports" => $orderReports,
+            'inventoryLevel' => $inventoryLevel,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName,
+            "orderCount" => $orderCount
+        ]);
+        $pdf = \PDF::loadView('pdf.order', [
+            "orderReports" => $orderReports,
+            'inventoryLevel' => $inventoryLevel,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName,
+            "orderCount" => $orderCount
+        ]);
+
+        return $pdf->download("Order-Report-" . Carbon::now()->format('m-d-Y') . ".pdf");
+    }
+
+    public function printOrderReport(Request $request)
+    {
+        $inventoryLevel = InventoryLevel::all();
+        $reStock = $inventoryLevel[0]->re_stock;
+        $critical = $inventoryLevel[0]->critical;
+        $orderReports = Inventory::where(function ($query) use ($reStock, $critical) {
+            $query->where("quantity", "=", 0)
+                ->orWhere("quantity", "<", $reStock)
+                ->orWhere("quantity", "=", $critical);
+        })->get();
+
+        $orderCount = $orderReports->count();
+
+        //check current user
+        $user = \Auth::user();
+        $fullName = $user->last_name . ", " . $user->first_name;
+
+        $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        return view('pdf.order', [
+            "orderReports" => $orderReports,
+            'inventoryLevel' => $inventoryLevel,
+            "dateToday" => $dateToday,
+            'fullName' => $fullName,
+            "orderCount" => $orderCount
         ]);
     }
 }
