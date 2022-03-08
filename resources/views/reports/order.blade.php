@@ -28,8 +28,10 @@
 						<!-- /.card-header -->
 						<div class="card-body">
                             <div class="row col-md-12">
-                                <a href="/generate-pdf-order-report" class="btn btn-danger" id="generateYearlySales">Generate PDF</a>
-                                <a href="/print-order-report" class="btn btn-primary" id="printOrderReport">Print</a>
+                                <div class="col-md-7">
+                                    <a href="/generate-pdf-order-report" class="btn btn-danger" id="generateYearlySales">Generate PDF</a>
+                                    <a href="/print-order-report" class="btn btn-primary" id="printOrderReport">Print</a>
+                                </div>
                             </div>
                             <br/>
                             <div class="row">

@@ -70,7 +70,7 @@
                                                 <th>CUSTOMER NAME</th>
                                                 <th>(₱) TOTAL PRICE</th>
                                                 <th>(₱) TOTAL DISCOUNT</th>
-                                                <th>(₱) (₱)TOTAL AMOUNT DUE</th>
+                                                <th>(₱) TOTAL AMOUNT DUE</th>
                                                 <th>DATE ADDED</th>
                                             </tr>
                                         </thead>
