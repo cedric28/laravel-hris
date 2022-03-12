@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Stock;
 use App\Delivery;
-use App\Product;
+use App\Inventory;
 use Carbon\Carbon;
 use Validator;
 
@@ -60,14 +60,14 @@ class StockController extends Controller
                 'received_by' => 'required|string|max:50',
                 'received_at' => 'required|string|max:50',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-            
+
             //save data in the delivery table
             $delivery = new Delivery();
             $delivery->reference_no = $request->reference_no;
@@ -86,17 +86,16 @@ class StockController extends Controller
             \DB::commit();
 
             return redirect()->route('stock.edit', $delivery->id);
-         
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     public function addProduct(Request $request)
     {
-         /*
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -108,14 +107,14 @@ class StockController extends Controller
                 'qty' => 'required|numeric|gt:0',
                 'expired_at' => 'required|string|max:50',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-            
+
             //save data in the delivery table
             $stock = new Stock();
             $stock->delivery_id = $request->delivery_id;
@@ -131,13 +130,12 @@ class StockController extends Controller
             \DB::commit();
 
             return redirect()->route('stock.edit', $stock->delivery_id)
-                        ->with('successMsg','Product Data Save Successful');
-         
-        } catch(\Exception $e) {
+                ->with('successMsg', 'Product Data Save Successful');
+        } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        } 
+        }
     }
 
     public function removeProduct($id)
@@ -156,8 +154,8 @@ class StockController extends Controller
     public function show($id)
     {
         $delivery = Delivery::withTrashed()->findOrFail($id);
-        $products = Product::all();
-        $stocks = Stock::where('delivery_id',$id)->get();
+        $products = Inventory::all();
+        $stocks = Stock::where('delivery_id', $id)->get();
 
         return view('stock.show', [
             'delivery' => $delivery,
@@ -175,9 +173,9 @@ class StockController extends Controller
     public function edit($id)
     {
         $delivery = Delivery::withTrashed()->findOrFail($id);
-        $products = Product::all();
-        $stocks = Stock::where('delivery_id',$id)->get();
-        
+        $products = Inventory::all();
+        $stocks = Stock::where('delivery_id', $id)->get();
+
         return view('stock.edit', [
             'delivery' => $delivery,
             'products' => $products,
@@ -194,7 +192,7 @@ class StockController extends Controller
      */
     public function update(Request $request, $id)
     {
-         /*
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -207,7 +205,7 @@ class StockController extends Controller
             $delivery = Delivery::withTrashed()->findOrFail($id);
             //validate request value
             $validator = Validator::make($request->all(), [
-                'reference_no' => 'required|string|unique:deliveries,reference_no,'.$delivery->id,
+                'reference_no' => 'required|string|unique:deliveries,reference_no,' . $delivery->id,
                 'vehicle' => 'required|string|max:50',
                 'vehicle_plate' => 'required|string|max:50',
                 'driver_name' => 'required|string|max:50',
@@ -215,11 +213,11 @@ class StockController extends Controller
                 'received_by' => 'required|string|max:50',
                 'received_at' => 'required|string|max:50',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //save data in the delivery table
             $delivery->reference_no = $request->reference_no;
             $delivery->received_by = $request->received_by;
@@ -235,13 +233,12 @@ class StockController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg","Stock {$delivery->reference_no} Update Successfully");
-         
-        } catch(\Exception $e) {
+            return back()->with("successMsg", "Stock {$delivery->reference_no} Update Successfully");
+        } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**

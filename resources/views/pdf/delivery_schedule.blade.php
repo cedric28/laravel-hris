@@ -334,28 +334,48 @@ footer {
           <span id="date-created">Date: {{ $dateToday }}</span>
         </div>
       </div>
+      <div class="header">
+        <div class="prepared-by">
+          <span id="date-created">Total Item/s: {{ $deliveriesCount }}</span>
+        </div>
+      </div>
       <div id="table">
         <h2 class="title-table">Delivery Schedule Reports</h2>
-        <table class="table-main">
-			<thead>    
-				<tr class="tabletitle">
-					<tr>
-            <th>Reference No</th>
-            <th>Supplier</th>
-            <th>Status</th>
-            <th>Delivery Date</th>
-          </tr>
-				</tr>
-			</thead>
         @foreach ($deliveries as $delivery)
-          <tr>
-              <td>{{$delivery->reference_no}}</td>
-              <td>{{$delivery->supplier->name }}</td>
-              <td>{{ $delivery->status }}</td>
-              <td  class="textCenter">{{$delivery->delivery_at}}</td>
-          </tr>
-        @endforeach
+        <table class="table-main">
+          <thead>    
+            <tr class="tabletitle">
+              <tr>
+                <th colspan="8">{{$delivery->reference_no}} | {{$delivery->supplier->name }} | {{ ucwords($delivery->status) }} | {{$delivery->delivery_at}}</th>
+              </tr>
+              <tr>
+                <th>PRODUCT NAME</th>
+                <th>GENERIC NAME</th>
+                <th>SERIAL NUMBER</th>
+                <th>REQUEST QUANTITY</th>
+                <th>RECEIVED QUANTITY</th>
+                <th>DEFECTIVE QUANTITY</th>
+                <th>REMARK</th>
+                <th>NOTE</th>
+              </tr>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($delivery->delivery_request_items as $item)
+            <tr>
+                <td>{{  $item->product->product_name }}</td>
+                <td>{{  $item->product->generic_name }}</td>
+                <td class="textRight">{{  $item->product->sku }}</td>
+                <td class="textRight">{{  $item->qty }}</td>
+                <td class="textRight">{{  $item->received_qty }}</td>
+                <td class="textRight">{{  $item->defectived_qty }}</td>
+                <td>{{  ucwords($item->remark ?? "-") }}</td>
+                <td>{{  $item->note == "" ? "-" : $item->note }}</td>
+            </tr>
+            @endforeach
+          </tbody>
         </table>
+         @endforeach
       </div><!--End Table-->	
       
     </div><!--End InvoiceBot-->

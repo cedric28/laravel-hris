@@ -334,14 +334,19 @@ footer {
           <span id="date-created">Date: {{ $dateToday }}</span>
         </div>
       </div>
+      <div class="header">
+        <div class="prepared-by">
+          <span id="date-created">Total Item/s: {{ $customerCount }}</span>
+        </div>
+      </div>
       <div id="table">
         <h2 class="title-table">Customer Discount Reports</h2>
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">
 					<tr>
-              <th>Customer Name</th>
-              <th>Point</th>
+              <th>CUSTOMER NAME</th>
+              <th>POINT</th>
               <th>DATE ADDED</th>    
           </tr>
 				</tr>

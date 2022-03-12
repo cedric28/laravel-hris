@@ -12,9 +12,9 @@ class NotificationSettingSeeder extends Seeder
      */
     public function run()
     {
-       
 
-         /*
+
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -23,10 +23,8 @@ class NotificationSettingSeeder extends Seeder
                 'creator_id' => 1,
                 'updater_id' => 1
             ]);
-
         } catch (Exception $e) {
-            
-        }   
+        }
 
         /*
         | @End Transaction

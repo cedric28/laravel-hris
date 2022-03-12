@@ -67,14 +67,16 @@
                                             <tr style="text-align:center;">
                                                 <th>REFERENCE NO</th>
                                                 <th>SUPPLIER</th>
+                                                <th>STATUS</th>
                                                 <th>DATE DELIVERED</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($deliveries as $delivery)
                                             <tr>
-                                                <td>{{$delivery->reference_no}}</td>
-                                                <td>{{$delivery->supplier->name }}</td>
+                                                <td>{{ $delivery->reference_no}}</td>
+                                                <td>{{ $delivery->supplier->name }}</td>
+                                                <td>{{ ucwords($delivery->status) }}</td>
                                                 <td class="textCenter">{{$delivery->delivery_at}}</td>
                                             </tr>
                                             @endforeach

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reports;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\ReturnStockItem;
+use App\ReturnStock;
 use Carbon\Carbon;
 use Validator;
 
@@ -26,25 +27,22 @@ class ReturnStocksController extends Controller
             return back()->withErrors($validator->errors())->withInput();
         }
 
-        $returnStocks = new ReturnStockItem();
+        $returnStocks = new ReturnStock();
 
         if ($request->start_date) {
             $search = $request->start_date;
 
-            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
-            });
+            $returnStocks = $returnStocks->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
         }
 
         if ($request->end_date) {
             $search = $request->end_date;
 
-            $returnStocks = $returnStocks->with('product')->whereHas("return_stock", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
-            });
+            $returnStocks = $returnStocks->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
         }
 
-        $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->paginate(10);
+        // $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
+        $returnStocks = $returnStocks->oldest()->paginate(10);
 
 
         return view("reports.return_products", [

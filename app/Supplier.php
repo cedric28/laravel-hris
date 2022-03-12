@@ -11,16 +11,16 @@ class Supplier extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class,'supplier_id','id')->withTrashed();
+        return $this->hasMany(Inventory::class, 'supplier_id', 'id')->withTrashed();
     }
 
     public function return_stocks()
     {
-        return $this->hasMany(ReturnStock::class,'supplier_id','id')->withTrashed();
+        return $this->hasMany(ReturnStock::class, 'supplier_id', 'id')->withTrashed();
     }
 
     public function delivery_requests()
     {
-        return $this->hasMany(DeliveryRequest::class,'supplier_id','id')->withTrashed();
+        return $this->hasMany(DeliveryRequest::class, 'supplier_id', 'id')->withTrashed();
     }
 }

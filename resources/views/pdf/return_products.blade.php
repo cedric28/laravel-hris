@@ -335,28 +335,44 @@ footer {
           <span id="date-created">Date: {{ $dateToday }}</span>
         </div>
       </div>
+      <div class="header">
+        <div class="prepared-by">
+          <span id="date-created">Total Item/s: {{ $returnCount }}</span>
+        </div>
+      </div>
       <div id="table">
         <h2 class="title-table">Return of Medical Supplies and Product Reports</h2>
+        @foreach ($returnStocks as $stock)
         <table class="table-main">
-			<thead>    
-				<tr class="tabletitle">
-					<tr>
-                        <th>Supplier Name</th>
-                        <th>Product Name</th>
-                        <th>Qty</th>
-                        <th>Date Returned</th>
-                    </tr>
-				</tr>
-			</thead>
-                @foreach ($returnStocks as $stock)
-                <tr>
-                    <td>{{ $stock->return_stock->supplier->name }}</td>
-                    <td>{{ $stock->product->product_name }}</td>
-                    <td>{{$stock->qty }}</td>
-                    <td class="textCenter">{{$stock->return_stock->delivery_at }}</td>
-                </tr>
-                @endforeach
+          <thead>    
+            <tr class="tabletitle">
+              <tr>
+                <th colspan="8">{{$stock->reference_no}} | {{$stock->supplier->name }} | {{$stock->delivery_at}}</th>
+              </tr>
+              <tr>
+                <th>PRODUCT NAME</th>
+                <th>GENERIC NAME</th>
+                <th>SERIAL NUMBER</th>
+                <th>RETURNED QUANTITY</th>
+                <th>REMARK</th>
+                <th>NOTE</th>
+              </tr>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($stock->return_stock_items as $item)
+            <tr>
+                <td>{{  $item->product->product_name }}</td>
+                <td>{{  $item->product->generic_name }}</td>
+                <td class="textRight">{{  $item->product->sku }}</td>
+                <td class="textRight">{{  $item->qty }}</td>
+                <td>{{  ucwords($item->remark ?? "-") }}</td>
+                <td>{{  $item->note == "" ? "-" : $item->note }}</td>
+            </tr>
+            @endforeach
+          </tbody>
         </table>
+        @endforeach
       </div><!--End Table-->	
       
     </div><!--End InvoiceBot-->

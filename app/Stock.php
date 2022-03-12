@@ -9,11 +9,13 @@ class Stock extends Model
 {
     use SoftDeletes;
 
-    public function product() {
-        return $this->belongsTo(Product::class)->withTrashed();
+    public function product()
+    {
+        return $this->belongsTo(Inventory::class)->withTrashed();
     }
 
-    public function delivery() {
+    public function delivery()
+    {
         return $this->belongsTo(Delivery::class)->withTrashed();
     }
 }

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>DAily Preventive Maintenance Reports</title>
+	<title>Order Report</title>
 <style>
 	@import url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,900,700,500,300,100);
 *{
@@ -80,6 +80,7 @@ a {
       justify-content:space-between;
       flex-direction:row;
 }
+
 .prepared-by{
   display: flex;
   flex-direction: column;
@@ -212,7 +213,6 @@ footer {
     flex-direction:column;
     text-align:center;
   }
-  
     h1 {
         font-size: .9em;
     }
@@ -337,27 +337,38 @@ footer {
       </div>
       <div class="header">
         <div class="prepared-by">
-          <span id="date-created">Total Item/s: {{ $deliveriesCount }}</span>
+          <span id="date-created">Total Item/s: {{ $orderCount }}</span>
         </div>
       </div>
       <div id="table">
-        <h2 class="title-table">Daily Preventive Reports</h2>
+        <h2 class="title-table">Order Reports</h2>
         <table class="table-main">
 			<thead>    
 				<tr class="tabletitle">
-					<tr>
-            <th>PRODUCT NAME</th>
-            <th>QUANTITY</th>
-            <th>EXPIRATION DATE</th>
-          </tr>
-				</tr>
-			</thead>
-        @foreach ($deliveries as $stock)
           <tr>
-              <td>{{ $stock->product->product_name }}</td>
-              <td>{{$stock->received_qty }}</td>
-              <td>{{ $stock->expired_at }}</td>
+            <th>SKU</th>
+            <th>PRODUCT NAME</th>
+            <th>CURRENT QUANTITY</th>
+            <th>MINIMUM QUANTITY</th>
+            <th>STATUS</th>
           </tr>
+			</thead>
+        @foreach ($orderReports as $order)
+        <tr>
+            <td class="textRight">{{ $order->sku }}</td>
+            <td>{{ $order->product_name }}</td>
+            <td class="textRight">{{$order->quantity }}</td>
+            <td class="textRight">{{ $inventoryLevel[0]->re_stock }}</td>
+            <td class="textCenter">
+                @if($order->quantity == 0)
+                    <span title="Danger" class="badge bg-danger">DANGER</span>
+                @elseif($order->quantity < $inventoryLevel[0]->re_stock)
+                    <span title="Danger" class="badge bg-danger">RE-STOCK</span>
+                @elseif($order->quantity == $inventoryLevel[0]->critical)
+                    <span title="Danger" class="badge bg-warning">CRITICAL</span>
+                @endif
+            </td>
+        </tr>
         @endforeach
         </table>
       </div><!--End Table-->	

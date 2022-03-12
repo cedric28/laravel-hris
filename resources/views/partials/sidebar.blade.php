@@ -229,6 +229,12 @@
                     <p>Return Products</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('orderReport') }}" class="nav-link {{ (request()->is('order-report*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-table"></i>
+                    <p>Order</p>
+                </a>
+            </li>
             <li class="nav-header">SETTINGS</li>
             <li class="nav-item">
                 <a href="{{ route('user-profile')}}" class="nav-link {{ (request()->is('profile*')) ? 'nav-link active' : '' }}">

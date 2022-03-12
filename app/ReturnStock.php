@@ -11,10 +11,11 @@ class ReturnStock extends Model
 
     public function return_stock_items()
     {
-        return $this->hasMany(ReturnStockItem::class,'return_stock_id')->withTrashed();
+        return $this->hasMany(ReturnStockItem::class, 'return_stock_id')->withTrashed();
     }
 
-    public function supplier() {
+    public function supplier()
+    {
         return $this->belongsTo(Supplier::class, 'supplier_id')->withTrashed();
     }
 }

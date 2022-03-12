@@ -141,7 +141,7 @@
                     {"data":"action","searchable":false,"orderable":false}
                 ],
                 "columnDefs": [{
-					"targets": [3,4],   // target column
+					"targets": [2,3,4],   // target column
 					"className": "textCenter",
 				}]
             });

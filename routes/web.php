@@ -118,6 +118,7 @@ Route::middleware('auth')->group(function () {
     Route::get('generate-pdf-customer-discount', 'PDF\PDFController@generateCustomerDiscount')->name('generateCustomerDiscount');
     Route::get('generate-pdf-daily-preventive', 'PDF\PDFController@generateDailyPreventive')->name('generateDailyPreventive');
     Route::get('generate-pdf-return-products', 'PDF\PDFController@generateReturnStocks')->name('generateReturnStocks');
+    Route::get('generate-pdf-order-report', 'PDF\PDFController@generateOrderReport')->name('generateOrderReport');
 
     //PRINT
     Route::get('print-yearly-sales', 'PDF\PDFController@printSalesYearly')->name('printSalesYearly');
@@ -127,6 +128,7 @@ Route::middleware('auth')->group(function () {
     Route::get('print-customer-discount', 'PDF\PDFController@printCustomerDiscount')->name('printCustomerDiscount');
     Route::get('print-daily-preventive', 'PDF\PDFController@printDailyPreventive')->name('printDailyPreventive');
     Route::get('print-return-products', 'PDF\PDFController@printReturnStocks')->name('printReturnStocks');
+    Route::get('print-order-report', 'PDF\PDFController@printOrderReport')->name('printOrderReport');
     //Reports
     Route::get('sales-report-yearly', 'Reports\SalesReportController@salesYearly')->name('salesYearly');
     Route::get('sales-report-monthly', 'Reports\SalesReportController@salesMonthly')->name('salesMonthly');
@@ -136,6 +138,7 @@ Route::middleware('auth')->group(function () {
     Route::get('schedule-delivery', 'Reports\DeliveryScheduleController@deliverySchedule')->name('deliverySchedule');
     Route::get('daily-preventive-maintenance', 'Reports\DailyPreventiveController@dailyPreventive')->name('dailyPreventive');
     Route::get('return-products', 'Reports\ReturnStocksController@returnStocks')->name('returnStocks');
+    Route::get('order-report', 'Reports\OrderController@orderReport')->name('orderReport');
 
     //Delivery Request
     Route::resource('delivery-request', 'Stock\DeliveryRequestController');
