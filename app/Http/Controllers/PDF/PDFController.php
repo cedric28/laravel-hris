@@ -34,12 +34,15 @@ class PDFController extends Controller
     public function generateSalesYearly(Request $request)
     {
         $sales = new Sale();
-
-        if ($request->start_date) {
-            $sales = $sales->whereYear('created_at', '>=', $request->start_date);
+        $now = Carbon::now();
+        $yearNow =  $now->year;
+        $startDate = $request->start_date ?? $yearNow;
+        $endDate = $request->end_date ?? $yearNow;
+        if ($startDate) {
+            $sales = $sales->whereYear('created_at', '>=', $startDate);
         }
-        if ($request->end_date) {
-            $sales = $sales->whereYear('created_at', '<=', $request->end_date);
+        if ($endDate) {
+            $sales = $sales->whereYear('created_at', '<=', $endDate);
         }
 
         $sales = $sales->latest()->get();
@@ -65,7 +68,9 @@ class PDFController extends Controller
             'totalCashChange' => $totalCashChange,
             'totalCashTendered' => $totalCashTendered,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "startDate" => $startDate,
+            "endDate" => $endDate
         ]);
 
         return $pdf->download("Yearly-Sales-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -74,12 +79,15 @@ class PDFController extends Controller
     public function printSalesYearly(Request $request)
     {
         $sales = new Sale();
-
-        if ($request->start_date) {
-            $sales = $sales->whereYear('created_at', '>=', $request->start_date);
+        $now = Carbon::now();
+        $yearNow =  $now->year;
+        $startDate = $request->start_date ?? $yearNow;
+        $endDate = $request->end_date ?? $yearNow;
+        if ($startDate) {
+            $sales = $sales->whereYear('created_at', '>=', $startDate);
         }
-        if ($request->end_date) {
-            $sales = $sales->whereYear('created_at', '<=', $request->end_date);
+        if ($endDate) {
+            $sales = $sales->whereYear('created_at', '<=', $endDate);
         }
 
         $sales = $sales->latest()->get();
@@ -104,7 +112,9 @@ class PDFController extends Controller
             'totalCashChange' => $totalCashChange,
             'totalCashTendered' => $totalCashTendered,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "startDate" => $startDate,
+            "endDate" => $endDate
         ]);
     }
 
@@ -114,15 +124,17 @@ class PDFController extends Controller
         $yearNow =  $now->year;
 
         $sales = new Sale();
-
-        if ($request->start_date) {
-            $sales = $sales->whereMonth('created_at', '>=', '11')->whereYear('created_at', '>=', $yearNow);
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        
+        if ($startDate) {
+            $sales = $sales->whereMonth('created_at', '>=', $startDate)->whereYear('created_at', '>=', $yearNow);
         } else {
             $sales = $sales->whereYear('created_at', '>=', $yearNow);
         }
 
-        if ($request->end_date) {
-            $sales = $sales->whereMonth('created_at', '<=', '11')->whereYear('created_at', '<=', $yearNow);
+        if ($endDate) {
+            $sales = $sales->whereMonth('created_at', '<=', $endDate)->whereYear('created_at', '<=', $yearNow);
         } else {
             $sales = $sales->whereYear('created_at', '<=', $yearNow);
         }
@@ -148,7 +160,9 @@ class PDFController extends Controller
             'totalPrice' => $totalPrice,
             'totalCashChange' => $totalCashChange,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "startDate" => Carbon::parse($startDate)->format('M Y'),
+            "endDate" => Carbon::parse($endDate)->format('M Y')
         ]);
 
         return $pdf->download("Monthly-Sales-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -160,15 +174,16 @@ class PDFController extends Controller
         $yearNow =  $now->year;
 
         $sales = new Sale();
-
-        if ($request->start_date) {
-            $sales = $sales->whereMonth('created_at', '>=', '11')->whereYear('created_at', '>=', $yearNow);
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        if ($startDate) {
+            $sales = $sales->whereMonth('created_at', '>=', $startDate)->whereYear('created_at', '>=', $yearNow);
         } else {
             $sales = $sales->whereYear('created_at', '>=', $yearNow);
         }
 
-        if ($request->end_date) {
-            $sales = $sales->whereMonth('created_at', '<=', '11')->whereYear('created_at', '<=', $yearNow);
+        if ($endDate) {
+            $sales = $sales->whereMonth('created_at', '<=', $endDate)->whereYear('created_at', '<=', $yearNow);
         } else {
             $sales = $sales->whereYear('created_at', '<=', $yearNow);
         }
@@ -192,28 +207,27 @@ class PDFController extends Controller
             'totalPrice' => $totalPrice,
             'totalCashChange' => $totalCashChange,
             "dateToday" => $dateToday,
-            'fullName' => $fullName
+            'fullName' => $fullName,
+            "startDate" => Carbon::parse($startDate)->format('M Y'),
+            "endDate" => Carbon::parse($endDate)->format('M Y')
         ]);
     }
 
     public function generateStockMedicalGoods(Request $request)
     {
-
         $deliveries = new DeliveryRequestItem();
-
-        if ($request->start_date) {
-            $search = $request->start_date;
-
-            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        if ($startDate) {
+            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($startDate) {
+                $q->whereDate('delivery_at', '>=', Carbon::parse($startDate)->format('Y-m-d'));
             });
         }
 
-        if ($request->end_date) {
-            $search = $request->end_date;
+        if ($endDate) {
 
-            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
+            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($endDate) {
+                $q->whereDate('delivery_at', '<=', Carbon::parse($endDate)->format('Y-m-d'));
             });
         }
 
@@ -235,13 +249,17 @@ class PDFController extends Controller
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            "deliveriesCount" => $deliveriesCount
+            "deliveriesCount" => $deliveriesCount,
+            "startDate" => Carbon::parse($startDate)->format('M d, Y'),
+            "endDate" => Carbon::parse($endDate)->format('M d, Y')
         ]);
         $pdf = \PDF::loadView('pdf.stock_medical_goods', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            "deliveriesCount" => $deliveriesCount
+            "deliveriesCount" => $deliveriesCount,
+            "startDate" => Carbon::parse($startDate)->format('M d, Y'),
+            "endDate" => Carbon::parse($endDate)->format('M d, Y')
         ]);
 
         return $pdf->download("Stocks-Medical-Goods-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -249,22 +267,18 @@ class PDFController extends Controller
 
     public function printStockMedicalGoods(Request $request)
     {
-
         $deliveries = new DeliveryRequestItem();
-
-        if ($request->start_date) {
-            $search = $request->start_date;
-
-            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '>=', Carbon::parse($search)->format('Y-m-d'));
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        if ($startDate) {
+            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($startDate) {
+                $q->whereDate('delivery_at', '>=', Carbon::parse($startDate)->format('Y-m-d'));
             });
         }
 
-        if ($request->end_date) {
-            $search = $request->end_date;
-
-            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($search) {
-                $q->whereDate('delivery_at', '<=', Carbon::parse($search)->format('Y-m-d'));
+        if ($endDate) {
+            $deliveries = $deliveries->with('product')->whereHas("delivery_request", function ($q) use ($endDate) {
+                $q->whereDate('delivery_at', '<=', Carbon::parse($endDate)->format('Y-m-d'));
             });
         }
 
@@ -285,7 +299,9 @@ class PDFController extends Controller
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            "deliveriesCount" => $deliveriesCount
+            "deliveriesCount" => $deliveriesCount,
+            "startDate" => Carbon::parse($startDate)->format('M d, Y'),
+            "endDate" => Carbon::parse($endDate)->format('M d, Y')
         ]);
     }
 
@@ -293,12 +309,13 @@ class PDFController extends Controller
     {
         $deliveries = new DeliveryRequest();
         $deliveries = $deliveries->orderBy('supplier_id', 'asc');
-
-        if ($request->start_date) {
-            $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        if ($startDate) {
+            $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '>=', Carbon::parse($startDate)->format('Y-m-d'));
         }
-        if ($request->end_date) {
-            $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        if ($endDate) {
+            $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($endDate)->format('Y-m-d'));
         }
 
         $deliveries = $deliveries->orderBy("status", 'desc')->oldest()->get();
@@ -314,14 +331,18 @@ class PDFController extends Controller
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            'deliveriesCount' => $deliveriesCount
+            'deliveriesCount' => $deliveriesCount,
+            "startDate" => Carbon::parse($startDate)->format('M d, Y'),
+            "endDate" => Carbon::parse($endDate)->format('M d, Y')
         ]);
 
         $pdf = \PDF::loadView('pdf.delivery_schedule', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            'deliveriesCount' => $deliveriesCount
+            'deliveriesCount' => $deliveriesCount,
+            "startDate" => Carbon::parse($startDate)->format('M d, Y'),
+            "endDate" => Carbon::parse($endDate)->format('M d, Y')
         ]);
 
         return $pdf->download("Delivery-Schedule-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -331,12 +352,13 @@ class PDFController extends Controller
     {
         $deliveries = new DeliveryRequest();
         $deliveries = $deliveries->orderBy('supplier_id', 'asc');
-
-        if ($request->start_date) {
-            $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        if ($startDate) {
+            $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '>=', Carbon::parse($startDate)->format('Y-m-d'));
         }
-        if ($request->end_date) {
-            $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
+        if ($endDate) {
+            $deliveries = $deliveries->with('supplier')->whereDate('delivery_at', '<=', Carbon::parse($endDate)->format('Y-m-d'));
         }
 
         $deliveries = $deliveries->orderBy("status", 'desc')->oldest()->get();
@@ -352,7 +374,9 @@ class PDFController extends Controller
             'deliveries' => $deliveries,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            'deliveriesCount' => $deliveriesCount
+            'deliveriesCount' => $deliveriesCount,
+            "startDate" => Carbon::parse($startDate)->format('M d, Y'),
+            "endDate" => Carbon::parse($endDate)->format('M d, Y')
         ]);
     }
 

@@ -18,13 +18,14 @@ class InventoryFetchController extends Controller
         $columns = array(
             0 => 'product_name',
             1 => 'generic_name',
-            2 => 'content',
-            3 => 'category_name',
-            4 => 'original_price',
-            5 => 'selling_price',
-            6 => 'quantity',
-            7 => 'created_at',
-            8 => 'action'
+            2 => 'sku',
+            3 => 'content',
+            4 => 'category_name',
+            5 => 'original_price',
+            6 => 'selling_price',
+            7 => 'quantity',
+            8 => 'created_at',
+            9 => 'action'
         );
 
         //get the total number of data in Inventory table
@@ -45,13 +46,14 @@ class InventoryFetchController extends Controller
             //search dropdown
             $productName = $request->input('columns.0.search.value');
             $genericName = $request->input('columns.1.search.value');
-            $categoryName = $request->input('columns.2.search.value');
-            $details = $request->input('columns.3.search.value');
-            $originalPrice = $request->input('columns.4.search.value');
-            $sellingPrice = $request->input('columns.5.search.value');
-            $stock = $request->input('columns.6.search.value');
-            $status = $request->input('columns.7.search.value');
-            $dateAdded = $request->input('columns.8.search.value');
+            $sku = $request->input('columns.2.search.value');
+            $categoryName = $request->input('columns.3.search.value');
+            $details = $request->input('columns.4.search.value');
+            $originalPrice = $request->input('columns.5.search.value');
+            $sellingPrice = $request->input('columns.6.search.value');
+            $stock = $request->input('columns.7.search.value');
+            $status = $request->input('columns.8.search.value');
+            $dateAdded = $request->input('columns.9.search.value');
             //get all the inventory data
             $posts = DB::table('inventories')
                 ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
@@ -59,6 +61,7 @@ class InventoryFetchController extends Controller
                 ->select('inventories.*', 'categories.category_name')
                 ->where('inventories.product_name', 'like', "%{$productName}%")
                 ->where('inventories.generic_name', 'like', "%{$genericName}%")
+                ->where('inventories.sku', 'like', "%{$sku}%")
                 ->where('categories.category_name', 'like', "%{$categoryName}%")
                 ->where('inventories.content', 'like', "%{$details}%")
                 ->where('inventories.original_price', 'like', "%{$originalPrice}%")
@@ -77,6 +80,7 @@ class InventoryFetchController extends Controller
                 ->select('inventories.*', 'categories.category_name')
                 ->where('inventories.product_name', 'like', "%{$productName}%")
                 ->where('inventories.generic_name', 'like', "%{$genericName}%")
+                ->where('inventories.sku', 'like', "%{$sku}%")
                 ->where('categories.category_name', 'like', "%{$categoryName}%")
                 ->where('inventories.content', 'like', "%{$details}%")
                 ->where('inventories.original_price', 'like', "%{$originalPrice}%")
@@ -97,6 +101,7 @@ class InventoryFetchController extends Controller
                 ->orWhere('inventories.created_at', 'like', "%{$search}%")
                 ->orWhere('inventories.product_name', 'like', "%{$search}%")
                 ->orWhere('inventories.generic_name', 'like', "%{$search}%")
+                ->orWhere('inventories.sku', 'like', "%{$search}%")
                 ->orWhere('inventories.content', 'like', "%{$search}%")
                 ->orWhere('categories.category_name', 'like', "%{$search}%")
                 ->offset($start)
@@ -115,6 +120,7 @@ class InventoryFetchController extends Controller
                 ->orWhere('inventories.created_at', 'like', "%{$search}%")
                 ->orWhere('inventories.product_name', 'like', "%{$search}%")
                 ->orWhere('inventories.generic_name', 'like', "%{$search}%")
+                ->orWhere('inventories.sku', 'like', "%{$search}%")
                 ->orWhere('inventories.content', 'like', "%{$search}%")
                 ->orWhere('categories.category_name', 'like', "%{$search}%")
                 ->count();
@@ -139,6 +145,7 @@ class InventoryFetchController extends Controller
                 }
                 $nestedData['product_name'] = $r->product_name;
                 $nestedData['generic_name'] = $r->generic_name;
+                $nestedData['sku'] = $r->sku;
                 $nestedData['content'] = $r->content;
                 $nestedData['category_name'] = $r->category_name;
                 $nestedData['original_price'] = $r->original_price;

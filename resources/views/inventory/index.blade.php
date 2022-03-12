@@ -31,8 +31,9 @@
 									<tr style="text-align:center;">
 										<th>PRODUCT NAME</th>
                                         <th>GENERIC NAME</th>
-                                        <th>CATEGORY</th>
-                                        <th>DETAILS</th>
+                                        <th>SKU/SERIAL NUMBER</th>
+                                        <th>CATEGORY/TYPE</th>
+                                        <th>DETAILS/GENERALIZATION</th>
                                         <th>(₱) ORIGINAL PRICE</th>
                                         <th>(₱) SELLING PRICE</th>
                                         <th>STOCK</th>
@@ -47,6 +48,7 @@
 										<tr>
 											<td>{{ $inventory->product_name }}</td>
 											<td>{{ $inventory->generic_name }}</td>
+                                            <td>{{ $inventory->sku }}</td>
                                             <td>{{ $inventory->categories[0]->category_name }}</td>
                                             <td>{{ $inventory->content }}</td>
 											<td>{{ $inventory->original_price }}</td>
@@ -72,10 +74,11 @@
 								</tbody>
                                 <tfoot>
 									<tr style="text-align:center;">
-										<th>PRODUCT NAME</th>
+                                        <th>PRODUCT NAME</th>
                                         <th>GENERIC NAME</th>
-                                        <th>DETAILS</th>
-                                        <th>CATEGORY</th>
+                                        <th>SKU/SERIAL NUMBER</th>
+                                        <th>CATEGORY/TYPE</th>
+                                        <th>DETAILS/GENERALIZATION</th>
                                         <th>(₱) ORIGINAL PRICE</th>
                                         <th>(₱) SELLING PRICE</th>
                                         <th>STOCK</th>
@@ -155,21 +158,21 @@
                                 "extend": 'csv',
                                 'title' :'Inventory Products',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6,7,8]
+                                    "columns": [0,1,2,3,4,5,6,7,8,9]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' :'Inventory Products',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6,7,8]
+                                    "columns": [0,1,2,3,4,5,6,7,8,9]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' :'Inventory Products',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6,7,8]
+                                    "columns": [0,1,2,3,4,5,6,7,8,9]
                                 }
                             }
                         ],
@@ -208,6 +211,7 @@
                 "columns":[
                     {"data":"product_name"},
                     {"data":"generic_name"},
+                    {"data":"sku"},
                     {"data":"category_name"},
                     {"data":"content"},
                     {"data":"original_price"},
@@ -219,11 +223,11 @@
                 ],
                 "columnDefs": [
                     {
-					    "targets": [4,5,6],   // target column
+					    "targets": [2,5,6,7],   // target column
 					    "className": "textRight",
 				    },
                     {
-					    "targets": [8],   // target column
+					    "targets": [9],   // target column
 					    "className": "textCenter",
 				    }
                 ]

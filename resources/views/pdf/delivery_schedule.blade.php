@@ -339,6 +339,11 @@ footer {
           <span id="date-created">Total Item/s: {{ $deliveriesCount }}</span>
         </div>
       </div>
+      <div class="header">
+        <div class="prepared-by">
+          <span id="date-created">Date Range: {{ $startDate }} - {{ $endDate }}</span>
+        </div>
+      </div>
       <div id="table">
         <h2 class="title-table">Delivery Schedule Reports</h2>
         @foreach ($deliveries as $delivery)

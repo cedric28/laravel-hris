@@ -33,7 +33,7 @@
                                         <th>QTY</th>
                                         <th>(₱) PRICE</th>
                                         <th>(₱) TOTAL SALES PRICE</th>
-										<th>DATE ADDED</th>
+										<th>TRANSACTION DATE</th>
 									</tr>
 								</thead>
 								<tbody>

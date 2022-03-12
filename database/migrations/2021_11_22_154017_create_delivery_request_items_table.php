@@ -23,6 +23,7 @@ class CreateDeliveryRequestItemsTable extends Migration
             $table->longText("note")->nullable();
             $table->integer("received_qty")->default(0);
             $table->integer("defectived_qty")->default(0);
+            $table->string("status")->nullable();
             $table->date('expired_at')->default(Carbon::now());
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();

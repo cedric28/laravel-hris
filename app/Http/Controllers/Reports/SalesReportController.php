@@ -68,15 +68,16 @@ class SalesReportController extends Controller
             $yearNow =  $now->year;
 
             $sales = new Sale();
-        
-            if($request->start_date) {
-                $sales = $sales->whereMonth('created_at', '>=', '11')->whereYear('created_at','>=', $yearNow);
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+            if($startDate) {
+                $sales = $sales->whereMonth('created_at', '>=', $startDate)->whereYear('created_at','>=', $yearNow);
             } else {
                 $sales = $sales->whereYear('created_at','>=', $yearNow);
             }
 
-            if($request->end_date) {
-                $sales = $sales->whereMonth('created_at', '<=', '11')->whereYear('created_at','<=', $yearNow);
+            if($endDate) {
+                $sales = $sales->whereMonth('created_at', '<=', $endDate)->whereYear('created_at','<=', $yearNow);
             } else {
                 $sales = $sales->whereYear('created_at','<=', $yearNow);
             }

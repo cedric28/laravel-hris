@@ -256,11 +256,13 @@ class DeliveryRequestController extends Controller
                     // }
 
                     foreach ($deliveryItems as $key => $value) {
+                        $value->status = $delivery->status;
+                        $value->save();
                         if ($value->received_qty > 0) {
                             $inventory = Inventory::firstOrNew([
                                 'id' => $value->product_id
                             ]);
-
+                        
                             $inventory->quantity = ($inventory->quantity + $value->received_qty);;
                             $inventory->creator_id = $user->id;
                             $inventory->updater_id = $user->id;

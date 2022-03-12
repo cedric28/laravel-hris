@@ -336,6 +336,11 @@ footer {
           <span id="date-created">Date: {{ $dateToday }}</span>
         </div>
       </div>
+      <div class="header">
+        <div class="prepared-by">
+          <span id="date-created">Date Range: {{ $startDate }} - {{ $endDate }}</span>
+        </div>
+      </div>
       <div id="table">
         <h2 class="title-table">Yearly Sales Reports</h2>
         <table class="table-main">

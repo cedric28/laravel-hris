@@ -44,7 +44,6 @@ class ReturnStocksController extends Controller
         // $returnStocks = $returnStocks->join('return_stocks', 'return_stock_items.return_stock_id', '=', 'return_stocks.id')->orderBy('return_stocks.supplier_id', 'asc')->get();
         $returnStocks = $returnStocks->oldest()->paginate(10);
 
-
         return view("reports.return_products", [
             'returnStocks' => $returnStocks
         ]);

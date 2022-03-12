@@ -353,9 +353,10 @@ footer {
                 <th>PRODUCT NAME</th>
                 <th>GENERIC NAME</th>
                 <th>SERIAL NUMBER</th>
-                <th>RETURNED QUANTITY</th>
+                <th>QUANTITY TO BE RETURNED</th>
                 <th>REMARK</th>
                 <th>NOTE</th>
+                <th>EXPIRATION DATE</th>
               </tr>
             </tr>
           </thead>
@@ -368,6 +369,12 @@ footer {
                 <td class="textRight">{{  $item->qty }}</td>
                 <td>{{  ucwords($item->remark ?? "-") }}</td>
                 <td>{{  $item->note == "" ? "-" : $item->note }}</td>
+                <td class="textCenter">   
+                  @php
+                    $deliveryStatus = $item->product->deliveryRequestItems->where("status","completed")->first();
+                  @endphp
+                  {{ $deliveryStatus->expired_at }}
+                </td>
             </tr>
             @endforeach
           </tbody>
