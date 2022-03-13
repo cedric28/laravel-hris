@@ -373,7 +373,11 @@ footer {
                   @php
                     $deliveryStatus = $item->product->deliveryRequestItems->where("status","completed")->first();
                   @endphp
+                  @if($deliveryStatus)
                   {{ $deliveryStatus->expired_at }}
+                  @else
+                  -
+                  @endif
                 </td>
             </tr>
             @endforeach
