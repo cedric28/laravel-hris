@@ -82,7 +82,7 @@ class SalesReportController extends Controller
                 $sales = $sales->whereYear('created_at','<=', $yearNow);
             }
         
-            $sales = $sales->latest()->paginate(10);
+            $sales = $sales->oldest()->paginate(10);
 
             $totalAmountDue = $sales->sum('total_amount_due');
             $totalDiscount = $sales->sum('total_discount');

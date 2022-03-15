@@ -139,7 +139,7 @@ class PDFController extends Controller
             $sales = $sales->whereYear('created_at', '<=', $yearNow);
         }
 
-        $sales = $sales->latest()->get();
+        $sales = $sales->oldest()->get();
 
         $totalAmountDue = $sales->sum('total_amount_due');
         $totalDiscount = $sales->sum('total_discount');
@@ -151,7 +151,8 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
-
+        $first = $sales->first();
+        $last = $sales->last();
         view()->share('sales', $sales);
         $pdf = \PDF::loadView('pdf.monthly_sales', [
             'sales' => $sales,
@@ -161,8 +162,8 @@ class PDFController extends Controller
             'totalCashChange' => $totalCashChange,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            "startDate" => Carbon::parse($startDate)->format('M Y'),
-            "endDate" => Carbon::parse($endDate)->format('M Y')
+            "startDate" => Carbon::parse($first->created_at)->format('M d, Y'),
+            "endDate" => Carbon::parse($last->created_at)->format('M d, Y')
         ]);
 
         return $pdf->download("Monthly-Sales-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -176,19 +177,19 @@ class PDFController extends Controller
         $sales = new Sale();
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        if ($startDate) {
-            $sales = $sales->whereMonth('created_at', '>=', $startDate)->whereYear('created_at', '>=', $yearNow);
+        if($startDate) {
+            $sales = $sales->whereMonth('created_at', '>=', $startDate)->whereYear('created_at','>=', $yearNow);
         } else {
-            $sales = $sales->whereYear('created_at', '>=', $yearNow);
+            $sales = $sales->whereYear('created_at','>=', $yearNow);
         }
 
-        if ($endDate) {
-            $sales = $sales->whereMonth('created_at', '<=', $endDate)->whereYear('created_at', '<=', $yearNow);
+        if($endDate) {
+            $sales = $sales->whereMonth('created_at', '<=', $endDate)->whereYear('created_at','<=', $yearNow);
         } else {
-            $sales = $sales->whereYear('created_at', '<=', $yearNow);
+            $sales = $sales->whereYear('created_at','<=', $yearNow);
         }
 
-        $sales = $sales->latest()->get();
+        $sales = $sales->oldest()->get();
 
         $totalAmountDue = $sales->sum('total_amount_due');
         $totalDiscount = $sales->sum('total_discount');
@@ -199,7 +200,8 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
-
+        $first = $sales->first();
+        $last = $sales->last();
         return view('pdf.monthly_sales', [
             'sales' => $sales,
             'totalAmountDue' => $totalAmountDue,
@@ -208,8 +210,8 @@ class PDFController extends Controller
             'totalCashChange' => $totalCashChange,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            "startDate" => Carbon::parse($startDate)->format('M Y'),
-            "endDate" => Carbon::parse($endDate)->format('M Y')
+            "startDate" => Carbon::parse($first->created_at)->format('M d, Y'),
+            "endDate" => Carbon::parse($last->created_at)->format('M d, Y')
         ]);
     }
 
