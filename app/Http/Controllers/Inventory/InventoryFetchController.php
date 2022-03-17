@@ -296,6 +296,7 @@ class InventoryFetchController extends Controller
             0 => 'product_name',
             1 => 'quantity',
             2 => 'price',
+            3 => 'price',
             4 => 'created_at'
         );
 
