@@ -754,11 +754,9 @@ class StockFetchController extends Controller
 		//column list in the table Prpducts
 		$columns = array(
 			0 => 'reference_no',
-			1 => 'name',
-			2 => 'content',
-			3 => 'delivery_at',
-			4 => 'received_at',
-			5 => 'action'
+			1 => 'delivery_at',
+			2 => 'received_at',
+			3 => 'action'
 		);
 
 		//get the total number of data in Product table
@@ -789,7 +787,6 @@ class StockFetchController extends Controller
 				->orWhereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-				->orWhere('notes', 'like', "%{$search}%")
 				->orWhere('delivery_at', 'like', "%{$search}%")
 				->orWhere('created_at', 'like', "%{$search}%")
 				->offset($start)
@@ -802,7 +799,6 @@ class StockFetchController extends Controller
 				->orWhereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-				->orWhere('notes', 'like', "%{$search}%")
 				->orWhere('delivery_at', 'like', "%{$search}%")
 				->orWhere('received_at', 'like', "%{$search}%")
 				->count();
@@ -815,7 +811,6 @@ class StockFetchController extends Controller
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
 				$nestedData['reference_no'] = $r->reference_no;
-				$nestedData['content'] = $r->content;
 				$nestedData['name'] = $r->supplier->name;
 				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
 				$nestedData['received_at'] = date('m-d-Y', strtotime($r->received_at));
