@@ -22,11 +22,11 @@ class POSController extends Controller
     public function index()
     {
         $inventories = DB::table('inventories')
-                        ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
-                        ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
-                        ->select('inventories.*', 'inventories.id as productId','categories.category_name')
-                        ->get();
-        return view("pos.index",[
+            ->leftJoin('category_per_products', 'category_per_products.product_id', '=', 'inventories.id')
+            ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
+            ->select('inventories.*', 'inventories.id as productId', 'categories.category_name')
+            ->get();
+        return view("pos.index", [
             'inventories' => $inventories
         ]);
     }
@@ -57,16 +57,16 @@ class POSController extends Controller
         try {
 
             //validate request value
-			$validator = Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'cart' => 'required|array',
-                'cash_tendered' =>'required|numeric|gt:0'
+                'cash_tendered' => 'required|numeric|gt:0'
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json([
                     'data' => $validator->errors(),
                     'message' => 'Your Cart or Cash Tendered is Empty'
-                ], 422); 
+                ], 422);
             }
 
             $cart = $request->cart;
@@ -76,7 +76,7 @@ class POSController extends Controller
             $discount = (array)$request->discount;
             $cashTendered = $request->cash_tendered;
             $totalPrice = 0;
-            foreach($cart as $item){
+            foreach ($cart as $item) {
                 $totalPrice += $item['item_quantity'] * floatval($item['selling_price']);
             }
 
@@ -90,7 +90,7 @@ class POSController extends Controller
             $sales = new Sale();
             $sales->or_no = $this->generateUniqueCode();
             $sales->customer_fullname = ucwords($customerFullName) ?? "";
-            $sales->total_price = number_format($totalPrice,2);
+            $sales->total_price = $totalPrice;
             $sales->discount_rate = $discountRate;
             $sales->total_discount = $totalDiscount;
             $sales->total_amount_due = $totalAmountDue;
@@ -99,31 +99,31 @@ class POSController extends Controller
             $sales->creator_id = $user;
             $sales->updater_id = $user;
 
-            if($sales->save()){
+            if ($sales->save()) {
                 $discountPoint = Point::all();
                 $pointEarned = (int)($totalAmountDue / $discountPoint[0]->price_per_point) * floatval($discountPoint[0]->point);
-                if(!empty($customerPointInfo)){
+                if (!empty($customerPointInfo)) {
                     //Points Deduction
-                    $customerId = $customerPointInfo['id']; 
+                    $customerId = $customerPointInfo['id'];
                     CustomerPoint::create([
                         'customer_id' => $customerId,
                         'sale_id' =>  $sales->id,
                         'point' => -floatval($discount['total_needed_point']),
                         'creator_id' => $user,
                         'updater_id' => $user
-                    ]);   
+                    ]);
                 }
 
-                if(!empty($customerEarnerInfo)){
+                if (!empty($customerEarnerInfo)) {
                     $customerEarnerId = $customerEarnerInfo['id'];
-                    if($pointEarned > 0){
+                    if ($pointEarned > 0) {
                         CustomerPoint::create([
                             'customer_id' => $customerEarnerId,
                             'sale_id' =>  $sales->id,
                             'point' => $pointEarned,
                             'creator_id' => $user,
                             'updater_id' => $user
-                        ]);   
+                        ]);
                     }
                 }
 
@@ -142,7 +142,7 @@ class POSController extends Controller
 
                     $inventory = Inventory::withTrashed()->findOrFail($cartItem['id']);
                     $inventory->quantity = $inventory->quantity - $cartItem['item_quantity'];
-                    $inventory->update(); 
+                    $inventory->update();
                 }
             }
 
@@ -156,15 +156,14 @@ class POSController extends Controller
                 'status' => 'success',
                 'message' => 'Order Complete!'
             ], 200);
-
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return response()->json([
                 'data' => $e->getMessage(),
                 'message' => 'Order Failed'
-            ], 500); 
-        } 
+            ], 500);
+        }
     }
 
     /**
@@ -215,9 +214,9 @@ class POSController extends Controller
     public function generateUniqueCode()
     {
         do {
-            $or_no = 'TD'.random_int(1000000000, 9999999999);
+            $or_no = 'TD' . random_int(1000000000, 9999999999);
         } while (Sale::where("or_no", "=", $or_no)->first());
-  
+
         return $or_no;
     }
 }

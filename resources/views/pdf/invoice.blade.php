@@ -355,23 +355,23 @@ footer {
 			@endforeach
             <tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Total</th>
-                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->total_price }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ Str::currency($sales->total_price) }}</td>
             </tr>
 			<tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Total Discount</th>
-                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->total_discount }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ Str::currency($sales->total_discount) }}</td>
             </tr>
 			<tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Total Amount Due</th>
-                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->total_amount_due }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ Str::currency($sales->total_amount_due) }}</td>
             </tr>
 			<tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Cash Tendered</th>
-                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->cash_tendered }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ Str::currency($sales->cash_tendered) }}</td>
             </tr>
 			<tr class="list-item total-row">
                 <th colspan="4" class="tableitem">Change</th>
-                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ $sales->cash_change }}</td>
+                <td data-label="Grand Total" class="tableitem">{{ Config::get('app.currency') }}{{ Str::currency($sales->cash_change) }}</td>
             </tr>
         </table>
       </div><!--End Table-->	
