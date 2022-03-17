@@ -24,8 +24,9 @@ class InventoryFetchController extends Controller
             5 => 'original_price',
             6 => 'selling_price',
             7 => 'quantity',
-            8 => 'created_at',
-            9 => 'action'
+            8 => 'quantity',
+            9 => 'created_at',
+            10 => 'action'
         );
 
         //get the total number of data in Inventory table

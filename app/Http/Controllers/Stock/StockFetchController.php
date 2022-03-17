@@ -754,9 +754,10 @@ class StockFetchController extends Controller
 		//column list in the table Prpducts
 		$columns = array(
 			0 => 'reference_no',
-			1 => 'delivery_at',
-			2 => 'received_at',
-			3 => 'action'
+			1 => 'suppliers.name',
+			2 => 'delivery_at',
+			3 => 'received_at',
+			4 => 'action'
 		);
 
 		//get the total number of data in Product table
@@ -773,7 +774,9 @@ class StockFetchController extends Controller
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
 			//get all the product data
-			$posts = ReturnStock::with('supplier')->offset($start)
+			$posts = ReturnStock::select('*')
+				->join('suppliers', 'return_stocks.supplier_id', '=', 'suppliers.id')
+				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
