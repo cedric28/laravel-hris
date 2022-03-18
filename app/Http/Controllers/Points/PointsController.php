@@ -16,9 +16,9 @@ class PointsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         $points = Point::all();
-        return view("point.index",[
+        return view("point.index", [
             'points' => $points
         ]);
     }
@@ -44,7 +44,7 @@ class PointsController extends Controller
      */
     public function store(Request $request)
     {
-       //prevent other user to access to this page
+        //prevent other user to access to this page
         $this->authorize("isAdmin");
         /*
         | @Begin Transaction
@@ -52,22 +52,22 @@ class PointsController extends Controller
         \DB::beginTransaction();
 
         try {
-             //validate request value
-             $validator = Validator::make($request->all(), [
+            //validate request value
+            $validator = Validator::make($request->all(), [
                 'point_name' => 'required|string|max:50|unique:points,point_name',
                 'discount_rate' => 'required|numeric|gt:0',
                 'point' => 'required|numeric|gt:0',
                 'price_per_point' => 'required|numeric|gt:0',
                 'total_needed_point' => 'required|numeric|gt:0',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-           
+
             //save point
             $point = new Point();
             $point->point_name = $request->point_name;
@@ -84,13 +84,12 @@ class PointsController extends Controller
             \DB::commit();
 
             return redirect()->route('point.create')
-                        ->with('successMsg','Point Save Successful');
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+                ->with('successMsg', 'Point Save Successful');
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -101,8 +100,8 @@ class PointsController extends Controller
      */
     public function show($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $point = Point::withTrashed()->findOrFail($id);
 
@@ -119,8 +118,8 @@ class PointsController extends Controller
      */
     public function edit($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $point = Point::withTrashed()->findOrFail($id);
 
@@ -139,8 +138,8 @@ class PointsController extends Controller
      */
     public function update(Request $request, $id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         /*
         | @Begin Transaction
@@ -153,7 +152,7 @@ class PointsController extends Controller
 
             //validate the request value
             $validator = Validator::make($request->all(), [
-                'point_name' => 'required|string|unique:points,point_name,'.$point->id,
+                'point_name' => 'required|string|unique:points,point_name,' . $point->id,
                 'discount_rate' => 'required|numeric|gt:0',
                 'point' => 'required|numeric|gt:0',
                 'price_per_point' => 'required|numeric|gt:0',
@@ -162,7 +161,7 @@ class PointsController extends Controller
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
 
@@ -179,10 +178,9 @@ class PointsController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg","Point Update Successfully");
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+            return back()->with("successMsg", "Point Update Successfully");
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
@@ -219,10 +217,9 @@ class PointsController extends Controller
 
             /* Restore point */
             $point->restore();
-
-            return back()->with("successMsg","Successfully Restore the data");
-
-        } catch(\Exception $e) {
+            \DB::commit();
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }

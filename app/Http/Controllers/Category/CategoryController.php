@@ -17,10 +17,12 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         $categories = Category::all();
-        return view("category.index",[
-            'categories' => $categories
+        $InactiveCategories = Category::onlyTrashed()->get();
+        return view("category.index", [
+            'categories' => $categories,
+            'InactiveCategories' => $InactiveCategories
         ]);
     }
 
@@ -45,7 +47,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-       //prevent other user to access to this page
+        //prevent other user to access to this page
         $this->authorize("isAdmin");
         /*
         | @Begin Transaction
@@ -53,18 +55,18 @@ class CategoryController extends Controller
         \DB::beginTransaction();
 
         try {
-             //validate request value
-             $validator = Validator::make($request->all(), [
+            //validate request value
+            $validator = Validator::make($request->all(), [
                 'category_name' => 'required|string|max:50|unique:categories,category_name',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-           
+
             //save category
             $category = new Category();
             $category->category_name = $request->category_name;
@@ -77,13 +79,12 @@ class CategoryController extends Controller
             \DB::commit();
 
             return redirect()->route('category.create')
-                        ->with('successMsg','Category Save Successful');
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+                ->with('successMsg', 'Category Save Successful');
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -94,8 +95,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $category = Category::withTrashed()->findOrFail($id);
 
@@ -112,8 +113,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $category = Category::withTrashed()->findOrFail($id);
 
@@ -132,8 +133,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         /*
         | @Begin Transaction
@@ -146,12 +147,12 @@ class CategoryController extends Controller
 
             //validate the request value
             $validator = Validator::make($request->all(), [
-                'category_name' => 'required|string|unique:categories,category_name,'.$category->id
+                'category_name' => 'required|string|unique:categories,category_name,' . $category->id
             ]);
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
 
@@ -164,10 +165,9 @@ class CategoryController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg","Category Update Successfully");
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+            return back()->with("successMsg", "Category Update Successfully");
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
@@ -206,9 +206,8 @@ class CategoryController extends Controller
             $category->restore();
             \DB::commit();
 
-            return back()->with("successMsg","Successfully Restore the data");
-
-        } catch(\Exception $e) {
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }

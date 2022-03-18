@@ -516,7 +516,7 @@ class StockFetchController extends Controller
 		//column list in the table Prpducts
 		$columns = array(
 			0 => 'reference_no',
-			1 => 'name',
+			1 => 'suppliers.name',
 			2 => 'status',
 			3 => 'delivery_at',
 			4 => 'action'
@@ -536,7 +536,9 @@ class StockFetchController extends Controller
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
 			//get all the product data
-			$posts = DeliveryRequest::with('supplier')->offset($start)
+			$posts = DeliveryRequest::select('*')
+				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
+				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
@@ -598,6 +600,105 @@ class StockFetchController extends Controller
 					<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
 				';
 				}
+
+				$data[] = $nestedData;
+			}
+		}
+
+		$json_data = array(
+			"draw"			    => intval($request->input('draw')),
+			"recordsTotal"	    => intval($totalData),
+			"recordsFiltered"   => intval($totalFiltered),
+			"data"			    => $data
+		);
+
+		//return the data in json response
+		return response()->json($json_data);
+	}
+
+	public function fetchInactiveDeliveriesRequest(Request $request)
+	{
+		//column list in the table Prpducts
+		$columns = array(
+			0 => 'reference_no',
+			1 => 'suppliers.name',
+			2 => 'status',
+			3 => 'delivery_at',
+			4 => 'action'
+		);
+
+		//get the total number of data in Product table
+		$totalData = DeliveryRequest::onlyTrashed()->count();
+		//total number of data that will show in the datatable default 10
+		$limit = $request->input('length');
+		//start number for pagination ,default 0
+		$start = $request->input('start');
+		//order list of the column
+		$order = $columns[$request->input('order.0.column')];
+		//order by ,default asc 
+		$dir = $request->input('order.0.dir');
+
+		//check if user search for a value in the product datatable
+		if (empty($request->input('search.value'))) {
+			//get all the product data
+			$posts = DeliveryRequest::onlyTrashed()
+				->select('*')
+				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
+				->offset($start)
+				->limit($limit)
+				->orderBy($order, $dir)
+				->get();
+
+			//total number of filtered data
+			$totalFiltered = DeliveryRequest::onlyTrashed()->count();
+		} else {
+			$search = $request->input('search.value');
+
+			$posts = DeliveryRequest::onlyTrashed()
+				->orWhere('reference_no', 'like', "%{$search}%")
+				->orWhereHas('supplier', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
+				})
+				->orWhere('status', 'like', "%{$search}%")
+				->orWhere('delivery_at', 'like', "%{$search}%")
+				->offset($start)
+				->limit($limit)
+				->orderBy($order, $dir)
+				->get();
+
+			//total number of filtered data matching the search value request in the delivery table	
+			$totalFiltered = DeliveryRequest::onlyTrashed()
+				->orWhere('reference_no', 'like', "%{$search}%")
+				->orWhereHas('supplier', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
+				})
+				->orWhere('status', 'like', "%{$search}%")
+				->orWhere('delivery_at', 'like', "%{$search}%")
+				->count();
+		}
+
+
+		$data = array();
+
+		if ($posts) {
+			//loop posts collection to transfer in another array $nestedData
+			foreach ($posts as $r) {
+				$status = '';
+				if ($r->status == 'cancel') {
+					$status = '<span title="Cancel" class="badge bg-danger">CANCEL</span>';
+				} else if ($r->status == 'pending') {
+					$status = '<span title="Danger" class="badge bg-warning">PENDING</span>';
+				} else if ($r->status == 'completed') {
+					$status = '<span title="Success" class="badge bg-success">COMPLETED</span>';
+				}
+				$nestedData['reference_no'] = $r->reference_no;
+				$nestedData['name'] = $r->supplier->name;
+				$nestedData['status'] = $status;
+				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
+				$nestedData['action'] = '
+                    <button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
+					';
+
 
 				$data[] = $nestedData;
 			}
@@ -748,7 +849,7 @@ class StockFetchController extends Controller
 		return response()->json($json_data);
 	}
 
-	//fetch Delivery Request
+	//fetch Return Stock
 	public function fetchReturnStock(Request $request)
 	{
 		//column list in the table Prpducts
@@ -821,6 +922,95 @@ class StockFetchController extends Controller
                     <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
 					<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
 					<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
+				';
+				$data[] = $nestedData;
+			}
+		}
+
+		$json_data = array(
+			"draw"			    => intval($request->input('draw')),
+			"recordsTotal"	    => intval($totalData),
+			"recordsFiltered"   => intval($totalFiltered),
+			"data"			    => $data
+		);
+
+		//return the data in json response
+		return response()->json($json_data);
+	}
+
+	public function fetchInactiveReturnStock(Request $request)
+	{
+		//column list in the table Prpducts
+		$columns = array(
+			0 => 'reference_no',
+			1 => 'suppliers.name',
+			2 => 'delivery_at',
+			3 => 'received_at',
+			4 => 'action'
+		);
+
+		//get the total number of data in Product table
+		$totalData = ReturnStock::onlyTrashed()->count();
+		//total number of data that will show in the datatable default 10
+		$limit = $request->input('length');
+		//start number for pagination ,default 0
+		$start = $request->input('start');
+		//order list of the column
+		$order = $columns[$request->input('order.0.column')];
+		//order by ,default asc 
+		$dir = $request->input('order.0.dir');
+
+		//check if user search for a value in the product datatable
+		if (empty($request->input('search.value'))) {
+			//get all the product data
+			$posts = ReturnStock::onlyTrashed()
+				->select('*')
+				->join('suppliers', 'return_stocks.supplier_id', '=', 'suppliers.id')
+				->offset($start)
+				->limit($limit)
+				->orderBy($order, $dir)
+				->get();
+
+			//total number of filtered data
+			$totalFiltered = ReturnStock::onlyTrashed()->count();
+		} else {
+			$search = $request->input('search.value');
+
+			$posts = ReturnStock::onlyTrashed()
+				->orWhere('reference_no', 'like', "%{$search}%")
+				->orWhereHas('supplier', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
+				})
+				->orWhere('delivery_at', 'like', "%{$search}%")
+				->orWhere('created_at', 'like', "%{$search}%")
+				->offset($start)
+				->limit($limit)
+				->orderBy($order, $dir)
+				->get();
+
+			//total number of filtered data matching the search value request in the delivery table	
+			$totalFiltered = ReturnStock::onlyTrashed()
+				->orWhere('reference_no', 'like', "%{$search}%")
+				->orWhereHas('supplier', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
+				})
+				->orWhere('delivery_at', 'like', "%{$search}%")
+				->orWhere('received_at', 'like', "%{$search}%")
+				->count();
+		}
+
+
+		$data = array();
+
+		if ($posts) {
+			//loop posts collection to transfer in another array $nestedData
+			foreach ($posts as $r) {
+				$nestedData['reference_no'] = $r->reference_no;
+				$nestedData['name'] = $r->supplier->name;
+				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
+				$nestedData['received_at'] = date('m-d-Y', strtotime($r->received_at));
+				$nestedData['action'] = '
+                    <button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
 				';
 				$data[] = $nestedData;
 			}

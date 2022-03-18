@@ -16,10 +16,12 @@ class DiscountController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         $discounts = Discount::all();
-        return view("discount.index",[
-            'discounts' => $discounts
+        $InactiveDiscount = Discount::onlyTrashed()->get();
+        return view("discount.index", [
+            'discounts' => $discounts,
+            'InactiveDiscount' => $InactiveDiscount
         ]);
     }
 
@@ -44,7 +46,7 @@ class DiscountController extends Controller
      */
     public function store(Request $request)
     {
-       //prevent other user to access to this page
+        //prevent other user to access to this page
         $this->authorize("isAdmin");
         /*
         | @Begin Transaction
@@ -52,19 +54,19 @@ class DiscountController extends Controller
         \DB::beginTransaction();
 
         try {
-             //validate request value
-             $validator = Validator::make($request->all(), [
+            //validate request value
+            $validator = Validator::make($request->all(), [
                 'discount_name' => 'required|string|max:50|unique:discounts,discount_name',
                 'discount_rate' => 'required|numeric|gt:0',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-           
+
             //save discount
             $discount = new Discount();
             $discount->discount_name = $request->discount_name;
@@ -78,13 +80,12 @@ class DiscountController extends Controller
             \DB::commit();
 
             return redirect()->route('discount.create')
-                        ->with('successMsg','Discount Save Successful');
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+                ->with('successMsg', 'Discount Save Successful');
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -95,8 +96,8 @@ class DiscountController extends Controller
      */
     public function show($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $discount = Discount::withTrashed()->findOrFail($id);
 
@@ -113,8 +114,8 @@ class DiscountController extends Controller
      */
     public function edit($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $discount = Discount::withTrashed()->findOrFail($id);
 
@@ -133,8 +134,8 @@ class DiscountController extends Controller
      */
     public function update(Request $request, $id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         /*
         | @Begin Transaction
@@ -147,13 +148,13 @@ class DiscountController extends Controller
 
             //validate the request value
             $validator = Validator::make($request->all(), [
-                'discount_name' => 'required|string|unique:discounts,discount_name,'.$discount->id,
+                'discount_name' => 'required|string|unique:discounts,discount_name,' . $discount->id,
                 'discount_rate' => 'required|numeric|gt:0',
             ]);
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
 
@@ -167,10 +168,9 @@ class DiscountController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg","Discount Update Successfully");
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+            return back()->with("successMsg", "Discount Update Successfully");
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
@@ -207,10 +207,9 @@ class DiscountController extends Controller
 
             /* Restore discount */
             $discount->restore();
-
-            return back()->with("successMsg","Successfully Restore the data");
-
-        } catch(\Exception $e) {
+            \DB::commit();
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }

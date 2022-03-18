@@ -18,9 +18,10 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-
+        $InactiveUsers = User::onlyTrashed()->get();
         return view('users.index', [
-            'users' => $users
+            'users' => $users,
+            'InactiveUsers' => $InactiveUsers
         ]);
     }
 
@@ -36,7 +37,7 @@ class UserController extends Controller
 
         $roles = Role::all();
 
-        return view("users.create",[
+        return view("users.create", [
             'roles' => $roles
         ]);
     }
@@ -49,7 +50,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-         /*
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -62,16 +63,16 @@ class UserController extends Controller
                 // 'password' => 'required|same:confirm-password',
                 'role_id' => 'required|integer'
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-        
+
             $password = Hash::make(12345);
 
             //check current user
             $currenUser = \Auth::user()->id;
-           
+
             //save user
             $user = new User();
             $user->first_name = $request->first_name;
@@ -88,12 +89,11 @@ class UserController extends Controller
             \DB::commit();
 
             return redirect()->route('user.create')
-                        ->with('successMsg','User Data Save Successful');
-         
-        } catch(\Exception $e) {
+                ->with('successMsg', 'User Data Save Successful');
+        } catch (\Exception $e) {
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -122,7 +122,7 @@ class UserController extends Controller
         $user = User::withTrashed()->findOrFail($id);
         $roles = Role::all();
 
-        return view("users.edit",[
+        return view("users.edit", [
             'roles' => $roles,
             'user' => $user
         ]);
@@ -137,7 +137,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-         /*
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -148,20 +148,19 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|max:50',
                 'last_name' => 'required|max:50',
-                'email' => 'required|email|unique:users,email,'.$user->id,  
+                'email' => 'required|email|unique:users,email,' . $user->id,
                 'password' => 'same:confirm-password',
                 'role_id' => 'required|integer'
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
 
-            if ( !$request->password == '')
-            {
+            if (!$request->password == '') {
                 $user->password = bcrypt($request->password);
             }
-            
+
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->email = $request->email;
@@ -173,9 +172,8 @@ class UserController extends Controller
             \DB::commit();
 
             return redirect()->route('user.edit', $user->id)
-                    ->with('successMsg','User Data update Successfully');
-
-        } catch(\Exception $e) {
+                ->with('successMsg', 'User Data update Successfully');
+        } catch (\Exception $e) {
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
@@ -210,9 +208,8 @@ class UserController extends Controller
             $user->restore();
             \DB::commit();
 
-            return back()->with("successMsg","Successfully Restore the data");
-
-        } catch(\Exception $e) {
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }

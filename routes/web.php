@@ -34,31 +34,36 @@ Route::middleware('auth')->group(function () {
 
     //Category
     Route::resource('/category', 'Category\CategoryController');
-    Route::post('category/{id}/restore', 'Category\CategoryController@restore');
+    Route::get('category/restore/{id}', 'Category\CategoryController@restore');
     Route::post('category/fetch/q', 'Category\CategoryFetchController@fetchCategory')->name('activeCategory');
     Route::get('category/destroy/{id}', 'Category\CategoryController@destroy');
+    Route::post('inactive-category/fetch/q', 'Category\CategoryFetchController@fetchInactiveCategory')->name('InActiveCategory');
 
     //Customer
     Route::resource('/customer', 'Customer\CustomerController');
-    Route::post('customer/{id}/restore', 'Customer\CustomerController@restore');
     Route::post('customer/fetch/q', 'Customer\CustomerFetchController@fetchCustomer')->name('activeCustomer');
+    Route::post('inactive-customer/fetch/q', 'Customer\CustomerFetchController@fetchInactiveCustomer')->name('InactiveCustomer');
     Route::get('customer/destroy/{id}', 'Customer\CustomerController@destroy');
+    Route::get('customer/restore/{id}', 'Customer\CustomerController@restore');
 
     Route::post('check-customer-info/fetch/q', 'Customer\CustomerFetchController@getCustomerInfo');
     Route::post('get-customer-points/fetch/q', 'Customer\CustomerFetchController@getCustomerPoints')->name('getCustomerPoints');
 
     //Discount
     Route::resource('/discount', 'Discount\DiscountController');
-    Route::post('discount/{id}/restore', 'Discount\DiscountController@restore');
     Route::post('discount/fetch/q', 'Discount\DiscountFetchController@fetchDiscount')->name('activeDiscount');
+    Route::post('inactive-discount/fetch/q', 'Discount\DiscountFetchController@fetchInactiveDiscount')->name('InactiveDiscount');
     Route::get('discount/destroy/{id}', 'Discount\DiscountController@destroy');
+    Route::get('discount/restore/{id}', 'Discount\DiscountController@restore');
 
     Route::get('normal-discounts/fetch/q', 'Discount\DiscountFetchController@fetchNormalDiscounts');
 
     //Supplier
     Route::resource('/supplier', 'Supplier\SupplierController');
     Route::post('supplier/fetch/q', 'Supplier\SupplierFetchController@fetchSupplier')->name('activeSupplier');
+    Route::post('inactive-supplier/fetch/q', 'Supplier\SupplierFetchController@fetchInactiveSupplier')->name('InActiveSupplier');
     Route::get('supplier/destroy/{id}', 'Supplier\SupplierController@destroy');
+    Route::get('supplier/restore/{id}', 'Supplier\SupplierController@restore');
 
     //Stock
     Route::resource('/stock', 'Stock\StockController');
@@ -66,11 +71,13 @@ Route::middleware('auth')->group(function () {
     Route::post('deliveries/fetch/q', 'Stock\StockFetchController@fetchDeliveries')->name('activeDeliveries');
     Route::post('stock/fetch/q', 'Stock\StockFetchController@fetchProductsDelivery')->name('activeProductsDelivery');
     Route::post('delivery-request-stock/fetch/q', 'Stock\StockFetchController@fetchDeliveriesRequest')->name('activeDeliveriesRequest');
+    Route::post('inactive-delivery-request-stock/fetch/q', 'Stock\StockFetchController@fetchInactiveDeliveriesRequest')->name('InactiveDeliveriesRequest');
     Route::post('delivery-request-stock-item/fetch/q', 'Stock\StockFetchController@fetchProductsDeliveryRequest')->name('activeProductsDeliveryRequest');
     Route::post('return-stock/fetch/q', 'Stock\StockFetchController@fetchReturnStock')->name('activeReturnStock');
     Route::post('return-stock-item/fetch/q', 'Stock\StockFetchController@fetchProductsReturnStock')->name('activeProductsReturnStock');
     Route::get('delivery/destroy/{id}', 'Stock\StockController@destroy');
     Route::get('stock/destroy/{id}', 'Stock\StockController@removeProduct');
+
 
     //Stock In History
     Route::resource('/history-stock-in', 'Stock\StockInHistoryController');
@@ -79,8 +86,11 @@ Route::middleware('auth')->group(function () {
     //Inventory
     Route::resource('/inventory', 'Inventory\InventoryController');
     Route::post('inventory/fetch/q', 'Inventory\InventoryFetchController@fetchInventory')->name('activeInventory');
+    Route::post('inactive-inventories/fetch/q', 'Inventory\InventoryFetchController@fetchInactiveInventory')->name('InActiveInventory');
     Route::get('inventory/destroy/{id}', 'Inventory\InventoryController@destroy');
+    Route::get('inventory/restore/{id}', 'Inventory\InventoryController@restore');
     Route::get('inventories/fetch/q', 'Inventory\InventoryFetchController@fetchInventoryProducts');
+
     Route::get('product-adjustment-logs', 'Inventory\InventoryController@productAdjustmentLogs')->name('productAdjustmentLogs');
     Route::post('product-adjustment-logs/fetch/q', 'Inventory\InventoryFetchController@getInventoryAdjustmentProducts')->name('getInventoryAdjustmentProducts');
 
@@ -89,9 +99,10 @@ Route::middleware('auth')->group(function () {
 
     //Users
     Route::resource('/user', 'User\UserController');
-    Route::post('user/{id}/restore', 'User\UserController@restore');
     Route::post('user/fetch/q', 'User\UserFetchController@fetchUser')->name('activeUser');
+    Route::post('inactive-user/fetch/q', 'User\UserFetchController@fetchInactiveUser')->name('InactiveUser');
     Route::get('user/destroy/{id}', 'User\UserController@destroy');
+    Route::get('user/restore/{id}', 'User\UserController@restore');
 
     //Profile
     Route::get('/profile', 'User\ProfileController@viewProfile')->name('user-profile');
@@ -145,12 +156,15 @@ Route::middleware('auth')->group(function () {
     Route::post('delivery-request/add-products', 'Stock\DeliveryRequestController@addProduct')->name('addDeliveryRequestItem');
     Route::post('delivery-request/update-products', 'Stock\DeliveryRequestController@updateProduct')->name('updateDeliveryRequestItem');
     Route::get('delivery-request/destroy/{id}', 'Stock\DeliveryRequestController@destroy');
+    Route::get('delivery-request/restore/{id}', 'Stock\DeliveryRequestController@restore');
     Route::get('delivery-request-item/destroy/{id}', 'Stock\DeliveryRequestController@removeProduct');
     //Return Stock
     Route::resource('return-stock', 'Stock\ReturnStockController');
     Route::post('return-stock/add-products', 'Stock\ReturnStockController@addProduct')->name('addReturnStockItem');
+    Route::post('inactive-return-stock/fetch/q', 'Stock\StockFetchController@fetchInactiveReturnStock')->name('InactiveReturnStock');
     Route::get('return-stock/destroy/{id}', 'Stock\ReturnStockController@destroy');
     Route::get('return-stock-item/destroy/{id}', 'Stock\ReturnStockController@removeProduct');
+    Route::get('return-stock/restore/{id}', 'Stock\ReturnStockController@restore');
 
     //Inventory Level
     Route::resource('inventories-level', 'Inventory\InventoryLevelController');

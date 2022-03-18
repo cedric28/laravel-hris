@@ -17,10 +17,12 @@ class SupplierController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         $suppliers = Supplier::all();
-        return view("supplier.index",[
-            'suppliers' => $suppliers
+        $InactiveSuppliers = Supplier::onlyTrashed()->get();
+        return view("supplier.index", [
+            'suppliers' => $suppliers,
+            'InactiveSuppliers' => $InactiveSuppliers
         ]);
     }
 
@@ -45,7 +47,7 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-       //prevent other user to access to this page
+        //prevent other user to access to this page
         $this->authorize("isAdmin");
         /*
         | @Begin Transaction
@@ -53,22 +55,22 @@ class SupplierController extends Controller
         \DB::beginTransaction();
 
         try {
-             //validate request value
-             $validator = Validator::make($request->all(), [
+            //validate request value
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:50|unique:suppliers,name',
                 'short_name' => 'required|string|max:50',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
                 'email' => 'required|email|max:50'
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-           
+
             //save supplier
             $supplier = new Supplier();
             $supplier->name = $request->name;
@@ -85,13 +87,12 @@ class SupplierController extends Controller
             \DB::commit();
 
             return redirect()->route('supplier.create')
-                        ->with('successMsg','Supplier Save Successful');
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+                ->with('successMsg', 'Supplier Save Successful');
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -102,8 +103,8 @@ class SupplierController extends Controller
      */
     public function show($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $supplier = Supplier::withTrashed()->findOrFail($id);
 
@@ -120,8 +121,8 @@ class SupplierController extends Controller
      */
     public function edit($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $supplier = Supplier::withTrashed()->findOrFail($id);
 
@@ -140,8 +141,8 @@ class SupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         /*
         | @Begin Transaction
@@ -154,7 +155,7 @@ class SupplierController extends Controller
 
             //validate the request value
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|unique:suppliers,name,'.$supplier->id,
+                'name' => 'required|string|unique:suppliers,name,' . $supplier->id,
                 'short_name' => 'required|string|max:50',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
@@ -163,7 +164,7 @@ class SupplierController extends Controller
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
 
@@ -180,10 +181,9 @@ class SupplierController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg","Supplier Update Successfully");
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+            return back()->with("successMsg", "Supplier Update Successfully");
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
@@ -203,5 +203,29 @@ class SupplierController extends Controller
         //delete category
         $supplier = Supplier::findOrFail($id);
         $supplier->delete();
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        \DB::beginTransaction();
+        try {
+
+            $supplier = Supplier::onlyTrashed()->findOrFail($id);
+
+            /* Restore supplier */
+            $supplier->restore();
+            \DB::commit();
+
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

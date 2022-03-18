@@ -17,10 +17,12 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         $customers = Customer::all();
-        return view("customer.index",[
-            'customers' => $customers
+        $InactiveCustomer = Customer::onlyTrashed()->get();
+        return view("customer.index", [
+            'customers' => $customers,
+            'InactiveCustomer' => $InactiveCustomer
         ]);
     }
 
@@ -45,7 +47,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-       //prevent other user to access to this page
+        //prevent other user to access to this page
         $this->authorize("isAdmin");
         /*
         | @Begin Transaction
@@ -53,21 +55,21 @@ class CustomerController extends Controller
         \DB::beginTransaction();
 
         try {
-             //validate request value
-             $validator = Validator::make($request->all(), [
+            //validate request value
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:50|unique:customers,name',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
                 'email' => 'required|email|max:50'
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-           
+
             //save customer
             $customer = new Customer();
             $customer->reference_no = $this->generateUniqueCode();
@@ -84,13 +86,12 @@ class CustomerController extends Controller
             \DB::commit();
 
             return redirect()->route('customer.create')
-                        ->with('successMsg','Customer Save Successful');
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+                ->with('successMsg', 'Customer Save Successful');
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -101,8 +102,8 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $customer = Customer::withTrashed()->findOrFail($id);
         $totalPoints = $customer->customer_points->sum('point');
@@ -121,8 +122,8 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $customer = Customer::withTrashed()->findOrFail($id);
 
@@ -141,8 +142,8 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         /*
         | @Begin Transaction
@@ -155,7 +156,7 @@ class CustomerController extends Controller
 
             //validate the request value
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|unique:customers,name,'.$customer->id,
+                'name' => 'required|string|unique:customers,name,' . $customer->id,
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
                 'email' => 'required|email|max:50'
@@ -163,7 +164,7 @@ class CustomerController extends Controller
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
 
@@ -179,10 +180,9 @@ class CustomerController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg","Customer Update Successfully");
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+            return back()->with("successMsg", "Customer Update Successfully");
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
@@ -204,12 +204,35 @@ class CustomerController extends Controller
         $customer->delete();
     }
 
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        \DB::beginTransaction();
+        try {
+
+            $customer = Customer::onlyTrashed()->findOrFail($id);
+
+            /* Restore customer */
+            $customer->restore();
+            \DB::commit();
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
     public function generateUniqueCode()
     {
         do {
             $reference_no = random_int(1000000000, 9999999999);
         } while (Customer::where("reference_no", "=", $reference_no)->first());
-  
+
         return $reference_no;
     }
 }

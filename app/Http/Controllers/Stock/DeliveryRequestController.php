@@ -22,9 +22,11 @@ class DeliveryRequestController extends Controller
     {
         $deliveryRequest = DeliveryRequest::all();
         $deliveryRequestItems = DeliveryRequestItem::all();
+        $InactiveDeliveryRequest = DeliveryRequest::onlyTrashed()->get();
         return view('stock.delivery_request.index', [
             'deliveryRequest' => $deliveryRequest,
-            'deliveryRequestItems' => $deliveryRequestItems
+            'deliveryRequestItems' => $deliveryRequestItems,
+            'InactiveDeliveryRequest' => $InactiveDeliveryRequest
         ]);
     }
 
@@ -262,7 +264,7 @@ class DeliveryRequestController extends Controller
                             $inventory = Inventory::firstOrNew([
                                 'id' => $value->product_id
                             ]);
-                        
+
                             $inventory->quantity = ($inventory->quantity + $value->received_qty);;
                             $inventory->creator_id = $user->id;
                             $inventory->updater_id = $user->id;
@@ -295,6 +297,30 @@ class DeliveryRequestController extends Controller
         //delete delivery
         $delivery = DeliveryRequest::findOrFail($id);
         $delivery->delete();
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        \DB::beginTransaction();
+        try {
+
+            $delivery = DeliveryRequest::onlyTrashed()->findOrFail($id);
+
+            /* Restore delivery */
+            $delivery->restore();
+            \DB::commit();
+
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function generateUniqueCode()

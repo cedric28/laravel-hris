@@ -22,9 +22,11 @@ class ReturnStockController extends Controller
     {
         $returnStocks = ReturnStock::all();
         $returnStockItems = ReturnStockItem::all();
+        $InactiveReturnStocks = ReturnStock::onlyTrashed()->get();
         return view('stock.return.index', [
             'returnStocks' => $returnStocks,
-            'returnStockItems' => $returnStockItems
+            'returnStockItems' => $returnStockItems,
+            'InactiveReturnStocks' => $InactiveReturnStocks
         ]);
     }
 
@@ -210,6 +212,30 @@ class ReturnStockController extends Controller
         //delete delivery
         $returnStock = ReturnStock::findOrFail($id);
         $returnStock->delete();
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        \DB::beginTransaction();
+        try {
+
+            $returnStock = ReturnStock::onlyTrashed()->findOrFail($id);
+
+            /* Restore returnStock */
+            $returnStock->restore();
+            \DB::commit();
+
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function generateUniqueCode()

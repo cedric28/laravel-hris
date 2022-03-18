@@ -24,10 +24,13 @@ class InventoryController extends Controller
     public function index()
     {
         $inventories = Inventory::all();
+        $InactiveInventories = Inventory::onlyTrashed()->get();
+
         $inventoryLevel = InventoryLevel::all();
         return view("inventory.index", [
             'inventories' => $inventories,
-            'inventoryLevel' => $inventoryLevel
+            'inventoryLevel' => $inventoryLevel,
+            'InactiveInventories' => $InactiveInventories
         ]);
     }
 
@@ -318,7 +321,33 @@ class InventoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //delete product
+        $product = Inventory::findOrFail($id);
+        $product->delete();
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        \DB::beginTransaction();
+        try {
+
+            $product = Inventory::onlyTrashed()->findOrFail($id);
+
+            /* Restore product */
+            $product->restore();
+            \DB::commit();
+
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function productAdjustmentLogs(Request $request)
