@@ -29,10 +29,6 @@
 									<td>{{ $deliveryRequest->reference_no }}</td>
 								</tr>
 								<tr>
-									<th>Notes</th>
-									<td>{!! $deliveryRequest->content !!}</td>
-								</tr>
-								<tr>
 									<th>Supplier</th>
 									<td>{{ $deliveryRequest->supplier->name }}</td>
 								</tr>

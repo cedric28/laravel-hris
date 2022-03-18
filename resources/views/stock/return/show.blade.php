@@ -29,10 +29,6 @@
 									<td>{{ $returnStock->reference_no }}</td>
 								</tr>
 								<tr>
-									<th>Notes</th>
-									<td>{!! $returnStock->content !!}</td>
-								</tr>
-								<tr>
 									<th>Supplier</th>
 									<td>{{ $returnStock->supplier->name }}</td>
 								</tr>
