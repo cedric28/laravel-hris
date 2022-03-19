@@ -536,7 +536,7 @@ class StockFetchController extends Controller
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
 			//get all the product data
-			$posts = DeliveryRequest::select('*')
+			$posts = DeliveryRequest::select('*', 'delivery_requests.id as id')
 				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
 				->offset($start)
 				->limit($limit)
@@ -642,7 +642,7 @@ class StockFetchController extends Controller
 		if (empty($request->input('search.value'))) {
 			//get all the product data
 			$posts = DeliveryRequest::onlyTrashed()
-				->select('*')
+				->select('*', 'delivery_requests.id as id')
 				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
 				->offset($start)
 				->limit($limit)
@@ -875,7 +875,7 @@ class StockFetchController extends Controller
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
 			//get all the product data
-			$posts = ReturnStock::select('*')
+			$posts = ReturnStock::select('*', 'return_stocks.id as id')
 				->join('suppliers', 'return_stocks.supplier_id', '=', 'suppliers.id')
 				->offset($start)
 				->limit($limit)
@@ -964,7 +964,7 @@ class StockFetchController extends Controller
 		if (empty($request->input('search.value'))) {
 			//get all the product data
 			$posts = ReturnStock::onlyTrashed()
-				->select('*')
+				->select('*', 'return_stocks.id as id')
 				->join('suppliers', 'return_stocks.supplier_id', '=', 'suppliers.id')
 				->offset($start)
 				->limit($limit)

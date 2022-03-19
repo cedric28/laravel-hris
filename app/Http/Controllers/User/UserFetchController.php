@@ -35,7 +35,7 @@ class UserFetchController extends Controller
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
-			$posts = User::select('*')
+			$posts = User::select('*', 'users.id as id')
 				->join('roles', 'users.role_id', '=', 'roles.id')
 				->offset($start)
 				->limit($limit)
@@ -127,7 +127,7 @@ class UserFetchController extends Controller
 		if (empty($request->input('search.value'))) {
 			//get all the User data
 			$posts = User::onlyTrashed()
-				->select('*')
+				->select('*', 'users.id as id')
 				->join('roles', 'users.role_id', '=', 'roles.id')
 				->offset($start)
 				->limit($limit)
