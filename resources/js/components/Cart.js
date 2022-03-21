@@ -227,7 +227,7 @@ class Cart extends Component {
 
     getTotalDiscount(){
         const { discount } = this.state;
-        const totalDiscount = discount.length != 0 ? this.getTotal() - (this.getTotal() * parseFloat(discount.discount_rate)) : 0;
+        const totalDiscount = discount.length != 0 ? (this.getTotal() * parseFloat(discount.discount_rate)) : 0;
         console.log("Total Discount", totalDiscount)
         console.log("Discount", discount)
         return totalDiscount.toFixed(2);

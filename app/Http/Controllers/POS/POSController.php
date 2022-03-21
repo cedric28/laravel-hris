@@ -116,7 +116,12 @@ class POSController extends Controller
 
                 if (!empty($customerEarnerInfo)) {
                     $customerEarnerId = $customerEarnerInfo['id'];
+                    $customerPointsTotal = CustomerPoint::where("customer_id", $customerEarnerId)->sum("point");
+                    $totalPointsInTotal = $customerPointsTotal + $pointEarned;
+
                     if ($pointEarned > 0) {
+                        $pointEarned = $totalPointsInTotal > floatval($discountPoint[0]->total_needed_point) ? floatval($discountPoint[0]->total_needed_point) - $customerPointsTotal : $pointEarned;
+
                         CustomerPoint::create([
                             'customer_id' => $customerEarnerId,
                             'sale_id' =>  $sales->id,
