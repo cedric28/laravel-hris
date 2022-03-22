@@ -42,16 +42,22 @@ class CategoryFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = Category::where('category_name', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+			$posts = Category::where(function ($query) use ($search) {
+				$query->where('category_name', 'like', "%{$search}%")
+					->orWhere('created_at', 'like', "%{$search}%");
+			})
+				->where('deleted_at', '=', null)
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the Category table	
-			$totalFiltered = Category::where('category_name', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+			$totalFiltered = Category::where(function ($query) use ($search) {
+				$query->where('category_name', 'like', "%{$search}%")
+					->orWhere('created_at', 'like', "%{$search}%");
+			})
+				->where('deleted_at', '=', null)
 				->count();
 		}
 
@@ -118,8 +124,10 @@ class CategoryFetchController extends Controller
 			$search = $request->input('search.value');
 
 			$posts = Category::onlyTrashed()
-				->orWhere('category_name', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+				->where(function ($query) use ($search) {
+					$query->where('category_name', 'like', "%{$search}%")
+						->orWhere('created_at', 'like', "%{$search}%");
+				})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -127,8 +135,10 @@ class CategoryFetchController extends Controller
 
 			//total number of filtered data matching the search value request in the Category table	
 			$totalFiltered = Category::onlyTrashed()
-				->orWhere('category_name', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+				->where(function ($query) use ($search) {
+					$query->where('category_name', 'like', "%{$search}%")
+						->orWhere('created_at', 'like', "%{$search}%");
+				})
 				->count();
 		}
 

@@ -47,24 +47,28 @@ class UserFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = User::where('first_name', 'like', "%{$search}%")
-				->orWhere('last_name', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
-				->orWhereHas('role', function ($query) use ($search) {
+			$posts = User::where(function ($query) use ($search) {
+				$query->whereHas('role', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
+					->orWhere('first_name', 'like', "%{$search}%")
+					->orWhere('last_name', 'like', "%{$search}%")
+					->orWhere('email', 'like', "%{$search}%");
+			})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the Supplier table	
-			$totalFiltered = User::where('first_name', 'like', "%{$search}%")
-				->orWhere('last_name', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
-				->orWhereHas('role', function ($query) use ($search) {
+			$totalFiltered = User::where(function ($query) use ($search) {
+				$query->whereHas('role', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
+					->orWhere('first_name', 'like', "%{$search}%")
+					->orWhere('last_name', 'like', "%{$search}%")
+					->orWhere('email', 'like', "%{$search}%");
+			})
 				->count();
 		}
 
@@ -140,11 +144,13 @@ class UserFetchController extends Controller
 			$search = $request->input('search.value');
 
 			$posts = User::onlyTrashed()
-				->orWhere('first_name', 'like', "%{$search}%")
-				->orWhere('last_name', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
-				->orWhereHas('role', function ($query) use ($search) {
-					$query->where('name', 'like', "%{$search}%");
+				->where(function ($query) use ($search) {
+					$query->whereHas('role', function ($query) use ($search) {
+						$query->where('name', 'like', "%{$search}%");
+					})
+						->orWhere('first_name', 'like', "%{$search}%")
+						->orWhere('last_name', 'like', "%{$search}%")
+						->orWhere('email', 'like', "%{$search}%");
 				})
 				->offset($start)
 				->limit($limit)
@@ -153,11 +159,13 @@ class UserFetchController extends Controller
 
 			//total number of filtered data matching the search value request in the Supplier table	
 			$totalFiltered = User::onlyTrashed()
-				->orWhere('first_name', 'like', "%{$search}%")
-				->orWhere('last_name', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
-				->orWhereHas('role', function ($query) use ($search) {
-					$query->where('name', 'like', "%{$search}%");
+				->where(function ($query) use ($search) {
+					$query->whereHas('role', function ($query) use ($search) {
+						$query->where('name', 'like', "%{$search}%");
+					})
+						->orWhere('first_name', 'like', "%{$search}%")
+						->orWhere('last_name', 'like', "%{$search}%")
+						->orWhere('email', 'like', "%{$search}%");
 				})
 				->count();
 		}

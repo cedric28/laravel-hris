@@ -46,22 +46,26 @@ class SupplierFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = Supplier::where('name', 'like', "%{$search}%")
-				->orWhere('short_name', 'like', "%{$search}%")
-				->orWhere('address', 'like', "%{$search}%")
-				->orWhere('contact_number', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
+			$posts = Supplier::where(function ($query) use ($search) {
+				$query->where('name', 'like', "%{$search}%")
+					->orWhere('short_name', 'like', "%{$search}%")
+					->orWhere('address', 'like', "%{$search}%")
+					->orWhere('contact_number', 'like', "%{$search}%")
+					->orWhere('email', 'like', "%{$search}%");
+			})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the Supplier table	
-			$totalFiltered = Supplier::where('name', 'like', "%{$search}%")
-				->orWhere('short_name', 'like', "%{$search}%")
-				->orWhere('address', 'like', "%{$search}%")
-				->orWhere('contact_number', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
+			$totalFiltered = Supplier::where(function ($query) use ($search) {
+				$query->where('name', 'like', "%{$search}%")
+					->orWhere('short_name', 'like', "%{$search}%")
+					->orWhere('address', 'like', "%{$search}%")
+					->orWhere('contact_number', 'like', "%{$search}%")
+					->orWhere('email', 'like', "%{$search}%");
+			})
 				->count();
 		}
 
@@ -111,7 +115,7 @@ class SupplierFetchController extends Controller
 		);
 
 		//get the total number of data in Supplier table
-		$totalData = Supplier::count();
+		$totalData = Supplier::onlyTrashed()->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -136,11 +140,13 @@ class SupplierFetchController extends Controller
 			$search = $request->input('search.value');
 
 			$posts = Supplier::onlyTrashed()
-				->orWhere('name', 'like', "%{$search}%")
-				->orWhere('short_name', 'like', "%{$search}%")
-				->orWhere('address', 'like', "%{$search}%")
-				->orWhere('contact_number', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
+				->where(function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%")
+						->orWhere('short_name', 'like', "%{$search}%")
+						->orWhere('address', 'like', "%{$search}%")
+						->orWhere('contact_number', 'like', "%{$search}%")
+						->orWhere('email', 'like', "%{$search}%");
+				})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -148,11 +154,13 @@ class SupplierFetchController extends Controller
 
 			//total number of filtered data matching the search value request in the Supplier table	
 			$totalFiltered = Supplier::onlyTrashed()
-				->orWhere('name', 'like', "%{$search}%")
-				->orWhere('short_name', 'like', "%{$search}%")
-				->orWhere('address', 'like', "%{$search}%")
-				->orWhere('contact_number', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
+				->where(function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%")
+						->orWhere('short_name', 'like', "%{$search}%")
+						->orWhere('address', 'like', "%{$search}%")
+						->orWhere('contact_number', 'like', "%{$search}%")
+						->orWhere('email', 'like', "%{$search}%");
+				})
 				->count();
 		}
 

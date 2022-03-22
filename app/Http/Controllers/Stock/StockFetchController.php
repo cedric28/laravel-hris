@@ -548,24 +548,28 @@ class StockFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = DeliveryRequest::where('reference_no', 'like', "%{$search}%")
-				->orWhereHas('supplier', function ($query) use ($search) {
+			$posts = DeliveryRequest::where(function ($query) use ($search) {
+				$query->whereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-				->orWhere('status', 'like', "%{$search}%")
-				->orWhere('delivery_at', 'like', "%{$search}%")
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('status', 'like', "%{$search}%")
+					->orWhere('delivery_at', 'like', "%{$search}%");
+			})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
-			$totalFiltered = DeliveryRequest::where('reference_no', 'like', "%{$search}%")
-				->orWhereHas('supplier', function ($query) use ($search) {
+			$totalFiltered = DeliveryRequest::where(function ($query) use ($search) {
+				$query->whereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-				->orWhere('status', 'like', "%{$search}%")
-				->orWhere('delivery_at', 'like', "%{$search}%")
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('status', 'like', "%{$search}%")
+					->orWhere('delivery_at', 'like', "%{$search}%");
+			})
 				->count();
 		}
 
@@ -655,12 +659,14 @@ class StockFetchController extends Controller
 			$search = $request->input('search.value');
 
 			$posts = DeliveryRequest::onlyTrashed()
-				->orWhere('reference_no', 'like', "%{$search}%")
-				->orWhereHas('supplier', function ($query) use ($search) {
-					$query->where('name', 'like', "%{$search}%");
+				->where(function ($query) use ($search) {
+					$query->whereHas('supplier', function ($query) use ($search) {
+						$query->where('name', 'like', "%{$search}%");
+					})
+						->orWhere('reference_no', 'like', "%{$search}%")
+						->orWhere('status', 'like', "%{$search}%")
+						->orWhere('delivery_at', 'like', "%{$search}%");
 				})
-				->orWhere('status', 'like', "%{$search}%")
-				->orWhere('delivery_at', 'like', "%{$search}%")
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -668,12 +674,14 @@ class StockFetchController extends Controller
 
 			//total number of filtered data matching the search value request in the delivery table	
 			$totalFiltered = DeliveryRequest::onlyTrashed()
-				->orWhere('reference_no', 'like', "%{$search}%")
-				->orWhereHas('supplier', function ($query) use ($search) {
-					$query->where('name', 'like', "%{$search}%");
+				->where(function ($query) use ($search) {
+					$query->whereHas('supplier', function ($query) use ($search) {
+						$query->where('name', 'like', "%{$search}%");
+					})
+						->orWhere('reference_no', 'like', "%{$search}%")
+						->orWhere('status', 'like', "%{$search}%")
+						->orWhere('delivery_at', 'like', "%{$search}%");
 				})
-				->orWhere('status', 'like', "%{$search}%")
-				->orWhere('delivery_at', 'like', "%{$search}%")
 				->count();
 		}
 
@@ -887,24 +895,28 @@ class StockFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = ReturnStock::where('reference_no', 'like', "%{$search}%")
-				->orWhereHas('supplier', function ($query) use ($search) {
+			$posts = ReturnStock::where(function ($query) use ($search) {
+				$query->whereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-				->orWhere('delivery_at', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('delivery_at', 'like', "%{$search}%")
+					->orWhere('created_at', 'like', "%{$search}%");
+			})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
-			$totalFiltered = ReturnStock::where('reference_no', 'like', "%{$search}%")
-				->orWhereHas('supplier', function ($query) use ($search) {
+			$totalFiltered = ReturnStock::where(function ($query) use ($search) {
+				$query->whereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-				->orWhere('delivery_at', 'like', "%{$search}%")
-				->orWhere('received_at', 'like', "%{$search}%")
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('delivery_at', 'like', "%{$search}%")
+					->orWhere('created_at', 'like', "%{$search}%");
+			})
 				->count();
 		}
 
@@ -977,12 +989,14 @@ class StockFetchController extends Controller
 			$search = $request->input('search.value');
 
 			$posts = ReturnStock::onlyTrashed()
-				->orWhere('reference_no', 'like', "%{$search}%")
-				->orWhereHas('supplier', function ($query) use ($search) {
-					$query->where('name', 'like', "%{$search}%");
+				->where(function ($query) use ($search) {
+					$query->whereHas('supplier', function ($query) use ($search) {
+						$query->where('name', 'like', "%{$search}%");
+					})
+						->orWhere('reference_no', 'like', "%{$search}%")
+						->orWhere('delivery_at', 'like', "%{$search}%")
+						->orWhere('created_at', 'like', "%{$search}%");
 				})
-				->orWhere('delivery_at', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -990,12 +1004,14 @@ class StockFetchController extends Controller
 
 			//total number of filtered data matching the search value request in the delivery table	
 			$totalFiltered = ReturnStock::onlyTrashed()
-				->orWhere('reference_no', 'like', "%{$search}%")
-				->orWhereHas('supplier', function ($query) use ($search) {
-					$query->where('name', 'like', "%{$search}%");
+				->where(function ($query) use ($search) {
+					$query->whereHas('supplier', function ($query) use ($search) {
+						$query->where('name', 'like', "%{$search}%");
+					})
+						->orWhere('reference_no', 'like', "%{$search}%")
+						->orWhere('delivery_at', 'like', "%{$search}%")
+						->orWhere('created_at', 'like', "%{$search}%");
 				})
-				->orWhere('delivery_at', 'like', "%{$search}%")
-				->orWhere('received_at', 'like', "%{$search}%")
 				->count();
 		}
 

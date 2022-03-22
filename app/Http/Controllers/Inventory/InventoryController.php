@@ -92,8 +92,13 @@ class InventoryController extends Controller
             //check current user
             $user = \Auth::user()->id;
 
+
             $originalImage = $request->file('image');
-            $photo = time() . $originalImage->getClientOriginalName();
+            $photo = "";
+            if ($originalImage) {
+                $photo = time() . $originalImage->getClientOriginalName();
+            }
+
 
             //save data in the inventory table
             $inventory = new Inventory();
@@ -110,17 +115,19 @@ class InventoryController extends Controller
             $inventory->creator_id = $user;
             $inventory->updater_id = $user;
             if ($inventory->save()) {
-                $photoPath = public_path('images/' . $inventory->id . '/');
+                if ($photo) {
+                    $photoPath = public_path('images/' . $inventory->id . '/');
 
-                if (!file_exists($photoPath)) {
-                    mkdir($photoPath, 0777, true);
+                    if (!file_exists($photoPath)) {
+                        mkdir($photoPath, 0777, true);
+                    }
+                    // create instance
+                    $img = \Image::make($originalImage->getRealPath());
+
+                    // resize image to fixed size
+                    $img->resize(100, 100);
+                    $img->save($photoPath . $photo);
                 }
-                // create instance
-                $img = \Image::make($originalImage->getRealPath());
-
-                // resize image to fixed size
-                $img->resize(100, 100);
-                $img->save($photoPath . $photo);
             }
 
             $inventory->categories()->sync($request->category_id);

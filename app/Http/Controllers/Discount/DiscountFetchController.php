@@ -42,18 +42,22 @@ class DiscountFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = Discount::where('discount_name', 'like', "%{$search}%")
-				->orWhere('discount_rate', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+			$posts = Discount::where(function ($query) use ($search) {
+				$query->where('discount_name', 'like', "%{$search}%")
+					->orWhere('discount_rate', 'like', "%{$search}%")
+					->orWhere('created_at', 'like', "%{$search}%");
+			})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the Category table	
-			$totalFiltered = Discount::where('discount_name', 'like', "%{$search}%")
-				->orWhere('discount_rate', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+			$totalFiltered = Discount::where(function ($query) use ($search) {
+				$query->where('discount_name', 'like', "%{$search}%")
+					->orWhere('discount_rate', 'like', "%{$search}%")
+					->orWhere('created_at', 'like', "%{$search}%");
+			})
 				->count();
 		}
 
@@ -122,9 +126,11 @@ class DiscountFetchController extends Controller
 			$search = $request->input('search.value');
 
 			$posts = Discount::onlyTrashed()
-				->orWhere('discount_name', 'like', "%{$search}%")
-				->orWhere('discount_rate', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+				->where(function ($query) use ($search) {
+					$query->where('discount_name', 'like', "%{$search}%")
+						->orWhere('discount_rate', 'like', "%{$search}%")
+						->orWhere('created_at', 'like', "%{$search}%");
+				})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -132,9 +138,11 @@ class DiscountFetchController extends Controller
 
 			//total number of filtered data matching the search value request in the Category table	
 			$totalFiltered = Discount::onlyTrashed()
-				->orWhere('discount_name', 'like', "%{$search}%")
-				->orWhere('discount_rate', 'like', "%{$search}%")
-				->orWhere('created_at', 'like', "%{$search}%")
+				->where(function ($query) use ($search) {
+					$query->where('discount_name', 'like', "%{$search}%")
+						->orWhere('discount_rate', 'like', "%{$search}%")
+						->orWhere('created_at', 'like', "%{$search}%");
+				})
 				->count();
 		}
 

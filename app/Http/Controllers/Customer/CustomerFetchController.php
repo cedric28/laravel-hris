@@ -48,22 +48,26 @@ class CustomerFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = Customer::where('name', 'like', "%{$search}%")
-				->orWhere('reference_no', 'like', "%{$search}%")
-				->orWhere('address', 'like', "%{$search}%")
-				->orWhere('contact_number', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
+			$posts = Customer::where(function ($query) use ($search) {
+				$query->where('name', 'like', "%{$search}%")
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('address', 'like', "%{$search}%")
+					->orWhere('contact_number', 'like', "%{$search}%")
+					->orWhere('email', 'like', "%{$search}%");
+			})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the Customer table	
-			$totalFiltered = Customer::where('name', 'like', "%{$search}%")
-				->orWhere('reference_no', 'like', "%{$search}%")
-				->orWhere('address', 'like', "%{$search}%")
-				->orWhere('contact_number', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
+			$totalFiltered = Customer::where(function ($query) use ($search) {
+				$query->where('name', 'like', "%{$search}%")
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('address', 'like', "%{$search}%")
+					->orWhere('contact_number', 'like', "%{$search}%")
+					->orWhere('email', 'like', "%{$search}%");
+			})
 				->count();
 		}
 
@@ -138,11 +142,13 @@ class CustomerFetchController extends Controller
 			$search = $request->input('search.value');
 
 			$posts = Customer::onlyTrashed()
-				->orWhere('name', 'like', "%{$search}%")
-				->orWhere('reference_no', 'like', "%{$search}%")
-				->orWhere('address', 'like', "%{$search}%")
-				->orWhere('contact_number', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
+				->where(function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%")
+						->orWhere('reference_no', 'like', "%{$search}%")
+						->orWhere('address', 'like', "%{$search}%")
+						->orWhere('contact_number', 'like', "%{$search}%")
+						->orWhere('email', 'like', "%{$search}%");
+				})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -150,11 +156,13 @@ class CustomerFetchController extends Controller
 
 			//total number of filtered data matching the search value request in the Customer table	
 			$totalFiltered = Customer::onlyTrashed()
-				->orWhere('name', 'like', "%{$search}%")
-				->orWhere('reference_no', 'like', "%{$search}%")
-				->orWhere('address', 'like', "%{$search}%")
-				->orWhere('contact_number', 'like', "%{$search}%")
-				->orWhere('email', 'like', "%{$search}%")
+				->where(function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%")
+						->orWhere('reference_no', 'like', "%{$search}%")
+						->orWhere('address', 'like', "%{$search}%")
+						->orWhere('contact_number', 'like', "%{$search}%")
+						->orWhere('email', 'like', "%{$search}%");
+				})
 				->count();
 		}
 
