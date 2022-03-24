@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Customers</h1>
+            <h1>>Activity Logs</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item">Customers</li>
+              <li class="breadcrumb-item">Activity Logs</li>
             </ol>
           </div>
         </div>
@@ -22,7 +22,7 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							<a type="button" href="{{ route('customer.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Customer</a>
+							
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
