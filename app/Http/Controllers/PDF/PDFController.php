@@ -13,6 +13,7 @@ use App\DeliveryRequestItem;
 use App\Inventory;
 use App\InventoryLevel;
 use App\Customer;
+use App\Log;
 use Carbon\Carbon;
 use PDF;
 
@@ -25,6 +26,13 @@ class PDFController extends Controller
         //     'sales' => $sales
         // ]);
         // share data to view
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Invoice " . $sales->or_no . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         view()->share('sales', $sales);
         $pdf = PDF::loadView('pdf.invoice', $sales);
 
@@ -73,6 +81,12 @@ class PDFController extends Controller
             "endDate" => $endDate
         ]);
 
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Yearly-Sales Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         return $pdf->download("Yearly-Sales-" . Carbon::now()->format('m-d-Y') . ".pdf");
     }
 
@@ -104,6 +118,12 @@ class PDFController extends Controller
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " print Yearly-Sales Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         return view('pdf.yearly_sales', [
             'sales' => $sales,
             'totalAmountDue' => $totalAmountDue,
@@ -126,7 +146,7 @@ class PDFController extends Controller
         $sales = new Sale();
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        
+
         if ($startDate) {
             $sales = $sales->whereMonth('created_at', '>=', $startDate)->whereYear('created_at', '>=', $yearNow);
         } else {
@@ -153,6 +173,13 @@ class PDFController extends Controller
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
         $first = $sales->first();
         $last = $sales->last();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Monthly-Sales Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         view()->share('sales', $sales);
         $pdf = \PDF::loadView('pdf.monthly_sales', [
             'sales' => $sales,
@@ -162,8 +189,8 @@ class PDFController extends Controller
             'totalCashChange' => $totalCashChange,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            "startDate" => Carbon::parse($first->created_at)->format('M d, Y'),
-            "endDate" => Carbon::parse($last->created_at)->format('M d, Y')
+            "startDate" => Carbon::parse($first->created_at ?? Carbon::now())->format('M d, Y'),
+            "endDate" => Carbon::parse($last->created_at ?? Carbon::now())->format('M d, Y')
         ]);
 
         return $pdf->download("Monthly-Sales-" . Carbon::now()->format('m-d-Y') . ".pdf");
@@ -177,16 +204,16 @@ class PDFController extends Controller
         $sales = new Sale();
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-        if($startDate) {
-            $sales = $sales->whereMonth('created_at', '>=', $startDate)->whereYear('created_at','>=', $yearNow);
+        if ($startDate) {
+            $sales = $sales->whereMonth('created_at', '>=', $startDate)->whereYear('created_at', '>=', $yearNow);
         } else {
-            $sales = $sales->whereYear('created_at','>=', $yearNow);
+            $sales = $sales->whereYear('created_at', '>=', $yearNow);
         }
 
-        if($endDate) {
-            $sales = $sales->whereMonth('created_at', '<=', $endDate)->whereYear('created_at','<=', $yearNow);
+        if ($endDate) {
+            $sales = $sales->whereMonth('created_at', '<=', $endDate)->whereYear('created_at', '<=', $yearNow);
         } else {
-            $sales = $sales->whereYear('created_at','<=', $yearNow);
+            $sales = $sales->whereYear('created_at', '<=', $yearNow);
         }
 
         $sales = $sales->oldest()->get();
@@ -202,6 +229,13 @@ class PDFController extends Controller
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
         $first = $sales->first();
         $last = $sales->last();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " print Monthly-Sales Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         return view('pdf.monthly_sales', [
             'sales' => $sales,
             'totalAmountDue' => $totalAmountDue,
@@ -210,8 +244,8 @@ class PDFController extends Controller
             'totalCashChange' => $totalCashChange,
             "dateToday" => $dateToday,
             'fullName' => $fullName,
-            "startDate" => Carbon::parse($first->created_at)->format('M d, Y'),
-            "endDate" => Carbon::parse($last->created_at)->format('M d, Y')
+            "startDate" => Carbon::parse($first->created_at ?? Carbon::now()->format('M d, Y'))->format('M d, Y'),
+            "endDate" => Carbon::parse($last->created_at ?? Carbon::now()->format('M d, Y'))->format('M d, Y')
         ]);
     }
 
@@ -246,6 +280,12 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Stock of Medical and Healthcare Goods Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
 
         view()->share('deliveries', [
             "deliveries" => $deliveries,
@@ -297,6 +337,12 @@ class PDFController extends Controller
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " print Stock of Medical and Healthcare Goods Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         return view('pdf.stock_medical_goods', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
@@ -328,6 +374,12 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Delivery Schedule Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
 
         view()->share('deliveries', [
             "deliveries" => $deliveries,
@@ -372,6 +424,12 @@ class PDFController extends Controller
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " print Delivery Schedule Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         return view("pdf.delivery_schedule", [
             'deliveries' => $deliveries,
             "dateToday" => $dateToday,
@@ -400,6 +458,13 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Customers Discount Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
 
         view()->share('customerPoint', [
             "customerPoint" => $customerPoint,
@@ -438,6 +503,12 @@ class PDFController extends Controller
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " print Customers Discount Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         return view("pdf.customer_discounts", [
             "customerPoint" => $customerPoint,
             "dateToday" => $dateToday,
@@ -475,6 +546,12 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Daily Preventive Maintenance Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
 
         view()->share('deliveries', [
             "deliveries" => $deliveries,
@@ -522,6 +599,12 @@ class PDFController extends Controller
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " print Daily Preventive Maintenance Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         return view('pdf.daily_preventive', [
             "deliveries" => $deliveries,
             "dateToday" => $dateToday,
@@ -555,6 +638,12 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Return Products Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
 
         view()->share('returnStocks', [
             "returnStocks" => $returnStocks,
@@ -598,6 +687,12 @@ class PDFController extends Controller
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
 
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " print Return Products Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+
         return view('pdf.return_products', [
             "returnStocks" => $returnStocks,
             "dateToday" => $dateToday,
@@ -624,6 +719,12 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " generate Order Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
 
         view()->share('orderReports', [
             "orderReports" => $orderReports,
@@ -661,6 +762,12 @@ class PDFController extends Controller
         $fullName = $user->last_name . ", " . $user->first_name;
 
         $dateToday = Carbon::now()->format('m/d/Y g:ia');
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " print Order Report at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
 
         return view('pdf.order', [
             "orderReports" => $orderReports,

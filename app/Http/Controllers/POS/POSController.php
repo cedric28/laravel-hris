@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use App\CustomerPoint;
+use App\Customer;
+use App\Log;
 use App\Sale;
 use App\SaleItem;
 use App\Inventory;
 use App\Point;
+use Carbon\Carbon;
 
 class POSController extends Controller
 {
@@ -100,6 +103,13 @@ class POSController extends Controller
             $sales->updater_id = $user;
 
             if ($sales->save()) {
+
+                $log = new Log();
+                $log->log = "User " . \Auth::user()->email . " create sale " .  $sales->or_no . " at " . Carbon::now();
+                $log->creator_id =  \Auth::user()->id;
+                $log->updater_id =  \Auth::user()->id;
+                $log->save();
+
                 $discountPoint = Point::all();
                 $pointEarned = (int)($totalAmountDue / $discountPoint[0]->price_per_point) * floatval($discountPoint[0]->point);
                 if (!empty($customerPointInfo)) {
@@ -112,6 +122,12 @@ class POSController extends Controller
                         'creator_id' => $user,
                         'updater_id' => $user
                     ]);
+                    $customer = Customer::find($customerId);
+                    $log = new Log();
+                    $log->log = "User " . \Auth::user()->email . " Process Customer Point to Customer " .  $customer->reference_no . " with point " . -floatval($discount['total_needed_point']) . " at " . Carbon::now();
+                    $log->creator_id =  \Auth::user()->id;
+                    $log->updater_id =  \Auth::user()->id;
+                    $log->save();
                 }
 
                 if (!empty($customerEarnerInfo)) {
@@ -129,6 +145,14 @@ class POSController extends Controller
                             'creator_id' => $user,
                             'updater_id' => $user
                         ]);
+
+                        $customer = Customer::find($customerEarnerId);
+
+                        $log = new Log();
+                        $log->log = "User " . \Auth::user()->email . " Process Customer Point to Customer " .  $customer->reference_no . " with point +" . $pointEarned . " at " . Carbon::now();
+                        $log->creator_id =  \Auth::user()->id;
+                        $log->updater_id =  \Auth::user()->id;
+                        $log->save();
                     }
                 }
 

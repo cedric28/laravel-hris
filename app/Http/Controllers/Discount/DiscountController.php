@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Discount;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Discount;
+use App\Log;
 use Carbon\Carbon;
 use Validator;
 
@@ -74,6 +75,13 @@ class DiscountController extends Controller
             $discount->creator_id = $user;
             $discount->updater_id = $user;
             $discount->save();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " create discount " . $discount->discount_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -163,6 +171,12 @@ class DiscountController extends Controller
             $discount->discount_rate = $request->discount_rate;
             $discount->updater_id = $user;
             $discount->update();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " edit discount " . $discount->discount_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -190,6 +204,12 @@ class DiscountController extends Controller
         //delete discount
         $discount = Discount::findOrFail($id);
         $discount->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete discount " . $discount->discount_name . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 
     /**
@@ -207,6 +227,13 @@ class DiscountController extends Controller
 
             /* Restore discount */
             $discount->restore();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " restore discount " . $discount->discount_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             \DB::commit();
             return back()->with("successMsg", "Successfully Restore the data");
         } catch (\Exception $e) {

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Log;
 use App\Role;
 use Validator, Hash, DB;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -83,6 +85,12 @@ class UserController extends Controller
             $user->creator_id = $currenUser;
             $user->updater_id = $currenUser;
             $user->save();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " add user " .  $user->email . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -166,6 +174,12 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->save();
 
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " edit user " .  $user->email . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -190,6 +204,12 @@ class UserController extends Controller
         //delete user
         $user = User::findOrFail($id);
         $user->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete user " .  $user->email . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
     /**
      * Restore the specified resource from storage.
@@ -206,6 +226,13 @@ class UserController extends Controller
 
             /* Restore user */
             $user->restore();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " restore user " .  $user->email . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             \DB::commit();
 
             return back()->with("successMsg", "Successfully Restore the data");

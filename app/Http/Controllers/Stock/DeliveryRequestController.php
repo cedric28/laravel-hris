@@ -8,6 +8,7 @@ use App\DeliveryRequest;
 use App\DeliveryRequestItem;
 use App\Supplier;
 use App\Inventory;
+use App\Log;
 use Carbon\Carbon;
 use Validator;
 
@@ -99,6 +100,12 @@ class DeliveryRequestController extends Controller
             $delivery->updater_id = $user;
             $delivery->save();
 
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " create delivery request " . $delivery->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             $products = $request->input('products', []);
             $quantities = $request->input('quantities', []);
             for ($product = 0; $product < count($products); $product++) {
@@ -112,6 +119,15 @@ class DeliveryRequestController extends Controller
                     $stock->creator_id = $user;
                     $stock->updater_id = $user;
                     $stock->save();
+
+                    $delivery = DeliveryRequest::findOrFail($stock->delivery_request_id);
+                    $inventory = Inventory::findOrFail($stock->product_id);
+
+                    $log = new Log();
+                    $log->log = "User " . \Auth::user()->email . " add product " . $inventory->product_name . " in delivery request " . $delivery->reference_no . " at " . Carbon::now();
+                    $log->creator_id =  \Auth::user()->id;
+                    $log->updater_id =  \Auth::user()->id;
+                    $log->save();
                 }
             }
 
@@ -243,6 +259,13 @@ class DeliveryRequestController extends Controller
             $delivery->supplier_id = $request->supplier_id;
             $delivery->updater_id = $user->id;
             if ($delivery->update()) {
+
+                $log = new Log();
+                $log->log = "User " . \Auth::user()->email . " edit delivery request " . $delivery->reference_no . " at " . Carbon::now();
+                $log->creator_id =  \Auth::user()->id;
+                $log->updater_id =  \Auth::user()->id;
+                $log->save();
+
                 if ($delivery->status === "completed") {
                     $id = $delivery->id;
                     $deliveryItems = DeliveryRequestItem::where("delivery_request_id", $id)->get();
@@ -269,6 +292,12 @@ class DeliveryRequestController extends Controller
                             $inventory->creator_id = $user->id;
                             $inventory->updater_id = $user->id;
                             $inventory->save();
+
+                            $log = new Log();
+                            $log->log = "User " . \Auth::user()->email . " update product " . $inventory->product_name . " at " . Carbon::now();
+                            $log->creator_id =  \Auth::user()->id;
+                            $log->updater_id =  \Auth::user()->id;
+                            $log->save();
                         }
                     }
                 }
@@ -297,6 +326,12 @@ class DeliveryRequestController extends Controller
         //delete delivery
         $delivery = DeliveryRequest::findOrFail($id);
         $delivery->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete delivery request " . $delivery->reference_no . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 
     /**
@@ -314,6 +349,13 @@ class DeliveryRequestController extends Controller
 
             /* Restore delivery */
             $delivery->restore();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " restore delivery request " . $delivery->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             \DB::commit();
 
             return back()->with("successMsg", "Successfully Restore the data");
@@ -363,6 +405,15 @@ class DeliveryRequestController extends Controller
             $stock->creator_id = $user;
             $stock->updater_id = $user;
             $stock->save();
+
+            $delivery = DeliveryRequest::findOrFail($request->delivery_request_id);
+            $inventory = Inventory::findOrFail($request->product_id);
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " add product " . $inventory->product_name . " in delivery request " . $delivery->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -440,6 +491,15 @@ class DeliveryRequestController extends Controller
             $deliveryItem->updater_id = $user;
             $deliveryItem->save();
 
+            $delivery = DeliveryRequest::findOrFail($deliveryItem->delivery_request_id);
+            $inventory = Inventory::findOrFail($request->product_id);
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " update product " . $inventory->product_name . " in delivery request " . $delivery->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -464,5 +524,14 @@ class DeliveryRequestController extends Controller
         //delete product
         $stock = DeliveryRequestItem::findOrFail($id);
         $stock->delete();
+
+        $delivery = DeliveryRequest::findOrFail($stock->delivery_request_id);
+        $inventory = Inventory::findOrFail($stock->product_id);
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete product " . $inventory->product_name . " in delivery request " . $delivery->reference_no . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 }

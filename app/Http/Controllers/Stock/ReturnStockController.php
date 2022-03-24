@@ -8,6 +8,7 @@ use App\ReturnStock;
 use App\ReturnStockItem;
 use App\Inventory;
 use App\Supplier;
+use App\Log;
 use Carbon\Carbon;
 use Validator;
 
@@ -88,6 +89,12 @@ class ReturnStockController extends Controller
             $returnStock->creator_id = $user;
             $returnStock->updater_id = $user;
             $returnStock->save();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " create return stock " . $returnStock->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -188,6 +195,12 @@ class ReturnStockController extends Controller
             $returnStock->supplier_id = $request->supplier_id;
             $returnStock->updater_id = $user->id;
             $returnStock->update();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " edit return stock " . $returnStock->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -212,6 +225,13 @@ class ReturnStockController extends Controller
         //delete delivery
         $returnStock = ReturnStock::findOrFail($id);
         $returnStock->delete();
+
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete return stock " . $returnStock->reference_no . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 
     /**
@@ -229,6 +249,14 @@ class ReturnStockController extends Controller
 
             /* Restore returnStock */
             $returnStock->restore();
+
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " restore return stock " . $returnStock->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             \DB::commit();
 
             return back()->with("successMsg", "Successfully Restore the data");
@@ -284,6 +312,15 @@ class ReturnStockController extends Controller
             $stock->note = $request->note;
             $stock->qty += $request->qty;
             $stock->save();
+
+            $returnStock = ReturnStock::findOrFail($request->return_stock_id);
+            $inventory = Inventory::findOrFail($request->product_id);
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " add product " . $inventory->product_name . " in return stock " . $returnStock->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             // $stock = new ReturnStockItem();
             // $stock->return_stock_id = $request->return_stock_id;
             // $stock->product_id = $request->product_id;
@@ -311,5 +348,14 @@ class ReturnStockController extends Controller
         //delete product
         $stock = ReturnStockItem::findOrFail($id);
         $stock->delete();
+
+        $inventory = Inventory::findOrFail($id);
+        $returnStock = ReturnStock::findOrFail($stock->return_stock_id);
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete product " . $inventory->product_name . " in return stock " . $returnStock->reference_no . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 }

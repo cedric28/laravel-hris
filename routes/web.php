@@ -168,4 +168,8 @@ Route::middleware('auth')->group(function () {
 
     //Inventory Level
     Route::resource('inventories-level', 'Inventory\InventoryLevelController');
+    Route::post('logs/fetch/q', 'Logs\LogFetchController@fetchLogs')->name('activityLogs');
+
+    //Logs
+    Route::resource('logs', 'Logs\LogController');
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Supplier;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Log;
 use App\Supplier;
 use Carbon\Carbon;
 use Validator;
@@ -81,6 +82,12 @@ class SupplierController extends Controller
             $supplier->creator_id = $user;
             $supplier->updater_id = $user;
             $supplier->save();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " create supplier " . $supplier->name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -176,6 +183,12 @@ class SupplierController extends Controller
             $supplier->email = $request->email;
             $supplier->updater_id = $user;
             $supplier->update();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " edit supplier " . $supplier->name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -203,6 +216,12 @@ class SupplierController extends Controller
         //delete category
         $supplier = Supplier::findOrFail($id);
         $supplier->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete supplier " . $supplier->name . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 
     /**
@@ -220,6 +239,13 @@ class SupplierController extends Controller
 
             /* Restore supplier */
             $supplier->restore();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " restore supplier " . $supplier->name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             \DB::commit();
 
             return back()->with("successMsg", "Successfully Restore the data");

@@ -12,7 +12,9 @@ use App\Category;
 use App\Supplier;
 use App\CategoryPerProduct;
 use App\SaleItem;
+use App\Log;
 use Validator;
+use Carbon\Carbon;
 
 class InventoryController extends Controller
 {
@@ -115,6 +117,11 @@ class InventoryController extends Controller
             $inventory->creator_id = $user;
             $inventory->updater_id = $user;
             if ($inventory->save()) {
+                $log = new Log();
+                $log->log = "User " . \Auth::user()->email . " create product " . $inventory->product_name . " at " . Carbon::now();
+                $log->creator_id =  \Auth::user()->id;
+                $log->updater_id =  \Auth::user()->id;
+                $log->save();
                 if ($photo) {
                     $photoPath = public_path('images/' . $inventory->id . '/');
 
@@ -302,9 +309,23 @@ class InventoryController extends Controller
                 $inventoryAdjustment->creator_id = $user;
                 $inventoryAdjustment->updater_id = $user;
                 $inventoryAdjustment->save();
+
+                $adjustmentType = InventoryAdjustmentType::findOrFail($request->inventory_adjustment_type_id);
+
+                $log = new Log();
+                $log->log = "User " . \Auth::user()->email . " adjust product " . $inventory->product_name . " as " . $adjustmentType->type . " with a quantity of " . $inventoryAdjustment->adjusted_quantity . " at " . Carbon::now();
+                $log->creator_id =  \Auth::user()->id;
+                $log->updater_id =  \Auth::user()->id;
+                $log->save();
             }
 
             $inventory->save();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " update product " . $inventory->product_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
 
             $inventory->categories()->sync($request->category_id);
             /*
@@ -331,6 +352,12 @@ class InventoryController extends Controller
         //delete product
         $product = Inventory::findOrFail($id);
         $product->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete product " . $product->product_name . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 
     /**
@@ -348,6 +375,13 @@ class InventoryController extends Controller
 
             /* Restore product */
             $product->restore();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " restore product " . $product->product_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             \DB::commit();
 
             return back()->with("successMsg", "Successfully Restore the data");

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Log;
 use App\Customer;
 use Carbon\Carbon;
 use Validator;
@@ -80,6 +81,12 @@ class CustomerController extends Controller
             $customer->creator_id = $user;
             $customer->updater_id = $user;
             $customer->save();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " create customer " . $customer->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -175,6 +182,12 @@ class CustomerController extends Controller
             $customer->email = $request->email;
             $customer->updater_id = $user;
             $customer->update();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " edit customer " . $customer->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -202,6 +215,12 @@ class CustomerController extends Controller
         //delete category
         $customer = Customer::findOrFail($id);
         $customer->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete customer " . $customer->reference_no . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 
     /**
@@ -219,6 +238,13 @@ class CustomerController extends Controller
 
             /* Restore customer */
             $customer->restore();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " restore customer " . $customer->reference_no . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             \DB::commit();
             return back()->with("successMsg", "Successfully Restore the data");
         } catch (\Exception $e) {

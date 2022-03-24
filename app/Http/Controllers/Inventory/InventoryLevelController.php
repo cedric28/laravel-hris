@@ -5,21 +5,22 @@ namespace App\Http\Controllers\Inventory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Log;
 use App\InventoryLevel;
 use Carbon\Carbon;
 use Validator;
 
 class InventoryLevelController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         $inventoryLevels = InventoryLevel::all();
-        return view("inventory.level.index",[
+        return view("inventory.level.index", [
             'inventoryLevels' => $inventoryLevels
         ]);
     }
@@ -45,7 +46,7 @@ class InventoryLevelController extends Controller
      */
     public function store(Request $request)
     {
-       //prevent other user to access to this page
+        //prevent other user to access to this page
         $this->authorize("isAdmin");
         /*
         | @Begin Transaction
@@ -53,18 +54,18 @@ class InventoryLevelController extends Controller
         \DB::beginTransaction();
 
         try {
-             //validate request value
-             $validator = Validator::make($request->all(), [
+            //validate request value
+            $validator = Validator::make($request->all(), [
                 'category_name' => 'required|string|max:50|unique:categories,category_name',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
-           
+
             //save category
             $category = new Category();
             $category->category_name = $request->category_name;
@@ -77,13 +78,12 @@ class InventoryLevelController extends Controller
             \DB::commit();
 
             return redirect()->route('category.create')
-                        ->with('successMsg','Category Save Successful');
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+                ->with('successMsg', 'Category Save Successful');
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
-        }   
+        }
     }
 
     /**
@@ -94,8 +94,8 @@ class InventoryLevelController extends Controller
      */
     public function show($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $inventoryLevel = InventoryLevel::withTrashed()->findOrFail($id);
 
@@ -112,8 +112,8 @@ class InventoryLevelController extends Controller
      */
     public function edit($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         $inventoryLevel = InventoryLevel::withTrashed()->findOrFail($id);
 
@@ -132,8 +132,8 @@ class InventoryLevelController extends Controller
      */
     public function update(Request $request, $id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
 
         /*
         | @Begin Transaction
@@ -151,11 +151,11 @@ class InventoryLevelController extends Controller
                 'critical' => 'required|numeric|gt:0',
                 're_stock' => 'required|numeric|gt:0|lt:critical',
             ], $messages);
-    
+
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-            
+
             //check current user
             $user = \Auth::user()->id;
 
@@ -164,15 +164,20 @@ class InventoryLevelController extends Controller
             $inventoryLevel->critical = $request->critical;
             $inventoryLevel->updater_id = $user;
             $inventoryLevel->update();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " update inventory level to Re-Stock " . $inventoryLevel->re_stock . " and Critical " . $inventoryLevel->critical . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg","Inventory Level Update Successfully");
-         
-        } catch(\Exception $e) {
-             //if error occurs rollback the data from it's previos state
+            return back()->with("successMsg", "Inventory Level Update Successfully");
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
@@ -211,9 +216,8 @@ class InventoryLevelController extends Controller
             $category->restore();
             \DB::commit();
 
-            return back()->with("successMsg","Successfully Restore the data");
-
-        } catch(\Exception $e) {
+            return back()->with("successMsg", "Successfully Restore the data");
+        } catch (\Exception $e) {
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }

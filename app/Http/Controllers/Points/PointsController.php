@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Points;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Point;
+use App\Log;
 use Carbon\Carbon;
 use Validator;
 
@@ -173,6 +174,13 @@ class PointsController extends Controller
             $point->total_needed_point = $request->total_needed_point;
             $point->updater_id = $user;
             $point->update();
+
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " update point discount " . $point->point_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/

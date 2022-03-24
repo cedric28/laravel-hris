@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 use App\Category;
+use App\Log;
 use Carbon\Carbon;
 use Validator;
 
@@ -73,6 +74,13 @@ class CategoryController extends Controller
             $category->creator_id = $user;
             $category->updater_id = $user;
             $category->save();
+
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " create category " . $category->category_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -160,6 +168,12 @@ class CategoryController extends Controller
             $category->category_name = $request->category_name;
             $category->updater_id = $user;
             $category->update();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " edit category " . $category->category_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
@@ -187,6 +201,12 @@ class CategoryController extends Controller
         //delete category
         $category = Category::findOrFail($id);
         $category->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete category " . $category->category_name . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 
     /**
@@ -204,6 +224,13 @@ class CategoryController extends Controller
 
             /* Restore category */
             $category->restore();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " restore category " . $category->category_name . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
             \DB::commit();
 
             return back()->with("successMsg", "Successfully Restore the data");
