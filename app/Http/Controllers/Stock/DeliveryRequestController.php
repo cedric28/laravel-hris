@@ -460,7 +460,7 @@ class DeliveryRequestController extends Controller
             //check current user
             $user = \Auth::user()->id;
 
-            $deliveryItem = DeliveryRequestItem::findOrFail($request->product_id);
+            $deliveryItem = DeliveryRequestItem::findOrFail($request->id);
 
             $totalItems = $request->received_qty + $request->defectived_qty;
 

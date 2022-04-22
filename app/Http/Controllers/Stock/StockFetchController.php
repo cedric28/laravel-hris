@@ -487,6 +487,7 @@ class StockFetchController extends Controller
 							data-defectived_qty="' . $r->defectived_qty . '"
 							data-expired_at="' . date('m/d/Y', strtotime($r->expired_at)) . '"
 							data-id="' . $r->id . '" 
+							data-product-id="' . $r->product_id . '" 
 							data-note="' . $r->note . '" 
 							class="btn bg-gradient-warning btn-sm"
 						>Edit</button>

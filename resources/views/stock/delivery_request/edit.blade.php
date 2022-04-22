@@ -432,9 +432,9 @@
 				]
             });
 
-            var product_id;
+            var id;
             $(document).on('click', '#delete', function(){
-                product_id = $(this).attr('data-id');
+                id = $(this).attr('data-id');
                 $('#confirmModal').modal('show');
             });
 
@@ -444,8 +444,10 @@
 			let productName;
 			let expired_at;
 			let note = "";
+			let product_id = 0;
             $(document).on('click', '#edit', function(){
-                product_id = $(this).attr('data-id');
+                id = $(this).attr('data-id');
+				product_id = $(this).attr('data-product-id');
 				qty = $(this).attr('data-qty');
 				received_qty = $(this).attr('data-received_qty');
 				defectived_qty = $(this).attr('data-defectived_qty');
@@ -461,7 +463,7 @@
             });
 			
             $('#ok_button').click(function(){
-				let url = window.location.protocol + "//" + window.location.host + "/delivery-request-item/destroy/"+product_id;
+				let url = window.location.protocol + "//" + window.location.host + "/delivery-request-item/destroy/"+id;
                 $.ajax({
                     url: url,
                     beforeSend:function(){
@@ -490,6 +492,7 @@
                     type:"POST",
                     data:{
 						"_token":"<?= csrf_token() ?>",
+						"id": id,
 						"product_id": product_id,
 						"delivery_request_id": "<?= $deliveryRequest->id ?>",
 						"received_qty" : receivedQty,
