@@ -357,6 +357,7 @@ class InventoryFetchController extends Controller
                 ->leftJoin('categories', 'category_per_products.category_id', '=', 'categories.id')
                 ->select('inventories.*', 'categories.category_name')
                 ->where('inventories.quantity', '>', 0)
+                ->where('inventories.deleted_at', '=', null)
                 ->get();
 
             return response()->json([
