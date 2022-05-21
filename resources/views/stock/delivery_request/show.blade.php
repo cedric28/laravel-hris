@@ -97,8 +97,8 @@
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
 												<th>REQUEST QTY</th>
-												<th>RECEIVED QTY</th>
 												<th>DEFECTIVE QTY</th>
+												<th>RECEIVED QTY</th>
 												<th>REMARK</th>
 												<th>NOTE</th>
 												<th>EXPIRATION DATE</th>
@@ -109,8 +109,8 @@
 												<tr>
 													<td>{{ $stock->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
-													<td>{{ $stock->received_qty }}</td>
 													<td>{{ $stock->defectived_qty }}</td>
+													<td>{{ $stock->received_qty }}</td>
 													<td>{{ $stock->remark }}</td>
 													<td>{{ $stock->note }}</td>
 													<td>{{ $stock->expired_at }}</td>
@@ -219,8 +219,8 @@
                 "columns":[
                     {"data":"product_name"},
                     {"data":"qty"},
-					{"data":"received_qty"},
 					{"data":"defectived_qty"},
+					{"data":"received_qty"},
 					{"data":"remark"},
 					{"data":"note"},
 					{"data":"expired_at"}
