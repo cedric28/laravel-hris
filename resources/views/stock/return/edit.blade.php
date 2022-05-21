@@ -155,7 +155,7 @@
 										<thead>
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
-												<th>QTY</th>
+												<th>QUANTITY</th>
 												<th>REMARK</th>
 												<th>NOTE</th>
 												<th>Action</th>

@@ -62,7 +62,8 @@
 										<thead>
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
-												<th>Qty</th>
+												<th>QUANTITY</th>
+												<th>REMARK</th>
 												<th>Note</th>
 												{{-- <th>Action</th> --}}
 											</tr>
@@ -72,6 +73,7 @@
 												<tr>
 													<td>{{ $returnStockItem->product->product_name }}</td>
 													<td>{{ $returnStockItem->qty }}</td>
+													<td>{{ $returnStockItem->remark }}</td>
 													<td>{{ $returnStockItem->note }}</td>
 													{{-- <td>
 														
@@ -181,6 +183,7 @@
                 "columns":[
                     {"data":"product_name"},
                     {"data":"qty"},
+					{"data":"remark"},
 					{"data":"note"},
                     // {"data":"action","searchable":false,"orderable":false}
                 ],

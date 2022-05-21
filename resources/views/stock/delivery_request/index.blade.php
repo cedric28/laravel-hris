@@ -30,7 +30,13 @@
                                 <div class="card-header p-0 border-bottom-0">
                                     <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Active Delivery Requests</a>
+                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Active Completed Delivery Requests</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-four-pending-tab" data-toggle="pill" href="#custom-tabs-four-pending" role="tab" aria-controls="custom-tabs-four-pending" aria-selected="false">Active Pending Delivery Requests</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-four-cancel-tab" data-toggle="pill" href="#custom-tabs-four-cancel" role="tab" aria-controls="custom-tabs-four-cancel" aria-selected="false">Active Cancelled Delivery Requests</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Inactive Delivery Requests</a>
@@ -41,6 +47,58 @@
                                     <div class="tab-content" id="custom-tabs-four-tabContent">
                                         <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
                                             <table id="delivery" class="table table-hover table-bordered table-striped">
+                                                <thead>
+                                                    <tr style="text-align:center;">
+                                                        <th>REFERENCE NO</th>
+                                                        <th>SUPPLIER</th>
+                                                        <th>STATUS</th>
+                                                        <th>DATE DELIVERED</th>
+                                                        <th>ACTION</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($deliveryRequest as $delivery)
+                                                        <tr>
+                                                            <td>{{ $delivery->reference_no }}</td>
+                                                            <td>{{ $delivery->supplier->name }}</td>
+                                                            <td>{{ $delivery->status }}</td>
+                                                            <td>{{ $delivery->delivery_at }}</td>
+                                                            <td>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade show" id="custom-tabs-four-pending" role="tabpanel" aria-labelledby="custom-tabs-four-pending-tab">
+                                            <table id="delivery-pending" class="table table-hover table-bordered table-striped">
+                                                <thead>
+                                                    <tr style="text-align:center;">
+                                                        <th>REFERENCE NO</th>
+                                                        <th>SUPPLIER</th>
+                                                        <th>STATUS</th>
+                                                        <th>DATE DELIVERED</th>
+                                                        <th>ACTION</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($deliveryRequest as $delivery)
+                                                        <tr>
+                                                            <td>{{ $delivery->reference_no }}</td>
+                                                            <td>{{ $delivery->supplier->name }}</td>
+                                                            <td>{{ $delivery->status }}</td>
+                                                            <td>{{ $delivery->delivery_at }}</td>
+                                                            <td>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-four-cancel" role="tabpanel" aria-labelledby="custom-tabs-four-cancel-tab">
+                                            <table id="delivery-cancel" class="table table-hover table-bordered table-striped">
                                                 <thead>
                                                     <tr style="text-align:center;">
                                                         <th>REFERENCE NO</th>
@@ -205,6 +263,112 @@
 				}]
             });
 
+            var tablePending = $('#delivery-pending').DataTable({
+				"responsive": true, "lengthChange": false, "autoWidth": false,
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activeDeliveriesRequestPending') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{"_token":"<?= csrf_token() ?>"}
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :'Delivery Requests',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :'Delivery Requests',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :'Delivery Requests',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"reference_no"},
+                    {"data":"name"},
+                    {"data":"status"},
+                    {"data":"delivery_at"},
+                    {"data":"action","searchable":false,"orderable":false}
+                ],
+                "columnDefs": [{
+					"targets": [3],   // target column
+					"className": "textCenter",
+				}]
+            });
+
+            var tableCancel = $('#delivery-cancel').DataTable({
+				"responsive": true, "lengthChange": false, "autoWidth": false,
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activeDeliveriesRequestCancel') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{"_token":"<?= csrf_token() ?>"}
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :'Delivery Requests',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :'Delivery Requests',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :'Delivery Requests',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"reference_no"},
+                    {"data":"name"},
+                    {"data":"status"},
+                    {"data":"delivery_at"},
+                    {"data":"action","searchable":false,"orderable":false}
+                ],
+                "columnDefs": [{
+					"targets": [3],   // target column
+					"className": "textCenter",
+				}]
+            });
+
             var tableInactive = $('#inactive-delivery').DataTable({
 				"responsive": true, "lengthChange": false, "autoWidth": false,
                 "processing": true,
@@ -287,6 +451,8 @@
                         setTimeout(function(){
                             $('#confirmModal').modal('hide');
 							table.ajax.reload();
+                            tablePending.ajax.reload();
+                            tableCancel.ajax.reload();
                             tableInactive.ajax.reload();
                             $('#ok_button').text('OK');
                         }, 2000);
@@ -315,17 +481,12 @@
                             $('#restoreModal').modal('hide');
                             tableInactive.ajax.reload();
                             table.ajax.reload();
+                            tablePending.ajax.reload();
+                            tableCancel.ajax.reload();
                             $('#restore_button').text('OK');
                         }, 2000);
                     }
                 })
-            });
-
-        
-            $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
-                $('.table:visible').each( function(e) {
-                $(this).DataTable().columns.adjust().responsive.recalc();
-                });
             });
 
 

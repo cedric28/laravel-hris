@@ -71,6 +71,8 @@ Route::middleware('auth')->group(function () {
     Route::post('deliveries/fetch/q', 'Stock\StockFetchController@fetchDeliveries')->name('activeDeliveries');
     Route::post('stock/fetch/q', 'Stock\StockFetchController@fetchProductsDelivery')->name('activeProductsDelivery');
     Route::post('delivery-request-stock/fetch/q', 'Stock\StockFetchController@fetchDeliveriesRequest')->name('activeDeliveriesRequest');
+    Route::post('delivery-request-stock-pending/fetch/q', 'Stock\StockFetchController@fetchDeliveriesRequestPending')->name('activeDeliveriesRequestPending');
+    Route::post('delivery-request-stock-cancel/fetch/q', 'Stock\StockFetchController@fetchDeliveriesRequestCancel')->name('activeDeliveriesRequestCancel');
     Route::post('inactive-delivery-request-stock/fetch/q', 'Stock\StockFetchController@fetchInactiveDeliveriesRequest')->name('InactiveDeliveriesRequest');
     Route::post('delivery-request-stock-item/fetch/q', 'Stock\StockFetchController@fetchProductsDeliveryRequest')->name('activeProductsDeliveryRequest');
     Route::post('return-stock/fetch/q', 'Stock\StockFetchController@fetchReturnStock')->name('activeReturnStock');

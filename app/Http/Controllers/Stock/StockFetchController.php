@@ -511,7 +511,7 @@ class StockFetchController extends Controller
 		return response()->json($json_data);
 	}
 
-	//fetch Delivery Request
+	//fetch Delivery Request Completed
 	public function fetchDeliveriesRequest(Request $request)
 	{
 		//column list in the table Prpducts
@@ -524,7 +524,7 @@ class StockFetchController extends Controller
 		);
 
 		//get the total number of data in Product table
-		$totalData = DeliveryRequest::count();
+		$totalData = DeliveryRequest::where('status', 'completed')->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -539,36 +539,35 @@ class StockFetchController extends Controller
 			//get all the product data
 			$posts = DeliveryRequest::select('*', 'delivery_requests.id as id')
 				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
+				->where('status', 'completed')
 				->offset($start)
 				->limit($limit)
-				->orderBy($order, $dir)
+				->orderBy('delivery_at', 'DESC')
 				->get();
 
 			//total number of filtered data
-			$totalFiltered = DeliveryRequest::count();
+			$totalFiltered = DeliveryRequest::where('status', 'completed')->count();
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = DeliveryRequest::where(function ($query) use ($search) {
+			$posts = DeliveryRequest::where('status', "completed")->where(function ($query) use ($search) {
 				$query->whereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
 					->orWhere('reference_no', 'like', "%{$search}%")
-					->orWhere('status', 'like', "%{$search}%")
 					->orWhere('delivery_at', 'like', "%{$search}%");
 			})
 				->offset($start)
 				->limit($limit)
-				->orderBy($order, $dir)
+				->orderBy('delivery_at', 'DESC')
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
-			$totalFiltered = DeliveryRequest::where(function ($query) use ($search) {
+			$totalFiltered = DeliveryRequest::where('status', "completed")->where(function ($query) use ($search) {
 				$query->whereHas('supplier', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
 					->orWhere('reference_no', 'like', "%{$search}%")
-					->orWhere('status', 'like', "%{$search}%")
 					->orWhere('delivery_at', 'like', "%{$search}%");
 			})
 				->count();
@@ -580,31 +579,247 @@ class StockFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$status = '';
-				if ($r->status == 'cancel') {
-					$status = '<span title="Cancel" class="badge bg-danger">CANCEL</span>';
-				} else if ($r->status == 'pending') {
-					$status = '<span title="Danger" class="badge bg-warning">PENDING</span>';
-				} else if ($r->status == 'completed') {
-					$status = '<span title="Success" class="badge bg-success">COMPLETED</span>';
-				}
+				// $status = '';
+				// if ($r->status == 'cancel') {
+				// 	$status = '<span title="Cancel" class="badge bg-danger">CANCEL</span>';
+				// } else if ($r->status == 'pending') {
+				// 	$status = '<span title="Danger" class="badge bg-warning">PENDING</span>';
+				// } else if ($r->status == 'completed') {
+				// 	$status = '<span title="Success" class="badge bg-success">COMPLETED</span>';
+				// }
 				$nestedData['reference_no'] = $r->reference_no;
 				$nestedData['name'] = $r->supplier->name;
-				$nestedData['status'] = $status;
+				$nestedData['status'] = '<span title="Success" class="badge bg-success">COMPLETED</span>';
 				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
-				if ($r->status == "completed" || $r->status == "cancel") {
-					$nestedData['action'] = '
+				// if ($r->status == "completed" || $r->status == "cancel") {
+				$nestedData['action'] = '
                     <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
 					<button name="edit"  disabled="disabled" class="btn bg-gradient-warning btn-sm">Edit</button>
 					<button name="delete" disabled="disabled" class="btn bg-gradient-danger btn-sm">Delete</button>
 					';
-				} else {
-					$nestedData['action'] = '
+				// } else {
+				// 	$nestedData['action'] = '
+				//     <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
+				// 	<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
+				// 	<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
+				// ';
+				// }
+
+				$data[] = $nestedData;
+			}
+		}
+
+		$json_data = array(
+			"draw"			    => intval($request->input('draw')),
+			"recordsTotal"	    => intval($totalData),
+			"recordsFiltered"   => intval($totalFiltered),
+			"data"			    => $data
+		);
+
+		//return the data in json response
+		return response()->json($json_data);
+	}
+
+	public function fetchDeliveriesRequestPending(Request $request)
+	{
+		//column list in the table Prpducts
+		$columns = array(
+			0 => 'reference_no',
+			1 => 'suppliers.name',
+			2 => 'status',
+			3 => 'delivery_at',
+			4 => 'action'
+		);
+
+		//get the total number of data in Product table
+		$totalData = DeliveryRequest::where('status', 'pending')->count();
+		//total number of data that will show in the datatable default 10
+		$limit = $request->input('length');
+		//start number for pagination ,default 0
+		$start = $request->input('start');
+		//order list of the column
+		$order = $columns[$request->input('order.0.column')];
+		//order by ,default asc 
+		$dir = $request->input('order.0.dir');
+
+		//check if user search for a value in the product datatable
+		if (empty($request->input('search.value'))) {
+			//get all the product data
+			$posts = DeliveryRequest::select('*', 'delivery_requests.id as id')
+				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
+				->where('status', 'pending')
+				->offset($start)
+				->limit($limit)
+				->orderBy('delivery_at', 'DESC')
+				->get();
+
+			//total number of filtered data
+			$totalFiltered = DeliveryRequest::where('status', 'pending')->count();
+		} else {
+			$search = $request->input('search.value');
+
+			$posts = DeliveryRequest::where('status', 'pending')->where(function ($query) use ($search) {
+				$query->whereHas('supplier', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
+				})
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('delivery_at', 'like', "%{$search}%");
+			})
+				->offset($start)
+				->limit($limit)
+				->orderBy('delivery_at', 'DESC')
+				->get();
+
+			//total number of filtered data matching the search value request in the delivery table	
+			$totalFiltered = DeliveryRequest::where('status', 'pending')->where(function ($query) use ($search) {
+				$query->whereHas('supplier', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
+				})
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('delivery_at', 'like', "%{$search}%");
+			})
+				->count();
+		}
+
+
+		$data = array();
+
+		if ($posts) {
+			//loop posts collection to transfer in another array $nestedData
+			foreach ($posts as $r) {
+				// $status = '';
+				// if ($r->status == 'cancel') {
+				// 	$status = '<span title="Cancel" class="badge bg-danger">CANCEL</span>';
+				// } else if ($r->status == 'pending') {
+				// 	$status = '<span title="Danger" class="badge bg-warning">PENDING</span>';
+				// } else if ($r->status == 'completed') {
+				// 	$status = '<span title="Success" class="badge bg-success">COMPLETED</span>';
+				// }
+				$nestedData['reference_no'] = $r->reference_no;
+				$nestedData['name'] = $r->supplier->name;
+				$nestedData['status'] = '<span title="Danger" class="badge bg-warning">PENDING</span>';
+				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
+				// if ($r->status == "completed" || $r->status == "cancel") {
+				// 	$nestedData['action'] = '
+				//     <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
+				// 	<button name="edit"  disabled="disabled" class="btn bg-gradient-warning btn-sm">Edit</button>
+				// 	<button name="delete" disabled="disabled" class="btn bg-gradient-danger btn-sm">Delete</button>
+				// 	';
+				// } else {
+				$nestedData['action'] = '
                     <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
 					<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
 					<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
 				';
-				}
+				//}
+
+				$data[] = $nestedData;
+			}
+		}
+
+		$json_data = array(
+			"draw"			    => intval($request->input('draw')),
+			"recordsTotal"	    => intval($totalData),
+			"recordsFiltered"   => intval($totalFiltered),
+			"data"			    => $data
+		);
+
+		//return the data in json response
+		return response()->json($json_data);
+	}
+
+	public function fetchDeliveriesRequestCancel(Request $request)
+	{
+		//column list in the table Prpducts
+		$columns = array(
+			0 => 'reference_no',
+			1 => 'suppliers.name',
+			2 => 'status',
+			3 => 'delivery_at',
+			4 => 'action'
+		);
+
+		//get the total number of data in Product table
+		$totalData = DeliveryRequest::where('status', 'cancel')->count();
+		//total number of data that will show in the datatable default 10
+		$limit = $request->input('length');
+		//start number for pagination ,default 0
+		$start = $request->input('start');
+		//order list of the column
+		$order = $columns[$request->input('order.0.column')];
+		//order by ,default asc 
+		$dir = $request->input('order.0.dir');
+
+		//check if user search for a value in the product datatable
+		if (empty($request->input('search.value'))) {
+			//get all the product data
+			$posts = DeliveryRequest::select('*', 'delivery_requests.id as id')
+				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
+				->where('status', 'cancel')
+				->offset($start)
+				->limit($limit)
+				->orderBy('delivery_at', 'DESC')
+				->get();
+
+			//total number of filtered data
+			$totalFiltered = DeliveryRequest::where('status', 'cancel')->count();
+		} else {
+			$search = $request->input('search.value');
+
+			$posts = DeliveryRequest::where('status', 'cancel')->where(function ($query) use ($search) {
+				$query->whereHas('supplier', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
+				})
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('delivery_at', 'like', "%{$search}%");
+			})
+				->offset($start)
+				->limit($limit)
+				->orderBy('delivery_at', 'DESC')
+				->get();
+
+			//total number of filtered data matching the search value request in the delivery table	
+			$totalFiltered = DeliveryRequest::where('status', 'cancel')->where(function ($query) use ($search) {
+				$query->whereHas('supplier', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
+				})
+					->orWhere('reference_no', 'like', "%{$search}%")
+					->orWhere('delivery_at', 'like', "%{$search}%");
+			})
+				->count();
+		}
+
+
+		$data = array();
+
+		if ($posts) {
+			//loop posts collection to transfer in another array $nestedData
+			foreach ($posts as $r) {
+				// $status = '';
+				// if ($r->status == 'cancel') {
+				// 	$status = '<span title="Cancel" class="badge bg-danger">CANCEL</span>';
+				// } else if ($r->status == 'pending') {
+				// 	$status = '<span title="Danger" class="badge bg-warning">PENDING</span>';
+				// } else if ($r->status == 'completed') {
+				// 	$status = '<span title="Success" class="badge bg-success">COMPLETED</span>';
+				// }
+				$nestedData['reference_no'] = $r->reference_no;
+				$nestedData['name'] = $r->supplier->name;
+				$nestedData['status'] = '<span title="Cancel" class="badge bg-danger">CANCEL</span>';
+				$nestedData['delivery_at'] = date('m-d-Y', strtotime($r->delivery_at));
+				// if ($r->status == "completed" || $r->status == "cancel") {
+				$nestedData['action'] = '
+                    <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
+					<button name="edit"  disabled="disabled" class="btn bg-gradient-warning btn-sm">Edit</button>
+					<button name="delete" disabled="disabled" class="btn bg-gradient-danger btn-sm">Delete</button>
+					';
+				// } else {
+				// 	$nestedData['action'] = '
+				//     <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
+				// 	<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
+				// 	<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
+				// ';
+				// }
 
 				$data[] = $nestedData;
 			}
@@ -651,7 +866,7 @@ class StockFetchController extends Controller
 				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
 				->offset($start)
 				->limit($limit)
-				->orderBy($order, $dir)
+				->orderBy('delivery_at', 'DESC')
 				->get();
 
 			//total number of filtered data
@@ -670,7 +885,7 @@ class StockFetchController extends Controller
 				})
 				->offset($start)
 				->limit($limit)
-				->orderBy($order, $dir)
+				->orderBy('delivery_at', 'DESC')
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
