@@ -50,6 +50,7 @@
                                                         <th>DETAILS/GENERALIZATION</th>
                                                         <th>(₱) ORIGINAL PRICE</th>
                                                         <th>(₱) SELLING PRICE</th>
+                                                        <th>UNIT MEASUREMENT</th>
                                                         <th>STOCK</th>
                                                         <th>STATUS</th>
                                                         <th>DATE ADDED</th>
@@ -67,6 +68,7 @@
                                                             <td>{{ $inventory->content }}</td>
                                                             <td>{{ $inventory->original_price }}</td>
                                                             <td>{{ $inventory->selling_price }}</td>
+                                                            <td>{{ $inventory->unit_measurement }}</td>
                                                             <td>{{ $inventory->quantity }}</td>
                                                             <td>
                                                                 @if($inventory->quantity == 0)
@@ -95,6 +97,7 @@
                                                         <th>DETAILS/GENERALIZATION</th>
                                                         <th>(₱) ORIGINAL PRICE</th>
                                                         <th>(₱) SELLING PRICE</th>
+                                                        <th>UNIT MEASUREMENT</th>
                                                         <th>STOCK</th>
                                                         <th>STATUS</th>
                                                         <th>DATE ADDED</th>
@@ -114,6 +117,7 @@
                                                         <th>DETAILS/GENERALIZATION</th>
                                                         <th>(₱) ORIGINAL PRICE</th>
                                                         <th>(₱) SELLING PRICE</th>
+                                                        <th>UNIT MEASUREMENT</th>
                                                         <th>STOCK</th>
                                                         <th>STATUS</th>
                                                         <th>DATE ADDED</th>
@@ -131,6 +135,7 @@
                                                             <td>{{ $inventory->content }}</td>
                                                             <td>{{ $inventory->original_price }}</td>
                                                             <td>{{ $inventory->selling_price }}</td>
+                                                            <td>{{ $inventory->unit_measurement }}</td>
                                                             <td>{{ $inventory->quantity }}</td>
                                                             <td>
                                                                 @if($inventory->quantity == 0)
@@ -159,6 +164,7 @@
                                                         <th>DETAILS/GENERALIZATION</th>
                                                         <th>(₱) ORIGINAL PRICE</th>
                                                         <th>(₱) SELLING PRICE</th>
+                                                        <th>UNIT MEASUREMENT</th>
                                                         <th>STOCK</th>
                                                         <th>STATUS</th>
                                                         <th>DATE ADDED</th>
@@ -245,21 +251,21 @@ var tableInactive = $('#inactive').DataTable({
                             "extend": 'csv',
                             'title' :'Inactive Inventory Products',
                             "exportOptions": {
-                                "columns": [0,1,2,3,4,5,6,7,8,9]
+                                "columns": [0,1,2,3,4,5,6,7,8,9,10]
                             }
                         },
                         {
                             "extend": 'pdf',
                             'title' :'Inactive Inventory Products',
                             "exportOptions": {
-                                "columns": [0,1,2,3,4,5,6,7,8,9]
+                                "columns": [0,1,2,3,4,5,6,7,8,9,10]
                             }
                         },
                         {
                             "extend": 'print',
                             'title' :'Inactive Inventory Products',
                             "exportOptions": {
-                                "columns": [0,1,2,3,4,5,6,7,8,9]
+                                "columns": [0,1,2,3,4,5,6,7,8,9,10]
                             }
                         }
                     ],
@@ -303,6 +309,7 @@ var tableInactive = $('#inactive').DataTable({
                 {"data":"content"},
                 {"data":"original_price"},
                 {"data":"selling_price"},
+                {"data":"unit_measurement"},
                 {"data":"quantity"},
                 {"data":"status"},
                 {"data":"created_at"},
@@ -310,11 +317,11 @@ var tableInactive = $('#inactive').DataTable({
             ],
             "columnDefs": [
                 {
-                    "targets": [2,5,6,7],   // target column
+                    "targets": [2,5,6,8],   // target column
                     "className": "textRight",
                 },
                 {
-                    "targets": [9],   // target column
+                    "targets": [10],   // target column
                     "className": "textCenter",
                 }
             ]
@@ -360,21 +367,21 @@ var tableInactive = $('#inactive').DataTable({
                                 "extend": 'csv',
                                 'title' :'Inventory Products',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6,7,8,9]
+                                    "columns": [0,1,2,3,4,5,6,7,8,9,10]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' :'Inventory Products',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6,7,8,9]
+                                    "columns": [0,1,2,3,4,5,6,7,8,9,10]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' :'Inventory Products',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6,7,8,9]
+                                    "columns": [0,1,2,3,4,5,6,7,8,9,10]
                                 }
                             }
                         ],
@@ -418,6 +425,7 @@ var tableInactive = $('#inactive').DataTable({
                     {"data":"content"},
                     {"data":"original_price"},
                     {"data":"selling_price"},
+                    {"data":"unit_measurement"},
                     {"data":"quantity"},
                     {"data":"status"},
                     {"data":"created_at"},
@@ -425,11 +433,11 @@ var tableInactive = $('#inactive').DataTable({
                 ],
                 "columnDefs": [
                     {
-					    "targets": [2,5,6,7],   // target column
+					    "targets": [2,5,6,8],   // target column
 					    "className": "textRight",
 				    },
                     {
-					    "targets": [9],   // target column
+					    "targets": [10],   // target column
 					    "className": "textCenter",
 				    }
                 ]

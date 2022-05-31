@@ -174,6 +174,13 @@
 								</div>
 
 								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Unit Measurement:</label>
+									<div class="col-lg-9 col-sm-9">	
+										<input type="text" name="unit_measurement" value="{{ old('unit_measurement') }}" class="@error('unit_measurement') is-invalid @enderror form-control" placeholder="Unit Measurement e.g 10ml" >
+									</div>
+								</div>
+
+								<div class="form-group row">
 									<label class="col-form-label col-lg-3">Notes:</label>
 									<div class="col-lg-9">
 										<textarea rows="3" cols="3" name="note" class="@error('note') is-invalid @enderror form-control" placeholder="e.i special request"></textarea>
@@ -192,6 +199,7 @@
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
 												<th>REQUEST QTY</th>
+												<th>UNIT MEASUREMENT</th>
 												<th>DEFECTIVE QTY</th>
 												<th>RECEIVED QTY</th>
 												<th>EXPIRATION DATE</th>
@@ -205,6 +213,7 @@
 												<tr>
 													<td>{{ $stock->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
+													<td>{{ $stock->unit_measurement }}</td>
 													<td>{{ $stock->defectived_qty }}</td>
 													<td>{{ $stock->received_qty }}</td>
 													<td>{{ $stock->expired_at }}</td>
@@ -278,6 +287,13 @@
 									</div>
 								</div>
 								<span class="text-danger" id="expiredAtError"></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="col-form-label col-lg-3">Unit Measurement:</label>
+							<div class="col-lg-9">
+								<textarea rows="3" id="unit_measurement" cols="3" name="unit_measurement" class="@error('unit_measurement') is-invalid @enderror form-control" placeholder="e.g 10ml"></textarea>
 							</div>
 						</div>
 						
@@ -391,21 +407,21 @@
                                 "extend": 'csv',
                                 'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                    "columns": [0,1,2,3,4,5,6,7,8]
                                 }
                             },
                             {
                                 "extend": 'pdf',
 								'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                    "columns": [0,1,2,3,4,5,6,7,8]
                                 }
                             },
                             {
                                 "extend": 'print',
 								'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                    "columns": [0,1,2,3,4,5,6,7,8]
                                 }
                             }
                         ],
@@ -414,6 +430,7 @@
                 "columns":[
                     {"data":"product_name"},
                     {"data":"qty"},
+					{"data":"unit_measurement"},
 					{"data":"defectived_qty"},
 					{"data":"received_qty"},
 					{"data":"expired_at"},
@@ -422,11 +439,11 @@
                     {"data":"action","searchable":false,"orderable":false}
                 ],
 				"columnDefs": [{
-					"targets": [1,2,3],   // target column
+					"targets": [1,3,4],   // target column
 					"className": "textRight",
 				},
 				{
-					"targets": [4],   // target column
+					"targets": [2,5,6,7],   // target column
 					"className": "textCenter",
 				}
 				]
@@ -444,11 +461,13 @@
 			let productName;
 			let expired_at;
 			let note = "";
+			let unit_measurement = "";
 			let product_id = 0;
             $(document).on('click', '#edit', function(){
                 id = $(this).attr('data-id');
 				product_id = $(this).attr('data-product-id');
 				qty = $(this).attr('data-qty');
+				unit_measurement = $(this).attr('data-unit_measurement');
 				received_qty = $(this).attr('data-received_qty');
 				defectived_qty = $(this).attr('data-defectived_qty');
 				expired_at = $(this).attr('data-expired_at');
@@ -457,6 +476,7 @@
 				$('#productName').html(productName);
 				$('#received_qty').val(received_qty);
          		$('#defectived_qty').val(defectived_qty);
+				$('#unit_measurement').val(unit_measurement);
 				$('#expired_at').val(expired_at);
 				$('#note').val(note);
                 $('#editModal').modal('show');
@@ -486,6 +506,7 @@
 				let defectivedQty = $("#defectived_qty").val();
 				let expirationDate = $("#expired_at").val();
 				let note = $("#note").val();
+				let unit_measurement = $("#unit_measurement").val();
                 $.ajax({
                     url: "<?= route('updateDeliveryRequestItem') ?>",
 					dataType:"json",
@@ -498,7 +519,8 @@
 						"received_qty" : receivedQty,
 						"defectived_qty" : defectivedQty,
 						"expired_at" : expirationDate,
-						"note" : note
+						"note" : note,
+						"unit_measurement" : unit_measurement
 					},
                     beforeSend:function(){
                         $('#edit_button').text('Saving...');

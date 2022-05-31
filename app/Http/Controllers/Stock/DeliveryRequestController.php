@@ -108,6 +108,7 @@ class DeliveryRequestController extends Controller
 
             $products = $request->input('products', []);
             $quantities = $request->input('quantities', []);
+            $unit_measurements = $request->input('unit_measurements', []);
             for ($product = 0; $product < count($products); $product++) {
                 if ($products[$product] != '') {
                     $stock = DeliveryRequestItem::firstOrNew([
@@ -116,6 +117,7 @@ class DeliveryRequestController extends Controller
                     ]);
                     $stock->qty = ($stock->qty + $quantities[$product]);
                     $stock->note = $request->note ?? '';
+                    $stock->unit_measurement = $unit_measurements[$product] ?? '';
                     $stock->creator_id = $user;
                     $stock->updater_id = $user;
                     $stock->save();
@@ -288,7 +290,8 @@ class DeliveryRequestController extends Controller
                                 'id' => $value->product_id
                             ]);
 
-                            $inventory->quantity = ($inventory->quantity + $value->received_qty);;
+                            $inventory->quantity = ($inventory->quantity + $value->received_qty);
+                            $inventory->unit_measurement = $value->unit_measurement ?? $inventory->unit_measurement;
                             $inventory->creator_id = $user->id;
                             $inventory->updater_id = $user->id;
                             $inventory->save();
@@ -402,6 +405,7 @@ class DeliveryRequestController extends Controller
             ]);
             $stock->qty = ($stock->qty + $request->qty);
             $stock->note = $request->note;
+            $stock->unit_measurement = $request->unit_measurement;
             $stock->creator_id = $user;
             $stock->updater_id = $user;
             $stock->save();
@@ -487,6 +491,7 @@ class DeliveryRequestController extends Controller
             $deliveryItem->defectived_qty = (int)$request->defectived_qty;
             $deliveryItem->remark = $remark;
             $deliveryItem->note = $request->note;
+            $deliveryItem->unit_measurement = $request->unit_measurement;
             $deliveryItem->expired_at = Carbon::createFromFormat('m/d/Y', $request->expired_at)->format('Y-m-d');
             $deliveryItem->updater_id = $user;
             $deliveryItem->save();

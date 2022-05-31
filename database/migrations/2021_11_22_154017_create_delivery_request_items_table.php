@@ -20,6 +20,7 @@ class CreateDeliveryRequestItemsTable extends Migration
             $table->integer('product_id')->unsigned()->index();
             $table->integer("qty");
             $table->string("remark")->nullable();
+            $table->string("unit_measurement")->nullable();
             $table->longText("note")->nullable();
             $table->integer("received_qty")->default(0);
             $table->integer("defectived_qty")->default(0);

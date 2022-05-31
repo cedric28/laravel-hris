@@ -355,12 +355,13 @@ class StockFetchController extends Controller
 			0 => 'reference_no',
 			1 => 'product_name',
 			2 => 'qty',
-			3 => 'received_qty',
-			4 => 'defectived_qty',
-			5 => 'expired_at',
-			6 => 'remark',
-			7 => 'note',
-			8 => 'action'
+			3 => 'unit_measurement',
+			4 => 'received_qty',
+			5 => 'defectived_qty',
+			6 => 'expired_at',
+			7 => 'remark',
+			8 => 'note',
+			9 => 'action'
 		);
 
 		$delivery_request_id = $request->delivery_request_id;
@@ -417,6 +418,7 @@ class StockFetchController extends Controller
 						->orWhere('delivery_requests.reference_no', 'like', "%{$search}%")
 						->orWhere('inventories.product_name', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.qty', 'like', "%{$search}%")
+						->orWhere('delivery_request_items.unit_measurement', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.received_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.defectived_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.expired_at', 'like', "%{$search}%")
@@ -443,6 +445,7 @@ class StockFetchController extends Controller
 						->orWhere('delivery_requests.reference_no', 'like', "%{$search}%")
 						->orWhere('inventories.product_name', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.qty', 'like', "%{$search}%")
+						->orWhere('delivery_request_items.unit_measurement', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.received_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.defectived_qty', 'like', "%{$search}%")
 						->orWhere('delivery_request_items.expired_at', 'like', "%{$search}%")
@@ -465,11 +468,12 @@ class StockFetchController extends Controller
 				$nestedData['reference_no'] = $r->reference_no;
 				$nestedData['product_name'] = $r->product_name;
 				$nestedData['qty'] = $r->qty;
+				$nestedData['unit_measurement'] = $r->unit_measurement == null ? "-" : $r->note;
 				$nestedData['received_qty'] = $r->received_qty;
 				$nestedData['defectived_qty'] = $r->defectived_qty;
 				$nestedData['expired_at'] = date('m-d-Y', strtotime($r->expired_at));
-				$nestedData['remark'] = $r->remark;
-				$nestedData['note'] = $r->note;
+				$nestedData['remark'] = $r->remark ?? "-";
+				$nestedData['note'] = $r->note == null ? "-" : $r->note;
 				if ($r->status != "completed") {
 					$nestedData['action'] = '
 						<button 
@@ -483,6 +487,7 @@ class StockFetchController extends Controller
 							id="edit" 
 							data-productname="' . $r->product_name . '" 
 							data-qty="' . $r->qty . '" 
+							data-unit_measurement="' . $r->unit_measurement . '" 
 							data-received_qty="' . $r->received_qty . '"
 							data-defectived_qty="' . $r->defectived_qty . '"
 							data-expired_at="' . date('m/d/Y', strtotime($r->expired_at)) . '"

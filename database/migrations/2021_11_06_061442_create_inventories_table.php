@@ -17,6 +17,7 @@ class CreateInventoriesTable extends Migration
             $table->id();
             $table->string("product_name")->unique();
             $table->string("generic_name");
+            $table->string("unit_measurement");
             $table->string("sku")->unique();
             $table->longText("content");
             $table->longText("image")->nullable();

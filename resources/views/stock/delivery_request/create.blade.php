@@ -67,8 +67,9 @@
 										<table class="table" id="products_table">
 											<thead>
 												<tr>
-													<th>Product</th>
-													<th>Quantity</th>
+													<th>PRODUCT</th>
+													<th>QUANTITY</th>
+													<th>UNIT MEASUREMENT</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -86,6 +87,9 @@
 														</td>
 														<td>
 															<input type="number" name="quantities[]" class="form-control" value="{{ old('quantities.' . $index) ?? '1' }}" />
+														</td>
+														<td>
+															<input type="text" name="unit_measurements[]" class="form-control" value="{{ old('unit_measurements.' . $index) ?? '' }}" />
 														</td>
 														<td>
 															<a id="delete_row" class="btn btn-danger">Delete</a>

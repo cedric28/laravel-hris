@@ -97,6 +97,7 @@
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
 												<th>REQUEST QTY</th>
+												<th>UNIT MEASUREMENT</th>
 												<th>DEFECTIVE QTY</th>
 												<th>RECEIVED QTY</th>
 												<th>REMARK</th>
@@ -109,6 +110,7 @@
 												<tr>
 													<td>{{ $stock->product_name }}</td>
 													<td>{{ $stock->qty }}</td>
+													<td>{{ $stock->unit_measurement }}</td>
 													<td>{{ $stock->defectived_qty }}</td>
 													<td>{{ $stock->received_qty }}</td>
 													<td>{{ $stock->remark }}</td>
@@ -196,21 +198,21 @@
                                 "extend": 'csv',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                    "columns": [0,1,2,3,4,5,6,7]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                    "columns": [0,1,2,3,4,5,6,7]
                                 }
                             },
                             {
                                 "extend": 'print',
                                  'title' :`DELIVERY-ITEMS-${reference_no}`,
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                    "columns": [0,1,2,3,4,5,6,7]
                                 }
                             }
                         ],
@@ -219,6 +221,7 @@
                 "columns":[
                     {"data":"product_name"},
                     {"data":"qty"},
+					{"data":"unit_measurement"},
 					{"data":"defectived_qty"},
 					{"data":"received_qty"},
 					{"data":"remark"},
@@ -226,11 +229,11 @@
 					{"data":"expired_at"}
                 ],
 				"columnDefs": [{
-					"targets": [1,2,3],   // target column
+					"targets": [1,3,4],   // target column
 					"className": "textRight",
 				},
 				{
-					"targets": [6],   // target column
+					"targets": [2,5,6,7],   // target column
 					"className": "textCenter",
 				}
 				]

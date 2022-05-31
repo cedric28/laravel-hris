@@ -259,6 +259,7 @@ class InventoryController extends Controller
 
             $inventory->product_name = $request->product_name;
             $inventory->generic_name = $request->generic_name;
+            $inventory->unit_measurement = $request->unit_measurement;
             $inventory->sku = $request->sku;
             $inventory->content = $request->content;
             $inventory->image = $photo;

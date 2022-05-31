@@ -356,6 +356,7 @@ footer {
               <tr>
                 <th>PRODUCT NAME</th>
                 <th>GENERIC NAME</th>
+                <th>UNIT MEASUREMENT</th>
                 <th>SERIAL NUMBER</th>
                 <th>REQUEST QUANTITY</th>
                 <th>RECEIVED QUANTITY</th>
@@ -370,6 +371,7 @@ footer {
             <tr>
                 <td>{{  $item->product->product_name }}</td>
                 <td>{{  $item->product->generic_name }}</td>
+                <td>{{  $item->product->unit_measurement }}</td>
                 <td class="textRight">{{  $item->product->sku }}</td>
                 <td class="textRight">{{  $item->qty }}</td>
                 <td class="textRight">{{  $item->received_qty }}</td>

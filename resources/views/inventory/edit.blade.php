@@ -48,6 +48,12 @@
 									</div>
 								</div>
 								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Unit Measurement:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="unit_measurement" value="{{ old('unit_measurement', $inventory->unit_measurement) }}" class="@error('unit_measurement') is-invalid @enderror form-control" placeholder="Unit Measurement e.g 10 ml" >
+									</div>
+								</div>
+								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">SKU:</label>
 									<div class="col-lg-9">	
 										<input type="text" name="sku" value="{{ old('sku', $inventory->sku) }}" class="@error('sku') is-invalid @enderror form-control" placeholder="SKU" >
