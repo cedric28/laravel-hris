@@ -33,6 +33,7 @@ class PDFController extends Controller
         $log->updater_id =  \Auth::user()->id;
         $log->save();
 
+        // return view("pdf.invoice", ['sales' => $sales]);
         view()->share('sales', $sales);
         $pdf = PDF::loadView('pdf.invoice', $sales);
 

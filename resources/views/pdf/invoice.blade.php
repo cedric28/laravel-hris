@@ -29,7 +29,7 @@ body{
     float: right;
 }
 h1{
-  font-size: 1.5em;
+  font-size: 10px;
   color: #444;
 }
 h2{font-size: .8em;}
@@ -61,17 +61,25 @@ a {
 
 [id*='invoice-']{ /* Targets all id with 'col-' */
 /*  border-bottom: 1px solid #EEE;*/
-  padding: 20px;
+  padding: 20px 30%;
 }
 
-#invoice-top{border-bottom: 2px solid #00a63f;}
-#invoice-mid{min-height: 110px;}
-#invoice-bot{ min-height: 240px;}
+/* #invoice-top{border-bottom: 2px solid #00a63f;} */
+.green-line{
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #00a63f;
+    /* position: absolute; */
+}
+/* #invoice-mid{min-height: 110px;} */
+/* #invoice-bot{ min-height: 240px;} */
+#invoice-mid{min-height: 10px;}
+#invoice-bot{ min-height: 20px;}
 
 .logo{
     display: inline-block;
     vertical-align: middle;
-	width: 110px;
+	width: 100px;
     overflow: hidden;
 }
 .info{
@@ -86,7 +94,7 @@ a {
 .clientlogo{
     display: inline-block;
     vertical-align: middle;
-	width: 50px;
+	width: 30px;
 }
 .clientinfo {
     display: inline-block;
@@ -175,7 +183,8 @@ th {
 }
 footer {
     border-top: 1px solid #eeeeee;;
-    padding: 15px 20px;
+    /* padding: 15px 20px; */
+    padding: 15px 30%;
 }
 .effect2
 {
@@ -184,7 +193,7 @@ footer {
 
 @media screen and (max-width: 767px) {
     h1 {
-        font-size: .9em;
+        font-size: 5px;
     }
     #invoice {
         width: 100%;
@@ -291,6 +300,8 @@ footer {
 		   <span id="invoice_date">(046)4130829</span><br>
         </p>
       </div><!--End Title-->
+      <div class="green-line">
+      </div>
     </div><!--End InvoiceTop-->
 
 
