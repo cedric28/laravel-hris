@@ -96,10 +96,10 @@
 										<thead>
 											<tr style="text-align:center;">
 												<th>PRODUCT NAME</th>
-												<th>REQUEST QTY</th>
+												<th>REQUEST QUANTITY</th>
 												<th>UNIT MEASUREMENT</th>
-												<th>DEFECTIVE QTY</th>
-												<th>RECEIVED QTY</th>
+												<th>DEFECTIVE QUANTITY</th>
+												<th>RECEIVED QUANTITY</th>
 												<th>REMARK</th>
 												<th>NOTE</th>
 												<th>EXPIRATION DATE</th>

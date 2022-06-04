@@ -353,7 +353,7 @@ footer {
           <tr>
             <th>REFERENCE NO</th>
             <th>PRODUCT NAME</th>
-            <th>QTY</th>
+            <th>QUANTITY</th>
             <th>EXPIRATION DATE</th>
             <th>DATE RECEIVED</th>
           </tr>

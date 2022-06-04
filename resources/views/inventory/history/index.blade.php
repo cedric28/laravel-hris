@@ -30,7 +30,7 @@
 								<thead>
 									<tr style="text-align:center;">
 										<th>PRODUCT NAME</th>
-                                        <th>QTY</th>
+                                        <th>QUANTITY</th>
                                         <th>ADJUSTMENT TYPE</th>
                                         <th>REASON</th>
 										<th>DATE ADDED</th>

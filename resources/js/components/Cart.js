@@ -517,7 +517,7 @@ class Cart extends Component {
                                             }}>
                                                 <th>ITEM NAME</th>
                                                 <th>PRICE PER UNIT</th>
-                                                <th>QTY</th>
+                                                <th>QUANTITY</th>
                                                 <th>TOTAL PRICE</th>
                                                 <th>ACTION</th>
                                             </tr>

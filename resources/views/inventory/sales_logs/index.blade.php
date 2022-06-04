@@ -30,7 +30,7 @@
 								<thead>
 									<tr style="text-align:center;">
 										<th>PRODUCT NAME</th>
-                                        <th>QTY</th>
+                                        <th>QUANTITY</th>
                                         <th>(₱) PRICE</th>
                                         <th>(₱) TOTAL SALES PRICE</th>
 										<th>TRANSACTION DATE</th>

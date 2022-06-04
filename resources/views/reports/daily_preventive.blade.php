@@ -68,7 +68,7 @@
                                         <thead>
                                             <tr style="text-align:center;">
                                                 <th>PRODUCT NAME</th>
-                                                <th>QTY</th>
+                                                <th>QUANTITY</th>
                                                 <th>EXPIRATION DATE</th>
                                             </tr>
                                         </thead>

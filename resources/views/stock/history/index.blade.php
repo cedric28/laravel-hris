@@ -35,9 +35,9 @@
 												<th>REFERENCE NO</th>
 												<th>SUPPLIER</th>
 												<th>PRODUCT NAME</th>
-												<th>REQUESTED QTY</th>
-												<th>RECEIVED QTY</th>
-												<th>DEFECTIVE QTY</th>
+												<th>REQUESTED QUANTITY</th>
+												<th>DEFECTIVE QUANTITY</th>
+												<th>RECEIVED QUANTITY</th>
 												<th>EXPIRATION DATE</th>
 												<th>DATE ADDED</th>
 											</tr>
@@ -49,8 +49,8 @@
 													<td>{{ $deliveryRequestItem->delivery_request->supplier->name }}</td>
 													<td>{{ $deliveryRequestItem->product->product_name }}</td>
 													<td style="text-align:right;">{{ $deliveryRequestItem->qty }}</td>
-													<td style="text-align:right;">{{ $deliveryRequestItem->received_qty }}</td>
 													<td style="text-align:right;">{{ $deliveryRequestItem->defectived_qty }}</td>
+													<td style="text-align:right;">{{ $deliveryRequestItem->received_qty }}</td>
 													<td>{{ $deliveryRequestItem->expired_at }}</td>
 													<td>{{ $deliveryRequestItem->created_at }}</td>
 												</tr>
@@ -150,8 +150,8 @@
                     {"data":"supplier"},
                     {"data":"product_name"},
                     {"data":"qty"},
-					{"data":"received_qty"},
 					{"data":"defective_qty"},
+					{"data":"received_qty"},
                     {"data":"expired_at"},
 					{"data":"created_at"}
                 ],
