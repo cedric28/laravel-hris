@@ -84,7 +84,8 @@ class InventoryController extends Controller
                 'category_id' => 'required|integer',
                 'selling_price' => 'required|numeric|gt:0',
                 'original_price' => 'required|numeric|gt:0|lt:selling_price',
-                'quantity' => 'required|numeric|gt:0'
+                'quantity' => 'required|numeric|gt:0',
+                'unit_measurement' => 'required|string|max:50',
             ], $messages);
 
             if ($validator->fails()) {
@@ -114,6 +115,7 @@ class InventoryController extends Controller
             $inventory->original_price = $request->original_price;
             $inventory->selling_price = $request->selling_price;
             $inventory->quantity = $request->quantity;
+            $inventory->unit_measurement = $request->unit_measurement;
             $inventory->creator_id = $user;
             $inventory->updater_id = $user;
             if ($inventory->save()) {
@@ -225,6 +227,7 @@ class InventoryController extends Controller
                 'quantity' => 'numeric:gt:0',
                 'selling_price' => 'required|numeric|gt:0',
                 'original_price' => 'required|numeric|gt:0|lt:selling_price',
+                'unit_measurement' => 'required|string|max:50',
             ], $messages);
 
             if ($validator->fails()) {
