@@ -26,13 +26,14 @@ body{
     float: left;
 }
 .col-right {
+    margin-top: 30px;
     float: right;
 }
 h1{
   font-size: 10px;
   color: #444;
 }
-h2{font-size: .8em;}
+h2{font-size: .7em;}
 h3{
   font-size: 1.2em;
   font-weight: 300;
@@ -99,7 +100,7 @@ a {
 .clientinfo {
     display: inline-block;
     vertical-align: middle;
-    margin-left: 20px
+    margin-left: 5px
 }
 .title{
   float: right;

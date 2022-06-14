@@ -538,6 +538,10 @@ class StockFetchController extends Controller
 		$order = $columns[$request->input('order.0.column')];
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
+		if (intval($request->input('draw')) == 1) {
+			$order = 'delivery_at';
+			$dir = 'desc';
+		}
 
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
@@ -547,7 +551,7 @@ class StockFetchController extends Controller
 				->where('status', 'completed')
 				->offset($start)
 				->limit($limit)
-				->orderBy('delivery_at', 'DESC')
+				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data
@@ -564,7 +568,7 @@ class StockFetchController extends Controller
 			})
 				->offset($start)
 				->limit($limit)
-				->orderBy('delivery_at', 'DESC')
+				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
@@ -618,7 +622,8 @@ class StockFetchController extends Controller
 			"draw"			    => intval($request->input('draw')),
 			"recordsTotal"	    => intval($totalData),
 			"recordsFiltered"   => intval($totalFiltered),
-			"data"			    => $data
+			"data"			    => $data,
+			'dir'				=> $dir
 		);
 
 		//return the data in json response
@@ -647,6 +652,11 @@ class StockFetchController extends Controller
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
 
+		if (intval($request->input('draw')) == 1) {
+			$order = 'delivery_at';
+			$dir = 'desc';
+		}
+
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
 			//get all the product data
@@ -655,7 +665,7 @@ class StockFetchController extends Controller
 				->where('status', 'pending')
 				->offset($start)
 				->limit($limit)
-				->orderBy('delivery_at', 'DESC')
+				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data
@@ -672,7 +682,7 @@ class StockFetchController extends Controller
 			})
 				->offset($start)
 				->limit($limit)
-				->orderBy('delivery_at', 'DESC')
+				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
@@ -755,6 +765,11 @@ class StockFetchController extends Controller
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
 
+		if (intval($request->input('draw')) == 1) {
+			$order = 'delivery_at';
+			$dir = 'desc';
+		}
+
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
 			//get all the product data
@@ -763,7 +778,7 @@ class StockFetchController extends Controller
 				->where('status', 'cancel')
 				->offset($start)
 				->limit($limit)
-				->orderBy('delivery_at', 'DESC')
+				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data
@@ -780,7 +795,7 @@ class StockFetchController extends Controller
 			})
 				->offset($start)
 				->limit($limit)
-				->orderBy('delivery_at', 'DESC')
+				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
@@ -863,6 +878,11 @@ class StockFetchController extends Controller
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
 
+		if (intval($request->input('draw')) == 1) {
+			$order = 'delivery_at';
+			$dir = 'desc';
+		}
+
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
 			//get all the product data
@@ -871,7 +891,7 @@ class StockFetchController extends Controller
 				->join('suppliers', 'delivery_requests.supplier_id', '=', 'suppliers.id')
 				->offset($start)
 				->limit($limit)
-				->orderBy('delivery_at', 'DESC')
+				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data
@@ -890,7 +910,7 @@ class StockFetchController extends Controller
 				})
 				->offset($start)
 				->limit($limit)
-				->orderBy('delivery_at', 'DESC')
+				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
@@ -1100,6 +1120,10 @@ class StockFetchController extends Controller
 		$order = $columns[$request->input('order.0.column')];
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
+		if (intval($request->input('draw')) == 1) {
+			$order = 'delivery_at';
+			$dir = 'desc';
+		}
 
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
@@ -1164,7 +1188,8 @@ class StockFetchController extends Controller
 			"draw"			    => intval($request->input('draw')),
 			"recordsTotal"	    => intval($totalData),
 			"recordsFiltered"   => intval($totalFiltered),
-			"data"			    => $data
+			"data"			    => $data,
+			'dir'				=> $dir
 		);
 
 		//return the data in json response
@@ -1192,6 +1217,11 @@ class StockFetchController extends Controller
 		$order = $columns[$request->input('order.0.column')];
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
+
+		if (intval($request->input('draw')) == 1) {
+			$order = 'delivery_at';
+			$dir = 'desc';
+		}
 
 		//check if user search for a value in the product datatable
 		if (empty($request->input('search.value'))) {
