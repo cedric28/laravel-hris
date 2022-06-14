@@ -1132,7 +1132,7 @@ class StockFetchController extends Controller
 				->join('suppliers', 'return_stocks.supplier_id', '=', 'suppliers.id')
 				->offset($start)
 				->limit($limit)
-				->orderBy($order, $dir)
+				->orderBy('delivery_at', 'desc')
 				->get();
 
 			//total number of filtered data
@@ -1150,7 +1150,7 @@ class StockFetchController extends Controller
 			})
 				->offset($start)
 				->limit($limit)
-				->orderBy($order, $dir)
+				->orderBy('delivery_at', 'desc')
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	
@@ -1231,7 +1231,7 @@ class StockFetchController extends Controller
 				->join('suppliers', 'return_stocks.supplier_id', '=', 'suppliers.id')
 				->offset($start)
 				->limit($limit)
-				->orderBy($order, $dir)
+				->orderBy('delivery_at', 'desc')
 				->get();
 
 			//total number of filtered data
@@ -1250,7 +1250,7 @@ class StockFetchController extends Controller
 				})
 				->offset($start)
 				->limit($limit)
-				->orderBy($order, $dir)
+				->orderBy('delivery_at', 'desc')
 				->get();
 
 			//total number of filtered data matching the search value request in the delivery table	

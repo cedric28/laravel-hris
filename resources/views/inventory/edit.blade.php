@@ -113,6 +113,13 @@
 								</div>
 
 								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Unit Measurement:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="unit_measurement" value="{{ old('unit_measurement',$inventory->unit_measurement) }}" class="@error('unit_measurement') is-invalid @enderror form-control" placeholder="e.g 1ml" >
+									</div>
+								</div>
+
+								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">Stock on Hand:</label>
 									<div class="col-lg-9">	
 										<input disabled="disabled"  name="quantity" value="{{ old('quantity', $inventory->quantity) }}" class="@error('quantity') is-invalid @enderror form-control" placeholder="Quantity" >
