@@ -13,26 +13,10 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
-          @if($totalNotification > 0 )
-          <span class="badge badge-warning navbar-badge">{{ $totalNotification }}</span>
-          @endif
+        
+          <span class="badge badge-warning navbar-badge">0</span>
+        
         </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">{{ $totalNotification }} Notifications</span>
-          <div class="dropdown-divider"></div>
-          @if($totalDeliveries > 0 )
-          <a href="{{ route('deliverySchedule') }}" class="dropdown-item">
-            <i class="fas fas fa-truck mr-2"></i> {{ $totalDeliveries }} upcoming delivery
-          </a>
-          @endif
-          @if($expiredProducts > 0 )
-          <div class="dropdown-divider"></div>
-          <a href="{{ route('dailyPreventive') }}" class="dropdown-item">
-            <i class="fas fa-box-open mr-2"></i> {{ $expiredProducts }} products will soon be expired
-          </a>
-          @endif
-          <div class="dropdown-divider"></div>
-        </div>
       </li>
 	    <li class="nav-item d-none d-sm-inline-block">
         <a data-close="true" onclick="event.preventDefault();  document.getElementById('logout-form').submit();" class="nav-link">Logout</a>

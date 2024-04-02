@@ -14,11 +14,9 @@ class ProfileController extends Controller
     public function viewProfile()
     {
         $user = \Auth::user();
-        $notificationSetup = NotificationSetting::withTrashed()->findOrFail(1);
 
         return view('users.editprofile', [
             'user' => $user,
-            "notificationSetup" => $notificationSetup
         ]);
     }
 

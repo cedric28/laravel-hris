@@ -7,7 +7,7 @@
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
         <a href="#" class="h1">
-        <img src="{{ asset('dist/img/logo-drug.png') }}" alt="Logo" class="" style="opacity: .8;height: 100px;max-height: none !important;">
+        <img src="{{ asset('dist/img/logo.png') }}" alt="Logo" class="" style="opacity: .8;height: 100px;max-height: none !important;">
         </a>
         </div>
         <div class="card-body">
