@@ -21,9 +21,9 @@ class UserSeeder extends Seeder
                 'role_id' => 1
             ],
             [ 
-                'first_name' => 'Cashier', 
-                'last_name' => 'Cashier', 
-                'email' => 'cashier@cashier.com', 
+                'first_name' => 'HR', 
+                'last_name' => 'HR', 
+                'email' => 'hr@hr.com', 
                 'pw' => 'passw0rd',
                 'role_id' => 2
             ]
