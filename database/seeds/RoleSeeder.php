@@ -41,7 +41,7 @@ class RoleSeeder extends Seeder
                     'updater_id' => 1
                 ]);
 
-                echo $role['email'] . ' | ';
+                echo $role['name'] . ' | ';
 
             } catch (Exception $e) {
                 echo 'Duplicate role ' . $role['name'] . ' | ';
