@@ -39,6 +39,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile-update', 'User\ProfileController@updateProfile')->name('update-profile');
     Route::patch('/notification-update', 'User\ProfileController@updateNotification')->name('update-notification');
 
+    //Client
+    Route::resource('/client', 'Client\ClientController');
+    Route::post('client/fetch/q', 'Client\ClientFetchController@fetchClient')->name('activeClient');
+    Route::post('inactive-client/fetch/q', 'Client\ClientFetchController@fetchInactiveClient')->name('InactiveClient');
+    Route::get('client/destroy/{id}', 'Client\ClientController@destroy');
+    Route::get('client/restore/{id}', 'Client\ClientController@restore');
+
+    //Employee
+    Route::resource('/employee', 'Employee\EmployeeController');
+    Route::post('employee/fetch/q', 'Employee\EmployeeFetchController@fetchEmployee')->name('activeEmployee');
+    Route::post('inactive-employee/fetch/q', 'Employee\EmployeeFetchController@fetchInactiveEmployee')->name('InactiveEmployee');
+    Route::get('employee/destroy/{id}', 'Employee\EmployeeController@destroy');
+    Route::get('employee/restore/{id}', 'Employee\EmployeeController@restore');
+
     //Logs
     Route::resource('logs', 'Logs\LogController');
 });

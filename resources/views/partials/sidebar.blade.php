@@ -38,6 +38,75 @@
                     </p>
                 </a>
             </li>
+            <li class="nav-item">
+              <a href="{{ route('client.index')}}" class="nav-link {{ (request()->is('client*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-building"></i>
+                    <p>
+                        Client
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-address-book"></i>
+                <p>
+                    Employee Management
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('employee.index')}}" class="nav-link {{ (request()->is('employee*')) ? 'nav-link active' : '' }}">
+                            <i class="nav-icon fas fa-address-card"></i>
+                            <p>Employee</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-user-tag"></i>
+                            <p>Deployment</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-user-times"></i>
+                            <p>Disciplinary</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                <i class="nav-icon fas fas fa-clipboard"></i>
+                <p>
+                    Attendance Management
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="" class="nav-link">
+                            <i class="nav-icon fas fa-clipboard"></i>
+                            <p>Attendance</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fas fa-book"></i>
+                            <p>Report</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="" class="nav-link ">
+                    <i class="nav-icon fas fa-user-slash"></i>
+                    <p>Leaves</p>
+                </a>
+            </li>
             @endcan
             @can('isAdmin')
             <li class="nav-header">SETTINGS</li>

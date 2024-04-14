@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJobCertificatesTable extends Migration
+class CreateEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateJobCertificatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('job_certificates', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->string('reference_no')->unique();
             $table->string("name")->unique();
-            $table->longText("description")->nullable();
-            $table->integer('job_id')->unsigned()->index();
+            $table->string("nickname");
+            $table->longText("address");
+            $table->string("contact_number");
+            $table->string('email');
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();
             $table->softDeletes();
@@ -32,6 +35,6 @@ class CreateJobCertificatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('job_certificates');
+        Schema::dropIfExists('employees');
     }
 }
