@@ -16,7 +16,7 @@ class ClientSeeder extends Seeder
             [ 
                 'reference_no' => '7490505111',
                 'name' => 'Samsung',
-                'nickname' => 'sam',
+                'short_name' => 'sam',
                 'address' => '198 PUROK 3 ACAPULCO ST',
                 'contact_number' => '9455878983',
                 'email' => 'sample@yahoo.com'
@@ -38,7 +38,7 @@ class ClientSeeder extends Seeder
                 $clientObj = Client::create([
                     'reference_no' => $client['reference_no'],
                     'name' => $client['name'],
-                    'short_name' => $client['nickname'],
+                    'short_name' => $client['short_name'],
                     'address' => $client['address'],
                     'contact_number' => $client['contact_number'],
                     'email' => $client['email'],
