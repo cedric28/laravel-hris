@@ -53,6 +53,25 @@ Route::middleware('auth')->group(function () {
     Route::get('employee/destroy/{id}', 'Employee\EmployeeController@destroy');
     Route::get('employee/restore/{id}', 'Employee\EmployeeController@restore');
 
+
+    //Deployment
+    Route::resource('/deployment', 'Deployment\DeploymentController');
+    Route::post('deployment/fetch/q', 'Deployment\DeploymentFetchController@fetchDeployment')->name('activeDeployment');
+    Route::post('inactive-deployment/fetch/q', 'Deployment\DeploymentFetchController@fetchInactiveDeployment')->name('InactiveDeployment');
+    Route::get('deployment/destroy/{id}', 'Deployment\DeploymentController@destroy');
+    Route::get('deployment/restore/{id}', 'Deployment\DeploymentController@restore');
+
+
+    //Schedule
+    Route::resource('/schedule', 'Schedule\ScheduleController');
+    Route::post('schedule/fetch/q', 'Schedule\ScheduleFetchController@fetchSchedule')->name('activeSchedule');
+    Route::post('inactive-schedule/fetch/q', 'Schedule\ScheduleFetchController@fetchInactiveSchedule')->name('InactiveSchedule');
+    Route::get('schedule/schedule/{id}', 'Schedule\ScheduleController@destroy');
+    Route::get('schedule/restore/{id}', 'Schedule\ScheduleController@restore');
+    
     //Logs
     Route::resource('logs', 'Logs\LogController');
+
+    Route::post('logs/fetch/q', 'Logs\LogFetchController@fetchLogs')->name('activityLogs');
+
 });

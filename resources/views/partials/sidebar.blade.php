@@ -63,7 +63,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('deployment.index')}}" class="nav-link {{ (request()->is('deployment*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-user-tag"></i>
                             <p>Deployment</p>
                         </a>
@@ -90,6 +90,12 @@
                         <a href="" class="nav-link">
                             <i class="nav-icon fas fa-clipboard"></i>
                             <p>Attendance</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                    <a href="{{ route('schedule.index')}}" class="nav-link {{ (request()->is('schedule*')) ? 'nav-link active' : '' }}">
+                            <i class="nav-icon fas fa-clipboard"></i>
+                            <p>Schedule</p>
                         </a>
                     </li>
                     <li class="nav-item">

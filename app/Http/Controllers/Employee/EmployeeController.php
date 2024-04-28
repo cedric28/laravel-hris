@@ -10,6 +10,10 @@ use App\Employee;
 use App\EmploymentType;
 use App\Industry;
 use Carbon\Carbon;
+use App\Gender;
+use App\CivilStatus;
+use App\EmploymentHistory;
+use App\EducationalBackground;
 use Validator;
 
 class EmployeeController extends Controller
@@ -39,7 +43,13 @@ class EmployeeController extends Controller
         //prevent other user to access to this page
         $this->authorize("isAdmin");
 
-        return view("employee.create");
+        $civilStatus =  CivilStatus::all();
+        $gender = Gender::all();
+
+        return view("employee.create",[
+            'civilStatus' => $civilStatus,
+            'gender' => $gender
+        ]);
     }
 
     /**
@@ -58,14 +68,22 @@ class EmployeeController extends Controller
         \DB::beginTransaction();
 
         try {
+
+            $messages = [
+                'gender_id.required' => 'Please select a Gender',
+                'civil_status_id.required' => 'Please select a Civil Status'
+            ];
             //validate request value
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:50|unique:employees,name',
                 'nickname' => 'required|string|max:10',
+                'gender_id' => 'required|integer',
+                'birthdate' => 'required|string',
+                'civil_status_id' => 'required|integer',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
                 'email' => 'required|email|max:50'
-            ]);
+            ], $messages);
 
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
@@ -79,6 +97,9 @@ class EmployeeController extends Controller
             $employee->reference_no = $this->generateUniqueCode();
             $employee->name = $request->name;
             $employee->nickname = $request->nickname;
+            $employee->gender_id = $request->gender_id;
+            $employee->civil_status_id = $request->civil_status_id;
+            $employee->birthdate = $request->birthdate;
             $employee->address = $request->address;
             $employee->contact_number = $request->contact_number;
             $employee->email = $request->email;
@@ -96,8 +117,7 @@ class EmployeeController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('employee.create')
-                ->with('successMsg', 'Employeee Save Successful');
+            return redirect()->route('employee.edit', $employee->id);
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
@@ -137,11 +157,21 @@ class EmployeeController extends Controller
         $employee = Employee::withTrashed()->findOrFail($id);
         $employmentTypes = EmploymentType::all();
         $industries = Industry::all();
+        $civilStatus =  CivilStatus::all();
+        $gender = Gender::all();
 
+        $employment_histories = $employee->employment_histories;
+        $educ_backgrounds = $employee->educ_backgrounds;
+   
+    
         return view('employee.edit', [
             'employee' => $employee,
             'employmentTypes' => $employmentTypes,
-            'industries' => $industries
+            'industries' => $industries,
+            'civilStatus' => $civilStatus,
+            'gender' => $gender,
+            'employment_histories' => $employment_histories,
+            'educ_backgrounds' => $educ_backgrounds
         ]);
     }
 
@@ -166,14 +196,51 @@ class EmployeeController extends Controller
             //check employee if exist
             $employee = Employee::withTrashed()->findOrFail($id);
 
+            $messages = [
+                'gender_id.required' => 'Please select a Gender',
+                'civil_status_id.required' => 'Please select a Civil Status',
+                'employment_histories.*.required' => 'Please Add atleast 1 Employment History',
+                'educational_histories.*.required' => 'Please Add atleast 1 Educational Background',
+                'employmentTypes.*.integer' => 'Please select Employment Type',
+                'startdate.*.required' => 'Please select Start Date',
+                'enddate.*.required' => 'Please select Start Date',
+                'from.*.required' => 'Please select From Date',
+                'to.*.required' => 'Please select To Date',
+                'industries*.required' => 'Please select Nature of Work'
+            ];
+
             //validate the request value
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|unique:employees,name,' . $employee->id,
                 'nickname' => 'required|string|max:10',
+                'gender_id' => 'required|integer',
+                'birthdate' => 'required|string',
+                'civil_status_id' => 'required|integer',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
-                'email' => 'required|email|max:50'
-            ]);
+                'email' => 'required|email|max:50',
+                'employment_histories' => 'array',
+                'educational_histories' => 'array',
+                'title.*' => 'required|string',
+                'employmentTypes.*' => 'required|integer',
+                'company.*' => 'required|string',
+                'location.*' => 'required|string',
+                'startdate.*' => 'required|string',
+                'enddate.*' => 'required|string',
+                'industries.*' => 'required|integer',
+                'job_description.*' => 'required|string',
+                'school_name.*' => 'required|string',
+                'from.*' => 'required|string',
+                'to.*' => 'required|string',
+                'emergency_contact_name' => 'required|string|max:50',
+                'emergency_relationship' => 'required|string|max:10',
+                'emergency_address' => 'required|string|max:50',
+                'emergency_contact_number' => 'required|digits:10',
+                'sss' => 'required|digits:12',
+                'pagibig' => 'required|digits:12',
+                'philhealth' => 'required|digits:12',
+                'tin' =>  'required|digits:12'
+            ],$messages);
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
@@ -183,9 +250,20 @@ class EmployeeController extends Controller
 
             //save the update value
             $employee->name = $request->name;
-            $employee->short_name = $request->short_name;
+            $employee->nickname = $request->nickname;
+            $employee->gender_id = $request->gender_id;
+            $employee->civil_status_id = $request->civil_status_id;
+            $employee->birthdate = $request->birthdate;
             $employee->address = $request->address;
             $employee->contact_number = $request->contact_number;
+            $employee->emergency_contact_name = $request->emergency_contact_name;
+            $employee->emergency_relationship = $request->emergency_relationship;
+            $employee->emergency_address = $request->emergency_address;
+            $employee->emergency_contact_number = $request->emergency_contact_number;
+            $employee->sss = $request->sss;
+            $employee->pagibig = $request->pagibig;
+            $employee->philhealth = $request->philhealth;
+            $employee->tin = $request->tin;
             $employee->email = $request->email;
             $employee->updater_id = $user;
             $employee->update();
@@ -195,6 +273,63 @@ class EmployeeController extends Controller
             $log->creator_id =  \Auth::user()->id;
             $log->updater_id =  \Auth::user()->id;
             $log->save();
+
+            $titles = $request->input('title', []);
+            $employmentTypes = $request->input('employmentTypes', []);
+            $company = $request->input('company', []);
+            $location = $request->input('location', []);
+            $startdate = $request->input('startdate', []);
+            $enddate = $request->input('enddate', []);
+            $industries = $request->input('industries', []);
+            $job_description = $request->input('job_description', []);
+            for ($i = 0; $i < count($titles); $i++) {
+                if ($titles[$i] != '') {
+                    $employment = EmploymentHistory::firstOrNew([
+                        'employee_id' => $employee->id,
+                    ]);
+                    $employment->employment_type_id = $employmentTypes[$i];
+                    $employment->title = $titles[$i] ?? '';
+                    $employment->company = $company[$i] ?? '';
+                    $employment->location = $location[$i] ?? '';
+                    $employment->start_date = Carbon::parse($startdate[$i])->format('Y-m-d');
+                    $employment->end_date = Carbon::parse($enddate[$i])->format('Y-m-d');
+                    $employment->industry_id = $industries[$i] ?? '';
+                    $employment->job_description = $job_description[$i] ?? '';
+                    $employment->creator_id = $user;
+                    $employment->updater_id = $user;
+                    $employment->save();
+
+                    $log = new Log();
+                    $log->log = "User " . \Auth::user()->email . " add employment history " . $employment->title . " at " . Carbon::now();
+                    $log->creator_id =  \Auth::user()->id;
+                    $log->updater_id =  \Auth::user()->id;
+                    $log->save();
+                }
+            }
+
+
+            $school_names = $request->input('school_name', []);
+            $from = $request->input('from', []);
+            $to = $request->input('to', []);
+            for ($i = 0; $i < count($school_names); $i++) {
+                if ($school_names[$i] != '') {
+                    $education = EducationalBackground::firstOrNew([
+                        'employee_id' => $employee->id,
+                    ]);
+                    $education->school_name = $school_names[$i];
+                    $education->from = Carbon::parse($from[$i])->format('Y-m-d');
+                    $education->to = Carbon::parse($to[$i])->format('Y-m-d');
+                    $education->creator_id = $user;
+                    $education->updater_id = $user;
+                    $education->save();
+
+                    $log = new Log();
+                    $log->log = "User " . \Auth::user()->email . " add educational background " . $education->school_name . " at " . Carbon::now();
+                    $log->creator_id =  \Auth::user()->id;
+                    $log->updater_id =  \Auth::user()->id;
+                    $log->save();
+                }
+            }
             /*
             | @End Transaction
             |---------------------------------------------*/

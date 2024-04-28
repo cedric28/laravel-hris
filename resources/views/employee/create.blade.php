@@ -47,6 +47,46 @@
 								</div>
 
 								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Date of Birth:</label>
+									<div class="col-lg-9">
+										<div class="input-group date" id="birthdate" data-target-input="nearest">
+										<input type="text" name="birthdate" value="{{ old('birthdate') }}" placeholder="e.g 2022-08-20" onkeydown="return false;" class="@error('birthdate') is-invalid @enderror form-control datetimepicker-input" data-target="#reservationdate"/>
+										<div class="input-group-append" data-target="#birthdate" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+									</div>
+								</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="col-lg-3 col-form-label">Gender:</label>
+							<div class="col-lg-9">	
+								<select name="gender_id" class="form-control">
+									<option value="">Please select</option>
+									@foreach ($gender as $gend)
+										<option value="{{ $gend->id }}" {{ $gend->id == old('gender_id')  ? ' selected' : '' }}>
+											{{ $gend->name }}
+										</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+
+							<div class="form-group row">
+								<label class="col-lg-3 col-form-label">Civil Status:</label>
+								<div class="col-lg-9">	
+									<select name="civil_status_id" class="form-control">
+										<option value="">Please select</option>
+										@foreach ($civilStatus as $civilStat)
+											<option value="{{ $civilStat->id }}"{{ $civilStat->id == old('civil_status_id')  ? ' selected' : '' }}>
+												{{ $civilStat->name }}
+											</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+
+								<div class="form-group row">
 									<label class="col-form-label col-lg-3">Address</label>
 									<div class="col-lg-9">
 										<textarea rows="3" cols="3" name="address" class="@error('address') is-invalid @enderror form-control" placeholder="Address">{{ old('address') }}</textarea>
@@ -76,7 +116,7 @@
 								</div>
 
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" class="btn btn-primary">Next <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</form>
 						</div>
@@ -90,6 +130,29 @@
 	</section>
 	<!-- /page content -->
         @push('scripts')
+
+								<script>
+									$(function () {
+									var bindDatePicker = function() {
+											$("#birthdate").datetimepicker({
+												showClear: true,
+												showClose: true,
+												allowInputToggle: true,
+												useCurrent: false,
+												ignoreReadonly: true,
+												format:'YYYY-MM-DD',
+												icons: {
+													time: "fas fa-clock",
+													date: "fas fa-calendar",
+													up: "fas fa-chevron-up",
+													down: "fas fa-chevron-down"
+												}
+											});
+									}
+								
+									bindDatePicker();
+								});
+								</script>
 
         @endpush('scripts')
 @endsection

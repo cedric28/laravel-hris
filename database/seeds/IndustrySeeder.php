@@ -68,7 +68,7 @@ class IndustrySeeder extends Seeder
                 'name' => 'Pawnshop'
             ],
             [
-                'name' => 'Food and Reatil'
+                'name' => 'Food and Retail'
             ],
             [
                 'name' => 'Forex Trading/Money Changer'
@@ -86,7 +86,7 @@ class IndustrySeeder extends Seeder
                 'name' => 'Hospital and Tourism'
             ],
             [
-                'name' => 'Humanr Resources'
+                'name' => 'Human Resources'
             ],
             [
                 'name' => 'Insurance'
@@ -149,7 +149,7 @@ class IndustrySeeder extends Seeder
                 // Create Industry
                 $industryObj = Industry::create([
 
-                    'name' => $role['name'],
+                    'name' => $industry['name'],
                     'creator_id' => 1,
                     'updater_id' => 1
                 ]);
