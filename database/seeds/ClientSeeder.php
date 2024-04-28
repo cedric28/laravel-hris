@@ -38,7 +38,7 @@ class ClientSeeder extends Seeder
                 $clientObj = Client::create([
                     'reference_no' => $client['reference_no'],
                     'name' => $client['name'],
-                    'nickname' => $client['nickname'],
+                    'short_name' => $client['nickname'],
                     'address' => $client['address'],
                     'contact_number' => $client['contact_number'],
                     'email' => $client['email'],
