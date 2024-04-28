@@ -12,7 +12,7 @@ class ClientSeeder extends Seeder
      */
     public function run()
     {
-        $genders = [
+        $clients = [
             [ 
                 'reference_no' => '7490505111',
                 'name' => 'Samsung',
