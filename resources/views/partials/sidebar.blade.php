@@ -59,7 +59,7 @@
                     <li class="nav-item">
                         <a href="{{ route('employee.index')}}" class="nav-link {{ (request()->is('employee*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-address-card"></i>
-                            <p>Employee</p>
+                            <p>Applicant</p>
                         </a>
                     </li>
                     <li class="nav-item">

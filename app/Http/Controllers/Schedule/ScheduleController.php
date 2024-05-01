@@ -53,8 +53,8 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
          /*
          | @Begin Transaction
          |---------------------------------------------*/
