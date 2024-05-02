@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>User - {{ ucwords($user->first_name) }} {{ ucwords($user->last_name) }} Details</h1>
+            <h1>Employee - {{ ucwords($deployment->employee->name) }} Details</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('user.index')}}">Users</a></li>
-			  <li class="breadcrumb-item">{{ ucwords($user->first_name) }} {{ ucwords($user->last_name) }}Details</li>
+              <li class="breadcrumb-item"><a href="{{ route('deployment.index')}}">Employees</a></li>
+			 										<li class="breadcrumb-item">{{ ucwords($deployment->employee->name) }} Details</li>
             </ol>
           </div>
         </div>
@@ -30,21 +30,43 @@
 						<div class="card-body">
 							<table class="table table-bordered">
 								<tr>
-									<th>Firstname</th>
-									<td>{{ $user->first_name }}</td>
+									<th>Client</th>
+									<td>{{ $deployment->client->name }}</td>
 								</tr>
 								<tr>
-									<th>Last Name</th>
-									<td>{{ $user->last_name }}</td>
+									<th>Employee Fullname</th>
+									<td>{{ $deployment->employee->name }}</td>
 								</tr>
+
 								<tr>
-									<th>Email</th>
-									<td>{{ $user->email }}</td>
+									<th>Position</th>
+									<td>{{ $deployment->position }}</td>
 								</tr>
+
 								<tr>
-									<th>Role</th>
-									<td>{{ $user->role->name }}</td>
+									<th>Start Date</th>
+									<td>{{ $deployment->start_date }}</td>
 								</tr>
+
+								<tr>
+									<th>End Date</th>
+									<td>{{ $deployment->end_date }}</td>
+								</tr>
+
+								<tr>
+									<th>Schedule</th>
+									<td>
+										<p>{{ $deployment->schedule->slug }}</p>
+										<p>
+										TIME-IN: {{ $deployment->schedule->time_in }} 
+										</p>
+										<p>
+										TIME-OUT: {{ $deployment->schedule->time_out }}
+										</p>
+									</td>
+								
+								</tr>
+								
 							</table>
 						</div>
 						<!-- /.card-body -->

@@ -67,7 +67,7 @@
                     <li class="nav-item">
                         <a href="{{ route('deployment.index')}}" class="nav-link {{ (request()->is('deployment*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-user-tag"></i>
-                            <p>Deployment</p>
+                            <p>Employee</p>
                         </a>
                     </li>
                     <li class="nav-item">

@@ -129,7 +129,14 @@ class DeploymentController extends Controller
      */
     public function show($id)
     {
-        //
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
+
+        $deployment = Deployment::withTrashed()->findOrFail($id);
+
+        return view('deployment.show', [
+            'deployment' => $deployment
+        ]);
     }
 
     /**

@@ -14,7 +14,7 @@ class EmploymentType extends Model
         return $this->hasMany(EmploymentHistory::class,'employment_type_id','id')->withTrashed();
     }
 
-    public function employment_types_deployment()
+    public function deployments()
     {
         return $this->hasMany(Deployment::class,'employment_type_id','id')->withTrashed();
     }
