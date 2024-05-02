@@ -312,7 +312,7 @@
 																	</thead>
 																	<tbody>
 																					@foreach ($employment_histories as $employee)
-																									<tr>
+																									<tr style="text-align:center;">
 																										<td>{{ $employee->title }}</td>
 																										<td>{{ $employee->employment_type->name }}</td>
 																										<td>{{ $employee->company }}</td>
