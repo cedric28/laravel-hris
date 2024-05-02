@@ -187,21 +187,21 @@
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Employee-List',
+                                'title' : 'Applicant-List',
                                 "exportOptions": {
                                     "columns": [0,1,2,3,4,5,6]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Employee-List',
+                                'title' : 'Applicant-List',
                                 "exportOptions": {
                                     "columns": [0,1,2,3,4,5,6]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Employee-List',
+                                'title' : 'Applicant-List',
                                 "exportOptions": {
                                     "columns": [0,1,2,3,4,5,6]
                                 }
@@ -247,21 +247,21 @@
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Inactive Employee-List',
+                                'title' : 'Inactive Applicant-List',
                                 "exportOptions": {
                                     "columns": [0,1,2,3,4,5,6]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Inactive Employee-List',
+                                'title' : 'Inactive Applicant-List',
                                 "exportOptions": {
                                     "columns": [0,1,2,3,4,5,6]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Inactive Employee-List',
+                                'title' : 'Inactive Applicant-List',
                                 "exportOptions": {
                                     "columns": [0,1,2,3,4,5,6]
                                 }
