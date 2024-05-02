@@ -51,7 +51,7 @@
 								</tr>
 								<tr>
 									<th>Address</th>
-									<td>{{ $customer->address }}</td>
+									<td>{{ $client->address }}</td>
 								</tr>
 
 							</table>
