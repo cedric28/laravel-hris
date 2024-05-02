@@ -120,6 +120,12 @@ class ScheduleController extends Controller
     {
         //prevent other user to access to this page
         $this->authorize("isHROrAdmin");
+
+        $schedule = Schedule::withTrashed()->findOrFail($id);
+   
+        return view('schedule.show', [
+            'schedule' => $schedule
+        ]);
     }
 
     /**

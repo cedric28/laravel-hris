@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>User - {{ ucwords($user->first_name) }} {{ ucwords($user->last_name) }} Details</h1>
+            <h1>Schedule - {{ ucwords($schedule->deployment->employee->name) }} Details</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
               <li class="breadcrumb-item"><a href="{{ route('user.index')}}">Users</a></li>
-			  <li class="breadcrumb-item">{{ ucwords($user->first_name) }} {{ ucwords($user->last_name) }}Details</li>
+			  									<li class="breadcrumb-item">{{ ucwords($schedule->deployment->employee->name) }} Details</li>
             </ol>
           </div>
         </div>
@@ -30,20 +30,24 @@
 						<div class="card-body">
 							<table class="table table-bordered">
 								<tr>
-									<th>Firstname</th>
-									<td>{{ $user->first_name }}</td>
+									<th>Client</th>
+									<td>{{ ucwords($schedule->deployment->client->name) }}</td>
 								</tr>
 								<tr>
-									<th>Last Name</th>
-									<td>{{ $user->last_name }}</td>
+									<th>Employee Fullname</th>
+									<td>{{ ucwords($schedule->deployment->employee->name) }}</td>
 								</tr>
 								<tr>
-									<th>Email</th>
-									<td>{{ $user->email }}</td>
+									<th>Schedule</th>
+									<td>{{ $schedule->slug }}</td>
 								</tr>
 								<tr>
-									<th>Role</th>
-									<td>{{ $user->role->name }}</td>
+									<th>TIME IN</th>
+									<td>{{ $schedule->time_in }}</td>
+								</tr>
+								<tr>
+									<th>TIME OUT</th>
+									<td>{{ $schedule->time_out }}</td>
 								</tr>
 							</table>
 						</div>
