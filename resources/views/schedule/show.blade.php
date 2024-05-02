@@ -10,7 +10,7 @@
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('user.index')}}">Users</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('user.index')}}">Schedules</a></li>
 			  									<li class="breadcrumb-item">{{ ucwords($schedule->deployment->employee->name) }} Details</li>
             </ol>
           </div>
