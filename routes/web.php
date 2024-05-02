@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/schedule', 'Schedule\ScheduleController');
     Route::post('schedule/fetch/q', 'Schedule\ScheduleFetchController@fetchSchedule')->name('activeSchedule');
     Route::post('inactive-schedule/fetch/q', 'Schedule\ScheduleFetchController@fetchInactiveSchedule')->name('InactiveSchedule');
-    Route::get('schedule/schedule/{id}', 'Schedule\ScheduleController@destroy');
+    Route::get('schedule/destroy/{id}', 'Schedule\ScheduleController@destroy');
     Route::get('schedule/restore/{id}', 'Schedule\ScheduleController@restore');
     
     //Logs

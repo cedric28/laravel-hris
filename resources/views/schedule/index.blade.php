@@ -267,8 +267,8 @@
             });
 
 			$(document).on('click', '#show', function(){
-                var userId = $(this).attr('data-id');
-                window.location.href = 'schedule/'+userId;
+                var scheduleId = $(this).attr('data-id');
+                window.location.href = 'schedule/'+scheduleId;
             });
 
             $(document).on('click', '#edit', function(){
@@ -301,15 +301,15 @@
                 })
             });
 
-            var userId;
+            var scheduleId;
             $(document).on('click', '#restore', function(){
-                userId = $(this).attr('data-id');
+                scheduleId = $(this).attr('data-id');
                 $('#restoreModal').modal('show');
             });
 
             $('#restore_button').click(function(){
                 $.ajax({
-                    url:"schedule/restore/"+userId,
+                    url:"schedule/restore/"+scheduleId,
                     beforeSend:function(){
                         $('#restore_button').text('Restoring...');
                     },
