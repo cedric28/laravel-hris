@@ -35,8 +35,8 @@ class ScheduleController extends Controller
      */
     public function create()
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
 
          $deployments = Deployment::all();
  
@@ -54,7 +54,7 @@ class ScheduleController extends Controller
     public function store(Request $request)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
          /*
          | @Begin Transaction
          |---------------------------------------------*/
@@ -118,7 +118,8 @@ class ScheduleController extends Controller
      */
     public function show($id)
     {
-        //
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
     }
 
     /**
@@ -130,7 +131,7 @@ class ScheduleController extends Controller
     public function edit($id)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         $schedule = Schedule::withTrashed()->findOrFail($id);
         $deployments = Deployment::all();
@@ -150,7 +151,9 @@ class ScheduleController extends Controller
      */
     public function update(Request $request, $id)
     {
-          /*
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
+        /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
@@ -210,15 +213,17 @@ class ScheduleController extends Controller
      */
     public function destroy($id)
     {
-          //delete Schedule
-          $schedule = Schedule::findOrFail($id);
-          $schedule->delete();
-  
-          $log = new Log();
-          $log->log = "User " . \Auth::user()->email . " delete schedule " .  $schedule->id . " at " . Carbon::now();
-          $log->creator_id =  \Auth::user()->id;
-          $log->updater_id =  \Auth::user()->id;
-          $log->save();
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
+        //delete Schedule
+        $schedule = Schedule::findOrFail($id);
+        $schedule->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete schedule " .  $schedule->id . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
     }
 
       /**

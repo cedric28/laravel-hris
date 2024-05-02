@@ -38,6 +38,8 @@
                     </p>
                 </a>
             </li>
+            @endcan
+            @canany(['isHR','isAdmin'])
             <li class="nav-item">
               <a href="{{ route('client.index')}}" class="nav-link {{ (request()->is('client*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-building"></i>
@@ -46,7 +48,7 @@
                     </p>
                 </a>
             </li>
-
+          
             <li class="nav-item">
                 <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-address-book"></i>
@@ -76,6 +78,8 @@
                     </li>
                 </ul>
             </li>
+
+           
 
             <li class="nav-item">
                 <a href="#" class="nav-link">
@@ -113,7 +117,16 @@
                     <p>Leaves</p>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a href="" class="nav-link ">
+                    <i class="nav-icon fas fa-money-bill"></i>
+                    <p>Salary</p>
+                </a>
+            </li>
+
             @endcan
+          
             @can('isAdmin')
             <li class="nav-header">SETTINGS</li>
             <li class="nav-item">

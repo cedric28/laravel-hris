@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Employees</h1>
+            <h1>Applicants</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item">Employees</li>
+              <li class="breadcrumb-item">Applicants</li>
             </ol>
           </div>
         </div>
@@ -22,7 +22,7 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							<a type="button" href="{{ route('employee.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Employee</a>
+							<a type="button" href="{{ route('employee.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Applicant</a>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
@@ -30,10 +30,10 @@
                                 <div class="card-header p-0 border-bottom-0">
                                     <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Active Employees</a>
+                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Active Applicants</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Inactive Employees</a>
+                                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Inactive Applicants</a>
                                         </li>
                                     </ul>
                                 </div>

@@ -10,7 +10,7 @@
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('client.index')}}">Applicants</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('employee.index')}}">Applicants</a></li>
 			           <li class="breadcrumb-item">Add New Applicant</li>
             </ol>
           </div>
@@ -34,9 +34,9 @@
 							<form action="{{ route('employee.store')}}" method="POST" enctype="multipart/form-data">
 								@csrf
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Employeee Fullname:</label>
+									<label class="col-lg-3 col-form-label">Fullname:</label>
 									<div class="col-lg-9">	
-										<input type="text" name="name" value="{{ old('name') }}" class="@error('name') is-invalid @enderror form-control" placeholder="Employee Fullname" >
+										<input type="text" name="name" value="{{ old('name') }}" class="@error('name') is-invalid @enderror form-control" placeholder="e.g Juan Dela Cruz" >
 									</div>
 								</div>
         <div class="form-group row">

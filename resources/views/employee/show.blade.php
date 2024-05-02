@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Applicant - {{ ucwords($client->name) }} Details</h1>
+            <h1>Applicant - {{ ucwords($employee->name) }} Details</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('client.index')}}">Clients</a></li>
-			           <li class="breadcrumb-item">{{ ucwords($client->name) }} Details</li>
+              <li class="breadcrumb-item"><a href="{{ route('employee.index')}}">Applicants</a></li>
+			           <li class="breadcrumb-item">{{ ucwords($employee->name) }} Details</li>
             </ol>
           </div>
         </div>
@@ -28,33 +28,103 @@
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<table class="table table-bordered">
-								<tr>
-									<th>Reference</th>
-									<td>{{ $client->reference_no }}</td>
-								</tr>
-								<tr>
-									<th>Client Name</th>
-									<td>{{ $client->name }}</td>
-								</tr>
-        <tr>
-									<th>Short Name</th>
-									<td>{{ $client->short_name }}</td>
-								</tr>
-								<tr>
-									<th>Contact Number</th>
-									<td>{{ $client->contact_number }}</td>
-								</tr>
-								<tr>
-									<th>Email</th>
-									<td>{{ $client->email }}</td>
-								</tr>
-								<tr>
-									<th>Address</th>
-									<td>{{ $customer->address }}</td>
-								</tr>
+							<div class="card card-primary">
+								<div class="card-header">
+									Basic Information
+								</div>
+								<div class="card-body">
+									<table class="table table-bordered">
+										<tr>
+											<th>Reference</th>
+											<td>{{ $employee->reference_no }}</td>
+										</tr>
+										<tr>
+											<th>Fullname</th>
+											<td>{{ $employee->name }}</td>
+										</tr>
+										<tr>
+											<th>Nickname</th>
+											<td>{{ $employee->nickname }}</td>
+										</tr>
+										<tr>
+											<th>Date of Birth</th>
+											<td>{{ $employee->birthdate }}</td>
+										</tr>
+										<tr>
+											<th>Gender</th>
+											<td>{{ $employee->gender->name }}</td>
+										</tr>
+										<tr>
+											<th>Civil Status</th>
+											<td>{{ $employee->civil_status->name }}</td>
+										</tr>
+										<tr>
+											<th>Address</th>
+											<td>{{ $employee->address }}</td>
+										</tr>
+										<tr>
+											<th>Phone</th>
+											<td>+63{{ $employee->contact_number }}</td>
+										</tr>
+										<tr>
+											<th>Email</th>
+											<td>{{ $employee->email }}</td>
+										</tr>
+									</table>			
+								</div>
+							</div>
 
-							</table>
+							<div class="card card-primary">
+								<div class="card-header">
+									In-Case of Emergency Information
+								</div>
+								<div class="card-body">
+									<table class="table table-bordered">
+										<tr>
+											<th>Emergency Contact Name</th>
+											<td>{{ $employee->emergency_contact_name }}</td>
+										</tr>
+										<tr>
+											<th>Relationship</th>
+											<td>{{ $employee->emergency_relationship }}</td>
+										</tr>
+										<tr>
+											<th>Phone</th>
+											<td>+63{{ $employee->emergency_contact_number }}</td>
+										</tr>
+										<tr>
+											<th>Address</th>
+											<td>{{ $employee->emergency_address }}</td>
+										</tr>
+									</table>	
+								</div>
+							</div>
+
+							<div class="card card-primary">
+								<div class="card-header">
+								Government Information
+								</div>
+								<div class="card-body">
+									<table class="table table-bordered">
+										<tr>
+											<th>SSS</th>
+											<td>{{ $employee->sss }}</td>
+										</tr>
+										<tr>
+											<th>PAG-IBIG</th>
+											<td>{{ $employee->pagibig }}</td>
+										</tr>
+										<tr>
+											<th>Philhealth</th>
+											<td>{{ $employee->philhealth }}</td>
+										</tr>
+										<tr>
+											<th>TIN</th>
+											<td>{{ $employee->tin }}</td>
+										</tr>
+									</table>	
+								</div>
+							</div>
 						</div>
 						<!-- /.card-body -->
 						<div class="card-footer clearfix">

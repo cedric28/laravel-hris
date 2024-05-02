@@ -41,7 +41,7 @@ class EmployeeController extends Controller
     public function create()
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         $civilStatus =  CivilStatus::all();
         $gender = Gender::all();
@@ -60,8 +60,8 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //prevent other user to access to this page
-        $this->authorize("isAdmin");
+         //prevent other user to access to this page
+         $this->authorize("isHROrAdmin");
         /*
         | @Begin Transaction
         |---------------------------------------------*/
@@ -133,13 +133,26 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //prevent other user to access to this page
-        $this->authorize("isAdmin");
+         //prevent other user to access to this page
+         $this->authorize("isHROrAdmin");
 
         $employee = Employee::withTrashed()->findOrFail($id);
+        $employmentTypes = EmploymentType::all();
+        $industries = Industry::all();
+        $civilStatus =  CivilStatus::all();
+        $gender = Gender::all();
+
+        $employment_histories = $employee->employment_histories;
+        $educ_backgrounds = $employee->educ_backgrounds;
 
         return view('employee.show', [
-            'employee' => $employee
+            'employee' => $employee,
+            'employmentTypes' => $employmentTypes,
+            'industries' => $industries,
+            'civilStatus' => $civilStatus,
+            'gender' => $gender,
+            'employment_histories' => $employment_histories,
+            'educ_backgrounds' => $educ_backgrounds
         ]);
     }
 
@@ -151,8 +164,8 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        //prevent other user to access to this page
-        $this->authorize("isAdmin");
+         //prevent other user to access to this page
+         $this->authorize("isHROrAdmin");
 
         $employee = Employee::withTrashed()->findOrFail($id);
         $employmentTypes = EmploymentType::all();
@@ -184,8 +197,8 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //prevent other user to access to this page
-        $this->authorize("isAdmin");
+         //prevent other user to access to this page
+         $this->authorize("isHROrAdmin");
 
         /*
         | @Begin Transaction
@@ -351,8 +364,8 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //prevent other user to access to this page
-        $this->authorize("isAdmin");
+          //prevent other user to access to this page
+          $this->authorize("isHROrAdmin");
 
         //delete employee
         $employee = Employee::findOrFail($id);

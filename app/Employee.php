@@ -9,6 +9,14 @@ class Employee extends Model
 {
     use SoftDeletes;
 
+    public function gender() {
+        return $this->belongsTo(Gender::class)->withTrashed();
+    }
+    
+    public function civil_status() {
+        return $this->belongsTo(CivilStatus::class)->withTrashed();
+    }
+
     public function deployments()
     {
         return $this->hasMany(Deployments::class,'employee_id','id')->withTrashed();

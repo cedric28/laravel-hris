@@ -37,8 +37,8 @@ class LeavesController extends Controller
      */
     public function create()
     {
-        //prevent other user to access to this page
-        $this->authorize("isAdmin");
+         //prevent other user to access to this page
+         $this->authorize("isHROrAdmin");
 
         $leaves = Leave::all();
         $leaveStatuses = LeaveStatus::all();
@@ -59,8 +59,8 @@ class LeavesController extends Controller
      */
     public function store(Request $request)
     {
-        //prevent other user to access to this page
-        $this->authorize("isAdmin");
+         //prevent other user to access to this page
+         $this->authorize("isHROrAdmin");
         /*
         | @Begin Transaction
         |---------------------------------------------*/
@@ -128,7 +128,10 @@ class LeavesController extends Controller
      */
     public function show($id)
     {
-        //
+          //prevent other user to access to this page
+          $this->authorize("isHROrAdmin");
+
+        
     }
 
     /**
@@ -140,7 +143,7 @@ class LeavesController extends Controller
     public function edit($id)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         $deployment = Deployment::withTrashed()->findOrFail($id);
         $employmentTypes = EmploymentType::all();
@@ -164,6 +167,8 @@ class LeavesController extends Controller
      */
     public function update(Request $request, $id)
     {
+          //prevent other user to access to this page
+          $this->authorize("isHROrAdmin");
          /*
         | @Begin Transaction
         |---------------------------------------------*/
@@ -227,8 +232,8 @@ class LeavesController extends Controller
      */
     public function destroy($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
 
          //delete deployment
          $deployment = Deployment::findOrFail($id);

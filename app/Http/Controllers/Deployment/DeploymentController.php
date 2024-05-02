@@ -39,7 +39,7 @@ class DeploymentController extends Controller
     public function create()
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         $clients = Client::all();
         $employees = Employee::all();
@@ -61,7 +61,7 @@ class DeploymentController extends Controller
     public function store(Request $request)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
         /*
         | @Begin Transaction
         |---------------------------------------------*/
@@ -141,7 +141,7 @@ class DeploymentController extends Controller
     public function edit($id)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         $deployment = Deployment::withTrashed()->findOrFail($id);
         $employmentTypes = EmploymentType::all();
@@ -165,6 +165,9 @@ class DeploymentController extends Controller
      */
     public function update(Request $request, $id)
     {
+          //prevent other user to access to this page
+          $this->authorize("isHROrAdmin");
+
          /*
         | @Begin Transaction
         |---------------------------------------------*/
@@ -228,8 +231,8 @@ class DeploymentController extends Controller
      */
     public function destroy($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
 
          //delete deployment
          $deployment = Deployment::findOrFail($id);

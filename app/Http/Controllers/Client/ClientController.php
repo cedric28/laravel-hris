@@ -35,7 +35,7 @@ class ClientController extends Controller
     public function create()
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         return view("client.create");
     }
@@ -49,7 +49,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
         /*
         | @Begin Transaction
         |---------------------------------------------*/
@@ -112,7 +112,7 @@ class ClientController extends Controller
     public function show($id)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         $client = Client::withTrashed()->findOrFail($id);
 
@@ -130,7 +130,7 @@ class ClientController extends Controller
     public function edit($id)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         $client = Client::withTrashed()->findOrFail($id);
 
@@ -150,7 +150,7 @@ class ClientController extends Controller
     public function update(Request $request, $id)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         /*
         | @Begin Transaction
@@ -212,7 +212,7 @@ class ClientController extends Controller
     public function destroy($id)
     {
         //prevent other user to access to this page
-        $this->authorize("isAdmin");
+        $this->authorize("isHROrAdmin");
 
         //delete category
         $client = Client::findOrFail($id);

@@ -41,15 +41,15 @@
 													</div>
 													<div class="card-body">
 														<div class="form-group row">
-															<label class="col-lg-3 col-form-label">Reference No:</label>
+															<label class="col-lg-3 col-form-label">Applicant No:</label>
 															<div class="col-lg-9">	
 																<input type="text" disabled="disabled" name="reference_no" value="{{ old('reference_no', $employee->reference_no) }}" class="@error('reference_no') is-invalid @enderror form-control" placeholder="Reference No" >
 															</div>
 														</div>
 														<div class="form-group row">
-															<label class="col-lg-3 col-form-label">Employee Fullname:</label>
+															<label class="col-lg-3 col-form-label">Fullname:</label>
 															<div class="col-lg-9">	
-																<input type="text" name="name" value="{{ old('name', $employee->name) }}" class="@error('name') is-invalid @enderror form-control" placeholder="Employee Fullname" >
+																<input type="text" name="name" value="{{ old('name', $employee->name) }}" class="@error('name') is-invalid @enderror form-control" placeholder="e.g Juan Dela Cruz" >
 															</div>
 														</div>
 														<div class="form-group row">
