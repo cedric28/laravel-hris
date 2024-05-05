@@ -313,6 +313,16 @@
                 $('#restoreModal').modal('show');
             });
 
+            $(document).on('click', '#attendance', function(){
+                userId = $(this).attr('data-id');
+                window.location.href = `/attendance/${userId}/edit`;
+            });
+
+            $(document).on('click', '#leaves', function(){
+                userId = $(this).attr('data-id');
+                window.location.href = `/leaves/${userId}/edit`;
+            });
+
             $('#restore_button').click(function(){
                 $.ajax({
                     url:"deployment/restore/"+userId,

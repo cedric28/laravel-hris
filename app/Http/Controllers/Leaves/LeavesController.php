@@ -21,13 +21,13 @@ class LeavesController extends Controller
      */
     public function index()
     {
-        $leaves = Leave::all();
-        $InactiveLeave = Leave::onlyTrashed()->get();
+        // $leaves = Leave::all();
+        // $InactiveLeave = Leave::onlyTrashed()->get();
 
-        return view("leaves.index", [
-            'leaves' => $leaves,
-            'InactiveLeave' => $InactiveLeave
-        ]);
+        // return view("leaves.index", [
+        //     'leaves' => $leaves,
+        //     'InactiveLeave' => $InactiveLeave
+        // ]);
     }
 
     /**
@@ -59,27 +59,27 @@ class LeavesController extends Controller
      */
     public function store(Request $request)
     {
-         //prevent other user to access to this page
-         $this->authorize("isHROrAdmin");
-        /*
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
+
+         /*
         | @Begin Transaction
         |---------------------------------------------*/
         \DB::beginTransaction();
 
         try {
-
+            $deployment = Deployment::withTrashed()->findOrFail($request->deployment_id);
             $messages = [
-                'employee_id.required' => 'Please select a Employee',
-                'client_id.required' => 'Please select a Client',
-                'employment_type_id.required' => 'Please select a Employment Type'
+                'leave_type_id.required' => 'Please select a Leave Type',
+                'leave_type_id.unique' => 'This leave type has already been taken',
+                'leave_date.required' => 'Leave Date is required',
+                'leave_time.required' => 'Leave Time is required'
             ];
             //validate request value
             $validator = Validator::make($request->all(), [
-                'employee_id' => 'required|integer',
-                'client_id' => 'required|integer',
-                'employment_type_id' => 'required|integer',
-                'position' => 'required|string|max:50',
-                'start_date' => 'required|string'
+                'leave_type_id' => 'required|integer',
+                'leave_date' => 'required|string',
+                'leave_time' => 'required|string'
             ], $messages);
 
             if ($validator->fails()) {
@@ -89,21 +89,19 @@ class LeavesController extends Controller
             //check current user
             $user = \Auth::user()->id;
 
-            //save deployment
-            $deployment = new Deployment();
-            // $employee->reference_no = $this->generateUniqueCode();
-            $deployment->employee_id = $request->employee_id;
-            $deployment->employment_type_id = $request->employment_type_id;
-            $deployment->client_id = $request->client_id;
-            $deployment->position = $request->position;
-            $deployment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-            $deployment->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
-            $deployment->creator_id = $user;
-            $deployment->updater_id = $user;
-            $deployment->save();
+            //save leave
+            $leave = new Leave();
+            $leave->leave_time = Carbon::parse($request->leave_time)->format('H:i:s');
+            $leave->leave_date = Carbon::parse($request->leave_date)->format('Y-m-d');
+            $leave->status = 1;
+            $leave->leave_type_id = $request->leave_type_id;
+            $leave->deployment_id = $request->deployment_id;
+            $leave->creator_id = $user;
+            $leave->updater_id = $user;
+            $leave->save();
 
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " create deployment " . $deployment->id . " at " . Carbon::now();
+            $log->log = "User " . \Auth::user()->email . " create leave " . $deployment->id . " at " . Carbon::now();
             $log->creator_id =  \Auth::user()->id;
             $log->updater_id =  \Auth::user()->id;
             $log->save();
@@ -112,7 +110,7 @@ class LeavesController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('deployment.edit', $deployment->id);
+            return redirect()->route('leaves.edit', $deployment->id);
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
@@ -128,10 +126,8 @@ class LeavesController extends Controller
      */
     public function show($id)
     {
-          //prevent other user to access to this page
-          $this->authorize("isHROrAdmin");
-
-        
+        //prevent other user to access to this page
+        $this->authorize("isAdmin");
     }
 
     /**
@@ -144,16 +140,10 @@ class LeavesController extends Controller
     {
         //prevent other user to access to this page
         $this->authorize("isHROrAdmin");
-
+        $leaveTypes = LeaveType::all();
         $deployment = Deployment::withTrashed()->findOrFail($id);
-        $employmentTypes = EmploymentType::all();
-        $clients = Client::all();
-        $employees = Employee::all();
-   
-        return view('deployment.edit', [
-            'clients' => $clients,
-            'employees' => $employees,
-            'employmentTypes' => $employmentTypes,
+        return view('leaves.edit', [
+            'leaveTypes' => $leaveTypes,
             'deployment' => $deployment
         ]);
     }
@@ -167,61 +157,8 @@ class LeavesController extends Controller
      */
     public function update(Request $request, $id)
     {
-          //prevent other user to access to this page
-          $this->authorize("isHROrAdmin");
-         /*
-        | @Begin Transaction
-        |---------------------------------------------*/
-        \DB::beginTransaction();
-
-        try {
-            $deployment = Deployment::withTrashed()->findOrFail($id);
-
-            $messages = [
-                'employee_id.required' => 'Please select a Employee',
-                'client_id.required' => 'Please select a Client',
-                'employment_type_id.required' => 'Please select a Employment Type'
-            ];
-            //validate request value
-            $validator = Validator::make($request->all(), [
-                'employee_id' => 'required|integer',
-                'client_id' => 'required|integer',
-                'employment_type_id' => 'required|integer',
-                'position' => 'required|string|max:50',
-                'start_date' => 'required|string|max:50'
-            ], $messages);
-
-            if ($validator->fails()) {
-                return back()->withErrors($validator->errors())->withInput();
-            }
-
-          
-            $deployment->employee_id = $request->employee_id;
-            $deployment->employment_type_id = $request->employment_type_id;
-            $deployment->client_id = $request->client_id;
-            $deployment->position = $request->position;
-            $deployment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-            $deployment->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
-            $deployment->updater_id = \Auth::user()->id;
-            $deployment->save();
-
-            $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " edit deployment " .  $deployment->id . " at " . Carbon::now();
-            $log->creator_id =  \Auth::user()->id;
-            $log->updater_id =  \Auth::user()->id;
-            $log->save();
-
-            /*
-            | @End Transaction
-            |---------------------------------------------*/
-            \DB::commit();
-
-            return redirect()->route('deployment.edit', $deployment->id)
-                ->with('successMsg', 'Deployment Data update Successfully');
-        } catch (\Exception $e) {
-            \DB::rollback();
-            return back()->withErrors($e->getMessage());
-        }
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
     }
 
     /**
@@ -235,12 +172,12 @@ class LeavesController extends Controller
         //prevent other user to access to this page
         $this->authorize("isHROrAdmin");
 
-         //delete deployment
-         $deployment = Deployment::findOrFail($id);
-         $deployment->delete();
+         //delete leave
+         $leave = Leave::findOrFail($id);
+         $leave->delete();
  
          $log = new Log();
-         $log->log = "User " . \Auth::user()->email . " delete deployment " . $deployment->id . " at " . Carbon::now();
+         $log->log = "User " . \Auth::user()->email . " delete leave " . $leave->id . " at " . Carbon::now();
          $log->creator_id =  \Auth::user()->id;
          $log->updater_id =  \Auth::user()->id;
          $log->save();
@@ -257,13 +194,13 @@ class LeavesController extends Controller
         \DB::beginTransaction();
         try {
 
-            $deployment = Deployment::onlyTrashed()->findOrFail($id);
+            $leave = Leave::onlyTrashed()->findOrFail($id);
 
-            /* Restore deployment */
-            $deployment->restore();
+            /* Restore leave */
+            $leave->restore();
 
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " restore deployment " . $deployment->id . " at " . Carbon::now();
+            $log->log = "User " . \Auth::user()->email . " restore leave " . $leave->id . " at " . Carbon::now();
             $log->creator_id =  \Auth::user()->id;
             $log->updater_id =  \Auth::user()->id;
             $log->save();

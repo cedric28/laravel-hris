@@ -25,4 +25,9 @@ class Deployment extends Model
     {
         return $this->hasOne(Schedule::class,'deployment_id','id')->withTrashed();
     }
+
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class,'deployment_id','id')->withTrashed();
+    }
 }

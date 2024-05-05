@@ -68,6 +68,20 @@ Route::middleware('auth')->group(function () {
     Route::post('inactive-schedule/fetch/q', 'Schedule\ScheduleFetchController@fetchInactiveSchedule')->name('InactiveSchedule');
     Route::get('schedule/destroy/{id}', 'Schedule\ScheduleController@destroy');
     Route::get('schedule/restore/{id}', 'Schedule\ScheduleController@restore');
+
+    //Leaves
+    Route::resource('/leaves', 'Leaves\LeavesController');
+    Route::post('leaves/fetch/q', 'Leaves\LeavesFetchController@fetchLeaves')->name('activeLeaves');
+    Route::post('inactive-leaves/fetch/q', 'Leaves\LeavesFetchController@fetchInactiveLeaves')->name('InactiveLeaves');
+    Route::get('leaves/destroy/{id}', 'Leaves\LeavesController@destroy');
+    Route::get('leaves/restore/{id}', 'Leaves\LeavesController@restore');
+
+    //Attendance
+    Route::resource('/attendance', 'Attendance\AttendanceController');
+    Route::post('attendance/fetch/q', 'Attendance\AttendanceFetchController@fetchAttendance')->name('activeAttendance');
+    Route::post('inactive-attendance/fetch/q', 'Attendance\AttendanceFetchController@fetchInactiveAttendace')->name('InactiveAttendance');
+    Route::get('attendance/destroy/{id}', 'Attendance\AttendanceController@destroy');
+    Route::get('attendance/restore/{id}', 'Attendance\AttendanceController@restore');
     
     //Logs
     Route::resource('logs', 'Logs\LogController');

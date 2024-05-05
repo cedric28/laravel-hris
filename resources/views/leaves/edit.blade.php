@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Deployment - {{ ucwords($deployment->employee->name)}} to {{ ucwords($deployment->client->name)}} Company</h1>
+            <h1>Leaves - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('user.index')}}">Users</a></li>
-			  <li class="breadcrumb-item">Edit Details</li>
+              <li class="breadcrumb-item"><a href="{{ route('employee.index')}}">Employees</a></li>
+			  									<li class="breadcrumb-item">Leave Details</li>
             </ol>
           </div>
         </div>
@@ -26,65 +26,31 @@
 							@include('partials.message')
 							@include('partials.errors')
 							<div class="row">
-								<h3 class="card-title">User Edit Form</h3>
+								<h3 class="card-title">Leave Form</h3>
 							</div>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<form action="{{ route('deployment.update', $deployment->id)}}" method="POST" >
+							<form action="{{ route('leaves.store')}}" method="POST">
 								@csrf
-								@method('PATCH')
+								<input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Client:</label>
+									<label class="col-lg-3 col-form-label">Leave Type:</label>
 									<div class="col-lg-9">
-										<select id="client-id" name="client_id" class="form-control select2">
-											<option value="">Select Client</option>
-											@foreach ($clients as $client)
-												<option value="{{ $client->id }}"{{ ($client->id === old('client_id', $deployment->client_id)) ? 'selected' : '' }}>{{ ucwords($client->name) }}</option>
+									<select id="leave-type-id" name="leave_type_id" class="form-control select2">
+											<option value="">Select Leave Type</option>
+											@foreach ($leaveTypes as $leaveType)
+												<option value="{{ $leaveType->id }}"{{ ($leaveType->id == old('leave_type_id')) ? 'selected' : '' }}>{{ ucwords($leaveType->name) }}</option>
 											@endforeach
 										</select>
 									</div>
 								</div>
 
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Employee:</label>
-									<div class="col-lg-9">
-										<select id="employee-id" name="employee_id" class="form-control select2">
-											<option value="">Select Employee</option>
-											@foreach ($employees as $employee)
-												<option value="{{ $employee->id }}"{{ ($employee->id === old('employee_id',$deployment->employee_id)) ? ' selected' : '' }}>{{ ucwords($employee->name) }}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group row">
-											<label class="col-lg-3 col-form-label">Employment Type</label>
-											<div class="col-lg-9">	
-												<select name="employment_type_id" class="form-control">
-													<option value="">Please select</option>
-													@foreach ($employmentTypes as $employmentType)
-													<option value="{{ $employmentType->id }}"{{ ($employmentType->id === old('employment_type_id',$deployment->employment_type_id)) ? ' selected' : '' }}>
-															{{ $employmentType->name }}
-														</option>
-													@endforeach
-												</select>
-											</div>
-										</div>
-
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Position:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="position" value="{{ old('position',$deployment->position) }}" class="@error('position') is-invalid @enderror form-control" placeholder="Position" >
-									</div>
-								</div>
-
-
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Start Date</label>
+									<label class="col-lg-3 col-form-label">Leave Date</label>
 									<div class="col-lg-9">	
 											<div class="input-group date" id="startdate" data-target-input="nearest">
-													<input type="text" name="start_date"  value="{{ old('start_date',$deployment->start_date) }}" class="form-control datetimepicker-input" data-target="#startdate"/>
+													<input type="text" name="leave_date"  value="{{ old('leave_date') }}" class="form-control datetimepicker-input" data-target="#startdate"/>
 														<div class="input-group-append" data-target="#startdate" data-toggle="datetimepicker">
 															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 														</div>
@@ -93,15 +59,16 @@
 								</div>
 
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">End Date</label>
+									<label class="col-lg-3 col-form-label">Leave Time</label>
 									<div class="col-lg-9">	
-											<div class="input-group date" id="enddate" data-target-input="nearest">
-													<input type="text" name="end_date"  value="{{ old('end_date',$deployment->end_date)}}" class="form-control datetimepicker-input" data-target="#enddate"/>
-														<div class="input-group-append" data-target="#enddate" data-toggle="datetimepicker">
-															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-														</div>
-										</div>
+												<div class="input-group date" id="leavetime" data-target-input="nearest">
+												<input type="text" name="leave_time"  value="{{ old('leave_time') }}" class="form-control datetimepicker-input" data-target="#leavetime">
+												<div class="input-group-append" data-target="#leavetime" data-toggle="datetimepicker">
+												<div class="input-group-text"><i class="far fa-clock"></i></div>
+												</div>
 									</div>
+								</div>
+
 								</div>
 
 								<div class="text-right">
@@ -110,22 +77,167 @@
 							</form>
 						</div>
 						<div class="card-footer clearfix">
-							
+						<div class="row">
+                            <div class="col-md-12">
+								<table class="table table-hover table-striped" id="employee_leaves">
+									<thead>
+                                        <tr style="text-align:center;">
+                                            <th>LEAVE TYPE</th>
+                                            <th>LEAVE DATE </th>
+                                            <th>LEAVE TIME</th>
+                                            <th>ACTION</th>
+                                        </tr>
+									</thead>
+									<tbody>
+										@foreach ($deployment->leaves as $leave)
+                                            <tr style="text-align:center;">
+                                                <td>{{ $leave->leave_type->name }}</td>
+                                                <td>{{ $leave->leave_date }}</td>
+                                                <td>{{ $leave->leave_time }}</td>
+                                                <td>
+                                                                            
+                                                </td>
+                                            </tr>
+										@endforeach
+									</tbody>
+								</table>
+                            </div>
+						</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>	
 	</section>
+    	<!-- /page content -->
+	<div id="confirmModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+                </div>
+                <div class="modal-footer">
+                 <button type="button" name="ok_button" id="ok_button" class="btn btn-danger">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<!-- /page content -->
         @push('scripts')
         <!-- Javascript -->
-        <!-- Vendors -->
-      
-        <script src="{{ asset('vendors/bower_components/popper.js/dist/umd/popper.min.js') }}"></script>
-        <script src="{{ asset('vendors/bower_components/popper.js/dist/umd/popper.min.js') }}"></script>
-        <script src="{{ asset('vendors/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('vendors/bower_components/jquery.scrollbar/jquery.scrollbar.min.js') }}"></script>
-        <script src="{{ asset('vendors/bower_components/jquery-scrollLock/jquery-scrollLock.min.js') }}"></script>
+
+        <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+		<script>
+              $('#leavetime').datetimepicker({
+                        format: 'LT'
+                })
+
+                $('#startdate').datetimepicker({
+                format: 'L'
+            });
+
+var tableActiveLeaves = $('#employee_leaves').DataTable({
+				"responsive": true, 
+				"lengthChange": false, 
+				"autoWidth": false,
+      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activeLeaves') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{"_token":"<?= csrf_token() ?>"}
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Employee Leaves-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : 'Employee Leaves-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : 'Employee Leaves-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"leave_type"},
+                    {"data":"leave_date"},
+                    {"data":"leave_time"},
+                    {"data":"action","searchable":false,"orderable":false}
+                ],
+                "columnDefs": [{
+					"targets": [1,2],   // target column
+					"className": "textCenter",
+				}]
+            });
+            
+   
+            var leave_id;
+            $(document).on('click', '#delete', function(){
+                console.log
+                leave_id = $(this).attr('data-id');
+                $('#confirmModal').modal('show');
+            });
+
+            $('#ok_button').click(function(){
+                $.ajax({
+                    url:"/leaves/destroy/"+leave_id,
+                    beforeSend:function(){
+                        $('#ok_button').text('Deleting...');
+                    },
+                    success:function(data)
+                    {
+                        setTimeout(function(){
+                            $('#confirmModal').modal('hide');
+                            tableActiveLeaves.ajax.reload();
+                        }, 2000);
+                    }
+                })
+            });
+
+            
+            $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+                $('.table:visible').each( function(e) {
+                    $(this).DataTable().columns.adjust().responsive.recalc();
+                });
+            });
+            </script>
+
         @endpush('scripts')
 @endsection

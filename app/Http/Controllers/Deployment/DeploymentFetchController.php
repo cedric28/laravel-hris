@@ -90,6 +90,8 @@ class DeploymentFetchController extends Controller
 				$nestedData['start_date'] = date('d-m-Y', strtotime($r->start_date));
 				$nestedData['end_date'] = date('d-m-Y', strtotime($r->end_date));
 				$nestedData['action'] = '
+						<button name="attendance" id="attendance" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Attendance</button>
+						<button name="leaves" id="leaves" data-id="' . $r->id . '" class="btn bg-gradient-secondary btn-sm">Leaves</button>
 						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
 						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
 						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>

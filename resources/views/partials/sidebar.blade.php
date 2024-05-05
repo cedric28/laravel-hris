@@ -91,12 +91,6 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="" class="nav-link">
-                            <i class="nav-icon fas fa-clipboard"></i>
-                            <p>Attendance</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                     <a href="{{ route('schedule.index')}}" class="nav-link {{ (request()->is('schedule*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-clipboard"></i>
                             <p>Schedule</p>
@@ -104,18 +98,17 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fas fa-book"></i>
-                            <p>Report</p>
+                            <i class="nav-icon fas fas fa-calendar"></i>
+                            <p>Perfect Attendance Report</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fas fa-user-tie"></i>
+                            <p>Best Performer Report</p>
                         </a>
                     </li>
                 </ul>
-            </li>
-
-            <li class="nav-item">
-                <a href="" class="nav-link ">
-                    <i class="nav-icon fas fa-user-slash"></i>
-                    <p>Leaves</p>
-                </a>
             </li>
 
             <li class="nav-item">
