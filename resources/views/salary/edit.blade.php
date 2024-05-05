@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Leaves - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
+            <h1>Compensation - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
               <li class="breadcrumb-item"><a href="{{ route('deployment.index')}}">Employees</a></li>
-			  									<li class="breadcrumb-item">Leave Details</li>
+			  									<li class="breadcrumb-item">Compensation Details</li>
             </ol>
           </div>
         </div>
@@ -26,49 +26,68 @@
 							@include('partials.message')
 							@include('partials.errors')
 							<div class="row">
-								<h3 class="card-title">Leave Form</h3>
+								<h3 class="card-title">Compensation Form</h3>
 							</div>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<form action="{{ route('leaves.store')}}" method="POST">
+							<form action="{{ route('salary.store')}}" method="POST">
 								@csrf
 								<input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Leave Type:</label>
-									<div class="col-lg-9">
-									<select id="leave-type-id" name="leave_type_id" class="form-control select2">
-											<option value="">Select Leave Type</option>
-											@foreach ($leaveTypes as $leaveType)
-												<option value="{{ $leaveType->id }}"{{ ($leaveType->id == old('leave_type_id')) ? 'selected' : '' }}>{{ ucwords($leaveType->name) }}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Leave Date</label>
+                                <div class="form-group row">
+									<label class="col-lg-3 col-form-label">SSS:</label>
 									<div class="col-lg-9">	
-											<div class="input-group date" id="startdate" data-target-input="nearest">
-													<input type="text" name="leave_date"  value="{{ old('leave_date') }}" class="form-control datetimepicker-input" data-target="#startdate"/>
-														<div class="input-group-append" data-target="#startdate" data-toggle="datetimepicker">
-															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-														</div>
-										</div>
+										<input type="text" name="sss" value="{{ old('sss') }}" class="@error('sss') is-invalid @enderror form-control" placeholder="0.00" >
 									</div>
 								</div>
 
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Leave Time</label>
-                                        <div class="col-lg-9">	
-                                                    <div class="input-group date" id="leavetime" data-target-input="nearest">
-                                                    <input type="text" name="leave_time"  value="{{ old('leave_time') }}" class="form-control datetimepicker-input" data-target="#leavetime">
-                                                    <div class="input-group-append" data-target="#leavetime" data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
-                                                    </div>
-                                        </div>
-                                    </div>
+                                <div class="form-group row">
+									<label class="col-lg-3 col-form-label">TAX:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="tax" value="{{ old('tax') }}" class="@error('tax') is-invalid @enderror form-control" placeholder="0.00" >
+									</div>
+								</div>
 
+                                <div class="form-group row">
+									<label class="col-lg-3 col-form-label">PAG-IBIG:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="pagibig" value="{{ old('pagibig') }}" class="@error('pagibig') is-invalid @enderror form-control" placeholder="0.00" >
+									</div>
+								</div>
+
+                                <div class="form-group row">
+									<label class="col-lg-3 col-form-label">PHILHEALTH:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="pagibig" value="{{ old('pagibig') }}" class="@error('pagibig') is-invalid @enderror form-control" placeholder="0.00" >
+									</div>
+								</div>
+
+                                <div class="form-group row">
+									<label class="col-lg-3 col-form-label">MEAL ALLOWANCE:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="meal_allowance" value="{{ old('meal_allowance') }}" class="@error('meal_allowance') is-invalid @enderror form-control" placeholder="0.00" >
+									</div>
+								</div>
+
+                                <div class="form-group row">
+									<label class="col-lg-3 col-form-label">LAUNDRY ALLOWANCE:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="laundry_allowance" value="{{ old('laundry_allowance') }}" class="@error('laundry_allowance') is-invalid @enderror form-control" placeholder="0.00" >
+									</div>
+								</div>
+
+                                <div class="form-group row">
+									<label class="col-lg-3 col-form-label">TRANSPORTATION ALLOWANCE:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="transportation_allowance" value="{{ old('transportation_allowance') }}" class="@error('transportation_allowance') is-invalid @enderror form-control" placeholder="0.00" >
+									</div>
+								</div>
+
+                                <div class="form-group row">
+									<label class="col-lg-3 col-form-label">COLA:</label>
+									<div class="col-lg-9">	
+										<input type="text" name="cola" value="{{ old('cola') }}" class="@error('cola') is-invalid @enderror form-control" placeholder="0.00" >
+									</div>
 								</div>
 
 								<div class="text-right">
@@ -77,32 +96,7 @@
 							</form>
 						</div>
 						<div class="card-footer clearfix">
-						<div class="row">
-                            <div class="col-md-12">
-								<table class="table table-hover table-striped" id="employee_leaves">
-									<thead>
-                                        <tr style="text-align:center;">
-                                            <th>LEAVE TYPE</th>
-                                            <th>LEAVE DATE </th>
-                                            <th>LEAVE TIME</th>
-                                            <th>ACTION</th>
-                                        </tr>
-									</thead>
-									<tbody>
-										@foreach ($deployment->leaves as $leave)
-                                            <tr style="text-align:center;">
-                                                <td>{{ $leave->leave_type->name }}</td>
-                                                <td>{{ $leave->leave_date }}</td>
-                                                <td>{{ $leave->leave_time }}</td>
-                                                <td>
-                                                                            
-                                                </td>
-                                            </tr>
-										@endforeach
-									</tbody>
-								</table>
-                            </div>
-						</div>
+						
 						</div>
 					</div>
 				</div>

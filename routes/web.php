@@ -82,6 +82,9 @@ Route::middleware('auth')->group(function () {
     Route::post('inactive-attendance/fetch/q', 'Attendance\AttendanceFetchController@fetchInactiveAttendace')->name('InactiveAttendance');
     Route::get('attendance/destroy/{id}', 'Attendance\AttendanceController@destroy');
     Route::get('attendance/restore/{id}', 'Attendance\AttendanceController@restore');
+
+    //Salary
+    Route::resource('/salary', 'Salary\SalaryController');
     
     //Logs
     Route::resource('logs', 'Logs\LogController');

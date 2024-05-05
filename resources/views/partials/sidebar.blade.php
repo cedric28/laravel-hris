@@ -79,13 +79,19 @@
                 </ul>
             </li>
 
-           
+            <li class="nav-item">
+                <a href="{{ route('schedule.index')}}" class="nav-link {{ (request()->is('schedule*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-clipboard"></i>
+                    <p>Schedule</p>
+                </a>
+            </li>
 
+            <li class="nav-header">REPORTS</li>
             <li class="nav-item">
                 <a href="#" class="nav-link">
-                <i class="nav-icon fas fas fa-clipboard"></i>
+                <i class="nav-icon fas fas fa-user-tie"></i>
                 <p>
-                    Attendance Management
+                    Employee Report
                     <i class="fas fa-angle-left right"></i>
                 </p>
                 </a>
@@ -93,7 +99,7 @@
                     <li class="nav-item">
                     <a href="{{ route('schedule.index')}}" class="nav-link {{ (request()->is('schedule*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-clipboard"></i>
-                            <p>Schedule</p>
+                            <p>For Regularization</p>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -109,13 +115,6 @@
                         </a>
                     </li>
                 </ul>
-            </li>
-
-            <li class="nav-item">
-                <a href="" class="nav-link ">
-                    <i class="nav-icon fas fa-money-bill"></i>
-                    <p>Salary</p>
-                </a>
             </li>
 
             @endcan

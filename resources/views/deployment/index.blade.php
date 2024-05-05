@@ -313,6 +313,11 @@
                 $('#restoreModal').modal('show');
             });
 
+            $(document).on('click', '#compensation', function(){
+                userId = $(this).attr('data-id');
+                window.location.href = `/salary/${userId}/edit`;
+            });
+
             $(document).on('click', '#attendance', function(){
                 userId = $(this).attr('data-id');
                 window.location.href = `/attendance/${userId}/edit`;

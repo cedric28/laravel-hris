@@ -37,8 +37,8 @@ class LeavesController extends Controller
      */
     public function create()
     {
-         //prevent other user to access to this page
-         $this->authorize("isHROrAdmin");
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
 
         $leaves = Leave::all();
         $leaveStatuses = LeaveStatus::all();

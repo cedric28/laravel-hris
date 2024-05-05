@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Leaves - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
+            <h1>Attendance - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('deployment.index')}}">Employees</a></li>
-			  									<li class="breadcrumb-item">Leave Details</li>
+                <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('deployment.index')}}">Employees</a></li>
+			    <li class="breadcrumb-item">Attendance Details</li>
             </ol>
           </div>
         </div>
@@ -26,74 +26,58 @@
 							@include('partials.message')
 							@include('partials.errors')
 							<div class="row">
-								<h3 class="card-title">Leave Form</h3>
+								<h3 class="card-title">Attendance Form</h3>
 							</div>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<form action="{{ route('leaves.store')}}" method="POST">
+							<form action="{{ route('attendance.store')}}" method="POST">
 								@csrf
-								<input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Leave Type:</label>
-									<div class="col-lg-9">
-									<select id="leave-type-id" name="leave_type_id" class="form-control select2">
-											<option value="">Select Leave Type</option>
-											@foreach ($leaveTypes as $leaveType)
-												<option value="{{ $leaveType->id }}"{{ ($leaveType->id == old('leave_type_id')) ? 'selected' : '' }}>{{ ucwords($leaveType->name) }}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Leave Date</label>
-									<div class="col-lg-9">	
-											<div class="input-group date" id="startdate" data-target-input="nearest">
-													<input type="text" name="leave_date"  value="{{ old('leave_date') }}" class="form-control datetimepicker-input" data-target="#startdate"/>
-														<div class="input-group-append" data-target="#startdate" data-toggle="datetimepicker">
-															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-														</div>
-										</div>
-									</div>
-								</div>
-
+								    <input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Leave Time</label>
+                                        <label class="col-lg-3 col-form-label">Attendance Date</label>
                                         <div class="col-lg-9">	
-                                                    <div class="input-group date" id="leavetime" data-target-input="nearest">
-                                                    <input type="text" name="leave_time"  value="{{ old('leave_time') }}" class="form-control datetimepicker-input" data-target="#leavetime">
-                                                    <div class="input-group-append" data-target="#leavetime" data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
-                                                    </div>
+                                            <div class="input-group date" id="attendance_date" data-target-input="nearest">
+                                                <input type="text" name="attendance_date"  value="{{ old('attendance_date') }}" class="form-control datetimepicker-input" data-target="#attendance_date"/>
+                                                <div class="input-group-append" data-target="#attendance_date" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
-								</div>
-
-								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
-								</div>
+                                
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Attendance Time</label>
+                                        <div class="col-lg-9">	
+                                            <div class="input-group date" id="attendance_time" data-target-input="nearest">
+                                                <input type="text" name="attendance_time"  value="{{ old('attendance_time') }}" class="form-control datetimepicker-input" data-target="#attendance_time">
+                                                <div class="input-group-append" data-target="#attendance_time" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+                                    </div>
 							</form>
 						</div>
 						<div class="card-footer clearfix">
 						<div class="row">
                             <div class="col-md-12">
-								<table class="table table-hover table-striped" id="employee_leaves">
+								<table class="table table-hover table-striped" id="employee_attendances">
 									<thead>
                                         <tr style="text-align:center;">
-                                            <th>LEAVE TYPE</th>
-                                            <th>LEAVE DATE </th>
-                                            <th>LEAVE TIME</th>
+                                            <th>ATTENDANCE DATE </th>
+                                            <th>ATTENDANCE TIME</th>
                                             <th>ACTION</th>
                                         </tr>
 									</thead>
 									<tbody>
-										@foreach ($deployment->leaves as $leave)
+										@foreach ($deployment->attendances as $attendance)
                                             <tr style="text-align:center;">
-                                                <td>{{ $leave->leave_type->name }}</td>
-                                                <td>{{ $leave->leave_date }}</td>
-                                                <td>{{ $leave->leave_time }}</td>
+                                                <td>{{ $attendance->attendance_date }}</td>
+                                                <td>{{ $attendance->attendance_time }}</td>
                                                 <td>
                                                                             
                                                 </td>
@@ -144,15 +128,15 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
 		<script>
-              $('#leavetime').datetimepicker({
-                        format: 'LT'
-                })
+            $(`#attendance_time`).datetimepicker({
+                format: 'LT'
+            })
 
-                $('#startdate').datetimepicker({
-                format: 'L'
+            $(`#attendance_date`).datetimepicker({
+            format: 'L'
             });
 
-var tableActiveLeaves = $('#employee_leaves').DataTable({
+var tableActiveAttendances = $('#employee_attendances').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -160,7 +144,7 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url":"<?= route('activeLeaves') ?>",
+                    "url":"<?= route('activeAttendance') ?>",
                     "dataType":"json",
                     "type":"POST",
                     "data":{
@@ -176,51 +160,50 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Employee Leaves-List',
+                                'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Employee Leaves-List',
+                                'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Employee Leaves-List',
+                                'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1]
                                 }
                             }
                         ],
                     }
                 ],
                 "columns":[
-                    {"data":"leave_type"},
-                    {"data":"leave_date"},
-                    {"data":"leave_time"},
+                    {"data":"attendance_date"},
+                    {"data":"attendance_time"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
                 "columnDefs": [{
-					"targets": [1,2],   // target column
+					"targets": [0,1],   // target column
 					"className": "textCenter",
 				}]
             });
             
    
-            var leave_id;
+            var attendance_id;
             $(document).on('click', '#delete', function(){
                 console.log
-                leave_id = $(this).attr('data-id');
+                attendance_id = $(this).attr('data-id');
                 $('#confirmModal').modal('show');
             });
 
             $('#ok_button').click(function(){
                 $.ajax({
-                    url:"/leaves/destroy/"+leave_id,
+                    url:"/attendance/destroy/"+attendance_id,
                     beforeSend:function(){
                         $('#ok_button').text('Deleting...');
                     },
@@ -228,7 +211,7 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                     {
                         setTimeout(function(){
                             $('#confirmModal').modal('hide');
-                            tableActiveLeaves.ajax.reload();
+                            tableActiveAttendances.ajax.reload();
                         }, 2000);
                     }
                 })

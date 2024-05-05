@@ -8,8 +8,7 @@ use App\Leave;
 
 class LeavesFetchController extends Controller
 {
-    public function fetchLeaves(Request $request)
-	{
+  public function fetchLeaves(Request $request){
 		//column list in the table Prpducts
 		$columns = array(
 			0 => 'leave_type',
@@ -18,8 +17,13 @@ class LeavesFetchController extends Controller
 			3 => 'action'
 		);
 
+		$deployment_id = $request->deployment_id;
+
 		//get the total number of data in User table
-		$totalData = Leave::count();
+		$totalData = Leave::where([
+			['deployment_id', $deployment_id],
+			['deleted_at', '=', null]
+		])->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -34,13 +38,20 @@ class LeavesFetchController extends Controller
 			//get all the User data
 			$posts = Leave::select('leave_types.name as leave_type','leaves.leave_date','leaves.leave_time','leaves.id as id')
 				->join('leave_types', 'leave_types.id', '=', 'leaves.leave_type_id')
+				->where([
+					['leaves.deployment_id', $deployment_id],
+					['leaves.deleted_at', '=', null]
+				])
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data
-			$totalFiltered = Leave::count();
+			$totalFiltered = Leave::where([
+				['leaves.deployment_id', $deployment_id],
+				['leaves.deleted_at', '=', null]
+			])->count();
 		} else {
 			$search = $request->input('search.value');
 
@@ -51,6 +62,10 @@ class LeavesFetchController extends Controller
 					->orWhere('leave_date', 'like', "%{$search}%")
 					->orWhere('leave_time', 'like', "%{$search}%");
 			})
+			->where([
+				['leaves.deployment_id', $deployment_id],
+				['leaves.deleted_at', '=', null]
+			])
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -61,9 +76,13 @@ class LeavesFetchController extends Controller
 				$query->whereHas('leave_type', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
 				})
-                ->orWhere('leave_date', 'like', "%{$search}%")
-                ->orWhere('leave_time', 'like', "%{$search}%");
+					->orWhere('leave_date', 'like', "%{$search}%")
+					->orWhere('leave_time', 'like', "%{$search}%");
 			})
+			->where([
+				['leaves.deployment_id', $deployment_id],
+				['leaves.deleted_at', '=', null]
+			])
 				->count();
 		}
 
