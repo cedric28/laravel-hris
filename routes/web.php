@@ -85,6 +85,9 @@ Route::middleware('auth')->group(function () {
 
     //Salary
     Route::resource('/salary', 'Salary\SalaryController');
+
+    //Late
+    Route::post('late/fetch/q', 'Late\LateFetchController@fetchLate')->name('activeLate');
     
     //Logs
     Route::resource('logs', 'Logs\LogController');

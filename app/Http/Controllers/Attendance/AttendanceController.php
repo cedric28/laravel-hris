@@ -166,8 +166,10 @@ class AttendanceController extends Controller
         //prevent other user to access to this page
         $this->authorize("isHROrAdmin");
         $deployment = Deployment::withTrashed()->findOrFail($id);
+        $lates = LateTime::withTrashed()->where('deployment_id', $deployment->id)->get();
         return view('attendance.edit', [
-            'deployment' => $deployment
+            'deployment' => $deployment,
+            'lates' => $lates
         ]);
     }
 

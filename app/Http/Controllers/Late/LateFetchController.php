@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Late;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\LateTime;
+use Carbon\Carbon;
 
 class LateFetchController extends Controller
 {
@@ -46,7 +47,7 @@ class LateFetchController extends Controller
 				->get();
 
 			//total number of filtered data
-			$totalFiltered = Attendance::where([
+			$totalFiltered = LateTime::where([
                 ['late_times.deployment_id', $deployment_id],
                 ['late_times.deleted_at', '=', null]
             ])->count();
@@ -84,7 +85,7 @@ class LateFetchController extends Controller
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
 				$nestedData['latetime_date'] =  date('d-m-Y', strtotime($r->latetime_date));
-				$nestedData['duration'] = $r->duration;
+				$nestedData['duration'] = Carbon::parse($r->duration)->format('i')." mins";
 				$data[] = $nestedData;
 			}
 		}

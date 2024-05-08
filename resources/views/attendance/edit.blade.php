@@ -77,28 +77,74 @@
 						<div class="card-footer clearfix">
 						<div class="row">
                             <div class="col-md-12">
-								<table class="table table-hover table-striped" id="employee_attendances">
-									<thead>
-                                        <tr style="text-align:center;">
-                                            <th>ATTENDANCE DATE </th>
-                                            <th>ATTENDANCE TIME IN</th>
-                                             <th>ATTENDANCE TIME OUT</th>
-                                            <th>ACTION</th>
-                                        </tr>
-									</thead>
-									<tbody>
-										@foreach ($deployment->attendances as $attendance)
-                                            <tr style="text-align:center;">
-                                                <td>{{ $attendance->attendance_date }}</td>
-                                                <td>{{ $attendance->attendance_time }}</td>
-                                                 <td>{{ $attendance->attendance_out }}</td>
-                                                <td>
-                                                                            
-                                                </td>
-                                            </tr>
-										@endforeach
-									</tbody>
-								</table>
+                                <div id="accordion">
+                                    <div class="card card-primary">
+                                        <div class="card-header">
+                                            <h4 class="card-title w-100">
+                                                <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseAttendance" aria-expanded="true">
+                                                   Attendance Log
+                                                </a>
+                                            </h4>
+                                        </div>
+                                    
+                                        <div id="collapseAttendance" class="collapse show" data-parent="#accordion" style="">
+                                            <div class="card-body">
+                                               <table class="table table-hover table-striped" id="employee_attendances">
+                                                    <thead>
+                                                        <tr style="text-align:center;">
+                                                            <th>ATTENDANCE DATE </th>
+                                                            <th>ATTENDANCE TIME IN</th>
+                                                            <th>ATTENDANCE TIME OUT</th>
+                                                            <th>ACTION</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($deployment->attendances as $attendance)
+                                                            <tr style="text-align:center;">
+                                                                <td>{{ $attendance->attendance_date }}</td>
+                                                                <td>{{ $attendance->attendance_time }}</td>
+                                                                <td>{{ $attendance->attendance_out }}</td>
+                                                                <td>
+                                                                                            
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>       
+                                            </div>
+                                        </div>
+                                    </div>
+                                      <div class="card card-warning">
+                                        <div class="card-header">
+                                            <h4 class="card-title w-100">
+                                                <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseLate" aria-expanded="true">
+                                                   Tardiness Log
+                                                </a>
+                                            </h4>
+                                        </div>
+                                    
+                                        <div id="collapseLate" class="collapse show" data-parent="#accordion" style="">
+                                            <div class="card-body">
+                                               <table class="table table-hover table-striped" id="employee_late">
+                                                    <thead>
+                                                        <tr style="text-align:center;">
+                                                            <th>DATE</th>
+                                                            <th>DURATION </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($lates as $late)
+                                                            <tr style="text-align:center;">
+                                                                <td>{{ $late->latetime_date }}</td>
+                                                                <td>{{ $late->duration }}</td>                                    
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>       
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 						</div>
 						</div>
@@ -236,12 +282,72 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                 })
             });
 
+            var tableActiveLate = $('#employee_late').DataTable({
+				"responsive": true, 
+				"lengthChange": false, 
+				"autoWidth": false,
+      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activeLate') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{
+                        "_token":"<?= csrf_token() ?>",
+                        "deployment_id": "<?= $deployment->id ?>"
+                    }
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Employee Late Log',
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : 'Employee Late Log',
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' :  'Employee Late Log',
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"latetime_date"},
+                    {"data":"duration"}
+                ],
+                "columnDefs": [{
+					"targets": [0,1],   // target column
+					"className": "textCenter",
+				}]
+            });
+            
+
             
             $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
                 $('.table:visible').each( function(e) {
                     $(this).DataTable().columns.adjust().responsive.recalc();
                 });
             });
+
+
+
             </script>
 
         @endpush('scripts')

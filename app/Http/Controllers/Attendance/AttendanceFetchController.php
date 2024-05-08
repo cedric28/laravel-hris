@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Attendance;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Attendance;
+use Carbon\Carbon;
 
 class AttendanceFetchController extends Controller
 {
@@ -87,9 +88,9 @@ class AttendanceFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['attendance_date'] =  date('d-m-Y', strtotime($r->attendance_date));
-				$nestedData['attendance_time'] = $r->attendance_time;
-				$nestedData['attendance_out'] = $r->attendance_out;
+				$nestedData['attendance_date'] = date('d-m-Y', strtotime($r->attendance_date));
+				$nestedData['attendance_time'] = Carbon::parse( $r->attendance_time)->format('g:i A');
+				$nestedData['attendance_out'] =  Carbon::parse($r->attendance_out)->format('g:i A');
 				$nestedData['action'] = '
 						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
 					';
