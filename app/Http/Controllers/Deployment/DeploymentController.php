@@ -119,7 +119,7 @@ class DeploymentController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('deployment.edit', $deployment->id);
+            return redirect()->route('salary.edit', $deployment->id);
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
