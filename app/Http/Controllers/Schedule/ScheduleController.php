@@ -71,7 +71,18 @@ class ScheduleController extends Controller
                  'deployment_id' => 'required|integer',
                  'slug' => 'required|string',
                  'time_in' => 'required|string',
-                 'time_out' => 'required|string'
+                 'time_out' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $scheduleTime = strtotime($request->time_in);
+                        $scheduleOut = strtotime($value);
+            
+                        if ($scheduleOut <= $scheduleTime) {
+                            $fail('The schedule out time must be greater than the schedule time in.');
+                        }
+                    },
+                 ]
              ], $messages);
  
              if ($validator->fails()) {
@@ -86,8 +97,8 @@ class ScheduleController extends Controller
              // $employee->reference_no = $this->generateUniqueCode();
              $schedule->deployment_id = $request->deployment_id;
              $schedule->slug = $request->slug;
-             $schedule->time_in = Carbon::parse($request->time_in)->format('H:m:s');
-             $schedule->time_out = Carbon::parse($request->time_out)->format('H:m:s');
+             $schedule->time_in = Carbon::parse($request->time_in)->format('H:i:s');
+             $schedule->time_out = Carbon::parse($request->time_out)->format('H:i:s');
              $schedule->creator_id = $user;
              $schedule->updater_id = $user;
              $schedule->save();
@@ -177,7 +188,18 @@ class ScheduleController extends Controller
                 'deployment_id' => 'required|integer|unique:schedules,deployment_id,' . $schedule->id,
                 'slug' => 'required|string',
                 'time_in' => 'required|string',
-                'time_out' => 'required|string'
+                'time_out' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $scheduleTime = strtotime($request->time_in);
+                        $scheduleOut = strtotime($value);
+            
+                        if ($scheduleOut <= $scheduleTime) {
+                            $fail('The schedule out time must be greater than the schedule time in.');
+                        }
+                    },
+                ]
             ], $messages);
 
             if ($validator->fails()) {
@@ -186,8 +208,8 @@ class ScheduleController extends Controller
 
             $schedule->deployment_id = $request->deployment_id;
             $schedule->slug = $request->slug;
-            $schedule->time_in = Carbon::parse($request->time_in)->format('H:m:s');
-            $schedule->time_out = Carbon::parse($request->time_out)->format('H:m:s');
+            $schedule->time_in = Carbon::parse($request->time_in)->format('H:i:s');
+            $schedule->time_out = Carbon::parse($request->time_out)->format('H:i:s');
             $schedule->updater_id = \Auth::user()->id;
             $schedule->save();
 
