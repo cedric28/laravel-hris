@@ -47,11 +47,23 @@
                                     </div>
                                 
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Attendance Time</label>
+                                        <label class="col-lg-3 col-form-label">Attendance Time In</label>
                                         <div class="col-lg-9">	
                                             <div class="input-group date" id="attendance_time" data-target-input="nearest">
                                                 <input type="text" name="attendance_time"  value="{{ old('attendance_time') }}" class="form-control datetimepicker-input" data-target="#attendance_time">
                                                 <div class="input-group-append" data-target="#attendance_time" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Attendance Time Out</label>
+                                        <div class="col-lg-9">	
+                                            <div class="input-group date" id="attendance_out" data-target-input="nearest">
+                                                <input type="text" name="attendance_out"  value="{{ old('attendance_out') }}" class="form-control datetimepicker-input" data-target="#attendance_out">
+                                                <div class="input-group-append" data-target="#attendance_out" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                             </div>
@@ -69,7 +81,8 @@
 									<thead>
                                         <tr style="text-align:center;">
                                             <th>ATTENDANCE DATE </th>
-                                            <th>ATTENDANCE TIME</th>
+                                            <th>ATTENDANCE TIME IN</th>
+                                             <th>ATTENDANCE TIME OUT</th>
                                             <th>ACTION</th>
                                         </tr>
 									</thead>
@@ -78,6 +91,7 @@
                                             <tr style="text-align:center;">
                                                 <td>{{ $attendance->attendance_date }}</td>
                                                 <td>{{ $attendance->attendance_time }}</td>
+                                                 <td>{{ $attendance->attendance_out }}</td>
                                                 <td>
                                                                             
                                                 </td>
@@ -132,6 +146,10 @@
                 format: 'LT'
             })
 
+             $(`#attendance_out`).datetimepicker({
+                format: 'LT'
+            })
+
             $(`#attendance_date`).datetimepicker({
             format: 'L'
             });
@@ -162,21 +180,21 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                                 "extend": 'csv',
                                 'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1]
+                                    "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1]
+                                    "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1]
+                                    "columns": [0,1,2]
                                 }
                             }
                         ],
@@ -185,10 +203,11 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                 "columns":[
                     {"data":"attendance_date"},
                     {"data":"attendance_time"},
+                      {"data":"attendance_out"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
                 "columnDefs": [{
-					"targets": [0,1],   // target column
+					"targets": [0,1,2],   // target column
 					"className": "textCenter",
 				}]
             });

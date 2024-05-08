@@ -93,7 +93,7 @@ class LeavesController extends Controller
             $leave = new Leave();
             $leave->leave_time = Carbon::parse($request->leave_time)->format('H:i:s');
             $leave->leave_date = Carbon::parse($request->leave_date)->format('Y-m-d');
-            $leave->status = 1;
+            $leave->leave_status_id = 1;
             $leave->leave_type_id = $request->leave_type_id;
             $leave->deployment_id = $request->deployment_id;
             $leave->creator_id = $user;

@@ -9,6 +9,8 @@ use App\Deployment;
 use App\Log;
 use Validator, Hash, DB;
 use Carbon\Carbon;
+use App\Rules\TimeNotGreaterThan;
+use Illuminate\Validation\Rule;
 
 class AttendanceController extends Controller
 {
@@ -50,15 +52,44 @@ class AttendanceController extends Controller
   
           try {
               $deployment = Deployment::withTrashed()->findOrFail($request->deployment_id);
-              $messages = [
-                  'attendance_date.required' => 'Attendance Date is required',
-                  'attendance_time.required' => 'Attendance Time is required'
-              ];
-              //validate request value
-              $validator = Validator::make($request->all(), [
-                  'attendance_date' => 'required|string',
-                  'attendance_date' => 'required|string'
-              ], $messages);
+            
+              $rules = [
+                'attendance_date' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
+                        ->where('deployment_id', $request->deployment_id)
+                        ->exists();
+            
+                        if ($attendance) {
+                            $fail('Attendance Date already exist for this Employee');
+                        }
+                    },
+                ],
+                'attendance_time' => ['required', 'string'],
+                'attendance_out' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $attendanceTime = strtotime($request->attendance_time);
+                        $attendanceOut = strtotime($value);
+            
+                        if ($attendanceOut <= $attendanceTime) {
+                            $fail('The attendance out time must be greater than the attendance time in.');
+                        }
+                    },
+                ],
+            ];
+
+            // Custom error messages
+            $messages = [
+                'attendance_date.required' => 'Attendance Date is required',
+                'attendance_time.required' => 'Attendance Time in is required',
+                'attendance_out.required' => 'Attendance Time Out is required',
+            ];
+             // Validate request
+            $validator = Validator::make($request->all(), $rules, $messages);
   
               if ($validator->fails()) {
                   return back()->withErrors($validator->errors())->withInput();
@@ -70,6 +101,7 @@ class AttendanceController extends Controller
               //save attendance
               $attendance = new Attendance();
               $attendance->attendance_time = Carbon::parse($request->attendance_time)->format('H:i:s');
+              $attendance->attendance_out = Carbon::parse($request->attendance_out)->format('H:i:s');
               $attendance->attendance_date = Carbon::parse($request->attendance_date)->format('Y-m-d');
               $attendance->deployment_id = $request->deployment_id;
               $attendance->status = 1;
