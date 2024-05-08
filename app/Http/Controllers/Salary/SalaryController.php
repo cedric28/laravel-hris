@@ -66,9 +66,19 @@ class SalaryController extends Controller
         $this->authorize("isHROrAdmin");
         $deployment = Deployment::withTrashed()->findOrFail($id);
         $salary = Salary::withTrashed()->where('deployment_id', $deployment->id)->first();
+        $baseRate =  [
+            [ 
+                'label' => 'Hourly',
+                'value' => 'hourly'
+            ],
+            [ 
+                'label' => 'Monthly',
+                'value' => 'monthly'
+            ]];
          return view('salary.edit', [
             'deployment' => $deployment,
-            'salary' => $salary
+            'salary' => $salary,
+            'baseRate' => $baseRate
         ]);
     }
 
@@ -94,6 +104,8 @@ class SalaryController extends Controller
 
             //validate request value
             $validator = Validator::make($request->all(), [
+                'basic_salary' => 'required|numeric',
+                'rate_base' => 'required|string|in:hourly,monthly',
                 'sss' => 'required|numeric',
                 'tax' => 'required|numeric',
                 'pagibig' => 'required|numeric',

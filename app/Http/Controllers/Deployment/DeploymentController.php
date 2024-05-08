@@ -69,19 +69,35 @@ class DeploymentController extends Controller
         \DB::beginTransaction();
 
         try {
-
             $messages = [
                 'employee_id.required' => 'Please select a Employee',
                 'client_id.required' => 'Please select a Client',
-                'employment_type_id.required' => 'Please select a Employment Type'
+                'employment_type_id.required' => 'Please select a Employment Type',
+                'position.required' => 'Please enter a Position',
+                'position.max' => 'Position must not be more than 50 characters',
+                'start_date.required' => 'Please enter a Start Date',
+                'end_date.after' => 'End Date must be after Start Date',
             ];
             //validate request value
             $validator = Validator::make($request->all(), [
-                'employee_id' => 'required|integer',
+                'employee_id' => [
+                    'required',
+                    'integer',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $attendance = Deployment::where('employee_id', $value)
+                        ->where('status', 'new')
+                        ->exists();
+            
+                        if ($attendance) {
+                            $fail('Employee has an active client');
+                        }
+                    },
+                ],
                 'client_id' => 'required|integer',
                 'employment_type_id' => 'required|integer',
                 'position' => 'required|string|max:50',
-                'start_date' => 'required|string'
+                'start_date' => 'required|string',
+                'end_date' => 'sometimes|string|after:start_date',
             ], $messages);
 
             if ($validator->fails()) {

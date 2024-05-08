@@ -16,6 +16,8 @@ class CreateSalariesTable extends Migration
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
             $table->integer('deployment_id')->unsigned()->index();
+            $table->decimal('basic_salary', 8, 2)->default(0);
+            $table->enum('rate_base',['hourly','monthly'])->default('hourly');
             $table->decimal('sss', 8, 2)->default(0);
             $table->decimal('tax', 8, 2)->default(0);
             $table->decimal('pagibig', 8, 2)->default(0);

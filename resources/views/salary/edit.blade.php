@@ -34,15 +34,50 @@
                             <form action="{{ route('salary.update', $salary->id)}}" method="POST">
                             @csrf
                             @method('PATCH')
-                            <div id="accordion">
+                                <div id="accordion">
+                                     <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseSalary" aria-expanded="true">
+                                                Compensation Information
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    
+                                    <div id="collapseSalary" class="collapse show" data-parent="#accordion" style="">
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">BASIC SALARY:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="basic_salary" value="{{ old('sss',$salary->basic_salary) }}" class="@error('basic_salary') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">BASE RATE:</label>
+                                                <div class="col-lg-9">	
+                                                    <select name="rate_base" class="form-control">
+                                                        <option value="">Please select</option>
+                                                        @foreach ($baseRate as $base)
+                                                        <option value="{{ $base['value'] }}"{{ ($salary->rate_base == old('rate_base',$base['value'])) ? ' selected' : '' }}>
+                                                                {{ $base['label'] }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="card card-primary">
                                     <div class="card-header">
                                         <h4 class="card-title w-100">
                                             <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseOne" aria-expanded="true">
-                                                Salary Deduction
+                                                Government Mandated
                                             </a>
                                         </h4>
                                     </div>
+                                    
                                     <div id="collapseOne" class="collapse show" data-parent="#accordion" style="">
                                         <div class="card-body">
                                             <div class="form-group row">

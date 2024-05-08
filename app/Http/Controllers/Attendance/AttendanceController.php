@@ -108,6 +108,10 @@ class AttendanceController extends Controller
               $attendance->creator_id = $user;
               $attendance->updater_id = $user;
               $attendance->save();
+
+                $employee = Deployment::find($request->deployment_id);
+                $schedule = $employee->schedule;
+                $lateTimeDuration = $employee->computeLateTimeDuration($schedule, $timeIn, $timeOut);
   
               $log = new Log();
               $log->log = "User " . \Auth::user()->email . " create attendance " . $attendance->id . " at " . Carbon::now();
@@ -216,5 +220,31 @@ class AttendanceController extends Controller
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
+    }
+
+    public function computeLateTimeDuration($schedule, $timeIn, $timeOut)
+    {
+        // Validate input times
+        if ($timeIn < $schedule->time_in) {
+            throw new \InvalidArgumentException('Time in cannot be less than schedule time in');
+        }
+        if ($timeOut <= $schedule->time_out) {
+            throw new \InvalidArgumentException('Time out must be greater than schedule time out');
+        }
+
+        // Convert times to Carbon instances for easy manipulation
+        $scheduleTimeIn = Carbon::parse($schedule->time_in);
+        $scheduleTimeOut = Carbon::parse($schedule->time_out);
+        $timeInCarbon = Carbon::parse($timeIn);
+        $timeOutCarbon = Carbon::parse($timeOut);
+
+        // Compute late time duration
+        $lateTimeDuration = 0;
+        if ($timeInCarbon > $scheduleTimeIn) {
+            $lateTimeDuration = $timeInCarbon->diffInMinutes($scheduleTimeIn);
+        }
+
+        // Return late time duration in minutes
+        return $lateTimeDuration;
     }
 }

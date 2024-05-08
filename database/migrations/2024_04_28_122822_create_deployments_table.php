@@ -21,6 +21,7 @@ class CreateDeploymentsTable extends Migration
             $table->string("position");
             $table->date('start_date');
             $table->date('end_date')->nullable();
+            $table->enum("status",['new','end','terminate'])->default('new');
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();
             $table->softDeletes();
