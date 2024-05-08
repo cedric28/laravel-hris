@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Attendance;
 use App\Deployment;
 use App\Log;
+use App\LateTime;
 use Validator, Hash, DB;
 use Carbon\Carbon;
 use App\Rules\TimeNotGreaterThan;
@@ -91,33 +92,45 @@ class AttendanceController extends Controller
              // Validate request
             $validator = Validator::make($request->all(), $rules, $messages);
   
-              if ($validator->fails()) {
-                  return back()->withErrors($validator->errors())->withInput();
-              }
-  
-              //check current user
-              $user = \Auth::user()->id;
-  
-              //save attendance
-              $attendance = new Attendance();
-              $attendance->attendance_time = Carbon::parse($request->attendance_time)->format('H:i:s');
-              $attendance->attendance_out = Carbon::parse($request->attendance_out)->format('H:i:s');
-              $attendance->attendance_date = Carbon::parse($request->attendance_date)->format('Y-m-d');
-              $attendance->deployment_id = $request->deployment_id;
-              $attendance->status = 1;
-              $attendance->creator_id = $user;
-              $attendance->updater_id = $user;
-              $attendance->save();
+            if ($validator->fails()) {
+                return back()->withErrors($validator->errors())->withInput();
+            }
 
-                $employee = Deployment::find($request->deployment_id);
-                $schedule = $employee->schedule;
-                $lateTimeDuration = $employee->computeLateTimeDuration($schedule, $timeIn, $timeOut);
-  
-              $log = new Log();
-              $log->log = "User " . \Auth::user()->email . " create attendance " . $attendance->id . " at " . Carbon::now();
-              $log->creator_id =  \Auth::user()->id;
-              $log->updater_id =  \Auth::user()->id;
-              $log->save();
+            //check current user
+            $user = \Auth::user()->id;
+
+            //save attendance
+            $attendance = new Attendance();
+            $attendance->attendance_time = Carbon::parse($request->attendance_time)->format('H:i:s');
+            $attendance->attendance_out = Carbon::parse($request->attendance_out)->format('H:i:s');
+            $attendance->attendance_date = Carbon::parse($request->attendance_date)->format('Y-m-d');
+            $attendance->deployment_id = $request->deployment_id;
+            $attendance->status = 1;
+            $attendance->creator_id = $user;
+            $attendance->updater_id = $user;
+            $attendance->save();
+
+            $employee = Deployment::find($request->deployment_id);
+            $schedule = $employee->schedule;
+            $timeIn = Carbon::parse($request->attendance_time)->format('H:i:s');
+            $timeOut = Carbon::parse($request->attendance_out)->format('H:i:s');
+            $lateTimeDuration = $this->computeLateTimeDuration($schedule, $timeIn, $timeOut);
+
+            if($lateTimeDuration > 0){
+                $late = new LateTime();
+                $late->deployment_id = $request->deployment_id;
+                $late->duration = Carbon::createFromTime(0, $lateTimeDuration, 0)->format('H:i:s');
+                $late->latetime_date =  Carbon::parse($request->attendance_date)->format('Y-m-d');
+                $late->creator_id = $user;
+                $late->updater_id = $user;
+                $late->save();
+            }
+             
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " create attendance " . $attendance->id . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
               /*
               | @End Transaction
               |---------------------------------------------*/
@@ -225,12 +238,12 @@ class AttendanceController extends Controller
     public function computeLateTimeDuration($schedule, $timeIn, $timeOut)
     {
         // Validate input times
-        if ($timeIn < $schedule->time_in) {
-            throw new \InvalidArgumentException('Time in cannot be less than schedule time in');
-        }
-        if ($timeOut <= $schedule->time_out) {
-            throw new \InvalidArgumentException('Time out must be greater than schedule time out');
-        }
+        // if ($timeIn < $schedule->time_in) {
+        //     throw new \InvalidArgumentException('Time in cannot be less than schedule time in');
+        // }
+        // if ($timeOut <= $schedule->time_out) {
+        //     throw new \InvalidArgumentException('Time out must be greater than schedule time out');
+        // }
 
         // Convert times to Carbon instances for easy manipulation
         $scheduleTimeIn = Carbon::parse($schedule->time_in);
