@@ -31,65 +31,111 @@
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<form action="{{ route('salary.store')}}" method="POST">
-								@csrf
-								<input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
-                                <div class="form-group row">
-									<label class="col-lg-3 col-form-label">SSS:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="sss" value="{{ old('sss') }}" class="@error('sss') is-invalid @enderror form-control" placeholder="0.00" >
-									</div>
-								</div>
+                            <form action="{{ route('salary.update', $salary->id)}}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <div id="accordion">
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseOne" aria-expanded="true">
+                                                Salary Deduction
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne" class="collapse show" data-parent="#accordion" style="">
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">SSS:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="sss" value="{{ old('sss',$salary->sss) }}" class="@error('sss') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
 
-                                <div class="form-group row">
-									<label class="col-lg-3 col-form-label">TAX:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="tax" value="{{ old('tax') }}" class="@error('tax') is-invalid @enderror form-control" placeholder="0.00" >
-									</div>
-								</div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">TAX:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="tax" value="{{ old('tax',$salary->tax) }}" class="@error('tax') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
 
-                                <div class="form-group row">
-									<label class="col-lg-3 col-form-label">PAG-IBIG:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="pagibig" value="{{ old('pagibig') }}" class="@error('pagibig') is-invalid @enderror form-control" placeholder="0.00" >
-									</div>
-								</div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">PAG-IBIG:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="pagibig" value="{{ old('pagibig',$salary->pagibig) }}" class="@error('pagibig') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
 
-                                <div class="form-group row">
-									<label class="col-lg-3 col-form-label">PHILHEALTH:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="pagibig" value="{{ old('pagibig') }}" class="@error('pagibig') is-invalid @enderror form-control" placeholder="0.00" >
-									</div>
-								</div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">PHILHEALTH:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="philhealth" value="{{ old('philhealth',$salary->philhealth) }}" class="@error('philhealth') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                        <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="true">
+                                            Allowances
+                                        </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse show" data-parent="#accordion" style="">
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">MEAL ALLOWANCE:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="meal_allowance" value="{{ old('meal_allowance',$salary->meal_allowance) }}" class="@error('meal_allowance') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
 
-                                <div class="form-group row">
-									<label class="col-lg-3 col-form-label">MEAL ALLOWANCE:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="meal_allowance" value="{{ old('meal_allowance') }}" class="@error('meal_allowance') is-invalid @enderror form-control" placeholder="0.00" >
-									</div>
-								</div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">LAUNDRY ALLOWANCE:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="laundry_allowance" value="{{ old('laundry_allowance',$salary->laundry_allowance) }}" class="@error('laundry_allowance') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
 
-                                <div class="form-group row">
-									<label class="col-lg-3 col-form-label">LAUNDRY ALLOWANCE:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="laundry_allowance" value="{{ old('laundry_allowance') }}" class="@error('laundry_allowance') is-invalid @enderror form-control" placeholder="0.00" >
-									</div>
-								</div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">TRANSPORTATION ALLOWANCE:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="transportation_allowance" value="{{ old('transportation_allowance',$salary->transportation_allowance) }}" class="@error('transportation_allowance') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
 
-                                <div class="form-group row">
-									<label class="col-lg-3 col-form-label">TRANSPORTATION ALLOWANCE:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="transportation_allowance" value="{{ old('transportation_allowance') }}" class="@error('transportation_allowance') is-invalid @enderror form-control" placeholder="0.00" >
-									</div>
-								</div>
-
-                                <div class="form-group row">
-									<label class="col-lg-3 col-form-label">COLA:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="cola" value="{{ old('cola') }}" class="@error('cola') is-invalid @enderror form-control" placeholder="0.00" >
-									</div>
-								</div>
-
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">COLA:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="cola" value="{{ old('cola',$salary->cola) }}" class="@error('cola') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                   <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h4 class="card-title w-100">
+                                            <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="true">
+                                                Other Deduction
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseThree" class="collapse show" data-parent="#accordion" style="">
+                                        <div class="card-body">
+                                             <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label">UNIFORM:</label>
+                                                <div class="col-lg-9">	
+                                                    <input type="text" name="uniform" value="{{ old('uniform',$salary->uniform) }}" class="@error('uniform') is-invalid @enderror form-control" placeholder="0.00" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+							
 								<div class="text-right">
 									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>

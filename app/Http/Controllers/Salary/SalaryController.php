@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Salary;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Deployment;
+use App\Salary;
+use App\Log;
 use Validator, Hash, DB;
 use Carbon\Carbon;
 
@@ -60,12 +62,13 @@ class SalaryController extends Controller
      */
     public function edit($id)
     {
-         //prevent other user to access to this page
-         $this->authorize("isHROrAdmin");
-         $deployment = Deployment::withTrashed()->findOrFail($id);
-        
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
+        $deployment = Deployment::withTrashed()->findOrFail($id);
+        $salary = Salary::withTrashed()->where('deployment_id', $deployment->id)->first();
          return view('salary.edit', [
-            'deployment' => $deployment
+            'deployment' => $deployment,
+            'salary' => $salary
         ]);
     }
 
@@ -78,7 +81,63 @@ class SalaryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+          //prevent other user to access to this page
+          $this->authorize("isHROrAdmin");
+
+         /*
+        | @Begin Transaction
+        |---------------------------------------------*/
+        \DB::beginTransaction();
+
+        try {
+            $salary = Salary::withTrashed()->findOrFail($id);
+
+            //validate request value
+            $validator = Validator::make($request->all(), [
+                'sss' => 'required|numeric',
+                'tax' => 'required|numeric',
+                'pagibig' => 'required|numeric',
+                'philhealth' => 'required|numeric',
+                'uniform' => 'required|numeric',
+                'meal_allowance' => 'required|numeric',
+                'transportation_allowance' => 'required|numeric',
+                'cola' => 'required|numeric'
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator->errors())->withInput();
+            }
+
+          
+            $salary->sss = $request->sss;
+            $salary->tax = $request->tax;
+            $salary->pagibig = $request->pagibig;
+            $salary->philhealth = $request->philhealth;
+            $salary->uniform = $request->uniform;
+            $salary->meal_allowance = $request->meal_allowance;
+            $salary->laundry_allowance = $request->laundry_allowance;
+            $salary->transportation_allowance = $request->transportation_allowance;
+            $salary->cola = $request->cola;
+            $salary->updater_id = \Auth::user()->id;
+            $salary->save();
+
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " edit salary " .  $salary->id . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
+
+            /*
+            | @End Transaction
+            |---------------------------------------------*/
+            \DB::commit();
+
+            return redirect()->route('salary.edit', $salary->deployment_id)
+                ->with('successMsg', 'Salary Data update Successfully');
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**

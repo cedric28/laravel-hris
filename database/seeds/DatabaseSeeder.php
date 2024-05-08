@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CivilStatusSeeder::class);
         $this->call(ClientSeeder::class);
         $this->call(LeaveStatusSeeder::class);
+        $this->call(ApplicantSeeder::class);
     }
 }

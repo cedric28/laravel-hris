@@ -15,7 +15,7 @@ class CreateSchedulesTable extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id('id')->unsigned();
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->time('time_in');
             $table->time('time_out');
             $table->integer('deployment_id')->unsigned()->index();

@@ -10,6 +10,7 @@ use App\Employee;
 use App\EmploymentType;
 use App\Log;
 use App\Role;
+use App\Salary;
 use Validator, Hash, DB;
 use Carbon\Carbon;
 
@@ -92,7 +93,6 @@ class DeploymentController extends Controller
 
             //save deployment
             $deployment = new Deployment();
-            // $employee->reference_no = $this->generateUniqueCode();
             $deployment->employee_id = $request->employee_id;
             $deployment->employment_type_id = $request->employment_type_id;
             $deployment->client_id = $request->client_id;
@@ -102,6 +102,12 @@ class DeploymentController extends Controller
             $deployment->creator_id = $user;
             $deployment->updater_id = $user;
             $deployment->save();
+
+            $salary = new Salary();
+            $salary->deployment_id = $deployment->id;
+            $salary->creator_id = $user;
+            $salary->updater_id = $user;
+            $salary->save();
 
             $log = new Log();
             $log->log = "User " . \Auth::user()->email . " create deployment " . $deployment->id . " at " . Carbon::now();
