@@ -119,6 +119,7 @@ class AttendanceController extends Controller
             if($lateTimeDuration > 0){
                 $late = new LateTime();
                 $late->deployment_id = $request->deployment_id;
+                $late->attendance_id = $attendance->id;
                 $late->duration = Carbon::createFromTime(0, $lateTimeDuration, 0)->format('H:i:s');
                 $late->latetime_date =  Carbon::parse($request->attendance_date)->format('Y-m-d');
                 $late->creator_id = $user;
@@ -198,6 +199,13 @@ class AttendanceController extends Controller
 
          //delete Attendance
          $attendance = Attendance::findOrFail($id);
+
+         $late = LateTime::where('attendance_id', $attendance->id)->first();
+
+         if ($late) {
+            $late->delete();
+         }
+
          $attendance->delete();
  
          $log = new Log();
@@ -261,5 +269,31 @@ class AttendanceController extends Controller
 
         // Return late time duration in minutes
         return $lateTimeDuration;
+    }
+
+
+    public function computeOverTimeDuration($schedule, $timeIn, $timeOut)
+    {
+        // Validate input times
+        if ($timeIn < $schedule->time_out) {
+            throw new \InvalidArgumentException('Over Time-in cannot be less than schedule time out');
+        }
+
+        if ($timeOut <= $timeIn) {
+            throw new \InvalidArgumentException('Over Time-out must be greater than Over Time-in');
+        }
+
+        // Convert times to Carbon instances for easy manipulation
+        $scheduleTimeOut = Carbon::parse($schedule->time_out);
+        $timeInCarbon = Carbon::parse($timeIn);
+
+        // Compute late time duration
+        $overTimeDuration = 0;
+        if ($timeInCarbon > $scheduleTimeOut) {
+            $overTimeDuration = $timeInCarbon->diffInMinutes($scheduleTimeOut);
+        }
+
+        // Return late time duration in minutes
+        return $overTimeDuration;
     }
 }

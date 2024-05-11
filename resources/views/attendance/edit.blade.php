@@ -151,6 +151,103 @@
 					</div>
 				</div>
 			</div>
+
+            <div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header">
+							@include('partials.message')
+							@include('partials.errors')
+							<div class="row">
+								<h3 class="card-title">Overtime Form</h3>
+							</div>
+						</div>
+						<!-- /.card-header -->
+						<div class="card-body">
+							<form action="{{ route('attendance.store')}}" method="POST">
+								@csrf
+								    <input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Date</label>
+                                        <div class="col-lg-9">	
+                                            <div class="input-group date" id="overtime_date" data-target-input="nearest">
+                                                <input type="text" name="overtime_date"  value="{{ old('overtime_date') }}" class="form-control datetimepicker-input" data-target="#overtime_date"/>
+                                                <div class="input-group-append" data-target="#overtime_date" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Time In</label>
+                                        <div class="col-lg-9">	
+                                            <div class="input-group date" id="attendance_time" data-target-input="nearest">
+                                                <input type="text" name="attendance_time"  value="{{ old('attendance_time') }}" class="form-control datetimepicker-input" data-target="#attendance_time">
+                                                <div class="input-group-append" data-target="#attendance_time" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Time Out</label>
+                                        <div class="col-lg-9">	
+                                            <div class="input-group date" id="attendance_out" data-target-input="nearest">
+                                                <input type="text" name="attendance_out"  value="{{ old('attendance_out') }}" class="form-control datetimepicker-input" data-target="#attendance_out">
+                                                <div class="input-group-append" data-target="#attendance_out" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+                                    </div>
+							</form>
+						</div>
+						<div class="card-footer clearfix">
+						<div class="row">
+                            <div class="col-md-12">
+                                <div id="accordion">
+                                    <div class="card card-primary">
+                                        <div class="card-header">
+                                            <h4 class="card-title w-100">
+                                                <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseOverTime" aria-expanded="true">
+                                                    Overtime Log
+                                                </a>
+                                            </h4>
+                                        </div>
+                                    
+                                        <div id="collapseOverTime" class="collapse show" data-parent="#accordion" style="">
+                                            <div class="card-body">
+                                               <table class="table table-hover table-striped" id="employee_overtime">
+                                                        <thead>
+                                                        <tr style="text-align:center;">
+                                                            <th>DATE</th>
+                                                            <th>DURATION </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                            <tr style="text-align:center;">
+                                                                <td></td>
+                                                                <td></td>                                    
+                                                            </tr>
+                                                       
+                                                    </tbody>
+                                                </table>       
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>	
 	</section>
     	<!-- /page content -->
@@ -197,7 +294,11 @@
             })
 
             $(`#attendance_date`).datetimepicker({
-            format: 'L'
+                format: 'L'
+            });
+
+            $(`#overtime_date`).datetimepicker({
+                format: 'L'
             });
 
 var tableActiveAttendances = $('#employee_attendances').DataTable({
@@ -258,29 +359,6 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
 				}]
             });
             
-   
-            var attendance_id;
-            $(document).on('click', '#delete', function(){
-                console.log
-                attendance_id = $(this).attr('data-id');
-                $('#confirmModal').modal('show');
-            });
-
-            $('#ok_button').click(function(){
-                $.ajax({
-                    url:"/attendance/destroy/"+attendance_id,
-                    beforeSend:function(){
-                        $('#ok_button').text('Deleting...');
-                    },
-                    success:function(data)
-                    {
-                        setTimeout(function(){
-                            $('#confirmModal').modal('hide');
-                            tableActiveAttendances.ajax.reload();
-                        }, 2000);
-                    }
-                })
-            });
 
             var tableActiveLate = $('#employee_late').DataTable({
 				"responsive": true, 
@@ -336,6 +414,29 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
 					"targets": [0,1],   // target column
 					"className": "textCenter",
 				}]
+            });
+
+             var attendance_id;
+            $(document).on('click', '#delete', function(){
+                attendance_id = $(this).attr('data-id');
+                $('#confirmModal').modal('show');
+            });
+
+            $('#ok_button').click(function(){
+                $.ajax({
+                    url:"/attendance/destroy/"+attendance_id,
+                    beforeSend:function(){
+                        $('#ok_button').text('Deleting...');
+                    },
+                    success:function(data)
+                    {
+                        setTimeout(function(){
+                            $('#confirmModal').modal('hide');
+                            tableActiveAttendances.ajax.reload();
+                            tableActiveLate.ajax.reload();
+                        }, 2000);
+                    }
+                })
             });
             
 

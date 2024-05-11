@@ -15,10 +15,58 @@ class ClientSeeder extends Seeder
         $clients = [
             [ 
                 'reference_no' => '7490505111',
-                'name' => 'Samsung',
-                'short_name' => 'sam',
+                'name' => 'A-Movement',
+                'short_name' => 'a-movement',
                 'address' => '198 PUROK 3 ACAPULCO ST',
-                'contact_number' => '9455878983',
+                'contact_number' => '9455878984',
+                'email' => 'sample@yahoo.com'
+            ],
+            [ 
+                'reference_no' => '7490505222',
+                'name' => 'Shopee Express Philippines',
+                'short_name' => 'shopee',
+                'address' => '198 PUROK 3 ACAPULCO ST',
+                'contact_number' => '9455878985',
+                'email' => 'sample@yahoo.com'
+            ],
+            [ 
+                'reference_no' => '7490505333',
+                'name' => 'STT Philippines',
+                'short_name' => 'stt phil',
+                'address' => '198 PUROK 3 ACAPULCO ST',
+                'contact_number' => '9455878985',
+                'email' => 'sample@yahoo.com'
+            ],
+            [ 
+                'reference_no' => '7490505333',
+                'name' => 'PHESI',
+                'short_name' => 'phesi',
+                'address' => '198 PUROK 3 ACAPULCO ST',
+                'contact_number' => '9455878985',
+                'email' => 'sample@yahoo.com'
+            ],
+            [ 
+                'reference_no' => '7490505444',
+                'name' => 'Sutherland Global Solution',
+                'short_name' => 'SGS',
+                'address' => '198 PUROK 3 ACAPULCO ST',
+                'contact_number' => '9455878985',
+                'email' => 'sample@yahoo.com'
+            ],
+            [ 
+                'reference_no' => '7490505555',
+                'name' => 'SM Sto. Tomas Batangas',
+                'short_name' => 'SM STB',
+                'address' => '198 PUROK 3 ACAPULCO ST',
+                'contact_number' => '9455878985',
+                'email' => 'sample@yahoo.com'
+            ],
+            [ 
+                'reference_no' => '7490505666',
+                'name' => 'Suzuki Philippines',
+                'short_name' => 'Suzuki',
+                'address' => '198 PUROK 3 ACAPULCO ST',
+                'contact_number' => '9455878985',
                 'email' => 'sample@yahoo.com'
             ]
         ];

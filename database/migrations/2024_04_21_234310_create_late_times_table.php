@@ -15,11 +15,13 @@ class CreateLateTimesTable extends Migration
     {
         Schema::create('late_times', function (Blueprint $table) {
             $table->id();
-            $table->integer('deployment_id')->unsigned()->index();
+            $table->unsignedBigInteger('deployment_id')->index();
             $table->time('duration');
             $table->date('latetime_date');
-            $table->integer('creator_id')->unsigned()->index();
-            $table->integer('updater_id')->unsigned()->index();
+            $table->unsignedBigInteger('attendance_id')->index();
+            $table->unsignedBigInteger('creator_id')->index();
+            $table->unsignedBigInteger('updater_id')->index();
+            $table->foreign('attendance_id')->references('id')->on('attendances')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
