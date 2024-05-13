@@ -109,7 +109,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                         <a href="{{ route('best-performer.index')}}" class="nav-link {{ (request()->is('best-performer*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fas fa-user-tie"></i>
                             <p>Best Performer Report</p>
                         </a>

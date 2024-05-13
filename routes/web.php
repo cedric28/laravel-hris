@@ -103,6 +103,11 @@ Route::middleware('auth')->group(function () {
     Route::post('perfect-attendance/fetch/q', 'PerfectAttendance\PerfectAttendanceFetchController@fetchPerfectAttendance')->name('activePerfectAttendance');
     Route::get('generate-pdf-perfect-attendance', 'PDF\PDFController@generateSalesMonthly')->name('generateSalesMonthly');
 
+
+
+    //Best Performer
+    Route::resource('/best-performer', 'BestPerformer\BestPerformerController');
+    Route::post('best-performer/fetch/q', 'BestPerformer\BestPerformerFetchController@fetchBestPerformer')->name('activeBestPerformer');
     
     //Logs
     Route::resource('logs', 'Logs\LogController');

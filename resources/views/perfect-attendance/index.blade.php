@@ -23,7 +23,7 @@
 					  <div class="card">
               <div class="card-header">
                   <div class="row">
-                  <h3 class="card-title">For the Month of {{ $currentMonth }} {{  $year }}</h3>
+                  <h3 class="card-title">For the Month of <strong>{{ $currentMonth }} {{  $year }} </strong></h3>
                   </div>
               </div>
 						<!-- /.card-header -->

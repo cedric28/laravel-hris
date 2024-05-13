@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Perfect Attendance</h1>
+            <h1>Best Performer</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item">Perfect Attendance</li>
+              <li class="breadcrumb-item">Best Performer</li>
             </ol>
           </div>
         </div>
@@ -23,7 +23,7 @@
 					  <div class="card">
               <div class="card-header">
                   <div class="row">
-                  <h3 class="card-title">Attendance for the Month of {{ $currentMonth }} {{  $year }}</h3>
+                  <h3 class="card-title">Best Performer for the Month of <strong>{{ $currentMonth }} {{  $year }} </strong></h3>
                   </div>
               </div>
 						<!-- /.card-header -->
