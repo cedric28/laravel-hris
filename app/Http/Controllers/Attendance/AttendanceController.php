@@ -137,7 +137,7 @@ class AttendanceController extends Controller
               |---------------------------------------------*/
               \DB::commit();
   
-              return redirect()->route('attendance.edit', $deployment->id)->with('successMsg', 'Attendace Data Save Successful');
+              return redirect()->route('attendance.edit', $deployment->id)->with('successMsg', 'Attendance Data Save Successful');
           } catch (\Exception $e) {
               //if error occurs rollback the data from it's previos state
               \DB::rollback();

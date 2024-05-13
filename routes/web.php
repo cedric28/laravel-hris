@@ -96,6 +96,13 @@ Route::middleware('auth')->group(function () {
 
     //Late
     Route::post('late/fetch/q', 'Late\LateFetchController@fetchLate')->name('activeLate');
+
+
+    //Perfect Attendance
+    Route::get('generate-pdf-perfect-attendance', 'PDF\PDFController@generateSalesMonthly')->name('generateSalesMonthly');
+    Route::resource('/perfect-attendance', 'PerfectAttendance\PerfectAttendanceController');
+    Route::post('perfect-attendance/fetch/q', 'PerfectAttendance\PerfectAttendanceFetchController@fetchPerfectAttendance')->name('activePerfectAttendance');
+
     
     //Logs
     Route::resource('logs', 'Logs\LogController');
