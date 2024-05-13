@@ -38,10 +38,12 @@
                               <tr style="text-align:center;">
                                   <th>FULLNAME</th>
                                   <th>COMPANY</th>
+                                  <th>aCTION</th>
                               </tr>
                           </thead>
                           <tbody>
                               <tr>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                               </tr>

@@ -149,7 +149,8 @@
                 })
 
                 $('#startdate').datetimepicker({
-                format: 'L'
+                format: 'L',
+                daysOfWeekDisabled: [0, 6]
             });
 
 var tableActiveLeaves = $('#employee_leaves').DataTable({
