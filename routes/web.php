@@ -108,6 +108,13 @@ Route::middleware('auth')->group(function () {
     //Best Performer
     Route::resource('/best-performer', 'BestPerformer\BestPerformerController');
     Route::post('best-performer/fetch/q', 'BestPerformer\BestPerformerFetchController@fetchBestPerformer')->name('activeBestPerformer');
+
+    //Disciplinary
+    Route::resource('/disciplinary', 'Disciplinary\DisciplinaryController');
+    Route::post('disciplinary/fetch/q', 'Disciplinary\DisciplinaryFetchController@fetchDisciplinary')->name('activeDisciplinary');
+    Route::post('inactive-disciplinary/fetch/q', 'Disciplinary\DisciplinaryFetchController@fetchInactiveAttendace')->name('InactiveDisciplinary');
+    Route::get('disciplinary/destroy/{id}', 'Disciplinary\DisciplinaryController@destroy');
+    Route::get('disciplinary/restore/{id}', 'Disciplinary\DisciplinaryController@restore');
     
     //Logs
     Route::resource('logs', 'Logs\LogController');
