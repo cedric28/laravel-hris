@@ -10,14 +10,6 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Notifications Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-bell"></i>
-        
-          <span class="badge badge-warning navbar-badge">0</span>
-        
-        </a>
-      </li>
 	    <li class="nav-item d-none d-sm-inline-block">
         <a data-close="true" onclick="event.preventDefault();  document.getElementById('logout-form').submit();" class="nav-link">Logout</a>
       </li>
