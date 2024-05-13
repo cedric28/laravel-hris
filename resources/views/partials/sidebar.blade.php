@@ -103,7 +103,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                     <a href="{{ route('perfect-attendance.index')}}" class="nav-link {{ (request()->is('perfect-attendance*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fas fa-calendar"></i>
                             <p>Perfect Attendance Report</p>
                         </a>

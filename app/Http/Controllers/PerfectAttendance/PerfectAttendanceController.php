@@ -4,6 +4,8 @@ namespace App\Http\Controllers\PerfectAttendance;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator, Hash, DB;
+use Carbon\Carbon;
 
 class PerfectAttendanceController extends Controller
 {
@@ -14,7 +16,13 @@ class PerfectAttendanceController extends Controller
      */
     public function index()
     {
-        //
+        $currentMonth = Carbon::now()->monthName;
+        $year = Carbon::now()->year;
+
+        return view("perfect-attendance.index", [
+            'currentMonth' => $currentMonth,
+            'year' => $year
+        ]);
     }
 
     /**
