@@ -83,6 +83,14 @@ Route::middleware('auth')->group(function () {
     Route::get('attendance/destroy/{id}', 'Attendance\AttendanceController@destroy');
     Route::get('attendance/restore/{id}', 'Attendance\AttendanceController@restore');
 
+
+    //OverTime
+    Route::resource('/overtime', 'OverTime\OverTimeController');
+    Route::post('overtime/fetch/q', 'OverTime\OverTimeFetchController@fetchOverTime')->name('activeOverTime');
+    Route::post('inactive-overtime/fetch/q', 'OverTime\OverTimeFetchController@fetchInactiveAttendace')->name('InactiveOverTime');
+    Route::get('overtime/destroy/{id}', 'OverTime\OverTimeController@destroy');
+    Route::get('overtime/restore/{id}', 'OverTime\OverTimeController@restore');
+
     //Salary
     Route::resource('/salary', 'Salary\SalaryController');
 

@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OverTime extends Model
 {
     use SoftDeletes;
+    
+    public function deployment() {
+        return $this->belongsTo(Deployment::class)->withTrashed();
+    }
 }

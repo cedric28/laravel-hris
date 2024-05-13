@@ -137,7 +137,7 @@ class AttendanceController extends Controller
               |---------------------------------------------*/
               \DB::commit();
   
-              return redirect()->route('attendance.edit', $deployment->id);
+              return redirect()->route('attendance.edit', $deployment->id)->with('successMsg', 'Attendace Data Save Successful');
           } catch (\Exception $e) {
               //if error occurs rollback the data from it's previos state
               \DB::rollback();
@@ -269,31 +269,5 @@ class AttendanceController extends Controller
 
         // Return late time duration in minutes
         return $lateTimeDuration;
-    }
-
-
-    public function computeOverTimeDuration($schedule, $timeIn, $timeOut)
-    {
-        // Validate input times
-        if ($timeIn < $schedule->time_out) {
-            throw new \InvalidArgumentException('Over Time-in cannot be less than schedule time out');
-        }
-
-        if ($timeOut <= $timeIn) {
-            throw new \InvalidArgumentException('Over Time-out must be greater than Over Time-in');
-        }
-
-        // Convert times to Carbon instances for easy manipulation
-        $scheduleTimeOut = Carbon::parse($schedule->time_out);
-        $timeInCarbon = Carbon::parse($timeIn);
-
-        // Compute late time duration
-        $overTimeDuration = 0;
-        if ($timeInCarbon > $scheduleTimeOut) {
-            $overTimeDuration = $timeInCarbon->diffInMinutes($scheduleTimeOut);
-        }
-
-        // Return late time duration in minutes
-        return $overTimeDuration;
     }
 }

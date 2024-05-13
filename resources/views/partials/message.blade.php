@@ -18,3 +18,12 @@
 @endif
 
 
+@if (session('errorMsg'))
+    <div class="alert alert-danger alert-dismissible fade show">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        {{ session('errorMsg') }}
+    </div>
+@endif
+

@@ -92,6 +92,7 @@ class DeploymentFetchController extends Controller
 				$nestedData['action'] = '
 					<button name="compensation" id="compensation" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Compensation</button>
 						<button name="attendance" id="attendance" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Attendance</button>
+						<button name="overtime" id="overtime" data-id="' . $r->id . '" class="btn bg-gradient-dark btn-sm">Overtime</button>
 						<button name="leaves" id="leaves" data-id="' . $r->id . '" class="btn bg-gradient-secondary btn-sm">Leaves</button>
 						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
 						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>

@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Attendance - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
+            <h1>Overtime - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('deployment.index')}}">Employees</a></li>
-			    <li class="breadcrumb-item">Attendance Details</li>
+			    <li class="breadcrumb-item">Overtime Details</li>
             </ol>
           </div>
         </div>
@@ -19,26 +19,26 @@
     </section>
 	<section class="content">
       	<div class="container-fluid">
-			<div class="row">
+            <div class="row">
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
 							@include('partials.message')
 							@include('partials.errors')
-                            <h3 class="card-title">Attendance Form</h3>
-                            <a type="button" href="{{ route('overtime.edit', $deployment->id )}}" class="btn bg-gradient-success float-right"><i class="fas fa-clock mr-2"></i> File Overtime</a>
+							<h3 class="card-title">Overtime Form</h3>
+						    <a type="button" href="{{ route('attendance.edit', $deployment->id )}}" class="btn bg-gradient-success float-right"><i class="fas fa-calendar mr-2"></i> File Attendance</a>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<form action="{{ route('attendance.store')}}" method="POST">
+							<form action="{{ route('overtime.store')}}" method="POST">
 								@csrf
 								    <input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Attendance Date</label>
+                                        <label class="col-lg-3 col-form-label">Date</label>
                                         <div class="col-lg-9">	
-                                            <div class="input-group date" id="attendance_date" data-target-input="nearest">
-                                                <input type="text" name="attendance_date"  value="{{ old('attendance_date') }}" class="form-control datetimepicker-input" data-target="#attendance_date"/>
-                                                <div class="input-group-append" data-target="#attendance_date" data-toggle="datetimepicker">
+                                            <div class="input-group date" id="overtime_date" data-target-input="nearest">
+                                                <input type="text" name="overtime_date"  value="{{ old('overtime_date') }}" class="form-control datetimepicker-input" data-target="#overtime_date"/>
+                                                <div class="input-group-append" data-target="#overtime_date" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
                                             </div>
@@ -46,11 +46,11 @@
                                     </div>
                                 
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Attendance Time In</label>
+                                        <label class="col-lg-3 col-form-label">Time In</label>
                                         <div class="col-lg-9">	
-                                            <div class="input-group date" id="attendance_time" data-target-input="nearest">
-                                                <input type="text" name="attendance_time"  value="{{ old('attendance_time') }}" class="form-control datetimepicker-input" data-target="#attendance_time">
-                                                <div class="input-group-append" data-target="#attendance_time" data-toggle="datetimepicker">
+                                            <div class="input-group date" id="overtime_in" data-target-input="nearest">
+                                                <input type="text" name="overtime_in"  value="{{ old('overtime_in') }}" class="form-control datetimepicker-input" data-target="#overtime_in">
+                                                <div class="input-group-append" data-target="#overtime_in" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                             </div>
@@ -58,11 +58,11 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Attendance Time Out</label>
+                                        <label class="col-lg-3 col-form-label">Time Out</label>
                                         <div class="col-lg-9">	
-                                            <div class="input-group date" id="attendance_out" data-target-input="nearest">
-                                                <input type="text" name="attendance_out"  value="{{ old('attendance_out') }}" class="form-control datetimepicker-input" data-target="#attendance_out">
-                                                <div class="input-group-append" data-target="#attendance_out" data-toggle="datetimepicker">
+                                            <div class="input-group date" id="overtime_out" data-target-input="nearest">
+                                                <input type="text" name="overtime_out"  value="{{ old('overtime_out') }}" class="form-control datetimepicker-input" data-target="#overtime_out">
+                                                <div class="input-group-append" data-target="#overtime_out" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                             </div>
@@ -80,64 +80,34 @@
                                     <div class="card card-primary">
                                         <div class="card-header">
                                             <h4 class="card-title w-100">
-                                                <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseAttendance" aria-expanded="true">
-                                                   Attendance Log
+                                                <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseOverTime" aria-expanded="true">
+                                                    Overtime Log
                                                 </a>
                                             </h4>
                                         </div>
                                     
-                                        <div id="collapseAttendance" class="collapse show" data-parent="#accordion" style="">
+                                        <div id="collapseOverTime" class="collapse show" data-parent="#accordion" style="">
                                             <div class="card-body">
-                                               <table class="table table-hover table-striped" id="employee_attendances">
-                                                    <thead>
+                                               <table class="table table-hover table-striped" id="employee_overtime">
+                                                        <thead>
                                                         <tr style="text-align:center;">
-                                                            <th>ATTENDANCE DATE </th>
-                                                            <th>ATTENDANCE TIME IN</th>
-                                                            <th>ATTENDANCE TIME OUT</th>
-                                                            <th>ACTION</th>
+                                                            <th>DATE</th>
+                                                            <th>DURATION </th>
+                                                             <th>ACTION</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($deployment->attendances as $attendance)
+                                                        
+                                                            @foreach ($deployment->overtimes as $time)
                                                             <tr style="text-align:center;">
-                                                                <td>{{ $attendance->attendance_date }}</td>
-                                                                <td>{{ $attendance->attendance_time }}</td>
-                                                                <td>{{ $attendance->attendance_out }}</td>
+                                                                <td>{{ $time->overtime_date }}</td>
+                                                                <td>{{ $time->duration }}</td>
                                                                 <td>
                                                                                             
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-                                                    </tbody>
-                                                </table>       
-                                            </div>
-                                        </div>
-                                    </div>
-                                      <div class="card card-warning">
-                                        <div class="card-header">
-                                            <h4 class="card-title w-100">
-                                                <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseLate" aria-expanded="true">
-                                                   Tardiness Log
-                                                </a>
-                                            </h4>
-                                        </div>
-                                    
-                                        <div id="collapseLate" class="collapse show" data-parent="#accordion" style="">
-                                            <div class="card-body">
-                                               <table class="table table-hover table-striped" id="employee_late">
-                                                    <thead>
-                                                        <tr style="text-align:center;">
-                                                            <th>DATE</th>
-                                                            <th>DURATION </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($lates as $late)
-                                                            <tr style="text-align:center;">
-                                                                <td>{{ $late->latetime_date }}</td>
-                                                                <td>{{ $late->duration }}</td>                                    
-                                                            </tr>
-                                                        @endforeach
+                                                       
                                                     </tbody>
                                                 </table>       
                                             </div>
@@ -187,19 +157,20 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
 		<script>
-            $(`#attendance_time`).datetimepicker({
+            $(`#overtime_in`).datetimepicker({
                 format: 'LT'
             })
 
-             $(`#attendance_out`).datetimepicker({
+             $(`#overtime_out`).datetimepicker({
                 format: 'LT'
             })
 
-            $(`#attendance_date`).datetimepicker({
+
+            $(`#overtime_date`).datetimepicker({
                 format: 'L'
             });
 
-var tableActiveAttendances = $('#employee_attendances').DataTable({
+var tableActiveOverTime = $('#employee_overtime').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -207,7 +178,7 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url":"<?= route('activeAttendance') ?>",
+                    "url":"<?= route('activeOverTime') ?>",
                     "dataType":"json",
                     "type":"POST",
                     "data":{
@@ -223,21 +194,21 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Employee Attendances-List',
+                                'title' : 'Employee OverTime-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Employee Attendances-List',
+                                'title' : 'Employee OverTime-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Employee Attendances-List',
+                                'title' : 'Employee OverTime-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
@@ -246,9 +217,8 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                     }
                 ],
                 "columns":[
-                    {"data":"attendance_date"},
-                    {"data":"attendance_time"},
-                      {"data":"attendance_out"},
+                    {"data":"overtime_date"},
+                    {"data":"duration"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
                 "columnDefs": [{
@@ -258,71 +228,17 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
             });
             
 
-            var tableActiveLate = $('#employee_late').DataTable({
-				"responsive": true, 
-				"lengthChange": false, 
-				"autoWidth": false,
-      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    "url":"<?= route('activeLate') ?>",
-                    "dataType":"json",
-                    "type":"POST",
-                    "data":{
-                        "_token":"<?= csrf_token() ?>",
-                        "deployment_id": "<?= $deployment->id ?>"
-                    }
-                },
-                "dom": 'Bfrtip',
-                "buttons": [
-                    {
-                        "extend": 'collection',
-                        "text": 'Export',
-                        "buttons": [
-                            {
-                                "extend": 'csv',
-                                'title' : 'Employee Late Log',
-                                "exportOptions": {
-                                    "columns": [0,1]
-                                }
-                            },
-                            {
-                                "extend": 'pdf',
-                                'title' : 'Employee Late Log',
-                                "exportOptions": {
-                                    "columns": [0,1]
-                                }
-                            },
-                            {
-                                "extend": 'print',
-                                'title' :  'Employee Late Log',
-                                "exportOptions": {
-                                    "columns": [0,1]
-                                }
-                            }
-                        ],
-                    }
-                ],
-                "columns":[
-                    {"data":"latetime_date"},
-                    {"data":"duration"}
-                ],
-                "columnDefs": [{
-					"targets": [0,1],   // target column
-					"className": "textCenter",
-				}]
-            });
+        
 
-             var attendance_id;
+             var overtime_id;
             $(document).on('click', '#delete', function(){
-                attendance_id = $(this).attr('data-id');
+                overtime_id = $(this).attr('data-id');
                 $('#confirmModal').modal('show');
             });
 
             $('#ok_button').click(function(){
                 $.ajax({
-                    url:"/attendance/destroy/"+attendance_id,
+                    url:"/overtime/destroy/"+overtime_id,
                     beforeSend:function(){
                         $('#ok_button').text('Deleting...');
                     },
@@ -330,8 +246,7 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                     {
                         setTimeout(function(){
                             $('#confirmModal').modal('hide');
-                            tableActiveAttendances.ajax.reload();
-                            tableActiveLate.ajax.reload();
+                            tableActiveOverTime.ajax.reload();
                         }, 2000);
                     }
                 })

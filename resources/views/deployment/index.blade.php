@@ -328,6 +328,11 @@
                 window.location.href = `/leaves/${userId}/edit`;
             });
 
+            $(document).on('click', '#overtime', function(){
+                userId = $(this).attr('data-id');
+                window.location.href = `/overtime/${userId}/edit`;
+            });
+
             $('#restore_button').click(function(){
                 $.ajax({
                     url:"deployment/restore/"+userId,

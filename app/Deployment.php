@@ -36,6 +36,11 @@ class Deployment extends Model
         return $this->hasMany(Attendance::class,'deployment_id','id')->withTrashed();
     }
 
+    public function overtimes()
+    {
+        return $this->hasMany(OverTime::class,'deployment_id','id')->withTrashed();
+    }
+
     public function salary() {
         return $this->belongsTo(Salary::class)->withTrashed();
     }
