@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Deployment;
+use App\Employee;
+use App\Client;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -28,7 +31,24 @@ class HomeController extends Controller
         $now = Carbon::now();
         $yearNow =  $now->year;
 
+        $user = User::count();
+        $totalEmployees = Deployment::where('status','new')->whereYear('start_date', $yearNow)->count();
+        $totalApplicants = Employee::count();
+        $totalClients = Client::count();
+
         $this->authorize("isAdmin");
-        return view('home');
+        
+        return view('home',[
+            "user" => $user,
+            "product" => [],
+            "supplier" => [],
+            'totalAmountDue' => [],
+            'year' => $yearNow,
+            'salesPerYear' => [],
+            'salesPerMonth' => [],
+            'totalEmployees' => $totalEmployees,
+            'totalApplicants' => $totalApplicants,
+            'totalClients' => $totalClients
+        ]);
     }
 }

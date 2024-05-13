@@ -23,34 +23,34 @@
 					  <div class="card">
               <div class="card-header">
                   <div class="row">
-                  <h3 class="card-title">Attendance for the Month of {{ $currentMonth }} {{  $year }}</h3>
+                  <h3 class="card-title">For the Month of {{ $currentMonth }} {{  $year }}</h3>
                   </div>
               </div>
 						<!-- /.card-header -->
 						<div class="card-body">
-                            <div class="card card-primary card-outline card-outline-tabs">
-                                <div class="card-header p-0 border-bottom-0">
-                                   
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-hover table-striped" id="logs">
-                                        <thead>
-                                            <tr style="text-align:center;">
-                                                <th>FULLNAME</th>
-                                                <th>COMPANY</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                          
-                                           <tr>
-                                             <td></td>
-                                             <td></td>
-                                           </tr>
-                                          
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+              <div class="card card-primary card-outline card-outline-tabs">
+                  <div class="card-header p-0 border-bottom-0">
+                      
+                  </div>
+                  <div class="card-body">
+                      <table class="table table-hover table-striped" id="logs">
+                          <thead>
+                              <tr style="text-align:center;">
+                                  <th>FULLNAME</th>
+                                  <th>COMPANY</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            
+                              <tr>
+                                <td></td>
+                                <td></td>
+                              </tr>
+                            
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
 						</div>
 						<!-- /.card-body -->
 						<div class="card-footer clearfix">

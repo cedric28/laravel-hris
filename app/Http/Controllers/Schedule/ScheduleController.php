@@ -94,7 +94,6 @@ class ScheduleController extends Controller
  
              //save schedule
              $schedule = new Schedule();
-             // $employee->reference_no = $this->generateUniqueCode();
              $schedule->deployment_id = $request->deployment_id;
              $schedule->slug = $request->slug;
              $schedule->time_in = Carbon::parse($request->time_in)->format('H:i:s');
