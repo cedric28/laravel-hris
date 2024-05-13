@@ -33,7 +33,7 @@
                       
                   </div>
                   <div class="card-body">
-                      <table class="table table-hover table-striped" id="logs">
+                      <table class="table table-hover table-striped" id="perfect_attendance">
                           <thead>
                               <tr style="text-align:center;">
                                   <th>FULLNAME</th>
@@ -41,7 +41,6 @@
                               </tr>
                           </thead>
                           <tbody>
-                            
                               <tr>
                                 <td></td>
                                 <td></td>
@@ -79,7 +78,65 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 		<script>
+       var table = $('#perfect_attendance').DataTable({
+				"responsive": true, 
+				"lengthChange": false, 
+				"autoWidth": false,
+      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activePerfectAttendance') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{"_token":"<?= csrf_token() ?>"}
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' :  'Employees-List Perfect Attendance',
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' :  'Employees-List Perfect Attendance',
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : 'Employees-List Perfect Attendance',
+                                "exportOptions": {
+                                    "columns": [0,1]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"fullname"},
+                    {"data":"company"},
+                    {"data":"action","searchable":false,"orderable":false}
+                ],
+                "columnDefs": [{
+					"targets": [1],   // target column
+					"className": "textCenter",
+				}]
+      });
 
+
+      	$(document).on('click', '#generate_pdf', function(){
+          var deploymentId = $(this).attr('data-id');
+          window.location.href = 'generate-pdf-perfect-attendance/'+deploymentId;
+        });
           
 
 		</script>

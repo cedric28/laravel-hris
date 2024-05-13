@@ -101,7 +101,7 @@ Route::middleware('auth')->group(function () {
     //Perfect Attendance
     Route::resource('/perfect-attendance', 'PerfectAttendance\PerfectAttendanceController');
     Route::post('perfect-attendance/fetch/q', 'PerfectAttendance\PerfectAttendanceFetchController@fetchPerfectAttendance')->name('activePerfectAttendance');
-    Route::get('generate-pdf-perfect-attendance', 'PDF\PDFController@generateSalesMonthly')->name('generateSalesMonthly');
+    Route::get('generate-pdf-perfect-attendance/{id}', 'PDF\PDFController@generateSalesMonthly')->name('generateSalesMonthly');
 
 
 

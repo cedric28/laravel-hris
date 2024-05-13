@@ -4,26 +4,28 @@ namespace App\Http\Controllers\PerfectAttendance;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Deployment;
+use Validator, Hash, DB;
+use Carbon\Carbon;
 
 class PerfectAttendanceFetchController extends Controller
 {
-    public function fetchPerfectAttendance(Request $request)
+ public function fetchPerfectAttendance(Request $request)
 	{
+		$currentMonth = Carbon::now()->month;
 		//column list in the table Prpducts
 		$columns = array(
-			0 => 'attendance_date',
-			1 => 'attendance_time',
-			2 => 'attendance_out',
-			3 => 'action'
+			0 => 'fullname',
+			1 => 'company',
+			2 => 'action'
 		);
 
-        $deployment_id = $request->deployment_id;
-
 		//get the total number of data in User table
-		$totalData = Attendance::where([
-            ['attendances.deployment_id', $deployment_id],
-            ['attendances.deleted_at', '=', null]
-        ])->count();
+		$totalData = Deployment::where([
+			['deployments.deleted_at', '=', null]
+])->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+	$query->whereMonth('created_at', $currentMonth);
+})->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -36,48 +38,65 @@ class PerfectAttendanceFetchController extends Controller
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
-			$posts = Attendance::select('attendances.attendance_date','attendances.attendance_time','attendances.attendance_out','attendances.id as id')
+			$posts = Deployment::select('deployments.id as id','employees.name as fullname', 'clients.name as company')
+																->join('employees', 'deployments.employee_id', '=', 'employees.id')
+																->join('clients', 'deployments.client_id', '=', 'clients.id')
                 ->where([
-                    ['attendances.deployment_id', $deployment_id],
-                    ['attendances.deleted_at', '=', null]
+                    ['deployments.deleted_at', '=', null]
                 ])
-				->offset($start)
-				->limit($limit)
-				->orderBy($order, $dir)
-				->get();
+																->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+																	$query->whereMonth('created_at', $currentMonth);
+																})
+															->offset($start)
+															->limit($limit)
+															->orderBy($order, $dir)
+															->get();
 
 			//total number of filtered data
-			$totalFiltered = Attendance::where([
-                ['attendances.deployment_id', $deployment_id],
-                ['attendances.deleted_at', '=', null]
-            ])->count();
+			$totalFiltered = Deployment::where([
+                ['deployments.deleted_at', '=', null]
+            ])->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+																				$query->whereMonth('created_at', $currentMonth);
+																			})->count();
 		} else {
 			$search = $request->input('search.value');
 
-			$posts = Attendance::where(function ($query) use ($search) {
-                $query->orWhere('attendance_date', 'like', "%{$search}%")
-					->orWhere('attendance_time', 'like', "%{$search}%")
-					->orWhere('attendance_out', 'like', "%{$search}%");
-			})
-            ->where([
-                ['attendances.deployment_id', $deployment_id],
-                ['attendances.deleted_at', '=', null]
+			$posts =	Deployment::select('deployments.id as id','employees.name as fullname', 'clients.name as company')
+												->join('employees', 'deployments.employee_id', '=', 'employees.id')
+												->join('clients', 'deployments.client_id', '=', 'clients.id')
+												->whereHas('employee', function ($query) use ($search) {
+															$query->where('name', 'like', "%{$search}%");
+													})
+													->orWhereHas('client', function ($query) use ($search) {
+															$query->where('name', 'like', "%{$search}%");
+													})
+													->where([
+														['deployments.deleted_at', '=', null]
             ])
+												->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+															$query->whereMonth('created_at', $currentMonth);
+													})
             ->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
 
 			//total number of filtered data matching the search value request in the Supplier table	
-			$totalFiltered = Attendance::where(function ($query) use ($search) {
-                $query->orWhere('attendance_date', 'like', "%{$search}%")
-																->orWhere('attendance_time', 'like', "%{$search}%")
-																->orWhere('attendance_out', 'like', "%{$search}%");
-												})
-            ->where([
-                ['attendances.deployment_id', $deployment_id],
-                ['attendances.deleted_at', '=', null]
-            ])->count();
+			$totalFiltered = Deployment::select('deployments.id as id','employees.name as fullname', 'clients.name as company')
+																				->join('employees', 'deployments.employee_id', '=', 'employees.id')
+																				->join('clients', 'deployments.client_id', '=', 'clients.id')
+																				->whereHas('employee', function ($query) use ($search) {
+																						$query->where('name', 'like', "%{$search}%");
+																				})
+																				->orWhereHas('client', function ($query) use ($search) {
+																						$query->where('name', 'like', "%{$search}%");
+																				})
+																				->where([
+																					['deployments.deleted_at', '=', null]
+																			])
+																			->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+																				$query->whereMonth('created_at', $currentMonth);
+																			})->count();
 		}
 
 
@@ -86,11 +105,10 @@ class PerfectAttendanceFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['attendance_date'] = date('d-m-Y', strtotime($r->attendance_date));
-				$nestedData['attendance_time'] = Carbon::parse( $r->attendance_time)->format('g:i A');
-				$nestedData['attendance_out'] =  Carbon::parse($r->attendance_out)->format('g:i A');
+				$nestedData['fullname'] = $r->fullname;
+				$nestedData['company'] = $r->company;
 				$nestedData['action'] = '
-						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
+						<button name="generate_pdf" id="generate_pdf" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Generate Certificate</button>
 					';
 				$data[] = $nestedData;
 			}
