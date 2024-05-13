@@ -12,6 +12,7 @@ class PerfectAttendanceFetchController extends Controller
 {
  public function fetchPerfectAttendance(Request $request)
 	{
+		$current_month = now()->startOfMonth()->format('Y-m');
 		$currentMonth = Carbon::now()->month;
 		//column list in the table Prpducts
 		$columns = array(
@@ -21,11 +22,16 @@ class PerfectAttendanceFetchController extends Controller
 		);
 
 		//get the total number of data in User table
-		$totalData = Deployment::where([
+		$totalData = Deployment::whereHas('attendances', function ($query) use ($current_month) {
+			$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+							->whereNotIn('day_of_week', [6, 0]);
+		})
+	->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+		$query->whereMonth('created_at', $currentMonth);
+	})
+->where([
 			['deployments.deleted_at', '=', null]
-])->whereDoesntHave('lates', function ($query) use ($currentMonth) {
-	$query->whereMonth('created_at', $currentMonth);
-})->count();
+])->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -41,23 +47,32 @@ class PerfectAttendanceFetchController extends Controller
 			$posts = Deployment::select('deployments.id as id','employees.name as fullname', 'clients.name as company')
 																->join('employees', 'deployments.employee_id', '=', 'employees.id')
 																->join('clients', 'deployments.client_id', '=', 'clients.id')
-                ->where([
-                    ['deployments.deleted_at', '=', null]
-                ])
+																->whereHas('attendances', function ($query) use ($current_month) {
+																	$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+																					->whereNotIn('day_of_week', [6, 0]);
+																})
 																->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 																	$query->whereMonth('created_at', $currentMonth);
 																})
+                ->where([
+                    ['deployments.deleted_at', '=', null]
+                ])
 															->offset($start)
 															->limit($limit)
 															->orderBy($order, $dir)
 															->get();
 
 			//total number of filtered data
-			$totalFiltered = Deployment::where([
-                ['deployments.deleted_at', '=', null]
-            ])->whereDoesntHave('lates', function ($query) use ($currentMonth) {
-																				$query->whereMonth('created_at', $currentMonth);
-																			})->count();
+			$totalFiltered = Deployment::whereHas('attendances', function ($query) use ($current_month) {
+							$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+											->whereNotIn('day_of_week', [6, 0]);
+						})
+						->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+							$query->whereMonth('created_at', $currentMonth);
+						})
+						->where([
+										['deployments.deleted_at', '=', null]
+						])->count();
 		} else {
 			$search = $request->input('search.value');
 
@@ -70,12 +85,16 @@ class PerfectAttendanceFetchController extends Controller
 													->orWhereHas('client', function ($query) use ($search) {
 															$query->where('name', 'like', "%{$search}%");
 													})
+													->orWhereHas('attendances', function ($query) use ($current_month) {
+														$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+																		->whereNotIn('day_of_week', [6, 0]);
+													})
+													->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+														$query->whereMonth('created_at', $currentMonth);
+													})
 													->where([
 														['deployments.deleted_at', '=', null]
             ])
-												->whereDoesntHave('lates', function ($query) use ($currentMonth) {
-															$query->whereMonth('created_at', $currentMonth);
-													})
             ->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
@@ -91,12 +110,17 @@ class PerfectAttendanceFetchController extends Controller
 																				->orWhereHas('client', function ($query) use ($search) {
 																						$query->where('name', 'like', "%{$search}%");
 																				})
+																				->orWhereHas('attendances', function ($query) use ($current_month) {
+																					$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+																									->whereNotIn('day_of_week', [6, 0]);
+																				})
+																				->whereDoesntHave('lates', function ($query) use ($currentMonth) {
+																					$query->whereMonth('created_at', $currentMonth);
+																				})
 																				->where([
 																					['deployments.deleted_at', '=', null]
 																			])
-																			->whereDoesntHave('lates', function ($query) use ($currentMonth) {
-																				$query->whereMonth('created_at', $currentMonth);
-																			})->count();
+																			->count();
 		}
 
 

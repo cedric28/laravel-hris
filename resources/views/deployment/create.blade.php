@@ -124,11 +124,13 @@
 				$('.select2').select2()
 				//Date picker
 				$('#startdate').datetimepicker({
-					format: 'L'
+						format: 'L',
+					 daysOfWeekDisabled: [0, 6]
 				});
 
 				$('#enddate').datetimepicker({
-					format: 'L'
+						format: 'L',
+					 daysOfWeekDisabled: [0, 6]
 				});
 			});
 		</script>

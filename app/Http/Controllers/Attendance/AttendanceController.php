@@ -98,12 +98,14 @@ class AttendanceController extends Controller
 
             //check current user
             $user = \Auth::user()->id;
-
+            $attendanceDate = Carbon::parse($request->attendance_date); 
+    
             //save attendance
             $attendance = new Attendance();
             $attendance->attendance_time = Carbon::parse($request->attendance_time)->format('H:i:s');
             $attendance->attendance_out = Carbon::parse($request->attendance_out)->format('H:i:s');
             $attendance->attendance_date = Carbon::parse($request->attendance_date)->format('Y-m-d');
+            $attendance->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
             $attendance->deployment_id = $request->deployment_id;
             $attendance->status = 1;
             $attendance->creator_id = $user;

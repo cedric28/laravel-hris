@@ -167,7 +167,8 @@
 
 
             $(`#overtime_date`).datetimepicker({
-                format: 'L'
+                format: 'L',
+                daysOfWeekDisabled: [0, 6]
             });
 
 var tableActiveOverTime = $('#employee_overtime').DataTable({

@@ -196,7 +196,8 @@
             })
 
             $(`#attendance_date`).datetimepicker({
-                format: 'L'
+                format: 'L',
+                daysOfWeekDisabled: [0, 6]
             });
 
 var tableActiveAttendances = $('#employee_attendances').DataTable({
