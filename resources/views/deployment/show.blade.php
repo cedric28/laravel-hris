@@ -52,7 +52,7 @@
 									<th>End Date</th>
 									<td>{{ $deployment->end_date }}</td>
 								</tr>
-
+							@if( $deployment->schedule)
 								<tr>
 									<th>Schedule</th>
 									<td>
@@ -64,8 +64,17 @@
 										TIME-OUT: {{ $deployment->schedule->time_out }}
 										</p>
 									</td>
+								</tr>
+							@else
+							<tr>
+									<th>Schedule</th>
+									<td>
+										<p>No Schedule</p>
+							
+									</td>
 								
 								</tr>
+								@endif
 								
 							</table>
 						</div>

@@ -119,8 +119,9 @@ class SalaryController extends Controller
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-
-          
+            
+            $salary->basic_salary = $request->basic_salary;
+            $salary->rate_base = $request->rate_base;
             $salary->sss = $request->sss;
             $salary->tax = $request->tax;
             $salary->pagibig = $request->pagibig;
