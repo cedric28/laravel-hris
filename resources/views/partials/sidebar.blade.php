@@ -97,7 +97,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                    <a href="{{ route('schedule.index')}}" class="nav-link {{ (request()->is('schedule*')) ? 'nav-link active' : '' }}">
+                    <a href="{{ route('for-regularization.index')}}" class="nav-link {{ (request()->is('for-regularization*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-clipboard"></i>
                             <p>For Regularization</p>
                         </a>

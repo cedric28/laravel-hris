@@ -156,7 +156,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url":"<?= route('activeSchedule') ?>",
+                    "url":"<?= route('activeFeedBack') ?>",
                     "dataType":"json",
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
@@ -169,21 +169,21 @@
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Schedules-List',
+                                'title' : 'Employee Feedback-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Schedules-List',
+                                'title' : 'Employee Feedback-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Schedules-List',
+                                'title' : 'Employee Feedback-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
@@ -192,8 +192,8 @@
                     }
                 ],
                 "columns":[
-                    {"data":"employee_name"},
-                    {"data":"company"},
+                    {"data":"fullname"},
+                    {"data":"client_name"},
                     {"data":"rate"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
@@ -211,7 +211,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url":"<?= route('InactiveSchedule') ?>",
+                    "url":"<?= route('InactiveFeedBack') ?>",
                     "dataType":"json",
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
@@ -224,21 +224,21 @@
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Schedules-List',
+                                 'title' : 'Employee Feedback-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Schedules-List',
+                                 'title' : 'Employee Feedback-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Schedules-List',
+                                 'title' : 'Employee Feedback-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
@@ -247,8 +247,8 @@
                     }
                 ],
                 "columns":[
-                    {"data":"employee_name"},
-                    {"data":"company"},
+                      {"data":"fullname"},
+                    {"data":"client_name"},
                     {"data":"rate"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],

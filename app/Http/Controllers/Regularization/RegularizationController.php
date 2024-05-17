@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Regularization;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator, Hash, DB;
+use Carbon\Carbon;
 
 class RegularizationController extends Controller
 {
@@ -14,7 +16,11 @@ class RegularizationController extends Controller
      */
     public function index()
     {
-        //
+        $year = Carbon::now()->year;
+
+        return view("for-regularization.index", [
+            'year' => $year
+        ]);
     }
 
     /**

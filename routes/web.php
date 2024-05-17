@@ -103,7 +103,9 @@ Route::middleware('auth')->group(function () {
     Route::post('perfect-attendance/fetch/q', 'PerfectAttendance\PerfectAttendanceFetchController@fetchPerfectAttendance')->name('activePerfectAttendance');
     Route::get('generate-pdf-perfect-attendance/{id}', 'PDF\PDFController@generateSalesMonthly')->name('generateSalesMonthly');
 
-
+    //For Regularization
+    Route::resource('/for-regularization', 'Regularization\RegularizationController');
+    Route::post('for-regularization/fetch/q', 'Regularization\RegularizationFetchController@fetchForRegularization')->name('activeForRegularization');
 
     //Best Performer
     Route::resource('/best-performer', 'BestPerformer\BestPerformerController');
@@ -112,7 +114,7 @@ Route::middleware('auth')->group(function () {
     //FeedBack
     Route::resource('/feedback', 'FeedBack\FeedBackController');
     Route::post('feedback/fetch/q', 'FeedBack\FeedBackFetchController@fetchFeedBack')->name('activeFeedBack');
-    Route::post('inactive-feedback/fetch/q', 'FeedBack\FeedBackFetchController@fetchInactiveAttendace')->name('InactiveFeedBack');
+    Route::post('inactive-feedback/fetch/q', 'FeedBack\FeedBackFetchController@fetchInactiveFeedBack')->name('InactiveFeedBack');
     Route::get('feedback/destroy/{id}', 'FeedBack\FeedBackController@destroy');
     Route::get('feedback/restore/{id}', 'FeedBack\FeedBackController@restore');
     
