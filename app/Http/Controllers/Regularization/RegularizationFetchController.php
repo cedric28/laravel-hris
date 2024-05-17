@@ -106,8 +106,7 @@ class RegularizationFetchController extends Controller
 				$nestedData['client_name'] = $r->company;
 				$nestedData['rate'] = $r->rate;
 				$nestedData['action'] = '
-						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
-						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
+                <button name="generate_pdf" id="generate_pdf" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Generate Certificate</button>
 					';
 				$data[] = $nestedData;
 			}
