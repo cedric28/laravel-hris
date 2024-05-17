@@ -8,6 +8,7 @@ use App\Attendance;
 use App\Deployment;
 use App\Log;
 use App\LateTime;
+use App\Schedule;
 use Validator, Hash, DB;
 use Carbon\Carbon;
 use App\Rules\TimeNotGreaterThan;
@@ -52,6 +53,13 @@ class AttendanceController extends Controller
           \DB::beginTransaction();
   
           try {
+
+            $schedule = Schedule::where('deployment_id',$request->deployment_id)->first();
+
+            if(!$schedule){
+                return back()->with("errorMsg", "Note: Please set a schedule first."); 
+            }
+
               $deployment = Deployment::withTrashed()->findOrFail($request->deployment_id);
             
               $rules = [
