@@ -31,6 +31,11 @@ class Deployment extends Model
         return $this->hasMany(Leave::class,'deployment_id','id')->withTrashed();
     }
 
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class,'deployment_id','id')->withTrashed();
+    }
+
     public function attendances()
     {
         return $this->hasMany(Attendance::class,'deployment_id','id')->withTrashed();

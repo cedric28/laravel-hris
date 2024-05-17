@@ -71,9 +71,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                         <a href="{{ route('disciplinary.index')}}" class="nav-link {{ (request()->is('disciplinary*')) ? 'nav-link active' : '' }}">
+                         <a href="{{ route('feedback.index')}}" class="nav-link {{ (request()->is('feedback*')) ? 'nav-link active' : '' }}">
                             <i class="nav-icon fas fa-user-times"></i>
-                            <p>Disciplinary</p>
+                            <p>Feedback</p>
                         </a>
                     </li>
                 </ul>

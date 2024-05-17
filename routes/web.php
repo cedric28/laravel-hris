@@ -109,12 +109,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('/best-performer', 'BestPerformer\BestPerformerController');
     Route::post('best-performer/fetch/q', 'BestPerformer\BestPerformerFetchController@fetchBestPerformer')->name('activeBestPerformer');
 
-    //Disciplinary
-    Route::resource('/disciplinary', 'Disciplinary\DisciplinaryController');
-    Route::post('disciplinary/fetch/q', 'Disciplinary\DisciplinaryFetchController@fetchDisciplinary')->name('activeDisciplinary');
-    Route::post('inactive-disciplinary/fetch/q', 'Disciplinary\DisciplinaryFetchController@fetchInactiveAttendace')->name('InactiveDisciplinary');
-    Route::get('disciplinary/destroy/{id}', 'Disciplinary\DisciplinaryController@destroy');
-    Route::get('disciplinary/restore/{id}', 'Disciplinary\DisciplinaryController@restore');
+    //FeedBack
+    Route::resource('/feedback', 'FeedBack\FeedBackController');
+    Route::post('feedback/fetch/q', 'FeedBack\FeedBackFetchController@fetchFeedBack')->name('activeFeedBack');
+    Route::post('inactive-feedback/fetch/q', 'FeedBack\FeedBackFetchController@fetchInactiveAttendace')->name('InactiveFeedBack');
+    Route::get('feedback/destroy/{id}', 'FeedBack\FeedBackController@destroy');
+    Route::get('feedback/restore/{id}', 'FeedBack\FeedBackController@restore');
     
     //Logs
     Route::resource('logs', 'Logs\LogController');
