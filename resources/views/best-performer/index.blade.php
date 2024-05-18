@@ -23,7 +23,7 @@
 					  <div class="card">
               <div class="card-header">
                   <div class="row">
-                  <h3 class="card-title">Best Performer for the Month of <strong>{{ $currentMonth }} {{  $year }} </strong></h3>
+                  <h3 class="card-title">Best Performer of the year <strong> {{  $year }} </strong></h3>
                   </div>
               </div>
 						<!-- /.card-header -->
@@ -33,11 +33,12 @@
                                    
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-hover table-striped" id="logs">
+                                    <table class="table table-hover table-striped" id="best-performer">
                                         <thead>
                                             <tr style="text-align:center;">
                                                 <th>FULLNAME</th>
                                                 <th>COMPANY</th>
+                                                <th>RATE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -78,10 +79,74 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-		<script>
+			<script>
 
-          
+            var table = $('#best-performer').DataTable({
+				"responsive": true, 
+				"lengthChange": false, 
+				"autoWidth": false,
+      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activeBestPerformer') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{"_token":"<?= csrf_token() ?>"}
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Employee For Best-Peformer-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                               'title' : 'Employee For Best-Peformer-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                               'title' : 'Employee For Best-Peformer-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"fullname"},
+                    {"data":"client_name"},
+                    {"data":"rate"},
+                    {"data":"action","searchable":false,"orderable":false}
+                ],
+                "columnDefs": [{
+					"targets": [0,1,2],   // target column
+					"className": "textCenter",
+				}]
+            });
 
+			$(document).on('click', '#generate_pdf', function(){
+                var feedbackId = $(this).attr('data-id');
+                window.location.href = 'generate-certificate-regularization/'+feedbackId;
+            })
+
+            
+            $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+                $('.table:visible').each( function(e) {
+                    $(this).DataTable().columns.adjust().responsive.recalc();
+                });
+            });
 		</script>
         @endpush('scripts')
 @endsection

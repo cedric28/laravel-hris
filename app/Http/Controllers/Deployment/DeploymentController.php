@@ -176,12 +176,28 @@ class DeploymentController extends Controller
         $employmentTypes = EmploymentType::all();
         $clients = Client::all();
         $employees = Employee::all();
+
+        $statuses = [ 
+            [ 
+                'name' => 'new'
+            ],
+            [
+                'name' => 'regular'
+            ],
+            [
+                'name' => 'end'
+            ],
+            [
+                'name' => 'terminate'
+            ]
+            ];
    
         return view('deployment.edit', [
             'clients' => $clients,
             'employees' => $employees,
             'employmentTypes' => $employmentTypes,
-            'deployment' => $deployment
+            'deployment' => $deployment,
+            'statuses' => $statuses
         ]);
     }
 
@@ -216,7 +232,8 @@ class DeploymentController extends Controller
                 'client_id' => 'required|integer',
                 'employment_type_id' => 'required|integer',
                 'position' => 'required|string|max:50',
-                'start_date' => 'required|string|max:50'
+                'start_date' => 'required|string|max:50',
+                'status' => 'required|string'
             ], $messages);
 
             if ($validator->fails()) {
@@ -228,6 +245,7 @@ class DeploymentController extends Controller
             $deployment->employment_type_id = $request->employment_type_id;
             $deployment->client_id = $request->client_id;
             $deployment->position = $request->position;
+            $deployment->status = $request->status;
             $deployment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
             $deployment->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
             $deployment->updater_id = \Auth::user()->id;

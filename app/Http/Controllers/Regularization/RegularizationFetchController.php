@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class RegularizationFetchController extends Controller
 {
-    public function fetchForRegularization(Request $request)
+ public function fetchForRegularization(Request $request)
 	{
         $currentYear = Carbon::now()->year;
 		//column list in the table Prpducts

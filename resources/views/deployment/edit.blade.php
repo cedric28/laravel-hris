@@ -72,6 +72,20 @@
 											</div>
 										</div>
 
+												<div class="form-group row">
+											<label class="col-lg-3 col-form-label">Employment Status</label>
+											<div class="col-lg-9">	
+												<select name="status" class="form-control">
+													<option value="">Please select</option>
+													@foreach ($statuses as $status)
+													<option value="{{ $status['name'] }}"{{ ($status['name']  == old('status',$deployment->status)) ? ' selected' : '' }}>
+															{{ ucwords($status['name']) }}
+														</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
+
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">Position:</label>
 									<div class="col-lg-9">	
