@@ -113,7 +113,7 @@ class OverTimeController extends Controller
         $timeOut = Carbon::parse($request->overtime_out)->format('H:i:s');
         $overTimeDuration = $this->computeOverTimeDuration($schedule, $timeIn, $timeOut);
     
-        if($overTimeDuration > 60){
+        if($overTimeDuration >= 60){
             $attendance = Attendance::where('attendance_date',Carbon::parse($request->overtime_date)->format('Y-m-d'))
                                 ->where('deployment_id', $request->deployment_id)
                                 ->first();

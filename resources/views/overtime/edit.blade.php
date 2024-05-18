@@ -168,6 +168,8 @@
 
             $(`#overtime_date`).datetimepicker({
                 format: 'L',
+                minDate: "<?= $deployment->start_date ?>",
+                maxDate: "<?= $deployment->end_date ?>",
                 daysOfWeekDisabled: [0, 6]
             });
 
