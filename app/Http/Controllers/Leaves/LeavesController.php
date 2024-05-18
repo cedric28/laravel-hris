@@ -8,6 +8,7 @@ use App\Leave;
 use App\Deployment;
 use App\LeaveType;
 use App\LeaveStatus;
+use App\Attendance;
 use App\Log;
 use Validator, Hash, DB;
 use Carbon\Carbon;
@@ -78,7 +79,20 @@ class LeavesController extends Controller
             //validate request value
             $validator = Validator::make($request->all(), [
                 'leave_type_id' => 'required|integer',
-                'leave_date' => 'required|string',
+                'leave_date' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) use ($request) {
+                      $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
+                        ->where('deployment_id', $request->deployment_id)
+                        ->exists();
+  
+                      if($attendance) {
+                        $fail('You have an attendace time in and out on this date.');
+                      }
+                    
+                    },
+                ],
                 'leave_time' => 'required|string'
             ], $messages);
 
