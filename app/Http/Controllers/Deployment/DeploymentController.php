@@ -241,7 +241,8 @@ class DeploymentController extends Controller
             $messages = [
                 'employee_id.required' => 'Please select a Employee',
                 'client_id.required' => 'Please select a Client',
-                'employment_type_id.required' => 'Please select a Employment Type'
+                'employment_type_id.required' => 'Please select a Employment Type',
+                'end_date.after' => 'End Date must be after Start Date',
             ];
             //validate request value
             $validator = Validator::make($request->all(), [
@@ -250,7 +251,21 @@ class DeploymentController extends Controller
                 'employment_type_id' => 'required|integer',
                 'position' => 'required|string|max:50',
                 'start_date' => 'required|string|max:50',
-                'status' => 'required|string'
+                'status' => 'required|string',
+                'end_date' => [
+                    'required',
+                    'string',
+                    'after:start_date',
+                    function ($attribute, $value, $fail) use ($request) {
+                        if ($request->start_date) {
+                            $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
+                            $endDate = Carbon::createFromFormat('m/d/Y', $value)->startOfDay();
+                            if ($startDate->diffInMonths($endDate) !== 12 || !$endDate->eq($startDate->copy()->addYear())) {
+                                $fail('End Date must be exactly one year after Start Date');
+                            }
+                        }
+                    },
+                ],
             ], $messages);
 
             if ($validator->fails()) {

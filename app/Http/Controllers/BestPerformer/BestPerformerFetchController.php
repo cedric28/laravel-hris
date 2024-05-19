@@ -26,9 +26,10 @@ class BestPerformerFetchController extends Controller
         ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
         ->whereYear('feedback.created_at', $currentYear)
         ->where([
-            ['feedback.rate','>=',7],
+            ['feedback.rate','=',10],
             ['deployments.status','=','new']
-        ])->count();
+        ])
+        ->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -46,7 +47,7 @@ class BestPerformerFetchController extends Controller
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
             ->whereYear('feedback.created_at', $currentYear)
-            ->where('rate','>=',7)
+            ->where('rate','=',10)
             ->where([
                 ['deployments.status', '=', 'new'],
             ])
@@ -64,7 +65,7 @@ class BestPerformerFetchController extends Controller
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
             ->whereYear('feedback.created_at', $currentYear)
-            ->where('rate','>=',7)
+            ->where('rate','=',10)
             ->where([
                 ['deployments.status', '=', 'new'],
             ])
@@ -83,7 +84,7 @@ class BestPerformerFetchController extends Controller
 				->orWhere('clients.name', 'like', "%{$search}%")
 				->orWhere('feedback.rate', 'like', "%{$search}%")
                 ->whereYear('feedback.created_at', $currentYear)
-                ->where('rate','>=',7)
+                ->where('rate','=',10)
                 ->where([
                     ['deployments.status', '=', 'new'],
                 ])
@@ -104,7 +105,7 @@ class BestPerformerFetchController extends Controller
                     ->orWhere('clients.name', 'like', "%{$search}%")
                     ->orWhere('feedback.rate', 'like', "%{$search}%")
                     ->whereYear('feedback.created_at', $currentYear)
-                    ->where('rate','>=',7)
+                    ->where('rate','=',10)
                     ->where([
                         ['deployments.status', '=', 'new'],
                     ])
