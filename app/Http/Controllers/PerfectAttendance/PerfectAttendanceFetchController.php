@@ -21,11 +21,15 @@ class PerfectAttendanceFetchController extends Controller
 			2 => 'action'
 		);
 
+		$endOfMonth = Carbon::now()->endOfMonth();
+		$threeDaysBeforeEndOfMonth = $endOfMonth->subDays(3);
+
 		//get the total number of data in User table
-		$totalData = Deployment::whereHas('attendances', function ($query) use ($current_month) {
+		$totalData = Deployment::whereHas('attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
 			$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
-							->whereNotIn('day_of_week', [6, 0]);
-		})
+							->whereNotIn('day_of_week', [6, 0])
+							->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
+})
 	->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 		$query->whereMonth('created_at', $currentMonth);
 	})
@@ -44,12 +48,31 @@ class PerfectAttendanceFetchController extends Controller
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
+// 			whereHas('attendances', function ($query) use ($currentMonth) {
+//     $query->where(function ($query) use ($currentMonth) {
+//         // Attendance within the current month, excluding weekends
+//         $query->whereBetween('attendance_date', [$currentMonth . '-01', $currentMonth . '-31'])
+//               ->whereNotIn('day_of_week', [6, 0]);
+        
+//         // Additional check for perfect attendance
+//         $query->orWhere(function ($query) use ($currentMonth) {
+//             // Get the last three days of the current month
+//             $lastThreeDays = Carbon::now()->endOfMonth()->subDays(2)->toDateString();
+            
+//             // Check if there are attendances for the last three days
+//             $query->where('attendance_date', '>=', $lastThreeDays)
+//                   ->where('attendance_date', '<=', Carbon::now()->endOfMonth()->toDateString())
+//                   ->whereNotIn('day_of_week', [6, 0]);
+//         });
+//     });
+// })
 			$posts = Deployment::select('deployments.id as id','employees.name as fullname', 'clients.name as company')
 																->join('employees', 'deployments.employee_id', '=', 'employees.id')
 																->join('clients', 'deployments.client_id', '=', 'clients.id')
-																->whereHas('attendances', function ($query) use ($current_month) {
-																	$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
-																					->whereNotIn('day_of_week', [6, 0]);
+																->whereHas('attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+																				$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+																								->whereNotIn('day_of_week', [6, 0])
+																								->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
 																})
 																->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 																	$query->whereMonth('created_at', $currentMonth);
@@ -63,9 +86,10 @@ class PerfectAttendanceFetchController extends Controller
 															->get();
 
 			//total number of filtered data
-			$totalFiltered = Deployment::whereHas('attendances', function ($query) use ($current_month) {
-							$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
-											->whereNotIn('day_of_week', [6, 0]);
+			$totalFiltered = Deployment::whereHas('attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+										$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+														->whereNotIn('day_of_week', [6, 0])
+														->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
 						})
 						->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 							$query->whereMonth('created_at', $currentMonth);
@@ -85,9 +109,10 @@ class PerfectAttendanceFetchController extends Controller
 													->orWhereHas('client', function ($query) use ($search) {
 															$query->where('name', 'like', "%{$search}%");
 													})
-													->orWhereHas('attendances', function ($query) use ($current_month) {
-														$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
-																		->whereNotIn('day_of_week', [6, 0]);
+													->whereHas('attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+																	$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+																					->whereNotIn('day_of_week', [6, 0])
+																					->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
 													})
 													->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 														$query->whereMonth('created_at', $currentMonth);
@@ -110,10 +135,11 @@ class PerfectAttendanceFetchController extends Controller
 																				->orWhereHas('client', function ($query) use ($search) {
 																						$query->where('name', 'like', "%{$search}%");
 																				})
-																				->orWhereHas('attendances', function ($query) use ($current_month) {
-																					$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
-																									->whereNotIn('day_of_week', [6, 0]);
-																				})
+																				->whereHas('attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+																							$query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+																											->whereNotIn('day_of_week', [6, 0])
+																											->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
+																			})
 																				->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 																					$query->whereMonth('created_at', $currentMonth);
 																				})

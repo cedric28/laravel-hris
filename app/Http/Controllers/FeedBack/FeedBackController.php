@@ -37,9 +37,9 @@ class FeedBackController extends Controller
     {
          //prevent other user to access to this page
          $this->authorize("isHROrAdmin");
-         $currentYear = Carbon::now()->year;
-         $deployments = Deployment::where('status','new')->whereDoesntHave('feedbacks', function ($query) use ($currentYear) {
-            $query->whereYear('created_at', $currentYear);
+         $currentMonth = Carbon::now()->month;
+         $deployments = Deployment::where('status','new')->whereDoesntHave('feedbacks', function ($query) use ($currentMonth) {
+            $query->whereMonth('created_at', $currentMonth);
         })->get();
 
         $always_on_time = [ 
@@ -205,15 +205,15 @@ class FeedBackController extends Controller
             $messages = [
                 'deployment_id.required' => 'Please select a Employee'
             ];
-            $currentYear = Carbon::now()->year;
+            $currentMonth = Carbon::now()->month;
             //validate request value
             $validator = Validator::make($request->all(), [
                 'deployment_id' => [
                 'required',
                 'integer',
-                function ($attribute, $value, $fail) use ($currentYear) {
+                function ($attribute, $value, $fail) use ($currentMonth) {
 
-                    $attendance = Feedback::whereYear('created_at',$currentYear)
+                    $attendance = Feedback::whereMonth('created_at',$currentMonth)
                     ->where('deployment_id', $value)
                     ->exists();
         

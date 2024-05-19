@@ -12,7 +12,10 @@ class BestPerformerFetchController extends Controller
 {
     public function fetchBestPerformer(Request $request)
 	{
-        $currentYear = Carbon::now()->year;
+        $current_month = now()->startOfMonth()->format('Y-m');
+		$currentMonth = Carbon::now()->month;
+        $endOfMonth = Carbon::now()->endOfMonth();
+		$threeDaysBeforeEndOfMonth = $endOfMonth->subDays(3);
 		//column list in the table Prpducts
 		$columns = array(
 			0 => 'fullname',
@@ -24,7 +27,15 @@ class BestPerformerFetchController extends Controller
 		//get the total number of data in User table
 		$totalData = Feedback::select('feedback.id as id')
         ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
-        ->whereYear('feedback.created_at', $currentYear)
+        ->whereMonth('feedback.created_at', $currentMonth)
+        ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+            $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+                            ->whereNotIn('day_of_week', [6, 0])
+                            ->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
+        })
+        ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
+            $query->whereMonth('created_at', $currentMonth);
+        })
         ->where([
             ['feedback.rate','=',10],
             ['deployments.status','=','new']
@@ -46,14 +57,19 @@ class BestPerformerFetchController extends Controller
             ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->whereYear('feedback.created_at', $currentYear)
-            ->where('rate','=',10)
-            ->where([
-                ['deployments.status', '=', 'new'],
-            ])
-            ->whereDoesntHave('deployment.lates', function ($query) use ($currentYear) {
-                $query->whereYear('created_at', $currentYear);
+            ->whereMonth('feedback.created_at', $currentMonth)
+            ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+                $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+                                ->whereNotIn('day_of_week', [6, 0])
+                                ->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
             })
+            ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
+                $query->whereMonth('created_at', $currentMonth);
+            })
+            ->where([
+                ['feedback.rate','=',10],
+                ['deployments.status','=','new']
+            ])
             ->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
@@ -64,14 +80,19 @@ class BestPerformerFetchController extends Controller
             ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->whereYear('feedback.created_at', $currentYear)
-            ->where('rate','=',10)
+            ->whereMonth('feedback.created_at', $currentMonth)
+            ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+                $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+                                ->whereNotIn('day_of_week', [6, 0])
+                                ->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
+            })
+            ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
+                $query->whereMonth('created_at', $currentMonth);
+            })
             ->where([
-                ['deployments.status', '=', 'new'],
-            ])
-            ->whereDoesntHave('deployment.lates', function ($query) use ($currentYear) {
-                $query->whereYear('created_at', $currentYear);
-            })->count();
+                ['feedback.rate','=',10],
+                ['deployments.status','=','new']
+            ])->count();
 
 		} else {
 			$search = $request->input('search.value');
@@ -82,15 +103,19 @@ class BestPerformerFetchController extends Controller
                 ->join('clients', 'deployments.client_id', '=', 'clients.id')
                 ->orWhere('employees.name', 'like', "%{$search}%")
 				->orWhere('clients.name', 'like', "%{$search}%")
-				->orWhere('feedback.rate', 'like', "%{$search}%")
-                ->whereYear('feedback.created_at', $currentYear)
-                ->where('rate','=',10)
-                ->where([
-                    ['deployments.status', '=', 'new'],
-                ])
-                ->whereDoesntHave('deployment.lates', function ($query) use ($currentYear) {
-                    $query->whereYear('created_at', $currentYear);
+                ->whereMonth('feedback.created_at', $currentMonth)
+                ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+                    $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+                                    ->whereNotIn('day_of_week', [6, 0])
+                                    ->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
                 })
+                ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
+                    $query->whereMonth('created_at', $currentMonth);
+                })
+                ->where([
+                    ['feedback.rate','=',10],
+                    ['deployments.status','=','new']
+                ])
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -103,15 +128,19 @@ class BestPerformerFetchController extends Controller
                     ->join('clients', 'deployments.client_id', '=', 'clients.id')
                     ->orWhere('employees.name', 'like', "%{$search}%")
                     ->orWhere('clients.name', 'like', "%{$search}%")
-                    ->orWhere('feedback.rate', 'like', "%{$search}%")
-                    ->whereYear('feedback.created_at', $currentYear)
-                    ->where('rate','=',10)
-                    ->where([
-                        ['deployments.status', '=', 'new'],
-                    ])
-                    ->whereDoesntHave('deployment.lates', function ($query) use ($currentYear) {
-                        $query->whereYear('created_at', $currentYear);
+                    ->whereMonth('feedback.created_at', $currentMonth)
+                    ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
+                        $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
+                                        ->whereNotIn('day_of_week', [6, 0])
+                                        ->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
                     })
+                    ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
+                        $query->whereMonth('created_at', $currentMonth);
+                    })
+                    ->where([
+                        ['feedback.rate','=',10],
+                        ['deployments.status','=','new']
+                    ])
 				    ->count();
 		}
 
