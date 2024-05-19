@@ -97,8 +97,25 @@ class DeploymentController extends Controller
                 'employment_type_id' => 'required|integer',
                 'position' => 'required|string|max:50',
                 'start_date' => 'required|string',
-                'end_date' => 'sometimes|string|after:start_date',
+                'end_date' => [
+                    'required',
+                    'string',
+                    'after:start_date',
+                    function ($attribute, $value, $fail) use ($request) {
+                        if ($request->start_date) {
+                            $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
+                            $endDate = Carbon::createFromFormat('m/d/Y', $value)->startOfDay();
+                            if ($startDate->diffInMonths($endDate) !== 12 || !$endDate->eq($startDate->copy()->addYear())) {
+                                $fail('End Date must be exactly one year after Start Date');
+                            }
+                        }
+                    },
+                ],
             ], $messages);
+
+
+          
+
 
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();

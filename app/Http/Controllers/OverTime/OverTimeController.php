@@ -112,7 +112,7 @@ class OverTimeController extends Controller
         $timeIn = Carbon::parse($request->overtime_in)->format('H:i:s');
         $timeOut = Carbon::parse($request->overtime_out)->format('H:i:s');
         $overTimeDuration = $this->computeOverTimeDuration($schedule, $timeIn, $timeOut);
-    
+      
         if($overTimeDuration >= 60){
             $attendance = Attendance::where('attendance_date',Carbon::parse($request->overtime_date)->format('Y-m-d'))
                                 ->where('deployment_id', $request->deployment_id)
@@ -120,8 +120,10 @@ class OverTimeController extends Controller
 
             $overtime = new OverTime();
             $overtime->deployment_id = $request->deployment_id;
-            $overtime->duration = Carbon::createFromTime(0, $overTimeDuration, 0)->format('H:i:s');
+            $overtime->duration = Carbon::createFromTime(0, 0, 0)->addMinutes($overTimeDuration);
             $overtime->overtime_date =  Carbon::parse($request->overtime_date)->format('Y-m-d');
+            $overtime->overtime_in = $attendance->overtime_in;
+            $overtime->overtime_out = $attendance->overtime_out;
             $overtime->attendance_id = $attendance->id;
             $overtime->creator_id = $user;
             $overtime->updater_id = $user;

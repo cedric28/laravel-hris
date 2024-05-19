@@ -27,7 +27,7 @@ class BestPerformerFetchController extends Controller
         ->whereYear('feedback.created_at', $currentYear)
         ->where([
             ['feedback.rate','>=',7],
-            ['deployments.status','=','regular']
+            ['deployments.status','=','new']
         ])->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
@@ -48,7 +48,7 @@ class BestPerformerFetchController extends Controller
             ->whereYear('feedback.created_at', $currentYear)
             ->where('rate','>=',7)
             ->where([
-                ['deployments.status', '=', 'regular'],
+                ['deployments.status', '=', 'new'],
             ])
             ->whereDoesntHave('deployment.lates', function ($query) use ($currentYear) {
                 $query->whereYear('created_at', $currentYear);
@@ -66,7 +66,7 @@ class BestPerformerFetchController extends Controller
             ->whereYear('feedback.created_at', $currentYear)
             ->where('rate','>=',7)
             ->where([
-                ['deployments.status', '=', 'regular'],
+                ['deployments.status', '=', 'new'],
             ])
             ->whereDoesntHave('deployment.lates', function ($query) use ($currentYear) {
                 $query->whereYear('created_at', $currentYear);
@@ -85,7 +85,7 @@ class BestPerformerFetchController extends Controller
                 ->whereYear('feedback.created_at', $currentYear)
                 ->where('rate','>=',7)
                 ->where([
-                    ['deployments.status', '=', 'regular'],
+                    ['deployments.status', '=', 'new'],
                 ])
                 ->whereDoesntHave('deployment.lates', function ($query) use ($currentYear) {
                     $query->whereYear('created_at', $currentYear);
@@ -106,7 +106,7 @@ class BestPerformerFetchController extends Controller
                     ->whereYear('feedback.created_at', $currentYear)
                     ->where('rate','>=',7)
                     ->where([
-                        ['deployments.status', '=', 'regular'],
+                        ['deployments.status', '=', 'new'],
                     ])
                     ->whereDoesntHave('deployment.lates', function ($query) use ($currentYear) {
                         $query->whereYear('created_at', $currentYear);
