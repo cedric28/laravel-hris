@@ -17,7 +17,7 @@ class CreateOverTimesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('deployment_id')->index();
             $table->time('duration');
-            $table->time('overtime_time')->default(date("H:i:s"));
+            $table->time('overtime_in')->default(date("H:i:s"));
             $table->time('overtime_out')->default(date("H:i:s"));
             $table->date('overtime_date');
             $table->unsignedBigInteger('attendance_id')->index();

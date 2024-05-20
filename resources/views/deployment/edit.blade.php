@@ -98,7 +98,7 @@
 									<label class="col-lg-3 col-form-label">Start Date</label>
 									<div class="col-lg-9">	
 											<div class="input-group date" id="startdate" data-target-input="nearest">
-													<input type="text" name="start_date"  value="{{ old('start_date',$deployment->start_date) }}" class="form-control datetimepicker-input" data-target="#startdate"/>
+													<input type="text" name="start_date"  value="{{ old('start_date') }}" class="form-control datetimepicker-input" data-target="#startdate"/>
 														<div class="input-group-append" data-target="#startdate" data-toggle="datetimepicker">
 															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 														</div>
@@ -110,7 +110,7 @@
 									<label class="col-lg-3 col-form-label">End Date</label>
 									<div class="col-lg-9">	
 											<div class="input-group date" id="enddate" data-target-input="nearest">
-													<input type="text" name="end_date"  value="{{ old('end_date',$deployment->end_date)}}" class="form-control datetimepicker-input" data-target="#enddate"/>
+													<input type="text" name="end_date"  value="{{ old('end_date')}}" class="form-control datetimepicker-input" data-target="#enddate"/>
 														<div class="input-group-append" data-target="#enddate" data-toggle="datetimepicker">
 															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 														</div>
@@ -141,5 +141,22 @@
         <script src="{{ asset('vendors/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('vendors/bower_components/jquery.scrollbar/jquery.scrollbar.min.js') }}"></script>
         <script src="{{ asset('vendors/bower_components/jquery-scrollLock/jquery-scrollLock.min.js') }}"></script>
+								   <script>
+			$(function () {
+				$('.select2').select2()
+				//Date picker
+				$('#startdate').datetimepicker({
+						format: 'L',
+						defaultDate: "<?= $deployment->start_date ?>",
+					 daysOfWeekDisabled: [0, 6]
+				});
+
+				$('#enddate').datetimepicker({
+						format: 'L',
+						defaultDate:  "<?= $deployment->end_date ?>",
+					 daysOfWeekDisabled: [0, 6]
+				});
+			});
+		</script>
         @endpush('scripts')
 @endsection

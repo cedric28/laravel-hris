@@ -46,6 +46,7 @@
                                                         <th>EMPLOYEE NAME</th>
                                                         <th>CLIENT</th>
                                                         <th>POSITION</th>
+                                                         <th>STATUS</th>
                                                         <th>START DATE</th>
                                                         <th>END DATE</th>
                                                         <th>ACTION</th>
@@ -57,6 +58,7 @@
                                                             <td>{{ $deployment->employee->name }}</td>
                                                             <td>{{ $deployment->client->name }}</td>
                                                             <td>{{ $deployment->position }}</td>
+                                                            <td>{{ $deployment->status }}</td>
                                                             <td>{{ $deployment->start_date}}</td>
                                                             <td>{{ $deployment->end_date }}</td>
                                                             <td>
@@ -74,6 +76,7 @@
                                                         <th>EMPLOYEE NAME</th>
                                                         <th>CLIENT</th>
                                                         <th>POSITION</th>
+                                                        <th>STATUS</th>
                                                         <th>START DATE</th>
                                                         <th>END DATE</th>
                                                         <th>ACTION</th>
@@ -85,6 +88,7 @@
                                                         <td>{{ $deployment->employee->name }}</td>
                                                             <td>{{ $deployment->client->name }}</td>
                                                             <td>{{ $deployment->position }}</td>
+                                                            <td>{{ $deployment->status }}</td>
                                                             <td>{{ $deployment->start_date}}</td>
                                                             <td>{{ $deployment->end_date }}</td>
                                                             <td>
@@ -181,21 +185,21 @@
                                 "extend": 'csv',
                                 'title' : 'Employees-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' : 'Employees-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' : 'Employees-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             }
                         ],
@@ -205,6 +209,7 @@
                     {"data":"employee_name"},
                     {"data":"client_name"},
                     {"data":"position"},
+                     {"data":"status"},
                     {"data":"start_date"},
                     {"data":"end_date"},
                     {"data":"action","searchable":false,"orderable":false}
@@ -238,21 +243,21 @@
                                 "extend": 'csv',
                                 'title' : 'Employees-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' : 'Employees-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' : 'Employees-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4]
+                                    "columns": [0,1,2,3,4,5]
                                 }
                             }
                         ],
@@ -262,6 +267,7 @@
                     {"data":"employee_name"},
                     {"data":"client_name"},
                     {"data":"position"},
+                     {"data":"status"},
                     {"data":"start_date"},
                     {"data":"end_date"},
                     {"data":"action","searchable":false,"orderable":false}

@@ -105,6 +105,13 @@ class DeploymentController extends Controller
                         if ($request->start_date) {
                             $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
                             $endDate = Carbon::createFromFormat('m/d/Y', $value)->startOfDay();
+
+                             // Check if the end date falls on a weekend
+                            if ($endDate->isWeekend()) {
+                                // Move the end date to the next weekday
+                                $endDate = $endDate->next(Carbon::MONDAY);
+                            }
+
                             if ($startDate->diffInMonths($endDate) !== 12 || !$endDate->eq($startDate->copy()->addYear())) {
                                 $fail('End Date must be exactly one year after Start Date');
                             }
@@ -260,6 +267,13 @@ class DeploymentController extends Controller
                         if ($request->start_date) {
                             $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
                             $endDate = Carbon::createFromFormat('m/d/Y', $value)->startOfDay();
+
+                             // Check if the end date falls on a weekend
+                            if ($endDate->isWeekend()) {
+                                // Move the end date to the next weekday
+                                $endDate = $endDate->next(Carbon::MONDAY);
+                            }
+
                             if ($startDate->diffInMonths($endDate) !== 12 || !$endDate->eq($startDate->copy()->addYear())) {
                                 $fail('End Date must be exactly one year after Start Date');
                             }

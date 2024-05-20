@@ -15,9 +15,10 @@ class DeploymentFetchController extends Controller
 			0 => 'employee_name',
 			1 => 'client_name',
 			2 => 'position',
-			3 => 'start_date',
-			4 => 'end_date',
-			5 => 'action'
+			3 => 'status',
+			4 => 'start_date',
+			5 => 'end_date',
+			6 => 'action'
 		);
 
 		//get the total number of data in User table
@@ -34,7 +35,7 @@ class DeploymentFetchController extends Controller
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
-			$posts = Deployment::select('employees.name as employee_name','clients.name as client_name','deployments.position','deployments.start_date','deployments.end_date', 'deployments.id as id')
+			$posts = Deployment::select('employees.name as employee_name','clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
 				->join('employees', 'deployments.employee_id', '=', 'employees.id')
 				->join('clients', 'deployments.client_id', '=', 'clients.id')
 				->offset($start)
@@ -55,6 +56,7 @@ class DeploymentFetchController extends Controller
 					$query->where('name', 'like', "%{$search}%");
 				})
 					->orWhere('position', 'like', "%{$search}%")
+					->orWhere('status', 'like', "%{$search}%")
 					->orWhere('start_date', 'like', "%{$search}%")
 					->orWhere('end_date', 'like', "%{$search}%");
 			})
@@ -72,6 +74,7 @@ class DeploymentFetchController extends Controller
 					$query->where('name', 'like', "%{$search}%");
 				})
 					->orWhere('position', 'like', "%{$search}%")
+					->orWhere('status', 'like', "%{$search}%")
 					->orWhere('start_date', 'like', "%{$search}%")
 					->orWhere('end_date', 'like', "%{$search}%");
 			})
@@ -87,9 +90,18 @@ class DeploymentFetchController extends Controller
 				$nestedData['employee_name'] = $r->employee_name;
 				$nestedData['client_name'] = $r->client_name;
 				$nestedData['position'] = $r->position;
+				$nestedData['status'] = ucwords($r->status);
 				$nestedData['start_date'] = date('d-m-Y', strtotime($r->start_date));
 				$nestedData['end_date'] = date('d-m-Y', strtotime($r->end_date));
-				$nestedData['action'] = '
+				if($r->status != 'new'){
+					$nestedData['action'] = '
+					<button name="compensation" id="compensation" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Compensation</button>
+						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
+						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
+						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
+					';
+				} else {
+					$nestedData['action'] = '
 					<button name="compensation" id="compensation" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Compensation</button>
 						<button name="attendance" id="attendance" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Attendance</button>
 						<button name="overtime" id="overtime" data-id="' . $r->id . '" class="btn bg-gradient-dark btn-sm">Overtime</button>
@@ -98,6 +110,8 @@ class DeploymentFetchController extends Controller
 						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
 						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Delete</button>
 					';
+				}
+			
 				$data[] = $nestedData;
 			}
 		}
@@ -120,9 +134,10 @@ class DeploymentFetchController extends Controller
 		0 => 'employee_name',
 		1 => 'client_name',
 		2 => 'position',
-		3 => 'start_date',
-		4 => 'end_date',
-		5 => 'action'
+		3 => 'status',
+		4 => 'start_date',
+		5 => 'end_date',
+		6 => 'action'
 	);
 
 	//get the total number of data in User table
@@ -139,7 +154,7 @@ class DeploymentFetchController extends Controller
 	//check if user search for a value in the User datatable
 	if (empty($request->input('search.value'))) {
 		//get all the User data
-		$posts = Deployment::onlyTrashed()->select('employees.name as employee_name','clients.name as client_name','deployments.position','deployments.start_date','deployments.end_date', 'deployments.id as id')
+		$posts = Deployment::onlyTrashed()->select('employees.name as employee_name','clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
 			->join('employees', 'deployments.employee_id', '=', 'employees.id')
 			->join('clients', 'deployments.client_id', '=', 'clients.id')
 			->offset($start)
@@ -160,6 +175,7 @@ class DeploymentFetchController extends Controller
 				$query->where('name', 'like', "%{$search}%");
 			})
 				->orWhere('position', 'like', "%{$search}%")
+				->orWhere('status', 'like', "%{$search}%")
 				->orWhere('start_date', 'like', "%{$search}%")
 				->orWhere('end_date', 'like', "%{$search}%");
 		})
@@ -177,6 +193,7 @@ class DeploymentFetchController extends Controller
 				$query->where('name', 'like', "%{$search}%");
 			})
 				->orWhere('position', 'like', "%{$search}%")
+				->orWhere('status', 'like', "%{$search}%")
 				->orWhere('start_date', 'like', "%{$search}%")
 				->orWhere('end_date', 'like', "%{$search}%");
 		})
@@ -193,6 +210,7 @@ class DeploymentFetchController extends Controller
 				$nestedData['employee_name'] = $r->employee_name;
 				$nestedData['client_name'] = $r->client_name;
 				$nestedData['position'] = $r->position;
+				$nestedData['status'] = ucwords($r->status);
 				$nestedData['start_date'] = date('d-m-Y', strtotime($r->start_date));
 				$nestedData['end_date'] = date('d-m-Y', strtotime($r->end_date));
 				$nestedData['action'] = '

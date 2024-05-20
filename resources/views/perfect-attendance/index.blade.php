@@ -38,7 +38,7 @@
                               <tr style="text-align:center;">
                                   <th>FULLNAME</th>
                                   <th>COMPANY</th>
-                                  <th>aCTION</th>
+                                  <th>ACTION</th>
                               </tr>
                           </thead>
                           <tbody>
