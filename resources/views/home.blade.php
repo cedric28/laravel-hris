@@ -28,7 +28,7 @@
             <div class="small-box bg-info">
               <div class="inner">
                 <h3>{{ $totalApplicants }}</h3>
-                <p>Total Applicant/s this year {{  $year }}</p>
+                <p>Applicant/s {{  $year }}</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-stalker"></i>
@@ -43,7 +43,7 @@
               <div class="inner">
                 <h3>{{ $totalEmployees }}</h3>
 
-                <p>Total Newly Deployed Employee/s this year {{  $year }}</p>
+                <p>New Deployed Employee/s {{  $year }}</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -58,7 +58,7 @@
               <div class="inner">
                 <h3>{{ $user }}</h3>
 
-                <p>Total Registered Users</p>
+                <p>Registered Users</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -72,7 +72,7 @@
             <div class="small-box bg-danger">
               <div class="inner">
                 <h3>{{  $totalClients }}</h3>
-                <p>Total Clients</p>
+                <p>Clients</p>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
