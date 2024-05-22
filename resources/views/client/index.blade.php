@@ -49,7 +49,7 @@
                                                      <th>CONTACT NO</th>
                                                      <th>EMAIL</th>
                                                      <th>ADDRESS</th>
-                                                     <th>DATE ADDED</th>
+                                                     <th>PARTNERSHIP DATE</th>
                                                      <th>ACTION</th>
                                                     </tr>
                                                 </thead>
@@ -81,7 +81,7 @@
                                                      <th>CONTACT NO</th>
                                                      <th>EMAIL</th>
                                                      <th>ADDRESS</th>
-                                                     <th>DATE ADDED</th>
+                                                     <th>PARTNERSHIP DATE</th>
                                                      <th>ACTION</th>
                                                     </tr>
                                                 </thead>
