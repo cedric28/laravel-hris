@@ -122,8 +122,8 @@ class OverTimeController extends Controller
             $overtime->deployment_id = $request->deployment_id;
             $overtime->duration = Carbon::createFromTime(0, 0, 0)->addMinutes($overTimeDuration);
             $overtime->overtime_date =  Carbon::parse($request->overtime_date)->format('Y-m-d');
-            $overtime->overtime_in = $attendance->overtime_in;
-            $overtime->overtime_out = $attendance->overtime_out;
+            $overtime->overtime_in = $timeIn;
+            $overtime->overtime_out = $timeOut;
             $overtime->attendance_id = $attendance->id;
             $overtime->creator_id = $user;
             $overtime->updater_id = $user;
