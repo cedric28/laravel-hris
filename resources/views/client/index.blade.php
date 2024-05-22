@@ -43,7 +43,7 @@
                                             <table class="table table-hover table-striped" id="client">
                                                 <thead>
                                                     <tr style="text-align:center;">
-                                                     <th>REFERENCE NO</th>
+                                                     <th>CLIENT ID</th>
                                                      <th>CLIENT NAME</th>
                                                      <th>SHORT NAME</th>
                                                      <th>CONTACT NO</th>
@@ -75,7 +75,7 @@
                                             <table class="table table-hover table-striped" id="inactive-client">
                                                 <thead>
                                                     <tr style="text-align:center;">
-                                                     <th>REFERENCE NO</th>
+                                                     <th>CLIENT ID</th>
                                                      <th>CLIENT NAME</th>
                                                      <th>SHORT NAME</th>
                                                      <th>CONTACT NO</th>
