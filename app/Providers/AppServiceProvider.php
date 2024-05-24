@@ -33,5 +33,9 @@ class AppServiceProvider extends ServiceProvider
         Str::macro('currency', function ($price) {
             return number_format($price, 2);
         });
+
+        Validator::resolver(function($translator, $data, $rules) {
+            return new AttendanceCsvValidator($translator, $data, $rules);
+        });
     }
 }

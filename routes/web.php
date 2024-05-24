@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
 
     //Attendance
     Route::resource('/attendance', 'Attendance\AttendanceController');
+    Route::post('bulk-attendance', 'Attendance\AttendanceController@bulkAttendance')->name('bulkAttendance');
     Route::post('attendance/fetch/q', 'Attendance\AttendanceFetchController@fetchAttendance')->name('activeAttendance');
     Route::post('inactive-attendance/fetch/q', 'Attendance\AttendanceFetchController@fetchInactiveAttendace')->name('InactiveAttendance');
     Route::get('attendance/destroy/{id}', 'Attendance\AttendanceController@destroy');

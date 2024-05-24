@@ -255,6 +255,137 @@ class AttendanceController extends Controller
         }
     }
 
+    public function bulkAttendance(Request $request)
+    {
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
+
+        /*
+        | @Begin Transaction
+        |---------------------------------------------*/
+        \DB::beginTransaction();
+
+        try {
+
+        $validator = Validator::make($request->all(), [
+            'csv_file' => 'required|mimes:csv',
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+    
+        $csvFile = $request->file('csv_file');
+        $rows = array_map('str_getcsv', file($csvFile->getPathname()));
+    
+        $errors = [];
+        $validRows = [];
+    
+        foreach ($rows as $key => $row) {
+            $validator = Validator::make($row, [
+                'employee_no' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        $deployment = Deployment::where('status','new')
+                        ->where('reference_no', $value)
+                        ->exists();
+            
+                        if ($deployment) {
+                            $schedule = Schedule::where('deployment_id',$deployment->deployment_id)->first();
+                            if(!$schedule){
+                                $fail('Employee doesnt any schedule record.');
+                            }
+                        } else {
+                            $fail('Employee doesnt exist.');
+                        }
+                    },
+                ],
+                'attendance_time' => 'required|date_format:H:i:s',
+                'attendance_out' => 'required|date_format:H:i:s|after:attendance_time',
+                'attendance_date' => [
+                    'required',
+                    'date_format:Y-m-d',
+                    'not_weekend',
+                    'not_duplicate'
+                ],
+            ]);
+    
+            if ($validator->fails()) {
+                $errors[] = [
+                    'row' => $key + 1,
+                    'errors' => $validator->messages()->all(),
+                ];
+            } else {
+                $validRows[] = $row;
+            }
+        }
+    
+        if (count($validRows) > 200) {
+            return redirect()->back()->withErrors(['Too many rows in the CSV file. Maximum allowed is 200.'])->withInput();
+        }
+    
+        if (!empty($errors)) {
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+    
+        // Process the valid rows
+        foreach ($validRows as $row) {
+            // Create a new attendance record
+            $employee = Deployment::where('reference_no',  $row['employee_no'])->first();
+            //check current user
+            $user = \Auth::user()->id;
+            $attendanceDate = Carbon::parse($row['attendance_date']); 
+      
+              //save attendance
+              $attendance = new Attendance();
+              $attendance->attendance_time = Carbon::parse($row['attendance_time'])->format('H:i:s');
+              $attendance->attendance_out = Carbon::parse($row['attendance_out'])->format('H:i:s');
+              $attendance->attendance_date = $attendanceDate->format('Y-m-d');
+              $attendance->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
+              $attendance->deployment_id = $employee->deployment_id;
+              $attendance->status = 1;
+              $attendance->creator_id = $user;
+              $attendance->updater_id = $user;
+              $attendance->save();
+  
+              $employee = Deployment::find($employee->deployment_id);
+              $schedule = $employee->schedule;
+              $timeIn = Carbon::parse($row['attendance_time'])->format('H:i:s');
+              $timeOut = Carbon::parse($row['attendance_out'])->format('H:i:s');
+              $lateTimeDuration = $this->computeLateTimeDuration($schedule, $timeIn, $timeOut);
+  
+              if($lateTimeDuration > 0){
+                  $late = new LateTime();
+                  $late->deployment_id = $employee->deployment_id;
+                  $late->attendance_id = $attendance->id;
+                  $late->duration = Carbon::createFromTime(0, $lateTimeDuration, 0)->format('H:i:s');
+                  $late->latetime_date =  Carbon::parse($row['attendance_date'])->format('Y-m-d');
+                  $late->creator_id = $user;
+                  $late->updater_id = $user;
+                  $late->save();
+              }
+               
+              $log = new Log();
+              $log->log = "User " . \Auth::user()->email . " create attendance " . $attendance->id . " at " . Carbon::now();
+              $log->creator_id =  \Auth::user()->id;
+              $log->updater_id =  \Auth::user()->id;
+              $log->save();
+            /*
+            | @End Transaction
+            |---------------------------------------------*/
+            \DB::commit();
+    
+        }
+
+        
+        return redirect()->route('attendance.edit', $deployment->id)->with('successMsg', 'Attendance Data Save Successful');
+        } catch (\Exception $e) {
+            //if error occurs rollback the data from it's previos state
+            \DB::rollback();
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
     public function computeLateTimeDuration($schedule, $timeIn, $timeOut)
     {
         // Validate input times
