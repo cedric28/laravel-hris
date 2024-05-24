@@ -62,7 +62,8 @@ class ClientController extends Controller
                 'short_name' => 'required|string|max:10',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
-                'email' => 'required|email|max:50'
+                'email' => 'required|email|max:50',
+                'contract' => 'required|image|mimes:jpg,png,jpeg,svg|max:2048',
             ]);
 
             if ($validator->fails()) {
@@ -72,6 +73,9 @@ class ClientController extends Controller
             //check current user
             $user = \Auth::user()->id;
 
+            $originalImage = $request->file('contract');
+            $photo = time() . $originalImage->getClientOriginalName();
+
             //save client
             $client = new Client();
             $client->reference_no = $this->generateUniqueCode();
@@ -80,9 +84,23 @@ class ClientController extends Controller
             $client->address = $request->address;
             $client->contact_number = $request->contact_number;
             $client->email = $request->email;
+            $client->contract = $photo;
             $client->creator_id = $user;
             $client->updater_id = $user;
-            $client->save();
+            if ($client->save()) {
+                $photoPath = public_path('images/' . $client->id . '/');
+
+                if (!file_exists($photoPath)) {
+                    mkdir($photoPath, 0777, true);
+                }
+                // create instance
+                $img = \Image::make($originalImage->getRealPath());
+
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath . $photo);
+            }
+
 
             $log = new Log();
             $log->log = "User " . \Auth::user()->email . " create client " . $client->reference_no . " at " . Carbon::now();
@@ -167,7 +185,8 @@ class ClientController extends Controller
                 'short_name' => 'required|string|max:10',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
-                'email' => 'required|email|max:50'
+                'email' => 'required|email|max:50',
+                'contract' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             ]);
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
@@ -175,6 +194,29 @@ class ClientController extends Controller
 
             //check current user
             $user = \Auth::user()->id;
+            $originalImage = $request->file('contract');
+            $currentPhoto = $client->contract;
+
+            $photo = "";
+            if ($originalImage) {
+                $photo = time() . $originalImage->getClientOriginalName();
+                $contractPhoto = public_path('images/' . $client->id . '/') . $currentPhoto;
+                $photoPath = public_path('images/' . $client->id . '/');
+                if (!file_exists($contractPhoto)) {
+                    mkdir($photoPath, 0777, true);
+                } else {
+                    @unlink($contractPhoto);
+                }
+                // create instance
+                $img = \Image::make($originalImage->getRealPath());
+
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath . $photo);
+            } else {
+                $photo = $currentPhoto;
+            }
+
 
             //save the update value
             $client->name = $request->name;
@@ -183,6 +225,7 @@ class ClientController extends Controller
             $client->contact_number = $request->contact_number;
             $client->email = $request->email;
             $client->updater_id = $user;
+            $client->contract = $photo;
             $client->update();
 
             $log = new Log();

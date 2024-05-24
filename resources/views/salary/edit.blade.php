@@ -88,7 +88,7 @@
                                                 </div>
 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-3 col-form-label">TAX:</label>
+                                                    <label class="col-lg-3 col-form-label">TAX (%):</label>
                                                     <div class="col-lg-9">	
                                                         <input type="text" name="tax" value="{{ old('tax',$salary->tax) }}" class="@error('tax') is-invalid @enderror form-control" placeholder="0.00" >
                                                     </div>

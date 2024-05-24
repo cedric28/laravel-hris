@@ -21,6 +21,7 @@ class CreateClientsTable extends Migration
             $table->longText("address");
             $table->string("contact_number");
             $table->string('email');
+            $table->string('contract')->nullable();
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();
             $table->softDeletes();

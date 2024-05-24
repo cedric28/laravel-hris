@@ -75,6 +75,13 @@
 									</div>
 								</div>
 
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Contract:</label>
+									<div class="col-lg-9">	
+											<input type="file" id="image" name="contract"value="{{ old('contract') }}" class="@error('contract') is-invalid @enderror form-control" placeholder="Contract Image" >
+									</div>
+								</div>
+
 								<div class="text-right">
 									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>

@@ -54,6 +54,23 @@
 									<td>{{ $client->address }}</td>
 								</tr>
 
+									<tr>
+									<th>Contract</th>
+									<td>
+										@php
+										$imageUrl = $client->contract != null ? '/images/'.$client->id.'/'.$client->contract : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+										@endphp
+										@if($client->contract)
+										<img 
+										class="profile-user-img img-fluid"
+									src="{{ url($imageUrl) }}"
+									alt="Contract Image">
+										@else
+										No Image
+										@endif
+									</td>
+								</tr>
+
 							</table>
 						</div>
 						<!-- /.card-body -->

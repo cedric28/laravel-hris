@@ -133,6 +133,7 @@ class DeploymentController extends Controller
 
             //save deployment
             $deployment = new Deployment();
+            $deployment->reference_no = $this->generateUniqueCode();
             $deployment->employee_id = $request->employee_id;
             $deployment->employment_type_id = $request->employment_type_id;
             $deployment->client_id = $request->client_id;
@@ -366,5 +367,15 @@ class DeploymentController extends Controller
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
+    }
+
+    public function generateUniqueCode()
+    {
+        do {
+            $year = Carbon::now()->year;
+            $reference_no = $year.random_int(1000000000, 9999999999);
+        } while (Deployment::where("reference_no", "=", $reference_no)->first());
+
+        return $reference_no;
     }
 }

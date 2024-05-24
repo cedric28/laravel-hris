@@ -15,6 +15,7 @@ class CreateDeploymentsTable extends Migration
     {
         Schema::create('deployments', function (Blueprint $table) {
             $table->id();
+            $table->string('reference_no')->unique();
             $table->integer('employee_id')->unsigned()->index();
             $table->integer('employment_type_id')->unsigned()->index();
             $table->integer('client_id')->unsigned()->index();
