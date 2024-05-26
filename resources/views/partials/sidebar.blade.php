@@ -1,5 +1,5 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-success elevation-4">
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
       <img src="{{ asset('dist/img/logo.png') }}" alt="Logo" class="brand-image elevation-3" style="opacity: .8">
@@ -48,43 +48,26 @@
                     </p>
                 </a>
             </li>
-          
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-address-book"></i>
-                <p>
-                    Employee Management
-                    <i class="fas fa-angle-left right"></i>
-                </p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{ route('employee.index')}}" class="nav-link {{ (request()->is('employee*')) ? 'nav-link active' : '' }}">
-                            <i class="nav-icon fas fa-address-card"></i>
-                            <p>Applicant</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('deployment.index')}}" class="nav-link {{ (request()->is('deployment*')) ? 'nav-link active' : '' }}">
-                            <i class="nav-icon fas fa-user-tag"></i>
-                            <p>Employee</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                         <a href="{{ route('feedback.index')}}" class="nav-link {{ (request()->is('feedback*')) ? 'nav-link active' : '' }}">
-                            <i class="nav-icon fas fa-user-times"></i>
-                            <p>Feedback</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ route('schedule.index')}}" class="nav-link {{ (request()->is('schedule*')) ? 'nav-link active' : '' }}">
-                    <i class="nav-icon fas fa-clipboard"></i>
-                    <p>Schedule</p>
+            
+             <li class="nav-item">
+                <a href="{{ route('employee.index')}}" class="nav-link {{ (request()->is('employee*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-address-card"></i>
+                    <p>Applicant</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('deployment.index')}}" class="nav-link {{ (request()->is('deployment*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-user-tag"></i>
+                    <p>Employee</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                    <a href="{{ route('feedback.index')}}" class="nav-link {{ (request()->is('feedback*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-user-times"></i>
+                    <p>Feedback</p>
+                </a>
+            </li>
+ 
 
             <li class="nav-header">REPORTS</li>
             <li class="nav-item">

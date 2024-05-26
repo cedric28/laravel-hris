@@ -4,7 +4,7 @@
 <!-- Main content -->
 <div class="login-box">
     <!-- /.login-logo -->
-    <div class="card card-outline card-primary">
+    <div class="card card-outline card-success">
         <div class="card-header text-center">
         <a href="#" class="h1">
         <img src="{{ asset('dist/img/logo.png') }}" alt="Logo" class="" style="opacity: .8;height: 100px;max-height: none !important;">
@@ -33,7 +33,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary btn-block">{{ __('Login') }} <i class="icon-circle-right2 ml-2"></i></button>
+                    <button type="submit" class="btn btn-success btn-block">{{ __('Login') }} <i class="icon-circle-right2 ml-2"></i></button>
                 </div>
             <!-- /.col -->
             </div>

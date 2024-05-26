@@ -28,7 +28,7 @@
               </div>
 						<!-- /.card-header -->
 						<div class="card-body">
-              <div class="card card-primary card-outline card-outline-tabs">
+              <div class="card card-success card-outline card-outline-tabs">
                   <div class="card-header p-0 border-bottom-0">
                       
                   </div>

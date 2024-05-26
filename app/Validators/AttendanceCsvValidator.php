@@ -1,9 +1,10 @@
+<?php
+
 namespace App\Validators;
 
-use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
-class AttendanceCsvValidator
+class AttendanceCsvValidator extends \Illuminate\Validation\Validator
 {
    public function validateNotWeekend($attribute, $value, $parameters, $validator)
    {

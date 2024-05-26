@@ -12,7 +12,7 @@ class DeploymentFetchController extends Controller
 	{
 		//column list in the table Prpducts
 		$columns = array(
-			0 => 'employee_name',
+			0 => 'first_name',
 			1 => 'client_name',
 			2 => 'position',
 			3 => 'status',
@@ -35,7 +35,7 @@ class DeploymentFetchController extends Controller
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
-			$posts = Deployment::select('employees.name as employee_name','clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
+			$posts = Deployment::select('employees.first_name as first_name','employees.middle_name as middle_name','employees.last_name as last_name','clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
 				->join('employees', 'deployments.employee_id', '=', 'employees.id')
 				->join('clients', 'deployments.client_id', '=', 'clients.id')
 				->offset($start)
@@ -50,7 +50,9 @@ class DeploymentFetchController extends Controller
 
 			$posts = Deployment::where(function ($query) use ($search) {
 				$query->whereHas('employee', function ($query) use ($search) {
-					$query->where('name', 'like', "%{$search}%");
+					$query->where('first_name', 'like', "%{$search}%")
+					->orWhere('middle_name', 'like', "%{$search}%")
+					->orWhere('last_name', 'like', "%{$search}%");
 				})
 				->whereHas('client', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
@@ -68,7 +70,9 @@ class DeploymentFetchController extends Controller
 			//total number of filtered data matching the search value request in the Supplier table	
 			$totalFiltered = Deployment::where(function ($query) use ($search) {
 				$query->whereHas('employee', function ($query) use ($search) {
-					$query->where('name', 'like', "%{$search}%");
+					$query->where('first_name', 'like', "%{$search}%")
+					->orWhere('middle_name', 'like', "%{$search}%")
+					->orWhere('last_name', 'like', "%{$search}%");
 				})
 				->whereHas('client', function ($query) use ($search) {
 					$query->where('name', 'like', "%{$search}%");
@@ -87,7 +91,7 @@ class DeploymentFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['employee_name'] = $r->employee_name;
+				$nestedData['employee_name'] = $r->last_name.', '.$r->first_name. ' '.$r->middle_name;
 				$nestedData['client_name'] = $r->client_name;
 				$nestedData['position'] = $r->position;
 				$nestedData['status'] = ucwords($r->status);
@@ -95,17 +99,13 @@ class DeploymentFetchController extends Controller
 				$nestedData['end_date'] = date('d-m-Y', strtotime($r->end_date));
 				if($r->status != 'new'){
 					$nestedData['action'] = '
-					<button name="compensation" id="compensation" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Compensation</button>
 						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
 						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
 						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Archive</button>
 					';
 				} else {
 					$nestedData['action'] = '
-					<button name="compensation" id="compensation" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Compensation</button>
-						<button name="attendance" id="attendance" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Attendance</button>
-						<button name="overtime" id="overtime" data-id="' . $r->id . '" class="btn bg-gradient-dark btn-sm">Overtime</button>
-						<button name="leaves" id="leaves" data-id="' . $r->id . '" class="btn bg-gradient-secondary btn-sm">Leaves</button>
+					<button name="work-details" id="work-details" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Work Details</button>
 						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
 						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
 						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Archive</button>
@@ -131,7 +131,7 @@ class DeploymentFetchController extends Controller
 	{
 	//column list in the table Prpducts
 	$columns = array(
-		0 => 'employee_name',
+		0 => 'first_name',
 		1 => 'client_name',
 		2 => 'position',
 		3 => 'status',
@@ -154,7 +154,7 @@ class DeploymentFetchController extends Controller
 	//check if user search for a value in the User datatable
 	if (empty($request->input('search.value'))) {
 		//get all the User data
-		$posts = Deployment::onlyTrashed()->select('employees.name as employee_name','clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
+		$posts = Deployment::onlyTrashed()->select('employees.first_name as first_name','employees.middle_name as middle_name','employees.last_name as last_name','clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
 			->join('employees', 'deployments.employee_id', '=', 'employees.id')
 			->join('clients', 'deployments.client_id', '=', 'clients.id')
 			->offset($start)
@@ -169,7 +169,9 @@ class DeploymentFetchController extends Controller
 
 		$posts = Deployment::onlyTrashed()->where(function ($query) use ($search) {
 			$query->whereHas('employee', function ($query) use ($search) {
-				$query->where('name', 'like', "%{$search}%");
+				$query->where('first_name', 'like', "%{$search}%")
+				->orWhere('middle_name', 'like', "%{$search}%")
+				->orWhere('last_name', 'like', "%{$search}%");
 			})
 			->whereHas('client', function ($query) use ($search) {
 				$query->where('name', 'like', "%{$search}%");
@@ -187,7 +189,9 @@ class DeploymentFetchController extends Controller
 		//total number of filtered data matching the search value request in the Supplier table	
 		$totalFiltered = Deployment::onlyTrashed()->where(function ($query) use ($search) {
 			$query->whereHas('employee', function ($query) use ($search) {
-				$query->where('name', 'like', "%{$search}%");
+				$query->where('first_name', 'like', "%{$search}%")
+					->orWhere('middle_name', 'like', "%{$search}%")
+					->orWhere('last_name', 'like', "%{$search}%");
 			})
 			->whereHas('client', function ($query) use ($search) {
 				$query->where('name', 'like', "%{$search}%");
@@ -207,7 +211,7 @@ class DeploymentFetchController extends Controller
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
 
-				$nestedData['employee_name'] = $r->employee_name;
+				$nestedData['employee_name'] = $r->last_name.', '.$r->first_name. ' '.$r->middle_name;
 				$nestedData['client_name'] = $r->client_name;
 				$nestedData['position'] = $r->position;
 				$nestedData['status'] = ucwords($r->status);

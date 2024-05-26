@@ -70,19 +70,44 @@ class EmployeeController extends Controller
         try {
 
             $messages = [
-                'gender_id.required' => 'Please select a Gender',
+                'gender_id.required' => 'Please select a Sex',
                 'civil_status_id.required' => 'Please select a Civil Status'
             ];
             //validate request value
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:50|unique:employees,name',
+                'first_name' => 'required|string|max:50',
+                'middle_name' => 'string|max:50',
+                'last_name' => 'required|string|max:50',   
                 'nickname' => 'required|string|max:10',
                 'gender_id' => 'required|integer',
                 'birthdate' => 'required|string',
                 'civil_status_id' => 'required|integer',
-                'address' => 'required|string|max:50',
+                'unit' => 'required|string|max:50',
+                'lot_block' => 'required|string|max:50',
+                'street' => 'required|string|max:50',
+                'subdivision' => 'required|string|max:50',
+                'municipality' => 'required|string|max:50',
+                'barangay' => 'required|string|max:50',
+                'province' => 'required|string|max:50',
+                'zip' => 'required|string|max:50',
+                'nationality' => 'required|string|max:50',
+                'religion' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
-                'email' => 'required|email|max:50'
+                'email' => 'required|email|max:50',
+                'sss_file' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'pagibig_file' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'tin_file' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'philhealth_file' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'nbi_file' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'emergency_contact_name' => 'required|string|max:50',
+                'emergency_relationship' => 'required|string|max:10',
+                'emergency_address' => 'required|string|max:50',
+                'emergency_contact_number' => 'required|digits:10',
+                'sss' => 'required|digits:12',
+                'pagibig' => 'required|digits:12',
+                'philhealth' => 'required|digits:12',
+                'tin' =>  'required|digits:12',
+                'nbi' =>  'required|digits:12'
             ], $messages);
 
             if ($validator->fails()) {
@@ -92,20 +117,127 @@ class EmployeeController extends Controller
             //check current user
             $user = \Auth::user()->id;
 
+            $sssOriginalImage = $request->file('sss_file');
+            $sssFile = time() . $sssOriginalImage->getClientOriginalName();
+
+            $pagibigOriginalImage = $request->file('pagibig_file');
+            $pagibigFile = time() . $pagibigOriginalImage->getClientOriginalName();
+
+            $tinOriginalImage = $request->file('tin_file');
+            $tinFile = time() . $tinOriginalImage->getClientOriginalName();
+
+            $philhealthOriginalImage = $request->file('philhealth_file');
+            $philhealthFile = time() . $philhealthOriginalImage->getClientOriginalName();
+
+            $nbiOriginalImage = $request->file('nbi_file');
+            $nbiFile = time() . $nbiOriginalImage->getClientOriginalName();
+
             //save employee
             $employee = new Employee();
             $employee->reference_no = $this->generateUniqueCode();
-            $employee->name = $request->name;
+            $employee->first_name = $request->first_name;
+            $employee->middle_name = $request->middle_name;
+            $employee->last_name = $request->last_name;
             $employee->nickname = $request->nickname;
+            $employee->nationality = $request->nationality;
+            $employee->religion = $request->religion;
             $employee->gender_id = $request->gender_id;
             $employee->civil_status_id = $request->civil_status_id;
             $employee->birthdate = $request->birthdate;
-            $employee->address = $request->address;
+            $employee->unit = $request->unit;
+            $employee->lot_block = $request->lot_block;
+            $employee->street = $request->street;
+            $employee->subdivision = $request->subdivision;
+            $employee->municipality = $request->municipality;
+            $employee->barangay = $request->barangay;
+            $employee->province = $request->province;
+            $employee->zip = $request->zip;
             $employee->contact_number = $request->contact_number;
             $employee->email = $request->email;
+            $employee->sss = $request->sss;
+            $employee->sss_file = $sssFile;
+            $employee->pagibig = $request->pagibig;
+            $employee->pagibig_file = $pagibigFile;
+            $employee->tin = $request->tin;
+            $employee->tin_file = $tinFile;
+            $employee->philhealth = $request->philhealth;
+            $employee->philhealth_file = $philhealthFile;
+            $employee->nbi = $request->nbi;
+            $employee->nbi_file = $nbiFile;
+            $employee->emergency_contact_name = $request->emergency_contact_name;
+            $employee->emergency_relationship = $request->emergency_relationship;
+            $employee->emergency_address = $request->emergency_address;
+            $employee->emergency_contact_number = $request->emergency_contact_number;
             $employee->creator_id = $user;
             $employee->updater_id = $user;
-            $employee->save();
+            if ($employee->save()) {
+                //sss
+                $photoPathSSS = public_path('images/sss/' . $employee->id . '/');
+
+                if (!file_exists($photoPathSSS)) {
+                    mkdir($photoPathSSS, 0777, true);
+                }
+                // create instance
+                $imgSSS = \Image::make($sssOriginalImage->getRealPath());
+
+                // resize image to fixed size
+                $imgSSS->resize(100, 100);
+                $imgSSS->save($photoPathSSS . $sssFile);
+
+                //pagibig
+                $photoPathPagibig = public_path('images/pagibig/' . $employee->id . '/');
+
+                if (!file_exists($photoPathPagibig)) {
+                    mkdir($photoPathPagibig, 0777, true);
+                }
+                // create instance
+                $imgPagibig = \Image::make($pagibigOriginalImage->getRealPath());
+
+                // resize image to fixed size
+                $imgPagibig->resize(100, 100);
+                $imgPagibig->save($photoPathPagibig . $sssFile);
+
+                //tin
+                $photoPathTin = public_path('images/tin/' . $employee->id . '/');
+
+                if (!file_exists($photoPathTin)) {
+                    mkdir($photoPathTin, 0777, true);
+                }
+                // create instance
+                $imgTin = \Image::make($tinOriginalImage->getRealPath());
+
+                // resize image to fixed size
+                $imgTin->resize(100, 100);
+                $imgTin->save($photoPathTin . $tinFile);
+
+
+                //philhealth
+                $photoPathPhilhealth = public_path('images/philhealth/' . $employee->id . '/');
+
+                if (!file_exists($photoPathPhilhealth)) {
+                    mkdir($photoPathPhilhealth, 0777, true);
+                }
+                // create instance
+                $imgPhilhealth = \Image::make($philhealthOriginalImage->getRealPath());
+
+                // resize image to fixed size
+                $imgPhilhealth->resize(100, 100);
+                $imgPhilhealth->save($photoPathPhilhealth . $philhealthFile);
+
+
+                //nbi
+                $photoPathNBI = public_path('images/nbi/' . $employee->id . '/');
+
+                if (!file_exists($photoPathNBI)) {
+                    mkdir($photoPathNBI, 0777, true);
+                }
+                // create instance
+                $imgNBI = \Image::make($nbiOriginalImage->getRealPath());
+
+                // resize image to fixed size
+                $imgNBI->resize(100, 100);
+                $imgNBI->save($photoPathNBI . $nbiFile);
+            }
 
             $log = new Log();
             $log->log = "User " . \Auth::user()->email . " create employee " . $employee->reference_no . " at " . Carbon::now();
@@ -175,6 +307,22 @@ class EmployeeController extends Controller
 
         $employment_histories = $employee->employment_histories;
         $educ_backgrounds = $employee->educ_backgrounds;
+
+
+        $educationLevel = [ 
+            [ 
+                'name' => 'Primary'
+            ],
+            [
+                'name' => 'Secondary'
+            ],
+            [
+                'name' => 'Tertiary'
+            ], 
+            [
+                'name' => 'Vocational'
+            ]
+        ];
    
     
         return view('employee.edit', [
@@ -184,7 +332,8 @@ class EmployeeController extends Controller
             'civilStatus' => $civilStatus,
             'gender' => $gender,
             'employment_histories' => $employment_histories,
-            'educ_backgrounds' => $educ_backgrounds
+            'educ_backgrounds' => $educ_backgrounds,
+            'educationLevel' => $educationLevel
         ]);
     }
 
@@ -210,41 +359,52 @@ class EmployeeController extends Controller
             $employee = Employee::withTrashed()->findOrFail($id);
 
             $messages = [
-                'gender_id.required' => 'Please select a Gender',
+                'gender_id.required' => 'Please select a Sex',
                 'civil_status_id.required' => 'Please select a Civil Status',
                 'employment_histories.*.required' => 'Please Add atleast 1 Employment History',
                 'educational_histories.*.required' => 'Please Add atleast 1 Educational Background',
                 'employmentTypes.*.integer' => 'Please select Employment Type',
                 'startdate.*.required' => 'Please select Start Date',
                 'enddate.*.required' => 'Please select Start Date',
-                'from.*.required' => 'Please select From Date',
-                'to.*.required' => 'Please select To Date',
+                'level.*.required' => 'Please select Education Level',
+                'date_graduated.*.required' => 'Please select Date Graduated',
                 'industries*.required' => 'Please select Nature of Work'
             ];
 
             //validate the request value
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|unique:employees,name,' . $employee->id,
+                'first_name' => 'required|string',
+                'middle_name' => 'nullable|string|max:50',
+                'last_name' => 'required|string',
                 'nickname' => 'required|string|max:10',
                 'gender_id' => 'required|integer',
                 'birthdate' => 'required|string',
                 'civil_status_id' => 'required|integer',
-                'address' => 'required|string|max:50',
+                'unit' => 'required|string|max:50',
+                'lot_block' => 'required|string|max:50',
+                'street' => 'required|string|max:50',
+                'subdivision' => 'required|string|max:50',
+                'municipality' => 'required|string|max:50',
+                'barangay' => 'required|string|max:50',
+                'province' => 'required|string|max:50',
+                'zip' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
                 'email' => 'required|email|max:50',
                 'employment_histories' => 'array',
                 'educational_histories' => 'array',
-                'title.*' => 'required|string',
-                'employmentTypes.*' => 'required|integer',
-                'company.*' => 'required|string',
-                'location.*' => 'required|string',
-                'startdate.*' => 'required|string',
-                'enddate.*' => 'required|string',
-                'industries.*' => 'required|integer',
-                'job_description.*' => 'required|string',
-                'school_name.*' => 'required|string',
-                'from.*' => 'required|string',
-                'to.*' => 'required|string',
+                'title.*' => 'nullable|string',
+                'employmentTypes.*' => 'nullable|integer',
+                'company.*' => 'nullable|string',
+                'location.*' => 'nullable|string',
+                'startdate.*' => 'nullable|string',
+                'enddate.*' => 'nullable|string',
+                'industries.*' => 'nullable|integer',
+                'job_description.*' => 'nullable|string',
+                'school_name.*' => 'nullable|string',
+                'level.*' => 'nullable|string',
+                'date_graduated.*' => 'nullable|string',
+                'nationality' => 'required|string|max:50',
+                'religion' => 'required|string|max:50',
                 'emergency_contact_name' => 'required|string|max:50',
                 'emergency_relationship' => 'required|string|max:10',
                 'emergency_address' => 'required|string|max:50',
@@ -252,7 +412,13 @@ class EmployeeController extends Controller
                 'sss' => 'required|digits:12',
                 'pagibig' => 'required|digits:12',
                 'philhealth' => 'required|digits:12',
-                'tin' =>  'required|digits:12'
+                'tin' =>  'required|digits:12',
+                'nbi' =>  'required|digits:12',
+                'sss_file' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'pagibig_file' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'tin_file' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'philhealth_file' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'nbi_file' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             ],$messages);
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
@@ -261,22 +427,159 @@ class EmployeeController extends Controller
             //check current user
             $user = \Auth::user()->id;
 
+            $originalImageSSS = $request->file('sss_file');
+            $currentPhotoSSS = $employee->sss_file;
+
+            $originalImagePagibig = $request->file('pagibig_file');
+            $currentPhotoPagibig = $employee->pagibig_file;
+
+            $originalImageTin = $request->file('tin_file');
+            $currentPhotoTin = $employee->tin_file;
+
+            $originalImagePhilhealth = $request->file('philhealth_file');
+            $currentPhotoPhilhealth = $employee->philhealth_file;
+
+            $originalImageNbi = $request->file('nbi_file');
+            $currentPhotoNbi = $employee->nbi_file;
+
+            $sssPhoto = "";
+            if ($originalImageSSS) {
+                $sssPhoto = time() . $originalImageSSS->getClientOriginalName();
+                $sssPhotos = public_path('images/sss/' . $employee->id . '/') . $currentPhotoSSS;
+                $photoPath = public_path('images/sss/' . $employee->id . '/');
+                if (!file_exists($sssPhotos)) {
+                    mkdir($photoPath, 0777, true);
+                } else {
+                    @unlink($sssPhotos);
+                }
+                // create instance
+                $img = \Image::make($originalImageSSS->getRealPath());
+
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath . $sssPhoto);
+            } else {
+                $sssPhoto = $currentPhotoSSS;
+            }
+
+            // 'pagibig_file' 
+            $pagibigPhoto = "";
+            if ($originalImagePagibig) {
+                $pagibigPhoto = time() . $originalImagePagibig->getClientOriginalName();
+                $pagibigPhotos = public_path('images/pagibig/' . $employee->id . '/') . $currentPhotoPagibig;
+                $photoPath = public_path('images/pagibig/' . $employee->id . '/');
+                if (!file_exists($pagibigPhotos)) {
+                    mkdir($photoPath, 0777, true);
+                } else {
+                    @unlink($pagibigPhotos);
+                }
+                // create instance
+                $img = \Image::make($originalImagePagibig->getRealPath());
+
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath . $pagibigPhoto);
+            } else {
+                $pagibigPhoto = $currentPhotoPagibig;
+            }
+
+            // 'tin_file' 
+            $tinPhoto = "";
+            if ($originalImageTin) {
+                $tinPhoto = time() . $originalImageTin->getClientOriginalName();
+                $tinPhotos = public_path('images/tin/' . $employee->id . '/') . $currentPhotoTin;
+                $photoPath = public_path('images/tin/' . $employee->id . '/');
+                if (!file_exists($tinPhotos)) {
+                    mkdir($photoPath, 0777, true);
+                } else {
+                    @unlink($tinPhotos);
+                }
+                // create instance
+                $img = \Image::make($originalImageTin->getRealPath());
+
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath . $tinPhoto);
+            } else {
+                $tinPhoto = $currentPhotoTin;
+            }
+
+            // 'philhealth_file' 
+            $philhealthPhoto = "";
+            if ($originalImagePhilhealth) {
+                $philhealthPhoto = time() . $originalImagePhilhealth->getClientOriginalName();
+                $phihealthPhotos = public_path('images/philhealth/' . $employee->id . '/') . $currentPhotoTin;
+                $photoPath = public_path('images/philhealth/' . $employee->id . '/');
+                if (!file_exists($phihealthPhotos)) {
+                    mkdir($photoPath, 0777, true);
+                } else {
+                    @unlink($phihealthPhotos);
+                }
+                // create instance
+                $img = \Image::make($originalImagePhilhealth->getRealPath());
+
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath . $philhealthPhoto);
+            } else {
+                $philhealthPhoto = $currentPhotoPhilhealth;
+            }
+
+
+            // 'nbi_file' 
+            $nbiPhoto = "";
+            if ($originalImagePhilhealth) {
+                $nbiPhoto = time() . $originalImageNbi->getClientOriginalName();
+                $nbiPhotos = public_path('images/nbi/' . $employee->id . '/') . $currentPhotoNbi;
+                $photoPath = public_path('images/nbi/' . $employee->id . '/');
+                if (!file_exists($nbiPhotos)) {
+                    mkdir($photoPath, 0777, true);
+                } else {
+                    @unlink($nbiPhotos);
+                }
+                // create instance
+                $img = \Image::make($originalImageNbi->getRealPath());
+
+                // resize image to fixed size
+                $img->resize(100, 100);
+                $img->save($photoPath . $nbiPhoto);
+            } else {
+                $nbiPhoto = $currentPhotoNbi;
+            }
+
             //save the update value
-            $employee->name = $request->name;
+            $employee->first_name = $request->first_name;
+            $employee->middle_name = $request->middle_name;
+            $employee->last_name = $request->last_name;
             $employee->nickname = $request->nickname;
             $employee->gender_id = $request->gender_id;
             $employee->civil_status_id = $request->civil_status_id;
+            $employee->religion = $request->religion;
+            $employee->nationality = $request->nationality;
             $employee->birthdate = $request->birthdate;
-            $employee->address = $request->address;
+            $employee->unit = $request->unit;
+            $employee->lot_block = $request->lot_block;
+            $employee->street = $request->street;
+            $employee->subdivision = $request->subdivision;
+            $employee->municipality = $request->municipality;
+            $employee->barangay = $request->barangay;
+            $employee->province = $request->province;
+            $employee->zip = $request->zip;
             $employee->contact_number = $request->contact_number;
             $employee->emergency_contact_name = $request->emergency_contact_name;
             $employee->emergency_relationship = $request->emergency_relationship;
             $employee->emergency_address = $request->emergency_address;
             $employee->emergency_contact_number = $request->emergency_contact_number;
             $employee->sss = $request->sss;
+            $employee->sss_file = $sssPhoto;
             $employee->pagibig = $request->pagibig;
-            $employee->philhealth = $request->philhealth;
+            $employee->pagibig_file = $pagibigPhoto;
             $employee->tin = $request->tin;
+            $employee->tin_file = $tinPhoto;
+            $employee->philhealth = $request->philhealth;
+            $employee->philhealth_file = $philhealthPhoto;
+            $employee->nbi = $request->nbi;
+            $employee->nbi_file = $nbiPhoto;
             $employee->email = $request->email;
             $employee->updater_id = $user;
             $employee->update();
@@ -322,16 +625,17 @@ class EmployeeController extends Controller
 
 
             $school_names = $request->input('school_name', []);
-            $from = $request->input('from', []);
-            $to = $request->input('to', []);
+            $date_graduated = $request->input('date_graduated', []);
+            $level = $request->input('level', []);
             for ($i = 0; $i < count($school_names); $i++) {
                 if ($school_names[$i] != '') {
                     $education = EducationalBackground::firstOrNew([
                         'employee_id' => $employee->id,
+                        'level' => $employee->level
                     ]);
                     $education->school_name = $school_names[$i];
-                    $education->from = Carbon::parse($from[$i])->format('Y-m-d');
-                    $education->to = Carbon::parse($to[$i])->format('Y-m-d');
+                    $education->date_graduated = Carbon::parse($date_graduated[$i])->format('Y-m-d');
+                    $education->level = $level[$i];
                     $education->creator_id = $user;
                     $education->updater_id = $user;
                     $education->save();

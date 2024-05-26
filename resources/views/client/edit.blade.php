@@ -31,7 +31,7 @@
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<form action="{{ route('client.update', $client->id)}}" method="POST">
+							<form action="{{ route('client.update', $client->id)}}" method="POST" enctype="multipart/form-data">
 								@csrf
 								@method('PATCH')
 								<div class="form-group row">
@@ -86,12 +86,23 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label">Contract:</label>
 									<div class="col-lg-9">	
+											@php
+											$imageUrl = $client->contract != null ? '/images/'.$client->id.'/'.$client->contract : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+											@endphp
+											@if($client->contract)
+											<img 
+											class="profile-user-img img-fluid"
+										src="{{ url($imageUrl) }}"
+										alt="Contract Image"><br/><br/>
+											@else
+											No Contract Found. Please upload.<br/><br/>
+											@endif
 												<input type="file" id="image" name="contract"value="{{ old('contract') }}" class="@error('contract') is-invalid @enderror form-control" placeholder="Contract Image" >
 									</div>
 								</div>
 
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" class="btn btn-success">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</form>
 						</div>

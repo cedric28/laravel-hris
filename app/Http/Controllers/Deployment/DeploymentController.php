@@ -11,6 +11,10 @@ use App\EmploymentType;
 use App\Log;
 use App\Role;
 use App\Salary;
+use App\Schedule;
+use App\LateTime;
+use App\OverTime;
+use App\LeaveType;
 use Validator, Hash, DB;
 use Carbon\Carbon;
 
@@ -121,8 +125,6 @@ class DeploymentController extends Controller
             ], $messages);
 
 
-          
-
 
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
@@ -149,6 +151,16 @@ class DeploymentController extends Controller
             $salary->creator_id = $user;
             $salary->updater_id = $user;
             $salary->save();
+
+
+            $schedule = new Schedule();
+            $schedule->deployment_id =  $deployment->id;
+            $schedule->slug = 'Monday - Friday';
+            $schedule->time_in = Carbon::parse('07:00:00')->format('H:i:s');
+            $schedule->time_out = Carbon::parse('16:00:00')->format('H:i:s');
+            $schedule->creator_id = $user;
+            $schedule->updater_id = $user;
+            $schedule->save();
 
             $log = new Log();
             $log->log = "User " . \Auth::user()->email . " create deployment " . $deployment->id . " at " . Carbon::now();
@@ -367,6 +379,33 @@ class DeploymentController extends Controller
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
+    }
+
+    public function workDetails($id)
+    {
+        //prevent other user to access to this page
+        $this->authorize("isHROrAdmin");
+
+        $deployment = Deployment::withTrashed()->findOrFail($id);
+        $schedule = Schedule::withTrashed()->where('deployment_id', $deployment->id)->first();
+        $lates = LateTime::withTrashed()->where('deployment_id', $deployment->id)->get();
+        $overtimes = OverTime::withTrashed()->where('deployment_id', $deployment->id)->get();
+        $leaveTypes = LeaveType::all();
+        $salary = Salary::withTrashed()->where('deployment_id', $deployment->id)->first();
+        $baseRate =  [
+            [ 
+                'label' => 'Hourly',
+                'value' => 'hourly'
+            ]];
+        return view('deployment.work-details', [
+           'deployment' => $deployment,
+           'schedule'=> $schedule,
+           'lates' => $lates,
+           'overtimes' => $overtimes,
+           'leaveTypes' => $leaveTypes,
+           'salary' => $salary,
+           'baseRate' => $baseRate
+        ]);
     }
 
     public function generateUniqueCode()

@@ -26,7 +26,7 @@
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-                            <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card card-success card-outline card-outline-tabs">
                                 <div class="card-header p-0 border-bottom-0">
                                     <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                         <li class="nav-item">
@@ -319,24 +319,9 @@
                 $('#restoreModal').modal('show');
             });
 
-            $(document).on('click', '#compensation', function(){
+            $(document).on('click', '#work-details', function(){
                 userId = $(this).attr('data-id');
-                window.location.href = `/salary/${userId}/edit`;
-            });
-
-            $(document).on('click', '#attendance', function(){
-                userId = $(this).attr('data-id');
-                window.location.href = `/attendance/${userId}/edit`;
-            });
-
-            $(document).on('click', '#leaves', function(){
-                userId = $(this).attr('data-id');
-                window.location.href = `/leaves/${userId}/edit`;
-            });
-
-            $(document).on('click', '#overtime', function(){
-                userId = $(this).attr('data-id');
-                window.location.href = `/overtime/${userId}/edit`;
+                window.location.href = `/deployment/work-details/${userId}`;
             });
 
             $('#restore_button').click(function(){

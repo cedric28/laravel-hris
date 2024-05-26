@@ -28,7 +28,7 @@
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<div class="card card-primary">
+							<div class="card card-success">
 								<div class="card-header">
 									Basic Information
 								</div>
@@ -40,7 +40,7 @@
 										</tr>
 										<tr>
 											<th>Fullname</th>
-											<td>{{ $employee->name }}</td>
+											<td>{{ $employee->last_name }}, {{ $employee->first_name }}  {{ $employee->middle_name }}</td>
 										</tr>
 										<tr>
 											<th>Nickname</th>
@@ -60,7 +60,7 @@
 										</tr>
 										<tr>
 											<th>Address</th>
-											<td>{{ $employee->address }}</td>
+											<td>{{ $employee->unit.' '.$employee->lot_block.' '.$employee->street.' '.$employee->subdivision.' '.$employee->barangay.' '.$employee->municipality.' '.$employee->province }}</td>
 										</tr>
 										<tr>
 											<th>Phone</th>
@@ -74,7 +74,7 @@
 								</div>
 							</div>
 
-							<div class="card card-primary">
+							<div class="card card-success">
 								<div class="card-header">
 									In-Case of Emergency Information
 								</div>
@@ -82,25 +82,25 @@
 									<table class="table table-bordered">
 										<tr>
 											<th>Emergency Contact Name</th>
-											<td>{{ $employee->emergency_contact_name }}</td>
+											<td>{{ $employee->emergency_contact_name ?? '-' }}</td>
 										</tr>
 										<tr>
 											<th>Relationship</th>
-											<td>{{ $employee->emergency_relationship }}</td>
+											<td>{{ $employee->emergency_relationship ?? '-' }}</td>
 										</tr>
 										<tr>
 											<th>Phone</th>
-											<td>+63{{ $employee->emergency_contact_number }}</td>
+											<td>+63{{ $employee->emergency_contact_number ?? '-' }}</td>
 										</tr>
 										<tr>
 											<th>Address</th>
-											<td>{{ $employee->emergency_address }}</td>
+											<td>{{ $employee->emergency_address ?? '-' }}</td>
 										</tr>
 									</table>	
 								</div>
 							</div>
 
-							<div class="card card-primary">
+							<div class="card card-success">
 								<div class="card-header">
 								Government Information
 								</div>
@@ -108,19 +108,19 @@
 									<table class="table table-bordered">
 										<tr>
 											<th>SSS</th>
-											<td>{{ $employee->sss }}</td>
+											<td>{{ $employee->sss ?? '-'}}</td>
 										</tr>
 										<tr>
 											<th>PAG-IBIG</th>
-											<td>{{ $employee->pagibig }}</td>
+											<td>{{ $employee->pagibig ?? '-' }}</td>
 										</tr>
 										<tr>
 											<th>Philhealth</th>
-											<td>{{ $employee->philhealth }}</td>
+											<td>{{ $employee->philhealth ?? '-' }}</td>
 										</tr>
 										<tr>
 											<th>TIN</th>
-											<td>{{ $employee->tin }}</td>
+											<td>{{ $employee->tin  ?? '-'}}</td>
 										</tr>
 									</table>	
 								</div>

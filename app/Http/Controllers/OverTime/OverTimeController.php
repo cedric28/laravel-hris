@@ -144,7 +144,7 @@ class OverTimeController extends Controller
         |---------------------------------------------*/
         \DB::commit();
 
-            return redirect()->route('overtime.edit', $deployment->id)->with('successMsg', 'Overtime Data Save Successful');
+            return redirect()->route('workDetails', $deployment->id)->with('successMsg', 'Overtime Data Save Successful');
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();

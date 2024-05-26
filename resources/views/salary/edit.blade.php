@@ -35,7 +35,7 @@
                             @csrf
                             @method('PATCH')
                                 <div id="accordion">
-                                    <div class="card card-primary">
+                                    <div class="card card-success">
                                         <div class="card-header">
                                             <h4 class="card-title w-100">
                                                 <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseSalary" aria-expanded="true">
@@ -69,7 +69,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card card-primary">
+                                    <div class="card card-success">
                                         <div class="card-header">
                                             <h4 class="card-title w-100">
                                                 <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseOne" aria-expanded="true">
@@ -110,7 +110,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card card-primary">
+                                    <div class="card card-success">
                                         <div class="card-header">
                                             <h4 class="card-title w-100">
                                             <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="true">
@@ -150,7 +150,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card card-primary">
+                                    <div class="card card-success">
                                         <div class="card-header">
                                             <h4 class="card-title w-100">
                                                 <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="true">
@@ -172,7 +172,7 @@
                                 </div>
 							
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" class="btn btn-success">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</form>
 						</div>

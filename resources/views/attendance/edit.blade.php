@@ -69,7 +69,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+                                        <button type="submit" class="btn btn-success">Save <i class="icon-paperplane ml-2"></i></button>
                                     </div>
 							</form>
 						</div>
@@ -77,7 +77,7 @@
 						<div class="row">
                             <div class="col-md-12">
                                 <div id="accordion">
-                                    <div class="card card-primary">
+                                    <div class="card card-success">
                                         <div class="card-header">
                                             <h4 class="card-title w-100">
                                                 <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseAttendance" aria-expanded="true">

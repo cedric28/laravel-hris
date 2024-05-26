@@ -16,8 +16,8 @@ class CreateEducationalBackgroundsTable extends Migration
         Schema::create('educational_backgrounds', function (Blueprint $table) {
             $table->id();
             $table->string("school_name");
-            $table->date('from')->default(date("Y-m-d"));
-            $table->date('to')->default(date("Y-m-d"));
+            $table->string("level");
+            $table->date('date_graduated')->default(date("Y-m-d"));
             $table->integer('employee_id')->unsigned()->index();
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();

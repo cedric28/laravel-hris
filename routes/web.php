@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::post('deployment/fetch/q', 'Deployment\DeploymentFetchController@fetchDeployment')->name('activeDeployment');
     Route::post('inactive-deployment/fetch/q', 'Deployment\DeploymentFetchController@fetchInactiveDeployment')->name('InactiveDeployment');
     Route::get('deployment/destroy/{id}', 'Deployment\DeploymentController@destroy');
+    Route::get('deployment/work-details/{id}', 'Deployment\DeploymentController@workDetails')->name('workDetails');
     Route::get('deployment/restore/{id}', 'Deployment\DeploymentController@restore');
 
 

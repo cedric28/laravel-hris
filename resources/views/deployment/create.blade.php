@@ -52,7 +52,7 @@
 										<select id="employee-id" name="employee_id" class="form-control select2">
 											<option value="">Select Employee</option>
 											@foreach ($employees as $employee)
-												<option value="{{ $employee->id }}"{{ ($employee->id == old('employee_id')) ? ' selected' : '' }}>{{ ucwords($employee->name) }}</option>
+												<option value="{{ $employee->id }}"{{ ($employee->id == old('employee_id')) ? ' selected' : '' }}>{{ ucwords($employee->last_name) }}, {{ ucwords($employee->first_name) }} {{ ucwords($employee->middle_name) }}</option>
 											@endforeach
 										</select>
 									</div>
@@ -105,7 +105,7 @@
 								</div>
 
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" class="btn btn-success">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</form>
 						</div>

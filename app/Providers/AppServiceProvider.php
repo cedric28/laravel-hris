@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Validators\AttendanceCsvValidator;
 use Validator;
 
 class AppServiceProvider extends ServiceProvider

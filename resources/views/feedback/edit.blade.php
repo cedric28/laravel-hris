@@ -203,7 +203,7 @@
 						</div>
 
 								<div class="text-right">
-									<button type="submit" class="btn btn-primary">Save <i class="icon-paperplane ml-2"></i></button>
+									<button type="submit" class="btn btn-success">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>
 							</form>
 						</div>

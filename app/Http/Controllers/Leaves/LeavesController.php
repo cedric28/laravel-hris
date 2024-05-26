@@ -124,7 +124,7 @@ class LeavesController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('leaves.edit', $deployment->id);
+            return redirect()->route('workDetails', $deployment->id);
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
