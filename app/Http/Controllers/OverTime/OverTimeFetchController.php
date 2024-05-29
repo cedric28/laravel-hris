@@ -89,7 +89,7 @@ class OverTimeFetchController extends Controller
 				$nestedData['overtime_date'] =  date('d-m-Y', strtotime($r->overtime_date));
 				$nestedData['duration'] = $totalMinutes." mins";
                 $nestedData['action'] = '
-                    <button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Archive</button>
+                    <button name="delete" id="delete_overtime" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Archive</button>
                 ';
 				$data[] = $nestedData;
 			}

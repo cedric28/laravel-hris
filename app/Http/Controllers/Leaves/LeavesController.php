@@ -124,7 +124,7 @@ class LeavesController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('workDetails', $deployment->id);
+            return redirect()->route('workDetails',  ['id' => $request->deployment_id,'parent_index' => 4])->with('successMsg', 'Leaves Data Save Successful');
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();

@@ -145,7 +145,7 @@ class SalaryController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('workDetails', $salary->deployment_id)
+            return redirect()->route('workDetails',['id' => $salary->deployment_id,'parent_index' => 5])
                 ->with('successMsg', 'Salary Data update Successfully');
         } catch (\Exception $e) {
             \DB::rollback();

@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Employee - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
+            <h1>Employee - {{ ucwords($deployment->employee->last_name).", ".ucwords($deployment->employee->first_name)." ".ucwords($deployment->employee->middle_name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
@@ -35,25 +35,25 @@
 								<div class="card-header p-0 pt-1">
 									<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
 										<li class="nav-item">
-											<a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Schedule</a>
+											<a class="nav-link {{ request()->get('parent_index') == 1 ? 'active' : '' }}" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Schedule</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Attendance</a>
+											<a class="nav-link {{ request()->get('parent_index') == 2 ? 'active' : '' }}" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Attendance</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Overtime</a>
+											<a class="nav-link {{ request()->get('parent_index') == 3 ? 'active' : '' }}" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Overtime</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Leaves</a>
+											<a class="nav-link {{ request()->get('parent_index') == 4 ? 'active' : '' }}" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Leaves</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="salary-tab" data-toggle="pill" href="#salary" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Salary</a>
+											<a class="nav-link {{ request()->get('parent_index') == 5 ? 'active' : '' }}" id="salary-tab" data-toggle="pill" href="#salary" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Salary</a>
 										</li>
 									</ul>
 								</div>
 								<div class="card-body">
 									<div class="tab-content" id="custom-tabs-one-tabContent">
-													<div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+													<div class="tab-pane fade {{ request()->get('parent_index') == 1 ? 'active show' : '' }}" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
 														<form action="{{ route('schedule.update', $schedule->id)}}" method="POST" >
 															@csrf
 															@method('PATCH')
@@ -94,7 +94,7 @@
 															</div>
 														</form>
 													</div>
-													<div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+													<div class="tab-pane fade {{ request()->get('parent_index') == 2 ? 'active show' : '' }}" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
 														<form action="{{ route('attendance.store')}}" method="POST">
 															@csrf
 																			<input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
@@ -211,7 +211,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+													<div class="tab-pane fade {{ request()->get('parent_index') == 3 ? 'active show' : '' }}" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
 															<form action="{{ route('overtime.store')}}" method="POST">
 															@csrf
 																			<input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
@@ -297,7 +297,7 @@
 																</div>
 															</div>
 													</div>
-													<div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+													<div class="tab-pane fade {{ request()->get('parent_index') == 4 ? 'active show' : '' }}" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
 														<form action="{{ route('leaves.store')}}" method="POST">
 								@csrf
 								<input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
@@ -369,7 +369,7 @@
                             </div>
 						</div>
 													</div>
-													<div class="tab-pane fade" id="salary" role="tabpanel" aria-labelledby="salary-tab">
+													<div class="tab-pane fade {{ request()->get('parent_index') == 5 ? 'active show' : '' }}" id="salary" role="tabpanel" aria-labelledby="salary-tab">
 															  <form action="{{ route('salary.update', $salary->id)}}" method="POST">
                             @csrf
                             @method('PATCH')
@@ -527,6 +527,55 @@
 			</div>
 		</div>	
 	</section>
+    	<!-- /page content -->
+	<div id="confirmModalAttendance" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="ok_button" id="ok_button_attendance" class="btn btn-danger">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="confirmModalOvertime" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="ok_button" id="ok_button_overtime" class="btn btn-danger">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="confirmModalLeaves" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4 align="center" style="margin:0;">Are you sure you want to remove this data?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="ok_button" id="ok_button_leaves" class="btn btn-danger">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<!-- /page content -->
         @push('scripts')
         <!-- Javascript -->
@@ -689,21 +738,21 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
             });
 
              var attendance_id;
-            $(document).on('click', '#delete', function(){
+            $(document).on('click', '#delete_attendance', function(){
                 attendance_id = $(this).attr('data-id');
-                $('#confirmModal').modal('show');
+                $('#confirmModalAttendance').modal('show');
             });
 
-            $('#ok_button').click(function(){
+            $('#ok_button_attendance').click(function(){
                 $.ajax({
                     url:"/attendance/destroy/"+attendance_id,
                     beforeSend:function(){
-                        $('#ok_button').text('Deleting...');
+                        $('#ok_button_attendance').text('Deleting...');
                     },
                     success:function(data)
                     {
                         setTimeout(function(){
-                            $('#confirmModal').modal('hide');
+                            $('#confirmModalAttendance').modal('hide');
                             tableActiveAttendances.ajax.reload();
                             tableActiveLate.ajax.reload();
                         }, 2000);
@@ -801,21 +850,21 @@ var tableActiveOverTime = $('#employee_overtime').DataTable({
         
 
              var overtime_id;
-            $(document).on('click', '#delete', function(){
+            $(document).on('click', '#delete_overtime', function(){
                 overtime_id = $(this).attr('data-id');
-                $('#confirmModal').modal('show');
+                $('#confirmModalOvertime').modal('show');
             });
 
-            $('#ok_button').click(function(){
+            $('#ok_button_overtime').click(function(){
                 $.ajax({
                     url:"/overtime/destroy/"+overtime_id,
                     beforeSend:function(){
-                        $('#ok_button').text('Deleting...');
+                        $('#ok_button_overtime').text('Deleting...');
                     },
                     success:function(data)
                     {
                         setTimeout(function(){
-                            $('#confirmModal').modal('hide');
+                            $('#confirmModalOvertime').modal('hide');
                             tableActiveOverTime.ajax.reload();
                         }, 2000);
                     }
@@ -905,22 +954,22 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
             
    
             var leave_id;
-            $(document).on('click', '#delete', function(){
+            $(document).on('click', '#delete_leaves', function(){
                 console.log
                 leave_id = $(this).attr('data-id');
-                $('#confirmModal').modal('show');
+                $('#confirmModalLeaves').modal('show');
             });
 
-            $('#ok_button').click(function(){
+            $('#ok_button_leaves').click(function(){
                 $.ajax({
                     url:"/leaves/destroy/"+leave_id,
                     beforeSend:function(){
-                        $('#ok_button').text('Deleting...');
+                        $('#ok_button_leaves').text('Deleting...');
                     },
                     success:function(data)
                     {
                         setTimeout(function(){
-                            $('#confirmModal').modal('hide');
+                            $('#confirmModalLeaves').modal('hide');
                             tableActiveLeaves.ajax.reload();
                         }, 2000);
                     }

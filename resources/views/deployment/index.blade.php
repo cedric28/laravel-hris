@@ -321,7 +321,7 @@
 
             $(document).on('click', '#work-details', function(){
                 userId = $(this).attr('data-id');
-                window.location.href = `/deployment/work-details/${userId}`;
+                window.location.href = `/deployment/work-details/${userId}?parent_index=1`;
             });
 
             $('#restore_button').click(function(){

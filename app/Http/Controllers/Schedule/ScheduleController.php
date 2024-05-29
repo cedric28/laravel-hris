@@ -224,7 +224,7 @@ class ScheduleController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('workDetails', $request->deployment_id)
+            return redirect()->route('workDetails', ['id' => $request->deployment_id,'parent_index' => 1])
                 ->with('successMsg', 'Schedule Data update Successfully');
         } catch (\Exception $e) {
             \DB::rollback();
