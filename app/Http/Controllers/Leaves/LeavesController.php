@@ -96,7 +96,7 @@ class LeavesController extends Controller
                       }
 
                       if($leaves){
-                        $fail('You have an existing leaves on this date '.Carbon::parse($value)->format('Y-m-d'));
+                        $fail('You have an existing leave on this date '.Carbon::parse($value)->format('Y-m-d'));
                       }
                     
                     },
