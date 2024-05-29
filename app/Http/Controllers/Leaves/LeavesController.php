@@ -86,9 +86,17 @@ class LeavesController extends Controller
                       $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
                         ->where('deployment_id', $request->deployment_id)
                         ->exists();
+
+                        $leaves = Leave::where('leave_date',Carbon::parse($value)->format('Y-m-d'))
+                        ->where('deployment_id', $request->deployment_id)
+                        ->exists();
   
                       if($attendance) {
-                        $fail('You have an attendace time in and out on this date.');
+                        $fail('You have an attendance time in and out on this date.');
+                      }
+
+                      if($leaves){
+                        $fail('You have an existing leaves on this date '.Carbon::parse($value)->format('Y-m-d'));
                       }
                     
                     },
