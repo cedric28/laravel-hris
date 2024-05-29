@@ -202,7 +202,7 @@ class ScheduleController extends Controller
             ], $messages);
 
             if ($validator->fails()) {
-                return back()->withErrors($validator->errors())->withInput();
+                return redirect()->route('workDetails', ['id' => $request->deployment_id,'parent_index' => 1])->withErrors($validator->errors())->withInput();
             }
 
             $schedule->deployment_id = $request->deployment_id;
@@ -228,7 +228,7 @@ class ScheduleController extends Controller
                 ->with('successMsg', 'Schedule Data update Successfully');
         } catch (\Exception $e) {
             \DB::rollback();
-            return back()->withErrors($e->getMessage());
+            return redirect()->route('workDetails', ['id' => $request->deployment_id,'parent_index' => 1])->withErrors($e->getMessage());
         }
     }
 

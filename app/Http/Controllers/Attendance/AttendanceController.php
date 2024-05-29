@@ -101,7 +101,7 @@ class AttendanceController extends Controller
             $validator = Validator::make($request->all(), $rules, $messages);
   
             if ($validator->fails()) {
-                return back()->withErrors($validator->errors())->withInput();
+                return redirect()->route('workDetails', ['id' => $request->deployment_id,'parent_index' => 2])->withErrors($validator->errors())->withInput();
             }
 
             //check current user
@@ -151,7 +151,7 @@ class AttendanceController extends Controller
           } catch (\Exception $e) {
               //if error occurs rollback the data from it's previos state
               \DB::rollback();
-              return back()->withErrors($e->getMessage());
+              return redirect()->route('workDetails', ['id' => $request->deployment_id,'parent_index' => 2])->withErrors($e->getMessage());
           }
     }
 

@@ -117,7 +117,7 @@ class SalaryController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return back()->withErrors($validator->errors())->withInput();
+                return redirect()->route('workDetails',['id' => $salary->deployment_id,'parent_index' => 5])->withErrors($validator->errors())->withInput();
             }
             
             $salary->basic_salary = $request->basic_salary;
@@ -149,7 +149,7 @@ class SalaryController extends Controller
                 ->with('successMsg', 'Salary Data update Successfully');
         } catch (\Exception $e) {
             \DB::rollback();
-            return back()->withErrors($e->getMessage());
+            return redirect()->route('workDetails',['id' => $salary->deployment_id,'parent_index' => 5])->withErrors($e->getMessage());
         }
     }
 

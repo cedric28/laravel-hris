@@ -101,7 +101,7 @@ class OverTimeController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return back()->withErrors($validator->errors())->withInput();
+            return redirect()->route('workDetails',  ['id' => $request->deployment_id,'parent_index' => 3])->withErrors($validator->errors())->withInput();
         }
 
         //check current user
@@ -148,7 +148,7 @@ class OverTimeController extends Controller
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
-            return back()->withErrors($e->getMessage());
+            return redirect()->route('workDetails',  ['id' => $request->deployment_id,'parent_index' => 3])->withErrors($e->getMessage());
         }
     }
 
