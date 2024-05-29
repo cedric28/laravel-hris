@@ -86,9 +86,9 @@ class ClientFetchController extends Controller
 				$nestedData['address'] = $r->address;
 				$nestedData['created_at'] = date('d-m-Y', strtotime($r->created_at));
 				$nestedData['action'] = '
-                    <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Show</button>
-					<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm">Edit</button>
-					<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm">Archive</button>
+                    <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="fas fa-eye"></i></button>
+					<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
+					<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-trash"></i></button>
 				';
 				$data[] = $nestedData;
 			}
