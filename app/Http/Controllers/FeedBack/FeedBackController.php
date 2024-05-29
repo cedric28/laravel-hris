@@ -270,7 +270,8 @@ class FeedBackController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('feedback.edit', $feedback->id);
+            return redirect()->route('feedback.create')
+            ->with('successMsg', 'FeedBack Save Successful');
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();

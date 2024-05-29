@@ -40,7 +40,7 @@
 										<select id="deployment-id" name="deployment_id" class="form-control select2" disabled>
 											<option value="">Select Employee</option>
 											@foreach ($deployments as $deployment)
-												<option value="{{ $deployment->id }}"{{ ($deployment->id == old('deployment_id', $feedback->deployment_id)) ? ' selected' : '' }}>{{ ucwords($deployment->employee->name) }} - {{ ucwords($deployment->client->name) }}</option>
+												<option value="{{ $deployment->id }}"{{ ($deployment->id == old('deployment_id', $feedback->deployment_id)) ? ' selected' : '' }}>{{  ucwords($deployment->employee->last_name).", ".ucwords($deployment->employee->first_name)." ".ucwords($deployment->employee->middle_name) }} - {{ ucwords($deployment->client->name) }}</option>
 											@endforeach
 										</select>
 									</div>
