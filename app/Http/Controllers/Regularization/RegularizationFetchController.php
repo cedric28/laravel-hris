@@ -15,7 +15,7 @@ class RegularizationFetchController extends Controller
         $currentMonth = Carbon::now()->month;
 		//column list in the table Prpducts
 		$columns = array(
-			0 => 'fullname',
+			0 => 'first_name',
 			1 => 'client_name',
 			2 => 'rate',
 			3 => 'action'
@@ -35,7 +35,8 @@ class RegularizationFetchController extends Controller
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
-            $posts = Feedback::select('feedback.id as id','employees.name as fullname', 'clients.name as company','feedback.rate')
+            $posts = Feedback::select('feedback.id as id',
+												DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
             ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
@@ -50,7 +51,8 @@ class RegularizationFetchController extends Controller
             ->get();
 
 			//total number of filtered data
-			$totalFiltered = Feedback::select('feedback.id as id','employees.name as fullname', 'clients.name as company','feedback.rate')
+			$totalFiltered = Feedback::select('feedback.id as id',
+			DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
             ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
@@ -63,11 +65,14 @@ class RegularizationFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-            $posts = Feedback::select('feedback.id as id','employees.name as fullname', 'clients.name as company','feedback.rate')
+            $posts = Feedback::select('feedback.id as id',
+												DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
                 ->join('employees', 'deployments.employee_id', '=', 'employees.id')
                 ->join('clients', 'deployments.client_id', '=', 'clients.id')
                 ->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
-                ->orWhere('employees.name', 'like', "%{$search}%")
+															->orWhere('employees.first_name', 'like', "%{$search}%")
+															->orWhere('employees.middle_name', 'like', "%{$search}%")
+															->orWhere('employees.last_name', 'like', "%{$search}%")
 																->orWhere('clients.name', 'like', "%{$search}%")
 																->orWhere('feedback.rate', 'like', "%{$search}%")
                 ->whereMonth('feedback.created_at', $currentMonth)
@@ -81,11 +86,13 @@ class RegularizationFetchController extends Controller
 															->get();
 
 			//total number of filtered data matching the search value request in the Supplier table	
-			$totalFiltered = Feedback::select('feedback.id as id','employees.name as fullname', 'clients.name as company','feedback.rate')
+			$totalFiltered = Feedback::select('feedback.id as id',DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
                     ->join('employees', 'deployments.employee_id', '=', 'employees.id')
                     ->join('clients', 'deployments.client_id', '=', 'clients.id')
                     ->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
-                    ->orWhere('employees.name', 'like', "%{$search}%")
+                    ->orWhere('employees.first_name', 'like', "%{$search}%")
+																				->orWhere('employees.middle_name', 'like', "%{$search}%")
+																				->orWhere('employees.last_name', 'like', "%{$search}%")
                     ->orWhere('clients.name', 'like', "%{$search}%")
                     ->orWhere('feedback.rate', 'like', "%{$search}%")
                     ->whereMonth('feedback.created_at', $currentMonth)

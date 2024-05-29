@@ -16,7 +16,7 @@ class PerfectAttendanceFetchController extends Controller
 		$currentMonth = Carbon::now()->month;
 		//column list in the table Prpducts
 		$columns = array(
-			0 => 'fullname',
+			0 => 'first_name',
 			1 => 'company',
 			2 => 'action'
 		);
@@ -66,7 +66,7 @@ class PerfectAttendanceFetchController extends Controller
 //         });
 //     });
 // })
-			$posts = Deployment::select('deployments.id as id','employees.name as fullname', 'clients.name as company')
+			$posts = Deployment::select('deployments.id as id',DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
 																->join('employees', 'deployments.employee_id', '=', 'employees.id')
 																->join('clients', 'deployments.client_id', '=', 'clients.id')
 																->whereHas('attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
@@ -100,11 +100,13 @@ class PerfectAttendanceFetchController extends Controller
 		} else {
 			$search = $request->input('search.value');
 
-			$posts =	Deployment::select('deployments.id as id','employees.name as fullname', 'clients.name as company')
+			$posts =	Deployment::select('deployments.id as id',DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
 												->join('employees', 'deployments.employee_id', '=', 'employees.id')
 												->join('clients', 'deployments.client_id', '=', 'clients.id')
 												->whereHas('employee', function ($query) use ($search) {
-															$query->where('name', 'like', "%{$search}%");
+															$query->where('first_name', 'like', "%{$search}%")
+															->orWhere('middle_name', 'like', "%{$search}%")
+															->orWhere('last_name', 'like', "%{$search}%");
 													})
 													->orWhereHas('client', function ($query) use ($search) {
 															$query->where('name', 'like', "%{$search}%");
@@ -126,11 +128,13 @@ class PerfectAttendanceFetchController extends Controller
             ->get();
 
 			//total number of filtered data matching the search value request in the Supplier table	
-			$totalFiltered = Deployment::select('deployments.id as id','employees.name as fullname', 'clients.name as company')
+			$totalFiltered = Deployment::select('deployments.id as id',DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
 																				->join('employees', 'deployments.employee_id', '=', 'employees.id')
 																				->join('clients', 'deployments.client_id', '=', 'clients.id')
 																				->whereHas('employee', function ($query) use ($search) {
-																						$query->where('name', 'like', "%{$search}%");
+																					$query->where('first_name', 'like', "%{$search}%")
+																					->orWhere('middle_name', 'like', "%{$search}%")
+																					->orWhere('last_name', 'like', "%{$search}%");
 																				})
 																				->orWhereHas('client', function ($query) use ($search) {
 																						$query->where('name', 'like', "%{$search}%");
@@ -155,7 +159,7 @@ class PerfectAttendanceFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['fullname'] = $r->fullname;
+				$nestedData['fullname'] = $r->full_name;
 				$nestedData['company'] = $r->company;
 				$nestedData['action'] = '
 						<button name="generate_pdf" id="generate_pdf" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Generate Certificate</button>
