@@ -47,7 +47,9 @@ class DeploymentController extends Controller
         $this->authorize("isHROrAdmin");
 
         $clients = Client::all();
-        $employees = Employee::all();
+        $employees = Employee::whereDoesntHave('deployments', function ($query) {
+            $query->where('status', 'new');
+            })->get();
         $employmentTypes = EmploymentType::all();
 
         return view("deployment.create",[
@@ -172,7 +174,7 @@ class DeploymentController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('workDetails', $deployment->id);
+            return redirect()->route('workDetails',['id' => $deployment->id,'parent_index' => 1]);
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
@@ -259,14 +261,12 @@ class DeploymentController extends Controller
             $deployment = Deployment::withTrashed()->findOrFail($id);
 
             $messages = [
-                'employee_id.required' => 'Please select a Employee',
                 'client_id.required' => 'Please select a Client',
                 'employment_type_id.required' => 'Please select a Employment Type',
                 'end_date.after' => 'End Date must be after Start Date',
             ];
             //validate request value
             $validator = Validator::make($request->all(), [
-                'employee_id' => 'required|integer',
                 'client_id' => 'required|integer',
                 'employment_type_id' => 'required|integer',
                 'position' => 'required|string|max:50',
@@ -299,8 +299,6 @@ class DeploymentController extends Controller
                 return back()->withErrors($validator->errors())->withInput();
             }
 
-          
-            $deployment->employee_id = $request->employee_id;
             $deployment->employment_type_id = $request->employment_type_id;
             $deployment->client_id = $request->client_id;
             $deployment->position = $request->position;

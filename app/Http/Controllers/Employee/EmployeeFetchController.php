@@ -37,7 +37,10 @@ class EmployeeFetchController extends Controller
 		//check if user search for a value in the Employee datatable
 		if (empty($request->input('search.value'))) {
 			//get all the Supplier data
-			$posts = Employee::offset($start)
+			$posts = Employee::whereDoesntHave('deployments', function ($query) {
+    $query->where('status', 'new');
+				})
+				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
@@ -63,6 +66,9 @@ class EmployeeFetchController extends Controller
 					->orWhere('contact_number', 'like', "%{$search}%")
 					->orWhere('email', 'like', "%{$search}%");
 			})
+			->whereDoesntHave('deployments', function ($query) {
+    $query->where('status', 'new');
+				})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -85,6 +91,9 @@ class EmployeeFetchController extends Controller
 					->orWhere('contact_number', 'like', "%{$search}%")
 					->orWhere('email', 'like', "%{$search}%");
 			})
+			->whereDoesntHave('deployments', function ($query) {
+    $query->where('status', 'new');
+				})
 				->count();
 		}
 
@@ -150,13 +159,18 @@ class EmployeeFetchController extends Controller
 		if (empty($request->input('search.value'))) {
 			//get all the Employee data
 			$posts = Employee::onlyTrashed()
+			->whereDoesntHave('deployments', function ($query) {
+    $query->where('status', 'new');
+				})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
 
 			//total number of filtered data
-			$totalFiltered = Employee::onlyTrashed()->count();
+			$totalFiltered = Employee::onlyTrashed()->whereDoesntHave('deployments', function ($query) {
+    $query->where('status', 'new');
+				})->count();
 		} else {
 			$search = $request->input('search.value');
 
@@ -171,6 +185,9 @@ class EmployeeFetchController extends Controller
 						->orWhere('contact_number', 'like', "%{$search}%")
 						->orWhere('email', 'like', "%{$search}%");
 				})
+				->whereDoesntHave('deployments', function ($query) {
+					$query->where('status', 'new');
+					})
 				->offset($start)
 				->limit($limit)
 				->orderBy($order, $dir)
@@ -188,6 +205,9 @@ class EmployeeFetchController extends Controller
 						->orWhere('contact_number', 'like', "%{$search}%")
 						->orWhere('email', 'like', "%{$search}%");
 				})
+				->whereDoesntHave('deployments', function ($query) {
+					$query->where('status', 'new');
+					})
 				->count();
 		}
 

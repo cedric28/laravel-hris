@@ -19,7 +19,7 @@ class Employee extends Model
 
     public function deployments()
     {
-        return $this->hasMany(Deployments::class,'employee_id','id')->withTrashed();
+        return $this->hasMany(Deployment::class,'employee_id','id')->withTrashed();
     }
 
     public function employment_histories()

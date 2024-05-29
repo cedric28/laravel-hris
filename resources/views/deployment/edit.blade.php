@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Employee - {{ ucwords($deployment->employee->name)}} - {{ ucwords($deployment->client->name)}} Company</h1>
+            <h1>Employee - {{ ucwords($deployment->employee->last_name).", ".ucwords($deployment->employee->first_name)." ".ucwords($deployment->employee->middle_name) }} - {{ ucwords($deployment->client->name)}} Company</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
@@ -41,18 +41,6 @@
 											<option value="">Select Client</option>
 											@foreach ($clients as $client)
 												<option value="{{ $client->id }}"{{ ($client->id == old('client_id', $deployment->client_id)) ? 'selected' : '' }}>{{ ucwords($client->name) }}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Employee:</label>
-									<div class="col-lg-9">
-										<select id="employee-id" name="employee_id" class="form-control select2">
-											<option value="">Select Employee</option>
-											@foreach ($employees as $employee)
-												<option value="{{ $employee->id }}"{{ ($employee->id == old('employee_id',$deployment->employee_id)) ? ' selected' : '' }}>{{ ucwords($employee->name) }}</option>
 											@endforeach
 										</select>
 									</div>
