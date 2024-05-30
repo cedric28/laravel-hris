@@ -104,6 +104,12 @@
           
             @can('isAdmin')
             <li class="nav-header">SETTINGS</li>
+              <li class="nav-item">
+                <a href="{{ route('backup-database.index')}}" class="nav-link {{ (request()->is('backup-database*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-user-shield"></i>
+                    <p>Back-up Database</p>
+                </a>
+            </li>
             <li class="nav-item">
                 <a href="{{ route('user-profile')}}" class="nav-link {{ (request()->is('profile*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-user-shield"></i>

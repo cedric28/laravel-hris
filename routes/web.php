@@ -109,6 +109,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('/for-regularization', 'Regularization\RegularizationController');
     Route::post('for-regularization/fetch/q', 'Regularization\RegularizationFetchController@fetchForRegularization')->name('activeForRegularization');
 
+    //Backup
+    Route::resource('/backup-database', 'Backup\BackupController');
+    Route::post('/backup-database', 'Backup\BackupController@store')->name('backupDatabase');
+
     //Best Performer
     Route::resource('/best-performer', 'BestPerformer\BestPerformerController');
     Route::post('best-performer/fetch/q', 'BestPerformer\BestPerformerFetchController@fetchBestPerformer')->name('activeBestPerformer');
@@ -119,6 +123,7 @@ Route::middleware('auth')->group(function () {
     Route::post('inactive-feedback/fetch/q', 'FeedBack\FeedBackFetchController@fetchInactiveFeedBack')->name('InactiveFeedBack');
     Route::get('feedback/destroy/{id}', 'FeedBack\FeedBackController@destroy');
     Route::get('feedback/restore/{id}', 'FeedBack\FeedBackController@restore');
+
     
     //Logs
     Route::resource('logs', 'Logs\LogController');

@@ -40,6 +40,9 @@
 	<link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
   	<link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   	<link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+			<link href="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
+" rel="stylesheet">
 	<!-- /global stylesheets -->
 	<style>
 		.highcharts-figure,
@@ -160,6 +163,9 @@
 	<script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 	<!-- AdminLTE App -->
 	<script src="{{ asset('dist/js/adminlte.js') }}"></script>
+	<script src="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.all.min.js
+"></script>
 	@yield('js')
 	@stack('scripts')
 </body>

@@ -33,7 +33,9 @@ class HomeController extends Controller
 
         $user = User::count();
         $totalEmployees = Deployment::where('status','new')->whereYear('start_date', $yearNow)->count();
-        $totalApplicants = Employee::count();
+        $totalApplicants = Employee::whereDoesntHave('deployments', function ($query) {
+            $query->where('status', 'new');
+            })->count();
         $totalClients = Client::count();
 
         $this->authorize("isAdmin");
