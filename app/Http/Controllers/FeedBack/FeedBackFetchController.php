@@ -107,7 +107,7 @@ class FeedBackFetchController extends Controller
 				$nestedData['rate'] = $r->rate;
 				$nestedData['action'] = '
 						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
-						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-trash"></i></button>
+						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
 				$data[] = $nestedData;
 			}

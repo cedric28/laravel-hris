@@ -92,7 +92,7 @@ class AttendanceFetchController extends Controller
 				$nestedData['attendance_time'] = Carbon::parse( $r->attendance_time)->format('g:i A');
 				$nestedData['attendance_out'] =  Carbon::parse($r->attendance_out)->format('g:i A');
 				$nestedData['action'] = '
-						<button name="delete" id="delete_attendance" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-trash"></i></button>
+						<button name="delete" id="delete_attendance" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
 				$data[] = $nestedData;
 			}

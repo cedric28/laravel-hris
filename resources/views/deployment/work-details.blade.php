@@ -519,100 +519,110 @@
                                             </form>
                                         </div>
                                         <div class="tab-pane fade" id="employee-info" role="tabpanel" aria-labelledby="employee-info-tab">
-                                           	<div class="card card-success">
-                                                <div class="card-header">
-                                                    Basic Information
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="card card-widget widget-user-2">
+                                                    <div class="widget-user-header text-white" style="background: url('../../dist/img/photo4.jpg') center center;">
+                                                        <div class="widget-user-image">
+                                                        <img class="img-circle elevation-2" src="{{ $deployment->employee->gender->id == 1 ? asset('dist/img/avatar5.png') : asset('dist/img/avatar3.png') }}" alt="User Avatar">
+                                                        </div>
+                                                        <h3 class="widget-user-username">{{ $deployment->employee->last_name }}, {{ $deployment->employee->first_name }}  {{ $deployment->employee->middle_name }}</h3>
+                                                        </div>
+                                                        <div class="card-footer p-0">
+                                                            <table class="table table-bordered">
+                                                                <tr>
+                                                                    <th>Reference</th>
+                                                                    <td>{{ $deployment->employee->reference_no }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Fullname</th>
+                                                                    <td>{{ $deployment->employee->last_name }}, {{ $deployment->employee->first_name }}  {{ $deployment->employee->middle_name }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Nickname</th>
+                                                                    <td>{{ $deployment->employee->nickname }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Date of Birth</th>
+                                                                    <td>{{ $deployment->employee->birthdate }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Gender</th>
+                                                                    <td>{{ $deployment->employee->gender->name }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Civil Status</th>
+                                                                    <td>{{ $deployment->employee->civil_status->name }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Address</th>
+                                                                    <td>{{ $deployment->employee->unit.' '.$deployment->employee->lot_block.' '.$deployment->employee->street.' '.$deployment->employee->subdivision.' '.$deployment->employee->barangay.' '.$deployment->employee->municipality.' '.$deployment->employee->province }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Phone</th>
+                                                                    <td>+63{{ $deployment->employee->contact_number }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Email</th>
+                                                                    <td>{{ $deployment->employee->email }}</td>
+                                                                </tr>
+                                                            </table>			
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="card-body">
-                                                    <table class="table table-bordered">
-                                                        <tr>
-                                                            <th>Reference</th>
-                                                            <td>{{ $deployment->employee->reference_no }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Fullname</th>
-                                                            <td>{{ $deployment->employee->last_name }}, {{ $deployment->employee->first_name }}  {{ $deployment->employee->middle_name }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Nickname</th>
-                                                            <td>{{ $deployment->employee->nickname }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Date of Birth</th>
-                                                            <td>{{ $deployment->employee->birthdate }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Gender</th>
-                                                            <td>{{ $deployment->employee->gender->name }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Civil Status</th>
-                                                            <td>{{ $deployment->employee->civil_status->name }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Address</th>
-                                                            <td>{{ $deployment->employee->unit.' '.$deployment->employee->lot_block.' '.$deployment->employee->street.' '.$deployment->employee->subdivision.' '.$deployment->employee->barangay.' '.$deployment->employee->municipality.' '.$deployment->employee->province }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Phone</th>
-                                                            <td>+63{{ $deployment->employee->contact_number }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Email</th>
-                                                            <td>{{ $deployment->employee->email }}</td>
-                                                        </tr>
-                                                    </table>			
-                                                </div>
-                                            </div>
-                                            <div class="card card-success">
-                                                <div class="card-header">
-                                                    In-Case of Emergency Information
-                                                </div>
-                                                <div class="card-body">
-                                                    <table class="table table-bordered">
-                                                        <tr>
-                                                            <th>Emergency Contact Name</th>
-                                                            <td>{{ $deployment->employee->emergency_contact_name ?? '-' }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Relationship</th>
-                                                            <td>{{ $deployment->employee->emergency_relationship ?? '-' }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Phone</th>
-                                                            <td>+63{{ $deployment->employee->emergency_contact_number ?? '-' }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Address</th>
-                                                            <td>{{ $deployment->employee->emergency_address ?? '-' }}</td>
-                                                        </tr>
-                                                    </table>	
-                                                </div>
-                                            </div>
+                                                <div class="col-md-8">
+                                                
+                                                        <div class="card card-success">
+                                                            <div class="card-header">
+                                                                In-Case of Emergency Information
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <table class="table table-bordered">
+                                                                    <tr>
+                                                                        <th>Emergency Contact Name</th>
+                                                                        <td>{{ $deployment->employee->emergency_contact_name ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Relationship</th>
+                                                                        <td>{{ $deployment->employee->emergency_relationship ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Phone</th>
+                                                                        <td>+63{{ $deployment->employee->emergency_contact_number ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Address</th>
+                                                                        <td>{{ $deployment->employee->emergency_address ?? '-' }}</td>
+                                                                    </tr>
+                                                                </table>	
+                                                            </div>
+                                                        </div>
 
-                                            <div class="card card-success">
-                                                <div class="card-header">
-                                                Government Information
-                                                </div>
-                                                <div class="card-body">
-                                                    <table class="table table-bordered">
-                                                        <tr>
-                                                            <th>SSS</th>
-                                                            <td>{{ $deployment->employee->sss ?? '-'}}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>PAG-IBIG</th>
-                                                            <td>{{ $deployment->employee->pagibig ?? '-' }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Philhealth</th>
-                                                            <td>{{ $deployment->employee->philhealth ?? '-' }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>TIN</th>
-                                                            <td>{{ $deployment->employee->tin  ?? '-'}}</td>
-                                                        </tr>
-                                                    </table>	
+                                                        <div class="card card-success">
+                                                            <div class="card-header">
+                                                            Government Information
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <table class="table table-bordered">
+                                                                    <tr>
+                                                                        <th>SSS</th>
+                                                                        <td>{{ $deployment->employee->sss ?? '-'}}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>PAG-IBIG</th>
+                                                                        <td>{{ $deployment->employee->pagibig ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Philhealth</th>
+                                                                        <td>{{ $deployment->employee->philhealth ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>TIN</th>
+                                                                        <td>{{ $deployment->employee->tin  ?? '-'}}</td>
+                                                                    </tr>
+                                                                </table>	
+                                                            </div>
+                                                        </div>
                                                 </div>
                                             </div>
                                         </div>

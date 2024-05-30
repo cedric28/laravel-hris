@@ -87,7 +87,7 @@ class UserFetchController extends Controller
 				$nestedData['action'] = '
 						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
 						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
-						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-trash"></i></button>
+						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
 				$data[] = $nestedData;
 			}

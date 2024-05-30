@@ -19,21 +19,17 @@
     </section>
 	<section class="content">
       	<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-12">
-					<!-- About Me Box -->
-					<div class="card">
-						<div class="card-header">
-							
-						</div>
-						<!-- /.card-header -->
-						<div class="card-body">
-							<div class="card card-success">
-								<div class="card-header">
-									Basic Information
-								</div>
-								<div class="card-body">
-									<table class="table table-bordered">
+								<div class="row">
+									<div class="col-md-4">
+										<div class="card card-widget widget-user-2">
+										<div class="widget-user-header text-white" style="background: url('../dist/img/photo4.jpg') center center;">
+											<div class="widget-user-image">
+											<img class="img-circle elevation-2" src="{{ $employee->gender->id == 1 ? asset('dist/img/avatar5.png') : asset('dist/img/avatar3.png') }}" alt="User Avatar">
+											</div>
+											<h3 class="widget-user-username">{{ $employee->last_name }}, {{ $employee->first_name }}  {{ $employee->middle_name }}</h3>
+											</div>
+											<div class="card-footer p-0">
+														<table class="table table-bordered">
 										<tr>
 											<th>Reference</th>
 											<td>{{ $employee->reference_no }}</td>
@@ -71,8 +67,17 @@
 											<td>{{ $employee->email }}</td>
 										</tr>
 									</table>			
-								</div>
-							</div>
+											</div>
+											</div>
+										</div>
+				<div class="col-md-8">
+					<!-- About Me Box -->
+					<div class="card">
+						<div class="card-header">
+							
+						</div>
+						<!-- /.card-header -->
+						<div class="card-body">
 
 							<div class="card card-success">
 								<div class="card-header">
