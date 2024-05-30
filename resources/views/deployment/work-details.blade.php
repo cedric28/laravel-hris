@@ -520,7 +520,7 @@
                                         </div>
                                         <div class="tab-pane fade" id="employee-info" role="tabpanel" aria-labelledby="employee-info-tab">
                                             <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 col-lg-4">
                                                     <div class="card card-widget widget-user-2">
                                                     <div class="widget-user-header text-white" style="background: url('../../dist/img/photo4.jpg') center center;">
                                                         <div class="widget-user-image">
@@ -529,7 +529,7 @@
                                                         <h3 class="widget-user-username">{{ $deployment->employee->last_name }}, {{ $deployment->employee->first_name }}  {{ $deployment->employee->middle_name }}</h3>
                                                         </div>
                                                         <div class="card-footer p-0">
-                                                            <table class="table table-bordered">
+                                                            <table class="table table-bordered w-100">
                                                                 <tr>
                                                                     <th>Reference</th>
                                                                     <td>{{ $deployment->employee->reference_no }}</td>
@@ -570,14 +570,14 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-8">
+                                                <div class="col-md-8 col-lg-8">
                                                 
                                                         <div class="card card-success">
                                                             <div class="card-header">
                                                                 In-Case of Emergency Information
                                                             </div>
                                                             <div class="card-body">
-                                                                <table class="table table-bordered">
+                                                                <table class="table table-bordered w-100">
                                                                     <tr>
                                                                         <th>Emergency Contact Name</th>
                                                                         <td>{{ $deployment->employee->emergency_contact_name ?? '-' }}</td>
@@ -603,7 +603,7 @@
                                                             Government Information
                                                             </div>
                                                             <div class="card-body">
-                                                                <table class="table table-bordered">
+                                                                <table class="table table-bordered w-100">
                                                                     <tr>
                                                                         <th>SSS</th>
                                                                         <td>{{ $deployment->employee->sss ?? '-'}}</td>
