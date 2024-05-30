@@ -29,7 +29,7 @@
 											<h3 class="widget-user-username">{{ $employee->last_name }}, {{ $employee->first_name }}  {{ $employee->middle_name }}</h3>
 											</div>
 											<div class="card-footer p-0">
-														<table class="table table-bordered">
+														<table class="table table-bordered w-100">
 										<tr>
 											<th>Reference</th>
 											<td>{{ $employee->reference_no }}</td>
@@ -84,7 +84,7 @@
 									In-Case of Emergency Information
 								</div>
 								<div class="card-body">
-									<table class="table table-bordered">
+									<table class="table table-bordered w-100">
 										<tr>
 											<th>Emergency Contact Name</th>
 											<td>{{ $employee->emergency_contact_name ?? '-' }}</td>
@@ -110,7 +110,7 @@
 								Government Information
 								</div>
 								<div class="card-body">
-									<table class="table table-bordered">
+									<table class="table table-bordered w-100">
 										<tr>
 											<th>SSS</th>
 											<td>{{ $employee->sss ?? '-'}}</td>
