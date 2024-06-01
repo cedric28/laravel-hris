@@ -12,7 +12,7 @@ class RegularizationFetchController extends Controller
 {
  public function fetchForRegularization(Request $request)
 	{
-        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
 		//column list in the table Prpducts
 		$columns = array(
 			0 => 'first_name',
@@ -22,7 +22,7 @@ class RegularizationFetchController extends Controller
 		);
 
 		//get the total number of data in User table
-		$totalData = Feedback::whereMonth('created_at', $currentMonth)->where('rate','>=',7)->count();
+		$totalData = Feedback::whereMonth('created_at', $currentYear)->where('rate','>=',7)->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -40,7 +40,7 @@ class RegularizationFetchController extends Controller
             ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->whereMonth('feedback.created_at', $currentMonth)
+            ->whereYear('feedback.created_at', $currentYear)
             ->where('rate','>=',7)
             ->where([
                 ['deployments.status', '=', 'new'],
@@ -56,7 +56,7 @@ class RegularizationFetchController extends Controller
             ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->whereMonth('feedback.created_at', $currentMonth)
+            ->whereYear('feedback.created_at', $currentYear)
             ->where('rate','=',10)
             ->where([
                 ['deployments.status', '=', 'new'],
@@ -75,7 +75,7 @@ class RegularizationFetchController extends Controller
 															->orWhere('employees.last_name', 'like', "%{$search}%")
 																->orWhere('clients.name', 'like', "%{$search}%")
 																->orWhere('feedback.rate', 'like', "%{$search}%")
-                ->whereMonth('feedback.created_at', $currentMonth)
+                ->whereYear('feedback.created_at', $currentYear)
                 ->where('rate','>=',7)
 																->where([
 																			['deployments.status', '=', 'new'],
@@ -95,7 +95,7 @@ class RegularizationFetchController extends Controller
 																				->orWhere('employees.last_name', 'like', "%{$search}%")
                     ->orWhere('clients.name', 'like', "%{$search}%")
                     ->orWhere('feedback.rate', 'like', "%{$search}%")
-                    ->whereMonth('feedback.created_at', $currentMonth)
+                    ->whereYear('feedback.created_at', $currentYear)
                     ->where('rate','>=',7)
                     ->where([
                         ['deployments.status', '=', 'new'],

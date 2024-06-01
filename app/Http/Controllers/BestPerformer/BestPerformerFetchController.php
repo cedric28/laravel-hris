@@ -14,6 +14,7 @@ class BestPerformerFetchController extends Controller
 	{
         $current_month = now()->startOfMonth()->format('Y-m');
 		$currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
         $endOfMonth = Carbon::now()->endOfMonth();
 		$threeDaysBeforeEndOfMonth = $endOfMonth->subDays(3);
 		//column list in the table Prpducts
@@ -27,7 +28,7 @@ class BestPerformerFetchController extends Controller
 		//get the total number of data in User table
 		$totalData = Feedback::select('feedback.id as id')
         ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
-        ->whereMonth('feedback.created_at', $currentMonth)
+        ->whereYear('feedback.created_at', $currentYear)
         ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
             $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
                             ->whereNotIn('day_of_week', [6, 0])
