@@ -109,7 +109,7 @@ class RegularizationFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['fullname'] = $r->fullname;
+				$nestedData['fullname'] = $r->full_name;
 				$nestedData['client_name'] = $r->company;
 				$nestedData['rate'] = $r->rate;
 				$nestedData['action'] = '
