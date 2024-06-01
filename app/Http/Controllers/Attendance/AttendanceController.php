@@ -282,9 +282,13 @@ class AttendanceController extends Controller
         $excelFile = $request->file('excel_file');
         $sheet = Excel::import($attendanceImport, $excelFile);
         $rows = $attendanceImport->data;
+
+        if (count($rows) > 200) {
+            return redirect()->back()->withErrors(['Too many rows in the Excel file. Maximum allowed is 200.'])->withInput();
+        }
       
         if (count($rows) <= 0) {
-            return redirect()->back()->withErrors(['No data found on the excel.'])->withInput();
+            return redirect()->back()->withErrors(['No data found on the Excel file.'])->withInput();
         }
        
         $errors = [];
@@ -330,7 +334,7 @@ class AttendanceController extends Controller
         }
     
         if (count($validRows) > 200) {
-            return redirect()->back()->withErrors(['Too many rows in the CSV file. Maximum allowed is 200.'])->withInput();
+            return redirect()->back()->withErrors(['Too many rows in the Excel file. Maximum allowed is 200.'])->withInput();
         }
     
         if (!empty($errors)) {
