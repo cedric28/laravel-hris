@@ -15,7 +15,7 @@ class FeedBackFetchController extends Controller
         $currentYear = Carbon::now()->year;
 		//column list in the table Prpducts
 		$columns = array(
-			0 => 'first_name',
+			0 => 'full_name',
 			1 => 'client_name',
 			2 => 'rate',
 			3 => 'action'
@@ -102,7 +102,7 @@ class FeedBackFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['fullname'] = $r->fullname;
+				$nestedData['full_name'] = $r->full_name;
 				$nestedData['client_name'] = $r->company;
 				$nestedData['rate'] = $r->rate;
 				$nestedData['action'] = '
@@ -217,7 +217,7 @@ class FeedBackFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['fullname'] = $r->fullname;
+				$nestedData['fullname'] = $r->full_name;
 				$nestedData['client_name'] = $r->company;
 				$nestedData['rate'] = $r->rate;
 				$nestedData['action'] = '

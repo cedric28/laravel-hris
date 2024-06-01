@@ -45,6 +45,14 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 " rel="stylesheet">
 	<!-- /global stylesheets -->
 	<style>
+
+	.bodyImage {
+			background-image: url('image-url');
+			background-size: cover;
+			background-position: center;
+			height: 100vh;
+			margin: 0;
+	}
 		.highcharts-figure,
 		.highcharts-data-table table {
 			min-width: 100%;

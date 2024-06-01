@@ -192,7 +192,7 @@
                     }
                 ],
                 "columns":[
-                    {"data":"fullname"},
+                    {"data":"full_name"},
                     {"data":"client_name"},
                     {"data":"rate"},
                     {"data":"action","searchable":false,"orderable":false}
@@ -247,7 +247,7 @@
                     }
                 ],
                 "columns":[
-                      {"data":"fullname"},
+                    {"data":"full_name"},
                     {"data":"client_name"},
                     {"data":"rate"},
                     {"data":"action","searchable":false,"orderable":false}

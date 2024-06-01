@@ -205,15 +205,16 @@ class FeedBackController extends Controller
             $messages = [
                 'deployment_id.required' => 'Please select a Employee'
             ];
-            $currentMonth = Carbon::now()->month;
+           
+            $currentYear = Carbon::now()->year;
             //validate request value
             $validator = Validator::make($request->all(), [
                 'deployment_id' => [
                 'required',
                 'integer',
-                function ($attribute, $value, $fail) use ($currentMonth) {
+                function ($attribute, $value, $fail) use ($currentYear) {
 
-                    $attendance = Feedback::whereMonth('created_at',$currentMonth)
+                    $attendance = Feedback::whereYear('created_at',$currentYear)
                     ->where('deployment_id', $value)
                     ->exists();
         
