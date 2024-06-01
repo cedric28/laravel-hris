@@ -27,6 +27,17 @@ Route::middleware('auth')->group(function () {
     //Dashboard
     Route::get('/dashboard', 'HomeController@index')->name('home');
 
+    Route::get('/download', function () {
+        $filename = 'attendance-template.xlsx';
+        $path = public_path() . '/downloads/' . $filename;
+    
+        if (file_exists($path)) {
+            return response()->download($path, $filename, [], 'inline');
+        } else {
+            abort(404);
+        }
+    })->name('download');
+
     //Users
     Route::resource('/user', 'User\UserController');
     Route::post('user/fetch/q', 'User\UserFetchController@fetchUser')->name('activeUser');
@@ -131,5 +142,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('logs', 'Logs\LogController');
 
     Route::post('logs/fetch/q', 'Logs\LogFetchController@fetchLogs')->name('activityLogs');
-
 });

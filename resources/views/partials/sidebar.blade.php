@@ -61,6 +61,12 @@
                     <p>Employee</p>
                 </a>
             </li>
+               <li class="nav-item">
+                <a href="{{ route('attendance.index')}}" class="nav-link {{ (request()->is('attendance*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-file-excel"></i>
+                    <p>Bulk Attendance</p>
+                </a>
+            </li>
             <li class="nav-item">
                     <a href="{{ route('feedback.index')}}" class="nav-link {{ (request()->is('feedback*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-user-times"></i>

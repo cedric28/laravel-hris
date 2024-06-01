@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Attendance;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Imports\AttendanceImport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Attendance;
 use App\Deployment;
 use App\Log;
@@ -23,7 +25,7 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        //
+        return view("attendance.index");
     }
 
     /**
@@ -266,18 +268,25 @@ class AttendanceController extends Controller
         \DB::beginTransaction();
 
         try {
-
+         
         $validator = Validator::make($request->all(), [
-            'csv_file' => 'required|mimes:csv',
+            'excel_file' => 'required|mimes:xlsx,xls',
         ]);
     
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
-        $csvFile = $request->file('csv_file');
-        $rows = array_map('str_getcsv', file($csvFile->getPathname()));
-    
+
+
+        $attendanceImport = new AttendanceImport;
+        $excelFile = $request->file('excel_file');
+        $sheet = Excel::import($attendanceImport, $excelFile);
+        $rows = $attendanceImport->data;
+      
+        if (count($rows) <= 0) {
+            return redirect()->back()->withErrors(['No data found on the excel.'])->withInput();
+        }
+       
         $errors = [];
         $validRows = [];
     
@@ -378,7 +387,7 @@ class AttendanceController extends Controller
         }
 
         
-        return redirect()->route('attendance.edit', $deployment->id)->with('successMsg', 'Attendance Data Save Successful');
+        return redirect()->route('attendance.index')->with('successMsg', 'Attendance Data Save Successful');
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
