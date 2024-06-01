@@ -138,7 +138,7 @@
 
 			$(document).on('click', '#generate_pdf', function(){
                 var feedbackId = $(this).attr('data-id');
-                window.location.href = 'generate-certificate-regularization/'+feedbackId;
+                window.location.href = 'generate-certificate-best-performer/'+feedbackId;
             })
 
             

@@ -22,7 +22,7 @@ class RegularizationFetchController extends Controller
 		);
 
 		//get the total number of data in User table
-		$totalData = Feedback::whereMonth('created_at', $currentYear)->where('rate','>=',7)->count();
+		$totalData = Feedback::whereYear('created_at', $currentYear)->where('rate','>=',7)->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0

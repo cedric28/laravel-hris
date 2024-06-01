@@ -103,11 +103,12 @@ Route::middleware('auth')->group(function () {
     //Perfect Attendance
     Route::resource('/perfect-attendance', 'PerfectAttendance\PerfectAttendanceController');
     Route::post('perfect-attendance/fetch/q', 'PerfectAttendance\PerfectAttendanceFetchController@fetchPerfectAttendance')->name('activePerfectAttendance');
-    Route::get('generate-pdf-perfect-attendance/{id}', 'PDF\PDFController@generateSalesMonthly')->name('generateSalesMonthly');
+    Route::get('generate-certificate-perfect-attendance/{id}', 'PDF\PDFController@generatePerfectAttendance')->name('generatePerfectAttendance');
 
     //For Regularization
     Route::resource('/for-regularization', 'Regularization\RegularizationController');
     Route::post('for-regularization/fetch/q', 'Regularization\RegularizationFetchController@fetchForRegularization')->name('activeForRegularization');
+    Route::get('generate-certificate-regularization/{id}', 'PDF\PDFController@generateForRegularization')->name('generateForRegularization');
 
     //Backup
     Route::resource('/backup-database', 'Backup\BackupController');
@@ -116,7 +117,8 @@ Route::middleware('auth')->group(function () {
     //Best Performer
     Route::resource('/best-performer', 'BestPerformer\BestPerformerController');
     Route::post('best-performer/fetch/q', 'BestPerformer\BestPerformerFetchController@fetchBestPerformer')->name('activeBestPerformer');
-
+    Route::get('generate-certificate-best-performer/{id}', 'PDF\PDFController@generateBestPerformer')->name('generateBestPerformer');
+    
     //FeedBack
     Route::resource('/feedback', 'FeedBack\FeedBackController');
     Route::post('feedback/fetch/q', 'FeedBack\FeedBackFetchController@fetchFeedBack')->name('activeFeedBack');

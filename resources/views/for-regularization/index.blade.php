@@ -149,7 +149,7 @@
 
 			$(document).on('click', '#generate_pdf', function(){
                 var feedbackId = $(this).attr('data-id');
-                window.location.href = 'generate-certificate-regularization/'+feedbackId;
+                  window.open('generate-certificate-regularization/'+feedbackId,'_blank');
             })
 
             

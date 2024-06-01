@@ -137,7 +137,7 @@
 
       	$(document).on('click', '#generate_pdf', function(){
           var deploymentId = $(this).attr('data-id');
-          window.location.href = 'generate-pdf-perfect-attendance/'+deploymentId;
+          window.location.href = 'generate-certificate-perfect-attendance/'+deploymentId;
         });
           
 
