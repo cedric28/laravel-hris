@@ -6,11 +6,11 @@
         <link href="{{ asset('assets/css/sb-admin-2.css') }}" rel="stylesheet" type="text/css">
 		<style>
 		body {
-				border: 10px solid;
-				border-radius: 20px;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-				padding: 20px;
-					border-image: linear-gradient(50deg, turquoise, greenyellow) 1;
+					 margin: 0;
+        padding: 0;
+        background-image: url('{{  public_path('assets/img/backgroundimage.jpg') }}');
+        background-size: cover;
+        background-position: center;
 			}
 			footer {
 				border-top: 1px solid #eeeeee;;
