@@ -31,7 +31,8 @@
             <li class="nav-header">MAIN</li>
             @can('isAdmin')
             <li class="nav-item">
-                <a href="{{ route('home') }}" class="nav-link {{ (request()->is('home')) ? 'nav-link active' : '' }}">
+           
+                <a href="{{ route('home') }}" class="nav-link {{ (request()->is('dashboard')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-th"></i>
                     <p>
                         Dashboard
