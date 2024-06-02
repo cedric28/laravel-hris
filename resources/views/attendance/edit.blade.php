@@ -88,7 +88,7 @@
                                     
                                         <div id="collapseAttendance" class="collapse show" data-parent="#accordion" style="">
                                             <div class="card-body">
-                                               <table class="table table-hover table-striped" id="employee_attendances">
+                                               <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_attendances">
                                                     <thead>
                                                         <tr style="text-align:center;">
                                                             <th>ATTENDANCE DATE </th>
@@ -124,7 +124,7 @@
                                     
                                         <div id="collapseLate" class="collapse show" data-parent="#accordion" style="">
                                             <div class="card-body">
-                                               <table class="table table-hover table-striped" id="employee_late">
+                                               <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_late">
                                                     <thead>
                                                         <tr style="text-align:center;">
                                                             <th>DATE</th>

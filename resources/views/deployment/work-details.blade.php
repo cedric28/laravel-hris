@@ -49,6 +49,9 @@
 										<li class="nav-item">
 											<a class="nav-link {{ request()->get('parent_index') == 5 ? 'active' : '' }}" id="salary-tab" data-toggle="pill" href="#salary" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Salary</a>
 										</li>
+                                         <li class="nav-item">
+											<a class="nav-link" data-toggle="pill" id="payslip-tab" href="#payslip" role="tab" aria-controls="payslip" aria-selected="false">Payslip</a>
+										</li>
                                         <li class="nav-item">
 											<a class="nav-link" data-toggle="pill" id="employee-info-tab" href="#employee-info" role="tab" aria-controls="employee-info" aria-selected="false">Employee Information</a>
 										</li>
@@ -155,7 +158,7 @@
                                                                                 
                                                                                                 <div id="collapseAttendance" class="collapse show" data-parent="#accordion" style="">
                                                                                                                 <div class="card-body">
-                                                                                                                            <table class="table table-hover table-striped" id="employee_attendances">
+                                                                                                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_attendances">
                                                                                                                                                 <thead>
                                                                                                                                                                 <tr style="text-align:center;">
                                                                                                                                                                                 <th>ATTENDANCE DATE </th>
@@ -191,7 +194,7 @@
                                                                                 
                                                                                                 <div id="collapseLate" class="collapse show" data-parent="#accordion" style="">
                                                                                                                 <div class="card-body">
-                                                                                                                            <table class="table table-hover table-striped" id="employee_late">
+                                                                                                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_late">
                                                                                                                                                 <thead>
                                                                                                                                                                 <tr style="text-align:center;">
                                                                                                                                                                                 <th>DATE</th>
@@ -271,7 +274,7 @@
                                                                                     
                                                                                                     <div id="collapseOverTime" class="collapse show" data-parent="#accordion" style="">
                                                                                                                     <div class="card-body">
-                                                                                                                                <table class="table table-hover table-striped" id="employee_overtime">
+                                                                                                                                <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_overtime">
                                                                                                                                                                     <thead>
                                                                                                                                                                     <tr style="text-align:center;">
                                                                                                                                                                                     <th>DATE</th>
@@ -347,7 +350,7 @@
                                             </form><br/>
                                             <div class="row">
                                             <div class="col-md-12">
-                                                <table class="table table-hover table-striped" id="employee_leaves">
+                                                <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_leaves">
                                                     <thead>
                                                         <tr style="text-align:center;">
                                                             <th>LEAVE TYPE</th>
@@ -517,6 +520,30 @@
                                                     <button type="submit" class="btn btn-success">Save <i class="icon-paperplane ml-2"></i></button>
                                                 </div>
                                             </form>
+                                        </div>
+                                         <div class="tab-pane fade" id="payslip" role="tabpanel" aria-labelledby="payslip-tab">
+                                         <br/>
+                                            <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_leaves" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);">
+                                                    <thead>
+                                                        <tr style="text-align:center;">
+                                                            <th>DESCRIPTION</th>
+                                                            <th>ACTION</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($deployment->leaves as $leave)
+                                                            <tr style="text-align:center;">
+                                                                <td>{{ $leave->leave_type->name }}</td>
+                                                                <td>
+                                                                                            
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="employee-info" role="tabpanel" aria-labelledby="employee-info-tab">
                                             <div class="row">

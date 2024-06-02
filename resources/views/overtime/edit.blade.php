@@ -88,7 +88,7 @@
                                     
                                         <div id="collapseOverTime" class="collapse show" data-parent="#accordion" style="">
                                             <div class="card-body">
-                                               <table class="table table-hover table-striped" id="employee_overtime">
+                                               <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_overtime">
                                                         <thead>
                                                         <tr style="text-align:center;">
                                                             <th>DATE</th>

@@ -381,7 +381,7 @@
 																	</div>
 																	<br/>
 																	<div class="row">
-																			<table class="table table-hover table-striped" id="employment_histories_list">
+																			<table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employment_histories_list">
 																				<thead>
 																								<tr style="text-align:center;">
 																									<th>JOB TITLE</th>
@@ -471,7 +471,7 @@
 																	<br/>
 																	<div class="row">
 																		<div class="col-md-12">
-																				<table class="table table-hover table-striped" id="educational_backgrounds_list">
+																				<table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="educational_backgrounds_list">
 																					<thead>
 																									<tr style="text-align:center;">
 																										<th>SCHOOL NAME</th>

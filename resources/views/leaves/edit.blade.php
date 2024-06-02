@@ -79,7 +79,7 @@
 						<div class="card-footer clearfix">
 						<div class="row">
                             <div class="col-md-12">
-								<table class="table table-hover table-striped" id="employee_leaves">
+								<table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee_leaves">
 									<thead>
                                         <tr style="text-align:center;">
                                             <th>LEAVE TYPE</th>

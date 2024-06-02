@@ -40,7 +40,7 @@
                                 <div class="card-body">
                                     <div class="tab-content" id="custom-tabs-four-tabContent">
                                         <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                                            <table class="table table-hover table-striped" id="schedules">
+                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="schedules">
                                                 <thead>
                                                     <tr style="text-align:center;">
                                                         <th>EMPLOYEE NAME</th>
@@ -66,7 +66,7 @@
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab"> 
-                                            <table class="table table-hover table-striped" id="inactive-schedules">
+                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="inactive-schedules">
                                                 <thead>
                                                     <tr style="text-align:center;">
                                                         <th>EMPLOYEE NAME</th>
