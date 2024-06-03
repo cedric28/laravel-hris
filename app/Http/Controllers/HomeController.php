@@ -48,10 +48,8 @@ class HomeController extends Controller
             ->orderBy(DB::raw('YEAR(start_date)'), 'desc')
             ->get();
         
-        // $currentYear = Carbon::now()->year;
-
-        $currentYear = now()->year;
-
+        $currentYear = Carbon::now()->year;
+		$threeDaysBeforeEndOfMonth = 3;
         $perfectAttendanceMonths = Attendance::select(DB::raw('MONTHNAME(attendance_date) as month'), DB::raw('COALESCE(COUNT(DISTINCT deployments.id),0) as total'))
             ->join('deployments', 'deployments.id', '=', 'attendances.deployment_id')
             ->whereYear('attendance_date', $currentYear)
@@ -67,7 +65,7 @@ class HomeController extends Controller
                       ->whereRaw('deployments.id = attendances.deployment_id')
                       ->where('deployments.status', 'new');
             })
-            ->whereRaw('DAY(LAST_DAY(attendance_date)) - DAY(attendance_date) <= 3')
+            ->whereRaw("DAY(LAST_DAY(attendance_date)) - DAY(attendance_date) <= ?", [$threeDaysBeforeEndOfMonth])
             ->groupBy(DB::raw('MONTHNAME(attendance_date)'))
             ->get();
 
@@ -89,10 +87,6 @@ class HomeController extends Controller
             }
         });
         
-        
-
-        
-       
         
         return view('home',[
             "user" => $user,
