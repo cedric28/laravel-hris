@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Salary;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Deployment;
+use Carbon\Carbon;
 
 class SalaryFetchController extends Controller
 {
@@ -11,19 +13,15 @@ class SalaryFetchController extends Controller
 	{
 		//column list in the table Prpducts
 		$columns = array(
-			0 => 'attendance_date',
-			1 => 'attendance_time',
-			2 => 'attendance_out',
-			3 => 'action'
+			0 => 'start_date',
+			1 => 'action'
 		);
 
-        $deployment_id = $request->deployment_id;
+  $deployment_id = $request->deployment_id;
 
-		//get the total number of data in User table
-		$totalData = Attendance::where([
-            ['attendances.deployment_id', $deployment_id],
-            ['attendances.deleted_at', '=', null]
-        ])->count();
+		// Total hours worked
+		$currentMonth = date('m');
+		$currentYear = date('Y');
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -33,64 +31,52 @@ class SalaryFetchController extends Controller
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
 
-		//check if user search for a value in the User datatable
-		if (empty($request->input('search.value'))) {
-			//get all the User data
-			$posts = Attendance::select('attendances.attendance_date','attendances.attendance_time','attendances.attendance_out','attendances.id as id')
-                ->where([
-                    ['attendances.deployment_id', $deployment_id],
-                    ['attendances.deleted_at', '=', null]
-                ])
-				->offset($start)
-				->limit($limit)
-				->orderBy($order, $dir)
-				->get();
+	//get all the User data
+		$employee =  Deployment::where('id',$deployment_id)
+									->offset($start)
+									->limit($limit)
+									->orderBy($order, $dir)
+									->first();
+		$startDate = Carbon::parse($employee->start_date);
+		$currentDate = now();
 
-			//total number of filtered data
-			$totalFiltered = Attendance::where([
-                ['attendances.deployment_id', $deployment_id],
-                ['attendances.deleted_at', '=', null]
-            ])->count();
-		} else {
-			$search = $request->input('search.value');
+		$payrollPeriods = [];
 
-			$posts = Attendance::where(function ($query) use ($search) {
-                $query->orWhere('attendance_date', 'like', "%{$search}%")
-					->orWhere('attendance_time', 'like', "%{$search}%")
-					->orWhere('attendance_out', 'like', "%{$search}%");
-			})
-            ->where([
-                ['attendances.deployment_id', $deployment_id],
-                ['attendances.deleted_at', '=', null]
-            ])
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir)
-            ->get();
+		while ($startDate <= $currentDate) {
+						$month = $startDate->month;
+						$year = $startDate->year;
 
-			//total number of filtered data matching the search value request in the Supplier table	
-			$totalFiltered = Attendance::where(function ($query) use ($search) {
-                $query->orWhere('attendance_date', 'like', "%{$search}%")
-																->orWhere('attendance_time', 'like', "%{$search}%")
-																->orWhere('attendance_out', 'like', "%{$search}%");
-												})
-            ->where([
-                ['attendances.deployment_id', $deployment_id],
-                ['attendances.deleted_at', '=', null]
-            ])->count();
+						if ($startDate->day <= 15) {
+										$payrollPeriod = Carbon::create($year, $month, 1)->format('m/d/Y') . ' - ' . Carbon::create($year, $month, 15)->format('m/d/Y');
+										$payrollPeriods[] = $payrollPeriod;
+										$startDate = Carbon::create($year, $month, 16);
+						} else {
+										$payrollPeriod = Carbon::create($year, $month, 16)->format('m/d/Y') . ' - ' . Carbon::create($year, $month)->endOfMonth()->format('m/d/Y');
+										$payrollPeriods[] = $payrollPeriod;
+										$startDate = Carbon::create($year, $month)->startOfMonth()->addMonth();
+						}
 		}
 
+		//get the total number of data in User table
+		$totalData = count($payrollPeriods);
 
+		//total number of filtered data
+		$totalFiltered =  count($payrollPeriods);
+						
 		$data = array();
 
-		if ($posts) {
+		if ($payrollPeriods) {
 			//loop posts collection to transfer in another array $nestedData
-			foreach ($posts as $r) {
-				$nestedData['attendance_date'] = date('m-d-Y', strtotime($r->attendance_date));
-				$nestedData['attendance_time'] = Carbon::parse( $r->attendance_time)->format('g:i A');
-				$nestedData['attendance_out'] =  Carbon::parse($r->attendance_out)->format('g:i A');
+			usort($payrollPeriods, function($a, $b) {
+				return $this->getStartDate($b) -  $this->getStartDate($a);
+		});
+			foreach ($payrollPeriods as $r) {
+				$parts = explode(" - ", $r);
+				$start_date = $parts[0];
+				$end_date = $parts[1];
+				$nestedData['description'] = "Payroll for ".$r;
 				$nestedData['action'] = '
-						<button name="delete" id="delete_attendance" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+						<button name="delete" id="generate-payslip" data-startdate="' . $start_date . '" data-enddate="' . $end_date . '" class="btn bg-gradient-info btn-sm">Generate Payslip</button>
 					';
 				$data[] = $nestedData;
 			}
@@ -105,5 +91,10 @@ class SalaryFetchController extends Controller
 
 		//return the data in json response
 		return response()->json($json_data);
+	}
+
+	public function getStartDate($dateRange) {
+			$parts = explode(" - ", $dateRange);
+			return strtotime($parts[0]);
 	}
 }

@@ -525,7 +525,7 @@
                                             <br/>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);" id="employee_leaves" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);">
+                                                    <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);" id="employee_compensation" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);">
                                                         <thead>
                                                             <tr style="text-align:center;">
                                                                 <th>DESCRIPTION</th>
@@ -533,14 +533,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach ($deployment->leaves as $leave)
-                                                                <tr style="text-align:center;">
-                                                                    <td>{{ $leave->leave_type->name }}</td>
-                                                                    <td>
-                                                                                                
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
+                                                           
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -1113,6 +1106,65 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                         }, 2000);
                     }
                 })
+            });
+
+
+
+
+            var tableActiveCompensation = $('#employee_compensation').DataTable({
+				"responsive": true, 
+				"lengthChange": false, 
+				"autoWidth": false,
+      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activeCompensation') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{
+                        "_token":"<?= csrf_token() ?>",
+                        "deployment_id": "<?= $deployment->id ?>"
+                    }
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Employee Compensation-List',
+                                "exportOptions": {
+                                    "columns": [0]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : 'Employee Compensation-List',
+                                "exportOptions": {
+                                    "columns": [0]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                 'title' : 'Employee Compensation-List',
+                                "exportOptions": {
+                                    "columns": [0]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"description"},
+                    {"data":"action","searchable":false,"orderable":false}
+                ],
+                "columnDefs": [{
+					"targets": [0],   // target column
+					"className": "textCenter",
+				}]
             });
 
             
