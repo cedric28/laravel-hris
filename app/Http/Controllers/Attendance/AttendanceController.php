@@ -313,7 +313,7 @@ class AttendanceController extends Controller
                         ->where('reference_no', $value)
                         ->first();
                       
-                        if ($deployment) {  
+                        if ($deployment != null) {  
                             $schedule = Schedule::where('deployment_id',$deployment->id)->first();
                             if(!$schedule){
                                 $fail('Employee doesnt any schedule record.');
@@ -352,13 +352,15 @@ class AttendanceController extends Controller
                         $deployment = Deployment::where('status','new')
                         ->where('reference_no', $row['employee_no'])
                         ->first();
-                       
-                        $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
-                        ->where('deployment_id', $deployment->id)
-                        ->exists();
-                        if ($attendance) {
-                            $fail('Attendance Date already exist for this Employee');
+                        if($deployment != null) {
+                            $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
+                            ->where('deployment_id', $deployment->id)
+                            ->exists();
+                            if ($attendance) {
+                                $fail('Attendance Date already exist for this Employee');
+                            }
                         }
+                       
                     },
                 ],
             ]);

@@ -31,7 +31,7 @@
 											<div class="card-footer p-0">
 														<table class="table table-bordered w-100">
 										<tr>
-											<th>Reference</th>
+											<th>Applicant No</th>
 											<td>{{ $employee->reference_no }}</td>
 										</tr>
 										<tr>

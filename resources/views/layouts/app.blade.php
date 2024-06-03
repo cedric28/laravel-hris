@@ -48,17 +48,12 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 
 	.bodyImage {
 		 background-image: url('https://i.sstatic.net/kx8MT.gif');
-  
-    
-    
-    
-    height: 100vh;
     padding:0;
     margin:0;
-			background-size: cover;
-			background-position: center;
-			height: 100vh;
-			margin: 0;
+				background-size: cover;
+				background-position: center;
+				height: 100vh;
+				margin: 0;
 	}
 		.highcharts-figure,
 		.highcharts-data-table table {

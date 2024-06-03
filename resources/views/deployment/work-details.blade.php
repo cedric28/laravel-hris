@@ -552,8 +552,8 @@
                                                         <div class="card-footer p-0">
                                                             <table class="table table-bordered w-100">
                                                                 <tr>
-                                                                    <th>Reference</th>
-                                                                    <td>{{ $deployment->employee->reference_no }}</td>
+                                                                    <th>Employee No</th>
+                                                                    <td>{{ $deployment->reference_no }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Fullname</th>
