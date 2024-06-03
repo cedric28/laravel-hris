@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Validators;
+use App\Attendance;
 
 use Carbon\Carbon;
 

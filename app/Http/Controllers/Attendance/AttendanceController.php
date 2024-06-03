@@ -284,7 +284,7 @@ class AttendanceController extends Controller
         ]);
     
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
 
@@ -311,10 +311,10 @@ class AttendanceController extends Controller
                     function ($attribute, $value, $fail) {
                         $deployment = Deployment::where('status','new')
                         ->where('reference_no', $value)
-                        ->exists();
-            
-                        if ($deployment) {
-                            $schedule = Schedule::where('deployment_id',$deployment->deployment_id)->first();
+                        ->first();
+                      
+                        if ($deployment) {  
+                            $schedule = Schedule::where('deployment_id',$deployment->id)->first();
                             if(!$schedule){
                                 $fail('Employee doesnt any schedule record.');
                             }
@@ -324,16 +324,45 @@ class AttendanceController extends Controller
                     },
                 ],
                 'attendance_time' => 'required|date_format:H:i:s',
-                'attendance_out' => 'required|date_format:H:i:s|after:attendance_time',
+                'attendance_out' => [
+                    'required',
+                    'date_format:H:i:s',
+                    'after:attendance_time',
+                    function ($attribute, $value, $fail) use ($row) {
+                        $attendanceTime = strtotime($row['attendance_time']);
+                        $attendanceOut = strtotime($value);
+            
+                        if ($attendanceOut <= $attendanceTime) {
+                            $fail('The attendance out time must be greater than the attendance time in.');
+                        }
+
+                        $totalHours = ($attendanceOut - $attendanceTime) / 3600; // convert seconds to hours
+
+                        if ($totalHours > 9) {
+                            $fail('The total attendance time must be less than or equal to 9 hours.');
+                        }
+                    },
+                ],
                 'attendance_date' => [
                     'required',
                     'date_format:Y-m-d',
                     'not_weekend',
-                    'not_duplicate'
+                    function ($attribute, $value, $fail) use ($row) {
+                        $deployment = Deployment::where('status','new')
+                        ->where('reference_no', $row['employee_no'])
+                        ->first();
+                       
+                        $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
+                        ->where('deployment_id', $deployment->id)
+                        ->exists();
+                        if ($attendance) {
+                            $fail('Attendance Date already exist for this Employee');
+                        }
+                    },
                 ],
             ]);
-    
             if ($validator->fails()) {
+               
                 $errors[] = [
                     'row' => $key + 1,
                     'errors' => $validator->messages()->all(),
@@ -342,14 +371,20 @@ class AttendanceController extends Controller
                 $validRows[] = $row;
             }
         }
+
+        if (!empty($errors)) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = 'Row ' . $error['row'] . ': ' . implode(', ', $error['errors']);
+            }
+            return redirect()->back()->withErrors(['errors' => $errorMessages])->withInput();
+        }
     
         if (count($validRows) > 200) {
             return redirect()->back()->withErrors(['Too many rows in the Excel file. Maximum allowed is 200.'])->withInput();
         }
     
-        if (!empty($errors)) {
-            return redirect()->back()->withErrors($errors)->withInput();
-        }
+     
     
         // Process the valid rows
         foreach ($validRows as $row) {
@@ -358,28 +393,33 @@ class AttendanceController extends Controller
             //check current user
             $user = \Auth::user()->id;
             $attendanceDate = Carbon::parse($row['attendance_date']); 
-      
+            $attendanceTime = strtotime($row['attendance_time']);
+            $attendanceOut = strtotime($row['attendance_out']);
+            $totalHours = ($attendanceOut - $attendanceTime) / 3600; 
+
               //save attendance
               $attendance = new Attendance();
               $attendance->attendance_time = Carbon::parse($row['attendance_time'])->format('H:i:s');
               $attendance->attendance_out = Carbon::parse($row['attendance_out'])->format('H:i:s');
               $attendance->attendance_date = $attendanceDate->format('Y-m-d');
               $attendance->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
-              $attendance->deployment_id = $employee->deployment_id;
+              $attendance->deployment_id = $employee->id;
+              $attendance->hours_worked =  $totalHours <= 4 ? $totalHours : $totalHours - 1; 
               $attendance->status = 1;
               $attendance->creator_id = $user;
               $attendance->updater_id = $user;
               $attendance->save();
   
-              $employee = Deployment::find($employee->deployment_id);
+              $employee = Deployment::find($employee->id);
               $schedule = $employee->schedule;
+              
               $timeIn = Carbon::parse($row['attendance_time'])->format('H:i:s');
               $timeOut = Carbon::parse($row['attendance_out'])->format('H:i:s');
               $lateTimeDuration = $this->computeLateTimeDuration($schedule, $timeIn, $timeOut);
   
               if($lateTimeDuration > 0){
                   $late = new LateTime();
-                  $late->deployment_id = $employee->deployment_id;
+                  $late->deployment_id = $employee->id;
                   $late->attendance_id = $attendance->id;
                   $late->duration = Carbon::createFromTime(0, $lateTimeDuration, 0)->format('H:i:s');
                   $late->latetime_date =  Carbon::parse($row['attendance_date'])->format('Y-m-d');
