@@ -280,7 +280,7 @@
                 $.ajax({
                     url:"feedback/destroy/"+feedbackId,
                     beforeSend:function(){
-                        $('#ok_button').text('Deleting...');
+                        $('#ok_button').text('Archiving...');
                     },
                     success:function(data)
                     {

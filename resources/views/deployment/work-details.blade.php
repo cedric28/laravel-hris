@@ -879,7 +879,7 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                 $.ajax({
                     url:"/attendance/destroy/"+attendance_id,
                     beforeSend:function(){
-                        $('#ok_button_attendance').text('Deleting...');
+                        $('#ok_button_attendance').text('Archiving...');
                     },
                     success:function(data)
                     {
@@ -991,7 +991,7 @@ var tableActiveOverTime = $('#employee_overtime').DataTable({
                 $.ajax({
                     url:"/overtime/destroy/"+overtime_id,
                     beforeSend:function(){
-                        $('#ok_button_overtime').text('Deleting...');
+                        $('#ok_button_overtime').text('Archiving...');
                     },
                     success:function(data)
                     {
@@ -1096,7 +1096,7 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                 $.ajax({
                     url:"/leaves/destroy/"+leave_id,
                     beforeSend:function(){
-                        $('#ok_button_leaves').text('Deleting...');
+                        $('#ok_button_leaves').text('Archiving...');
                     },
                     success:function(data)
                     {

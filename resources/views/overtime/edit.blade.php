@@ -243,7 +243,7 @@ var tableActiveOverTime = $('#employee_overtime').DataTable({
                 $.ajax({
                     url:"/overtime/destroy/"+overtime_id,
                     beforeSend:function(){
-                        $('#ok_button').text('Deleting...');
+                        $('#ok_button').text('Archiving...');
                     },
                     success:function(data)
                     {

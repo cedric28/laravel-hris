@@ -288,7 +288,7 @@
                 $.ajax({
                     url:"schedule/destroy/"+user_id,
                     beforeSend:function(){
-                        $('#ok_button').text('Deleting...');
+                        $('#ok_button').text('Archiving...');
                     },
                     success:function(data)
                     {

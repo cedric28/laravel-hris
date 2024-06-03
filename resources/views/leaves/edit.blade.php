@@ -225,7 +225,7 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                 $.ajax({
                     url:"/leaves/destroy/"+leave_id,
                     beforeSend:function(){
-                        $('#ok_button').text('Deleting...');
+                        $('#ok_button').text('Archiving...');
                     },
                     success:function(data)
                     {
