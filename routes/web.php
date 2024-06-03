@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/download', function () {
         $filename = 'attendance-template.xlsx';
-        $path = public_path() . '/downloads/' . $filename;
+        $path = public_path() . '/attendance_file/' . $filename;
     
         if (file_exists($path)) {
             return response()->download($path, $filename, [], 'inline');
