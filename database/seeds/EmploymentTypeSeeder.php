@@ -14,9 +14,6 @@ class EmploymentTypeSeeder extends Seeder
     {
         $employmentTypes = [
             [ 
-                'name' => 'Full-time'
-            ],
-            [ 
                 'name' => 'Part-time'
             ],
             [ 
