@@ -17,12 +17,6 @@ class EmploymentTypeSeeder extends Seeder
                 'name' => 'Part-time'
             ],
             [ 
-                'name' => 'Self-employed'
-            ],
-            [ 
-                'name' => 'Internship'
-            ],
-            [ 
                 'name' => 'Contract'
             ],
             [ 
