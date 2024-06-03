@@ -95,8 +95,8 @@ class DeploymentFetchController extends Controller
 				$nestedData['client_name'] = $r->client_name;
 				$nestedData['position'] = $r->position;
 				$nestedData['status'] = ucwords($r->status);
-				$nestedData['start_date'] = date('d-m-Y', strtotime($r->start_date));
-				$nestedData['end_date'] = date('d-m-Y', strtotime($r->end_date));
+				$nestedData['start_date'] = date('m-d-Y', strtotime($r->start_date));
+				$nestedData['end_date'] = date('m-d-Y', strtotime($r->end_date));
 				if($r->status != 'new'){
 					$nestedData['action'] = '
 						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
@@ -215,8 +215,8 @@ class DeploymentFetchController extends Controller
 				$nestedData['client_name'] = $r->client_name;
 				$nestedData['position'] = $r->position;
 				$nestedData['status'] = ucwords($r->status);
-				$nestedData['start_date'] = date('d-m-Y', strtotime($r->start_date));
-				$nestedData['end_date'] = date('d-m-Y', strtotime($r->end_date));
+				$nestedData['start_date'] = date('m-d-Y', strtotime($r->start_date));
+				$nestedData['end_date'] = date('m-d-Y', strtotime($r->end_date));
 				$nestedData['action'] = '
 						<button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
 					';

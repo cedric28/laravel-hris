@@ -109,7 +109,7 @@ class EmployeeFetchController extends Controller
 				$nestedData['contact_number'] = $r->contact_number;
 				$nestedData['email'] = $r->email;
 				$nestedData['address'] = $r->unit.' '.$r->lot_block.' '.$r->street.' '.$r->subdivision.' '.$r->barangay.' '.$r->municipality.' '.$r->province;
-				$nestedData['created_at'] = date('d-m-Y', strtotime($r->created_at));
+				$nestedData['created_at'] = date('m-d-Y', strtotime($r->created_at));
 				$nestedData['action'] = '
                     <button  data-toggle="tooltip" name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
 					<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
@@ -223,7 +223,7 @@ class EmployeeFetchController extends Controller
 				$nestedData['contact_number'] = $r->contact_number;
 				$nestedData['email'] = $r->email;
 				$nestedData['address'] = $r->address;
-				$nestedData['created_at'] = date('d-m-Y', strtotime($r->created_at));
+				$nestedData['created_at'] = date('m-d-Y', strtotime($r->created_at));
 				$nestedData['action'] = '
                     <button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
 				';

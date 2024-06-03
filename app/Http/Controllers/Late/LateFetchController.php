@@ -86,7 +86,7 @@ class LateFetchController extends Controller
 			foreach ($posts as $r) {
 				$carbonTime = Carbon::createFromFormat('H:i:s', $r->duration);
 				$totalMinutes = $carbonTime->hour * 60 + $carbonTime->minute;
-				$nestedData['latetime_date'] =  date('d-m-Y', strtotime($r->latetime_date));
+				$nestedData['latetime_date'] =  date('m-d-Y', strtotime($r->latetime_date));
 				$nestedData['duration'] = $totalMinutes." mins";
 				$data[] = $nestedData;
 			}

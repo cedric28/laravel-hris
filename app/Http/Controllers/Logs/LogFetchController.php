@@ -65,7 +65,7 @@ class LogFetchController extends Controller
             //loop posts collection to transfer in another array $nestedData
             foreach ($posts as $r) {
                 $nestedData['log'] = $r->log;
-                $nestedData['created_at'] = date('d-m-Y', strtotime($r->created_at));
+                $nestedData['created_at'] = date('m-d-Y', strtotime($r->created_at));
                 $data[] = $nestedData;
             }
         }

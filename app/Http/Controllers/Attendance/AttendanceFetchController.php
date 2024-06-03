@@ -88,7 +88,7 @@ class AttendanceFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['attendance_date'] = date('d-m-Y', strtotime($r->attendance_date));
+				$nestedData['attendance_date'] = date('m-d-Y', strtotime($r->attendance_date));
 				$nestedData['attendance_time'] = Carbon::parse( $r->attendance_time)->format('g:i A');
 				$nestedData['attendance_out'] =  Carbon::parse($r->attendance_out)->format('g:i A');
 				$nestedData['action'] = '
