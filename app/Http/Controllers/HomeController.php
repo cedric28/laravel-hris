@@ -45,7 +45,7 @@ class HomeController extends Controller
             ->select(DB::raw('YEAR(start_date) as year'), DB::raw('COUNT(*) as total_regular_employees'))
             ->where('status', 'regular')
             ->groupBy(DB::raw('YEAR(start_date)'))
-            ->orderBy(DB::raw('YEAR(start_date)'), 'desc')
+            ->orderBy(DB::raw('YEAR(start_date)'), 'asc')
             ->get();
         
         $currentYear = Carbon::now()->year;

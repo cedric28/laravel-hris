@@ -114,7 +114,7 @@
           let years = yearlyRegular.map(item => {
               return item.year
           })
-
+  console.log('years',years)
           let totalPerfectAttendaces =  perfectAttendanceMonths.map(item => {
                 return item.total;
           })
