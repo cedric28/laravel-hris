@@ -347,6 +347,7 @@ class AttendanceController extends Controller
                     'required',
                     'date_format:Y-m-d',
                     'not_weekend',
+                    'before_or_equal:' . now()->format('Y-m-d'),
                     function ($attribute, $value, $fail) use ($row) {
                         $deployment = Deployment::where('status','new')
                         ->where('reference_no', $row['employee_no'])
