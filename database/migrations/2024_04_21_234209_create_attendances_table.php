@@ -21,6 +21,7 @@ class CreateAttendancesTable extends Migration
             $table->date('attendance_date')->default(date("Y-m-d"));
             $table->enum('day_of_week', ['0', '1', '2', '3', '4', '5', '6'])->default(0);
             $table->boolean('status')->default(1);
+            $table->integer('hours_worked')->default(0);
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();
             $table->softDeletes();

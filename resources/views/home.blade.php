@@ -105,62 +105,23 @@
         <script>
           let yearNow = {!! json_encode($year) !!};
        
-          let salesYear = {!! json_encode($salesPerYear) !!};
-          let salesMonthly = {!! json_encode($salesPerMonth) !!};
-          let sales = salesYear.map(item => {
-              return parseFloat(item.total_sales)
+          let yearlyRegular = {!! json_encode($yearlyRegular) !!};
+          let perfectAttendanceMonths = {!! json_encode($perfectAttendanceMonths) !!};
+          let totalRegularEmployees = yearlyRegular.map(item => {
+              return parseFloat(item.total_regular_employees)
           })
 
-          let years = salesYear.map(item => {
+          let years = yearlyRegular.map(item => {
               return item.year
           })
 
-          let monthSales = 10000
-
-          let months = salesMonthly.map(item => {
-              let month = "";
-              switch (item.month) {
-                case 01:
-                  month = "January";
-                  break;
-                case 02:
-                  month = "February";
-                  break;
-                case 03:
-                  month = "March";
-                  break;
-                case 04:
-                  month = "April";
-                  break;
-                case 05:
-                  month = "May";
-                  break;
-                case 06:
-                  month = "June";
-                  break;
-                case 07:
-                  month = "July";
-                  break;
-                case 08:
-                  month = "August";
-                  break;
-                case 09:
-                  month = "September";
-                  break;
-                case 10:
-                  month = "October";
-                  break;
-                case 11:
-                  month = "November";
-                  break;
-                case 12:
-                  month = "December";
-              }
-
-              return month;
+          let totalPerfectAttendaces =  perfectAttendanceMonths.map(item => {
+                return item.total;
           })
 
-          console.log(months);
+          let months = perfectAttendanceMonths.map(item => {
+                return item.month;
+          })
   
           Highcharts.chart('yearly', {
               title: {
@@ -200,7 +161,7 @@
 
             series: [{
               name: 'Total Number of Employee',
-              data: sales
+              data: totalRegularEmployees
             }],
 
             responsive: {
@@ -261,8 +222,7 @@
               marker: {
                 symbol: 'square'
               },
-              data: []
-
+              data: totalPerfectAttendaces
             }]
           });
         </script>

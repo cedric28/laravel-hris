@@ -19,7 +19,23 @@ class SalaryController extends Controller
      */
     public function index()
     {
-        //
+        $payrolls = DB::table('deployments')
+        ->leftJoin('attendances', 'deployments.id', '=', 'attendances.deployment_id')
+        ->leftJoin('employees', 'deployments.employee_id', '=', 'employees.id')
+        ->select('employees.first_name', 'attendances.attendance_date', 'attendances.hours_worked')
+        ->where(function ($query) {
+            $query->orWhereBetween('attendances.attendance_date', [date('Y-m-01'), date('Y-m-15')])
+                ->where('attendances.deleted_at', '=', null);
+        })
+        ->orWhere(function ($query) {
+            $query->whereBetween('attendances.attendance_date', [date('Y-m-16'), date('Y-m-t')])
+            ->where('attendances.deleted_at', '=', null);
+        })
+        ->where([
+            ['deployments.id', 1]
+        ])
+        ->get();
+        dd($payrolls);exit();
     }
 
     /**

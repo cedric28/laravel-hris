@@ -35,7 +35,7 @@
 								</tr>
 								<tr>
 									<th>Employee Fullname</th>
-									<td>{{ $deployment->employee->name }}</td>
+									<td>{{ ucwords($deployment->employee->last_name).", ".ucwords($deployment->employee->first_name)." ".ucwords($deployment->employee->middle_name) }}</td>
 								</tr>
 
 								<tr>
