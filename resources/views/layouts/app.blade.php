@@ -47,7 +47,14 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 	<style>
 
 	.bodyImage {
-			background-image: url('image-url');
+		 background-image: url('https://i.sstatic.net/kx8MT.gif');
+  
+    
+    
+    
+    height: 100vh;
+    padding:0;
+    margin:0;
 			background-size: cover;
 			background-position: center;
 			height: 100vh;
@@ -112,7 +119,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 	<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 	<script src="{{ asset('assets/js/main.js') }}"></script>
 </head>
-<body class="{{ !Auth::user() ? 'hold-transition login-page' : 'hold-transition sidebar-mini layout-fixed' }}">
+<body class="{{ !Auth::user() ? 'hold-transition login-page bodyImage' : 'hold-transition sidebar-mini layout-fixed' }}">
 	@yield('login')
 	@if (Auth::user())
 		<div class="wrapper">
