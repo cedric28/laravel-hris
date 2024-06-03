@@ -26,7 +26,7 @@
 							@include('partials.message')
 							@include('partials.errors')
 							<h3 class="card-title">Overtime Form</h3>
-						    <a type="button" href="{{ route('attendance.edit', $deployment->id )}}" class="btn bg-gradient-success float-right"><i class="fas fa-calendar mr-2"></i> File Attendance</a>
+						    <a type="button" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);" href="{{ route('attendance.edit', $deployment->id )}}" class="btn bg-gradient-success float-right"><i class="fas fa-calendar mr-2"></i> File Attendance</a>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
@@ -69,7 +69,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <button type="submit" class="btn btn-success">Save <i class="icon-paperplane ml-2"></i></button>
+                                        <button type="submit" class="btn btn-success" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">Save <i class="icon-paperplane ml-2"></i></button>
                                     </div>
 							</form>
 						</div>

@@ -22,7 +22,7 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							<a type="button" href="{{ route('employee.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Applicant</a>
+							<a type="button" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);" href="{{ route('employee.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Applicant</a>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">

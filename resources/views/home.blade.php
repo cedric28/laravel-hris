@@ -25,7 +25,8 @@
         <div class="row">
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-info">
+            <div class="small-box bg-info" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">
               <div class="inner">
                 <h3>{{ $totalApplicants }}</h3>
                 <p>Applicant/s {{  $year }}</p>
@@ -39,7 +40,8 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-success">
+            <div class="small-box bg-success" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">
               <div class="inner">
                 <h3>{{ $totalEmployees }}</h3>
 
@@ -54,7 +56,8 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-warning">
+            <div class="small-box bg-warning" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">
               <div class="inner">
                 <h3>{{ $user }}</h3>
 
@@ -69,7 +72,8 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-danger" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">
               <div class="inner">
                 <h3>{{  $totalClients }}</h3>
                 <p>Clients</p>
@@ -86,14 +90,16 @@
         <!-- Main row -->
         <div class="row">
           <div class="col-lg-12 col-12">
-            <figure class="highcharts-figure">
+            <figure class="highcharts-figure" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">
               <div id="yearly"></div>
             </figure>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-12 col-12">
-            <figure class="highcharts-figure">
+            <figure class="highcharts-figure" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">
               <div id="monthly"></div>
             </figure>
           </div>

@@ -26,7 +26,8 @@
 							@include('partials.message')
 							@include('partials.errors')
 							<div class="row">
-								<h3 class="card-title">Bulk Attendance Form <a class="ml-2 btn btn-primary" href="{{ route('download') }}" target="_blank"> <i class="nav-icon fas fa-file-excel"></i> Download Attendance Template</a></h3>
+								<h3 class="card-title">Bulk Attendance Form <a class="ml-2 btn btn-primary" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);" href="{{ route('download') }}" target="_blank"> <i class="nav-icon fas fa-file-excel"></i> Download Attendance Template</a></h3>
 							</div>
 						</div>
 						<!-- /.card-header -->
@@ -39,7 +40,8 @@
           <input type="file" name="excel_file" value="{{ old('excel_file') }}" class="@error('excel_file') is-invalid @enderror form-control" placeholder="e.g Excel only" >
          </div>
          <div class="col-lg-4">	
-           <button type="submit" class="btn btn-success">Save <i class="icon-paperplane ml-2"></i></button>
+           <button type="submit" class="btn btn-success" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">Save <i class="icon-paperplane ml-2"></i></button>
           </div>
         </div>				
 							</form>
