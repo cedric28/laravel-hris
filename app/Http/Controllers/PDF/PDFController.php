@@ -10,7 +10,7 @@ use App\Deployment;
 use App\Attendance;
 use App\OverTime;
 use Carbon\Carbon;
-use PDF;
+use PDF, DB;
 
 class PDFController extends Controller
 {
@@ -134,14 +134,13 @@ class PDFController extends Controller
                         ->sum('hours_worked');
     $totalHoursOverTime = OverTime::where('deployment_id', $id)
                         ->whereBetween('overtime_date', [$startDate, $endDate])
-                        ->sum('duration');
-
+                        ->sum(DB::raw('TIME_TO_SEC(duration) / 60'));
     $employee = ucwords($employeeDetails->employee->last_name).", ".ucwords($employeeDetails->employee->first_name)." ".ucwords($employeeDetails->employee->middle_name);
     $company = ucwords($employeeDetails->client->name);
     $position = ucwords($employeeDetails->position);
     $basicSalary =  $employeeDetails->salary->basic_salary ?? 0;
     $basicSalaryTotal =  ($basicSalary / 8 ) * $totalHoursWorked;
-    $overTimeTotal = ($totalHoursOverTime / 8 ) * $totalHoursWorked;
+    $overTimeTotal = ($totalHoursOverTime /60) * ($basicSalary / 8 );
     $deMinimisBenefits = ($employeeDetails->salary->meal_allowance ?? 0 ) + ($employeeDetails->salary->laundry_allowance ?? 0 ) + ($employeeDetails->salary->transportation_allowance ?? 0 ) + ($employeeDetails->salary->cola ?? 0 );
     $totalCompensation = $basicSalaryTotal + $deMinimisBenefits + $overTimeTotal;
     $tax = $basicSalaryTotal >= 21000 ? $basicSalaryTotal / $employeeDetails->salary->tax ?? 0 : 0;
