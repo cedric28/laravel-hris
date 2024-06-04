@@ -11,6 +11,6 @@ class Salary extends Model
 
     public function deployments()
     {
-        return $this->hasMany(Deployment::class,'deployment_id','id')->withTrashed();
+        return $this->belongsTo(Deployment::class)->withTrashed();
     }
 }

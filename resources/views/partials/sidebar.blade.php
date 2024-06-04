@@ -3,7 +3,7 @@
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
       <img src="{{ asset('dist/img/logo.png') }}" alt="Logo" class="brand-image elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">REVIER</span>
+      <span class="brand-text font-weight-light">REVMAN</span>
     </a>
 
     <!-- Sidebar -->

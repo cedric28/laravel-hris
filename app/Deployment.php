@@ -47,7 +47,7 @@ class Deployment extends Model
     }
 
     public function salary() {
-        return $this->belongsTo(Salary::class)->withTrashed();
+        return $this->hasOne(Salary::class,'deployment_id','id')->withTrashed();
     }
 
     public function lates()

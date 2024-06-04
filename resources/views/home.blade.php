@@ -135,7 +135,7 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
               },
 
               subtitle: {
-                text: 'REVIER AGENCY'
+                text: 'REVMAN AGENCY'
               },
 
               yAxis: {
@@ -195,7 +195,7 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
               text: `Employee Monthly Perfect Attendance for ${yearNow}`
             },
             subtitle: {
-              text: 'REVIER AGENCY'
+              text: 'REVMAN AGENCY'
             },
             xAxis: {
               categories: months

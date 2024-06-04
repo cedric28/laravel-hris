@@ -1162,10 +1162,18 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                     {"data":"action","searchable":false,"orderable":false}
                 ],
                 "columnDefs": [{
-					"targets": [0],   // target column
+					"targets": [0,1],   // target column
 					"className": "textCenter",
 				}]
             });
+
+            
+            $(document).on('click', '#generate-payslip', function(){
+                let startDate = $(this).attr('data-startdate');
+                let endDate = $(this).attr('data-enddate');
+                window.open(`/generate-payslip/<?= $deployment->id ?>?start_date=${startDate}&end_date=${endDate}`,'_blank');
+            })
+
 
             
             $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {

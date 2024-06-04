@@ -107,6 +107,7 @@ Route::middleware('auth')->group(function () {
     //Salary
     Route::resource('/salary', 'Salary\SalaryController');
     Route::post('compensation/fetch/q', 'Salary\SalaryFetchController@fetchCompensation')->name('activeCompensation');
+    Route::get('generate-payslip/{id}', 'PDF\PDFController@generatePayslip')->name('generatePayslip');
 
     //Late
     Route::post('late/fetch/q', 'Late\LateFetchController@fetchLate')->name('activeLate');
