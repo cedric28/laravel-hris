@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Regularization;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Feedback;
+use App\Deployment;
 use Validator, Hash, DB;
 use Carbon\Carbon;
 
@@ -22,7 +22,21 @@ class RegularizationFetchController extends Controller
 		);
 
 		//get the total number of data in User table
-		$totalData = Feedback::whereYear('created_at', $currentYear)->where('rate','>=',7)->count();
+		$totalData =  Deployment::select('feedback.id as id',
+		DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
+		->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
+		->join('employees', 'deployments.employee_id', '=', 'employees.id')
+		->join('clients', 'deployments.client_id', '=', 'clients.id')
+		->whereHas('feedbacks', function ($query) use ($currentYear){
+				$query->where('rate', '>=', 7)
+				->whereYear('created_at', $currentYear);
+		})
+		->whereRaw('(
+					SELECT COUNT(DISTINCT MONTH(attendance_date))
+					FROM attendances
+					WHERE deployment_id = deployments.id
+					AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+		) >= 11')->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -35,72 +49,92 @@ class RegularizationFetchController extends Controller
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
-            $posts = Feedback::select('feedback.id as id',
+            $posts = Deployment::select('feedback.id as id',
 												DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
-            ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
-            ->join('employees', 'deployments.employee_id', '=', 'employees.id')
-            ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->whereYear('feedback.created_at', $currentYear)
-            ->where('rate','>=',7)
-            ->where([
-                ['deployments.status', '=', 'new'],
-            ])
+												->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
+												->join('employees', 'deployments.employee_id', '=', 'employees.id')
+												->join('clients', 'deployments.client_id', '=', 'clients.id')
+												->whereHas('feedbacks', function ($query) use ($currentYear){
+														$query->where('rate', '>=', 7)
+														->whereYear('created_at', $currentYear);
+												})
+												->whereRaw('(
+															SELECT COUNT(DISTINCT MONTH(attendance_date))
+															FROM attendances
+															WHERE deployment_id = deployments.id
+															AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+												) >= 11')
             ->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
 
 			//total number of filtered data
-			$totalFiltered = Feedback::select('feedback.id as id',
-			DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
-            ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
-            ->join('employees', 'deployments.employee_id', '=', 'employees.id')
-            ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->whereYear('feedback.created_at', $currentYear)
-            ->where('rate','=',10)
-            ->where([
-                ['deployments.status', '=', 'new'],
-            ])->count();
+			$totalFiltered = Deployment::select('feedback.id as id',
+											DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
+											->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
+											->join('employees', 'deployments.employee_id', '=', 'employees.id')
+											->join('clients', 'deployments.client_id', '=', 'clients.id')
+											->whereHas('feedbacks', function ($query) use ($currentYear){
+													$query->where('rate', '>=', 7)
+													->whereYear('created_at', $currentYear);
+											})
+											->whereRaw('(
+														SELECT COUNT(DISTINCT MONTH(attendance_date))
+														FROM attendances
+														WHERE deployment_id = deployments.id
+														AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+											) >= 11')->count();
 
 		} else {
 			$search = $request->input('search.value');
 
-            $posts = Feedback::select('feedback.id as id',
-												DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
-                ->join('employees', 'deployments.employee_id', '=', 'employees.id')
-                ->join('clients', 'deployments.client_id', '=', 'clients.id')
-                ->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
+            $posts = Deployment::select('feedback.id as id',
+																DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
+																->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
+																->join('employees', 'deployments.employee_id', '=', 'employees.id')
+																->join('clients', 'deployments.client_id', '=', 'clients.id')
+																->whereHas('feedbacks', function ($query) use ($currentYear){
+																		$query->where('rate', '>=', 7)
+																		->whereYear('created_at', $currentYear);
+																})
+																->whereRaw('(
+																			SELECT COUNT(DISTINCT MONTH(attendance_date))
+																			FROM attendances
+																			WHERE deployment_id = deployments.id
+																			AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+																) >= 11')
 															->orWhere('employees.first_name', 'like', "%{$search}%")
 															->orWhere('employees.middle_name', 'like', "%{$search}%")
 															->orWhere('employees.last_name', 'like', "%{$search}%")
-																->orWhere('clients.name', 'like', "%{$search}%")
-																->orWhere('feedback.rate', 'like', "%{$search}%")
-                ->whereYear('feedback.created_at', $currentYear)
-                ->where('rate','>=',7)
-																->where([
-																			['deployments.status', '=', 'new'],
-																])
+															->orWhere('clients.name', 'like', "%{$search}%")
+															->orWhere('feedback.rate', 'like', "%{$search}%")
 															->offset($start)
 															->limit($limit)
 															->orderBy($order, $dir)
 															->get();
 
 			//total number of filtered data matching the search value request in the Supplier table	
-			$totalFiltered = Feedback::select('feedback.id as id',DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
-                    ->join('employees', 'deployments.employee_id', '=', 'employees.id')
-                    ->join('clients', 'deployments.client_id', '=', 'clients.id')
-                    ->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
-                    ->orWhere('employees.first_name', 'like', "%{$search}%")
+			$totalFiltered = Deployment::select('feedback.id as id',
+																					DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company','feedback.rate')
+																					->join('feedback', 'deployments.id', '=', 'feedback.deployment_id')
+																					->join('employees', 'deployments.employee_id', '=', 'employees.id')
+																					->join('clients', 'deployments.client_id', '=', 'clients.id')
+																					->whereHas('feedbacks', function ($query) use ($currentYear){
+																							$query->where('rate', '>=', 7)
+																							->whereYear('created_at', $currentYear);
+																					})
+																					->whereRaw('(
+																								SELECT COUNT(DISTINCT MONTH(attendance_date))
+																								FROM attendances
+																								WHERE deployment_id = deployments.id
+																								AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+																					) >= 11')
+																				->orWhere('employees.first_name', 'like', "%{$search}%")
 																				->orWhere('employees.middle_name', 'like', "%{$search}%")
 																				->orWhere('employees.last_name', 'like', "%{$search}%")
-                    ->orWhere('clients.name', 'like', "%{$search}%")
-                    ->orWhere('feedback.rate', 'like', "%{$search}%")
-                    ->whereYear('feedback.created_at', $currentYear)
-                    ->where('rate','>=',7)
-                    ->where([
-                        ['deployments.status', '=', 'new'],
-                    ])
-				    ->count();
+																				->orWhere('clients.name', 'like', "%{$search}%")
+																				->orWhere('feedback.rate', 'like', "%{$search}%")->count();
 		}
 
 

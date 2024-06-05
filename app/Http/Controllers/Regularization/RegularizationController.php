@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Regularization;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator, Hash, DB;
+use App\Feedback;
+use App\Deployment;
 use Carbon\Carbon;
 
 class RegularizationController extends Controller
