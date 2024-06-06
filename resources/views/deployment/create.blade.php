@@ -47,7 +47,7 @@
 								</div>
 
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Employee:</label>
+									<label class="col-lg-3 col-form-label">Applicant:</label>
 									<div class="col-lg-9">
 										<select id="employee-id" name="employee_id" class="form-control select2">
 											<option value="">Select Employee</option>

@@ -17,7 +17,7 @@ class AttendanceSeeder extends Seeder
         |---------------------------------------------*/
         \DB::beginTransaction();
 
-        $currentMonth = '6';
+        $currentMonth = '5';
         $currentYear = '2024';
         $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
         
@@ -30,7 +30,7 @@ class AttendanceSeeder extends Seeder
                 
                     // Create
                     $civilStatusObj = Attendance::create([
-                        'deployment_id' => 4,
+                        'deployment_id' => 1,
                         'attendance_time' => '07:00:00',
                         'attendance_out' => '16:00:00',
                         'attendance_date' => date('Y-m-d', $date),

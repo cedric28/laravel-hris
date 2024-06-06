@@ -38,6 +38,17 @@ Route::middleware('auth')->group(function () {
         }
     })->name('download');
 
+    Route::get('/download-overtimefile', function () {
+        $filename = 'overtime-template.xlsx';
+        $path = public_path() . '/overtime_file/' . $filename;
+    
+        if (file_exists($path)) {
+            return response()->download($path, $filename, [], 'inline');
+        } else {
+            abort(404);
+        }
+    })->name('downloadOverTimeFile');
+
     //Users
     Route::resource('/user', 'User\UserController');
     Route::post('user/fetch/q', 'User\UserFetchController@fetchUser')->name('activeUser');

@@ -20,7 +20,7 @@ class OverTimeController extends Controller
      */
     public function index()
     {
-        //
+        return view("overtime.index");
     }
 
     /**

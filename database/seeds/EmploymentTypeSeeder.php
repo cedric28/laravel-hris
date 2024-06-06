@@ -19,9 +19,6 @@ class EmploymentTypeSeeder extends Seeder
             [ 
                 'name' => 'Contract'
             ],
-            [ 
-                'name' => 'Freelance'
-            ]
         ];
 
 

@@ -62,10 +62,16 @@
                     <p>Employee</p>
                 </a>
             </li>
-               <li class="nav-item">
+            <li class="nav-item">
                 <a href="{{ route('attendance.index')}}" class="nav-link {{ (request()->is('attendance*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-file-excel"></i>
                     <p>Bulk Attendance</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('overtime.index')}}" class="nav-link {{ (request()->is('overtime*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-file-excel"></i>
+                    <p>Bulk Over-Time</p>
                 </a>
             </li>
             <li class="nav-item">
