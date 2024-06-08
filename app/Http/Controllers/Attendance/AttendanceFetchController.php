@@ -34,7 +34,7 @@ class AttendanceFetchController extends Controller
 		$order = $columns[$request->input('order.0.column')];
 		//order by ,default asc 
 		$dir = $request->input('order.0.dir');
-
+		$dir = ($dir == 'asc') ? 'desc' : $dir;
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
@@ -47,6 +47,7 @@ class AttendanceFetchController extends Controller
 				->limit($limit)
 				->orderBy($order, $dir)
 				->get();
+
 
 			//total number of filtered data
 			$totalFiltered = Attendance::where([
