@@ -5,13 +5,13 @@
 }
 
  .modal-image {
-        width: 100%;
+       width: 70%;
         height: auto;
         margin: 0 auto;
         display: block;
     }
     .modal-lg {
-        max-width: 100%;
+        width: 70%;
     }
     .modal-content {
         padding: 0;
@@ -144,6 +144,9 @@
 																						class="profile-user-img img-fluid hover-image"
 																						src="{{ url($imageUrl) }}"
 																						alt="Contract Image"
+																							data-toggle="modal" 
+																						data-target="#imageModal"
+																						data-image-url="{{ url($imageUrl) }}"
 																		>
 																		@else
 																		No Image
@@ -159,9 +162,12 @@
 																		@endphp
 																		@if($employee->pagibig_file)
 																		<img 
-																						class="profile-user-img img-fluid"
+																						class="profile-user-img img-fluid hover-image"
 																						src="{{ url($imageUrl) }}"
 																						alt="Contract Image"
+																							data-toggle="modal" 
+																						data-target="#imageModal"
+																						data-image-url="{{ url($imageUrl) }}"
 																		>
 																		@else
 																		No Image
@@ -177,9 +183,12 @@
 																		@endphp
 																		@if($employee->philhealth_file)
 																		<img 
-																						class="profile-user-img img-fluid"
+																						class="profile-user-img img-fluid hover-image"
 																						src="{{ url($imageUrl) }}"
 																						alt="Contract Image"
+																							data-toggle="modal" 
+																						data-target="#imageModal"
+																						data-image-url="{{ url($imageUrl) }}"
 																		>
 																		@else
 																		No Image
@@ -195,9 +204,12 @@
 																		@endphp
 																		@if($employee->tin_file)
 																		<img 
-																						class="profile-user-img img-fluid"
+																						class="profile-user-img img-fluid hover-image"
 																						src="{{ url($imageUrl) }}"
 																						alt="Contract Image"
+																						data-toggle="modal" 
+																						data-target="#imageModal"
+																						data-image-url="{{ url($imageUrl) }}"
 																		>
 																		@else
 																		No Image
@@ -224,7 +236,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <img src="{{ url($imageUrl) }}" alt="Contract Image" class="img-fluid modal-image">
+                <img src="" alt="Contract Image" class="img-fluid modal-image">
             </div>
         </div>
     </div>
@@ -247,8 +259,11 @@
        
 		</script>
 		<script>
-     $(document).ready(function() {
+      $(document).ready(function() {
         $('.hover-image').hover(function() {
+            var imageUrl = $(this).data('image-url');
+            console.log('imageUrl',imageUrl.toString())
+            $('#imageModal .modal-image').attr('src', imageUrl.toString());
             $('#imageModal').modal('show');
         }, function() {
             $('#imageModal').modal('hide');
