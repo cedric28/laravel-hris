@@ -304,7 +304,7 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                         setTimeout(function(){
                             $('#confirmModal').modal('hide');
                             tableActiveLeaves.ajax.reload();
-                            $('#ok_button').text('Archive');
+                            $('#ok_button').text('OK');
                         }, 2000);
                     }
                 })

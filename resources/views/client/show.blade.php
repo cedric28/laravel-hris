@@ -1,4 +1,22 @@
 @extends('layouts.app')
+<style>
+.hover-image{
+	cursor: pointer !important;
+}
+
+ .modal-image {
+       width: 70%;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+    }
+    .modal-lg {
+        width: 70%;
+    }
+    .modal-content {
+        padding: 0;
+    }
+</style>
 
 @section('content')
 	<section class="content-header">
@@ -62,9 +80,14 @@
 										@endphp
 										@if($client->contract)
 										<img 
-										class="profile-user-img img-fluid"
-									src="{{ url($imageUrl) }}"
-									alt="Contract Image">
+											class="profile-user-img img-fluid hover-image"
+											src="{{ url($imageUrl) }}"
+											alt="Contract Image"
+											data-toggle="modal" 
+											data-target="#imageModal"
+											data-image-url="{{ url($imageUrl) }}"
+									>
+									
 										@else
 										No Image
 										@endif
@@ -83,6 +106,18 @@
 			</div>
 		</div>	
 	</section>
+
+		
+	<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="" alt="Contract Image" class="img-fluid modal-image">
+            </div>
+        </div>
+    </div>
+</div>
 	@push('scripts')
 		<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -96,6 +131,18 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+			<script>
+      $(document).ready(function() {
+        $('.hover-image').hover(function() {
+            var imageUrl = $(this).data('image-url');
+            console.log('imageUrl',imageUrl.toString())
+            $('#imageModal .modal-image').attr('src', imageUrl.toString());
+            $('#imageModal').modal('show');
+        }, function() {
+            $('#imageModal').modal('hide');
+        });
+    });
+</script>
 		<script>
        
 		</script>

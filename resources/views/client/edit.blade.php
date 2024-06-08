@@ -1,4 +1,22 @@
 @extends('layouts.app')
+<style>
+.hover-image{
+	cursor: 'pointer' !important;
+}
+
+ .modal-image {
+       width: 70%;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+    }
+    .modal-lg {
+        width: 70%;
+    }
+    .modal-content {
+        padding: 0;
+    }
+</style>
 
 @section('content')
 	<section class="content-header">
@@ -91,9 +109,13 @@
 											@endphp
 											@if($client->contract)
 											<img 
-											class="profile-user-img img-fluid"
-										src="{{ url($imageUrl) }}"
-										alt="Contract Image"><br/><br/>
+											class="profile-user-img img-fluid hover-image"
+											src="{{ url($imageUrl) }}"
+											alt="Contract Image"
+											data-toggle="modal" 
+											data-target="#imageModal"
+											data-image-url="{{ url($imageUrl) }}"
+										><br/><br/>
 											@else
 											No Contract Found. Please upload.<br/><br/>
 											@endif
@@ -114,6 +136,17 @@
 			</div>
 		</div>	
 	</section>
+		
+	<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="" alt="Contract Image" class="img-fluid modal-image">
+            </div>
+        </div>
+    </div>
+</div>
 	<!-- /page content -->
         @push('scripts')
         <!-- Javascript -->
@@ -124,5 +157,17 @@
         <script src="{{ asset('vendors/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('vendors/bower_components/jquery.scrollbar/jquery.scrollbar.min.js') }}"></script>
         <script src="{{ asset('vendors/bower_components/jquery-scrollLock/jquery-scrollLock.min.js') }}"></script>
+									<script>
+      $(document).ready(function() {
+        $('.hover-image').hover(function() {
+            var imageUrl = $(this).data('image-url');
+            console.log('imageUrl',imageUrl.toString())
+            $('#imageModal .modal-image').attr('src', imageUrl.toString());
+            $('#imageModal').modal('show');
+        }, function() {
+            $('#imageModal').modal('hide');
+        });
+    });
+</script>
         @endpush('scripts')
 @endsection
