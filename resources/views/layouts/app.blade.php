@@ -45,7 +45,6 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 " rel="stylesheet">
 	<!-- /global stylesheets -->
 	<style>
-
 	.bodyImage {
 		 background-image: url('https://i.sstatic.net/kx8MT.gif');
     padding:0;
@@ -145,6 +144,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 		</script>
 	@endauth
 
+
 	<!-- jQuery -->
 	<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 	<!-- jQuery UI 1.11.4 -->
@@ -176,6 +176,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 	<script src="
 https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.all.min.js
 "></script>
+
 	@yield('js')
 	@stack('scripts')
 </body>

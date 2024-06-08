@@ -1,5 +1,22 @@
 @extends('layouts.app')
+<style>
+.hover-image{
+	cursor: pointer !important;
+}
 
+ .modal-image {
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+    }
+    .modal-lg {
+        max-width: 100%;
+    }
+    .modal-content {
+        padding: 0;
+    }
+</style>
 @section('content')
 	<section class="content-header">
       <div class="container-fluid">
@@ -114,22 +131,78 @@
 								Government Information
 								</div>
 								<div class="card-body">
-									<table class="table table-bordered w-100">
+								 <table class="table table-bordered w-100">
 										<tr>
-											<th>SSS</th>
-											<td>{{ $employee->sss ?? '-'}}</td>
+														<th>SSS</th>
+														<td>{{ $employee->sss ?? '-'}}</td>
+														<td>
+																		@php
+																		$imageUrl = $employee->sss_file != null ? '/images/sss/'.$employee->id.'/'.$employee->sss_file : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+																		@endphp
+																		@if($employee->sss_file)
+																		<img 
+																						class="profile-user-img img-fluid hover-image"
+																						src="{{ url($imageUrl) }}"
+																						alt="Contract Image"
+																		>
+																		@else
+																		No Image
+																		@endif
+														</td>
 										</tr>
 										<tr>
-											<th>PAG-IBIG</th>
-											<td>{{ $employee->pagibig ?? '-' }}</td>
+														<th>PAG-IBIG</th>
+														<td>{{ $employee->pagibig ?? '-' }}</td>
+														<td>
+																		@php
+																		$imageUrl = $employee->pagibig_file != null ? '/images/pagibig/'.$employee->id.'/'.$employee->pagibig_file : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+																		@endphp
+																		@if($employee->pagibig_file)
+																		<img 
+																						class="profile-user-img img-fluid"
+																						src="{{ url($imageUrl) }}"
+																						alt="Contract Image"
+																		>
+																		@else
+																		No Image
+																		@endif
+														</td>
 										</tr>
 										<tr>
-											<th>Philhealth</th>
-											<td>{{ $employee->philhealth ?? '-' }}</td>
+														<th>Philhealth</th>
+														<td>{{ $employee->philhealth ?? '-' }}</td>
+														<td>
+																		@php
+																		$imageUrl = $employee->philhealth_file != null ? '/images/philhealth/'.$employee->id.'/'.$employee->philhealth_file : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+																		@endphp
+																		@if($employee->philhealth_file)
+																		<img 
+																						class="profile-user-img img-fluid"
+																						src="{{ url($imageUrl) }}"
+																						alt="Contract Image"
+																		>
+																		@else
+																		No Image
+																		@endif
+														</td>
 										</tr>
 										<tr>
-											<th>TIN</th>
-											<td>{{ $employee->tin  ?? '-'}}</td>
+														<th>TIN</th>
+														<td>{{ $employee->tin  ?? '-'}}</td>
+														<td>
+																		@php
+																		$imageUrl = $employee->tin_file != null ? '/images/tin/'.$employee->id.'/'.$employee->tin_file : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+																		@endphp
+																		@if($employee->tin_file)
+																		<img 
+																						class="profile-user-img img-fluid"
+																						src="{{ url($imageUrl) }}"
+																						alt="Contract Image"
+																		>
+																		@else
+																		No Image
+																		@endif
+														</td>
 										</tr>
 									</table>	
 								</div>
@@ -145,6 +218,18 @@
 			</div>
 		</div>	
 	</section>
+	
+	<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="{{ url($imageUrl) }}" alt="Contract Image" class="img-fluid modal-image">
+            </div>
+        </div>
+    </div>
+</div>
+
 	@push('scripts')
 		<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -161,5 +246,14 @@
 		<script>
        
 		</script>
+		<script>
+     $(document).ready(function() {
+        $('.hover-image').hover(function() {
+            $('#imageModal').modal('show');
+        }, function() {
+            $('#imageModal').modal('hide');
+        });
+    });
+</script>
         @endpush('scripts')
 @endsection

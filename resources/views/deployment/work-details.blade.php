@@ -1,5 +1,22 @@
 @extends('layouts.app')
+<style>
+.hover-image{
+	cursor: pointer !important;
+}
 
+ .modal-image {
+        width: 70%;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+    }
+    .modal-lg {
+        max-width: 70%;
+    }
+    .modal-content {
+        padding: 0;
+    }
+</style>
 @section('content')
 	<section class="content-header">
       <div class="container-fluid">
@@ -632,18 +649,86 @@
                                                                     <tr>
                                                                         <th>SSS</th>
                                                                         <td>{{ $deployment->employee->sss ?? '-'}}</td>
+                                                                        <td>
+                                                                            @php
+                                                                            $imageUrl = $deployment->employee->sss_file != null ? '/images/sss/'.$deployment->employee->id.'/'.$deployment->employee->sss_file : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+                                                                            @endphp
+                                                                            @if($deployment->employee->sss_file)
+                                                                            <img 
+                                                                                class="profile-user-img img-fluid hover-image"
+                                                                                src="{{ url($imageUrl) }}"
+                                                                                alt="Contract Image"
+                                                                                data-toggle="modal" 
+                                                                                data-target="#imageModal"
+                                                                                data-image-url="{{ url($imageUrl) }}"
+                                                                            >
+                                                                            @else
+                                                                            No Image
+                                                                            @endif
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>PAG-IBIG</th>
                                                                         <td>{{ $deployment->employee->pagibig ?? '-' }}</td>
+                                                                        <td>
+                                                                            @php
+                                                                            $imageUrl = $deployment->employee->pagibig_file != null ? '/images/pagibig/'.$deployment->employee->id.'/'.$deployment->employee->pagibig_file : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+                                                                            @endphp
+                                                                            @if($deployment->employee->pagibig_file)
+                                                                            <img 
+                                                                                class="profile-user-img img-fluid hover-image"
+                                                                                src="{{ url($imageUrl) }}"
+                                                                                alt="Contract Image"
+                                                                                 data-toggle="modal" 
+                                                                                data-target="#imageModal"
+                                                                                data-image-url="{{ url($imageUrl) }}"
+                                                                            >
+                                                                            @else
+                                                                            No Image
+                                                                            @endif
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>Philhealth</th>
                                                                         <td>{{ $deployment->employee->philhealth ?? '-' }}</td>
+                                                                        <td>
+                                                                            @php
+                                                                            $imageUrl = $deployment->employee->philhealth_file != null ? '/images/philhealth/'.$deployment->employee->id.'/'.$deployment->employee->philhealth_file : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+                                                                            @endphp
+                                                                            @if($deployment->employee->philhealth_file)
+                                                                            <img 
+                                                                                class="profile-user-img img-fluid hover-image"
+                                                                                src="{{ url($imageUrl) }}"
+                                                                                alt="Contract Image"
+                                                                                 data-toggle="modal" 
+                                                                                data-target="#imageModal"
+                                                                                data-image-url="{{ url($imageUrl) }}"
+                                                                            >
+                                                                            @else
+                                                                            No Image
+                                                                            @endif
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>TIN</th>
                                                                         <td>{{ $deployment->employee->tin  ?? '-'}}</td>
+                                                                        <td>
+                                                                            @php
+                                                                            $imageUrl = $deployment->employee->tin_file != null ? '/images/tin/'.$deployment->employee->id.'/'.$deployment->employee->tin_file : 'http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png';
+                                                                            @endphp
+                                                                            @if($deployment->employee->tin_file)
+                                                                            <img 
+                                                                                class="profile-user-img img-fluid hover-image"
+                                                                                src="{{ url($imageUrl) }}"
+                                                                                alt="Contract Image"
+                                                                                 data-toggle="modal" 
+                                                                                data-target="#imageModal"
+                                                                                data-image-url="{{ url($imageUrl) }}"
+                                                                            >
+                                                                            @else
+                                                                            No Image
+                                                                            @endif
+                                                                        </td>
                                                                     </tr>
                                                                 </table>	
                                                             </div>
@@ -712,6 +797,19 @@
             </div>
         </div>
     </div>
+
+    	<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="" alt="Contract Image" class="img-fluid modal-image">
+            </div>
+        </div>
+    </div>
+</div>
+
 	<!-- /page content -->
         @push('scripts')
         <!-- Javascript -->
@@ -729,6 +827,18 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+        		<script>
+     $(document).ready(function() {
+        $('.hover-image').hover(function() {
+            var imageUrl = $(this).data('image-url');
+            console.log('imageUrl',imageUrl.toString())
+            $('#imageModal .modal-image').attr('src', imageUrl.toString());
+            $('#imageModal').modal('show');
+        }, function() {
+            $('#imageModal').modal('hide');
+        });
+    });
+</script>
 								   <script>
 			$(function () {
 				$('.select2').select2()

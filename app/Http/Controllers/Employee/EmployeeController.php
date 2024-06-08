@@ -181,7 +181,7 @@ class EmployeeController extends Controller
                 $imgSSS = \Image::make($sssOriginalImage->getRealPath());
 
                 // resize image to fixed size
-                $imgSSS->resize(100, 100);
+                $imgSSS->resize(500, 500);
                 $imgSSS->save($photoPathSSS . $sssFile);
 
                 //pagibig
@@ -194,7 +194,7 @@ class EmployeeController extends Controller
                 $imgPagibig = \Image::make($pagibigOriginalImage->getRealPath());
 
                 // resize image to fixed size
-                $imgPagibig->resize(100, 100);
+                $imgPagibig->resize(500, 500);
                 $imgPagibig->save($photoPathPagibig . $sssFile);
 
                 //tin
@@ -207,7 +207,7 @@ class EmployeeController extends Controller
                 $imgTin = \Image::make($tinOriginalImage->getRealPath());
 
                 // resize image to fixed size
-                $imgTin->resize(100, 100);
+                $imgTin->resize(500, 500);
                 $imgTin->save($photoPathTin . $tinFile);
 
 
@@ -221,7 +221,7 @@ class EmployeeController extends Controller
                 $imgPhilhealth = \Image::make($philhealthOriginalImage->getRealPath());
 
                 // resize image to fixed size
-                $imgPhilhealth->resize(100, 100);
+                $imgPhilhealth->resize(500, 500);
                 $imgPhilhealth->save($photoPathPhilhealth . $philhealthFile);
 
 
@@ -235,7 +235,7 @@ class EmployeeController extends Controller
                 $imgNBI = \Image::make($nbiOriginalImage->getRealPath());
 
                 // resize image to fixed size
-                $imgNBI->resize(100, 100);
+                $imgNBI->resize(500, 500);
                 $imgNBI->save($photoPathNBI . $nbiFile);
             }
 
@@ -461,7 +461,7 @@ class EmployeeController extends Controller
                 $img = \Image::make($originalImageSSS->getRealPath());
 
                 // resize image to fixed size
-                $img->resize(100, 100);
+                $img->resize(500, 500);
                 $img->save($photoPath . $sssPhoto);
             } else {
                 $sssPhoto = $currentPhotoSSS;
@@ -482,7 +482,7 @@ class EmployeeController extends Controller
                 $img = \Image::make($originalImagePagibig->getRealPath());
 
                 // resize image to fixed size
-                $img->resize(100, 100);
+                $img->resize(500, 500);
                 $img->save($photoPath . $pagibigPhoto);
             } else {
                 $pagibigPhoto = $currentPhotoPagibig;
@@ -503,7 +503,7 @@ class EmployeeController extends Controller
                 $img = \Image::make($originalImageTin->getRealPath());
 
                 // resize image to fixed size
-                $img->resize(100, 100);
+                $img->resize(500, 500);
                 $img->save($photoPath . $tinPhoto);
             } else {
                 $tinPhoto = $currentPhotoTin;
@@ -524,7 +524,7 @@ class EmployeeController extends Controller
                 $img = \Image::make($originalImagePhilhealth->getRealPath());
 
                 // resize image to fixed size
-                $img->resize(100, 100);
+                $img->resize(500, 500);
                 $img->save($photoPath . $philhealthPhoto);
             } else {
                 $philhealthPhoto = $currentPhotoPhilhealth;
@@ -546,7 +546,7 @@ class EmployeeController extends Controller
                 $img = \Image::make($originalImageNbi->getRealPath());
 
                 // resize image to fixed size
-                $img->resize(100, 100);
+                $img->resize(500, 500);
                 $img->save($photoPath . $nbiPhoto);
             } else {
                 $nbiPhoto = $currentPhotoNbi;

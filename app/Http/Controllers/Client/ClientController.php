@@ -97,7 +97,7 @@ class ClientController extends Controller
                 $img = \Image::make($originalImage->getRealPath());
 
                 // resize image to fixed size
-                $img->resize(100, 100);
+                $img->resize(500, 500);
                 $img->save($photoPath . $photo);
             }
 
@@ -211,7 +211,7 @@ class ClientController extends Controller
                 $img = \Image::make($originalImage->getRealPath());
 
                 // resize image to fixed size
-                $img->resize(100, 100);
+                $img->resize(500, 500);
                 $img->save($photoPath . $photo);
             } else {
                 $photo = $currentPhoto;
