@@ -117,7 +117,7 @@
           
        
             <li class="nav-header">SETTINGS</li>
-              @can('isAdmin')
+                @canany(['isHR','isAdmin'])
               <li class="nav-item">
                 <a href="{{ route('backup-database.index')}}" class="nav-link {{ (request()->is('backup-database*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-user-shield"></i>
