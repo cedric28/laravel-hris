@@ -316,7 +316,7 @@
                             $('#confirmModal').modal('hide');
 							table.ajax.reload();
                             tableInactive.ajax.reload();
-                            $('#ok_button').text('Archive');
+                            $('#ok_button').text('OK');
                         }, 2000);
                     }
                 })

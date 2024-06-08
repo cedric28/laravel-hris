@@ -333,7 +333,7 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                     {
                         setTimeout(function(){
                             $('#confirmModal').modal('hide');
-                            $('#ok_button').text('Archive');
+                            $('#ok_button').text('OK');
                             tableActiveAttendances.ajax.reload();
                             tableActiveLate.ajax.reload();
                         }, 2000);

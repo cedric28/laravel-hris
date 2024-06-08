@@ -1001,7 +1001,7 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                             $('#confirmModalAttendance').modal('hide');
                             tableActiveAttendances.ajax.reload();
                             tableActiveLate.ajax.reload();
-                            $('#ok_button').text('Archive');
+                            $('#ok_button_attendance').text('OK');
                         }, 2000);
                     }
                 })
@@ -1113,7 +1113,7 @@ var tableActiveOverTime = $('#employee_overtime').DataTable({
                         setTimeout(function(){
                             $('#confirmModalOvertime').modal('hide');
                             tableActiveOverTime.ajax.reload();
-                            $('#ok_button').text('Archive');
+                            $('#ok_button_overtime').text('OK');
                         }, 2000);
                     }
                 })
@@ -1219,7 +1219,7 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                         setTimeout(function(){
                             $('#confirmModalLeaves').modal('hide');
                             tableActiveLeaves.ajax.reload();
-                            $('#ok_button').text('Archive');
+                            $('#ok_button_leaves').text('OK');
                         }, 2000);
                     }
                 })
