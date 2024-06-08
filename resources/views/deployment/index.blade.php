@@ -308,6 +308,7 @@
                             $('#confirmModal').modal('hide');
 							table.ajax.reload();
                             tableInactive.ajax.reload();
+                            $('#ok_button').text('Archive');
                         }, 2000);
                     }
                 })

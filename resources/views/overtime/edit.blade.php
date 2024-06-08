@@ -250,6 +250,7 @@ var tableActiveOverTime = $('#employee_overtime').DataTable({
                         setTimeout(function(){
                             $('#confirmModal').modal('hide');
                             tableActiveOverTime.ajax.reload();
+                            $('#ok_button').text('Archive');
                         }, 2000);
                     }
                 })
