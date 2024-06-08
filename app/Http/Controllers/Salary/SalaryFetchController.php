@@ -32,15 +32,13 @@ class SalaryFetchController extends Controller
 		$dir = $request->input('order.0.dir');
 
 	//get all the User data
-		$employee =  Deployment::where('id',$deployment_id)
-									->offset($start)
-									->limit($limit)
-									->orderBy($order, $dir)
-									->first();
+		$employee =  Deployment::where('id',$deployment_id)->first();
+
+	
 		$startDate = Carbon::parse($employee->start_date);
 		$currentDate = now();
 
-		$payrollPeriods = [];
+		$payrollPeriods = collect();
 
 		while ($startDate <= $currentDate) {
 						$month = $startDate->month;
@@ -48,28 +46,30 @@ class SalaryFetchController extends Controller
 
 						if ($startDate->day <= 15) {
 										$payrollPeriod = Carbon::create($year, $month, 1)->format('m/d/Y') . ' - ' . Carbon::create($year, $month, 15)->format('m/d/Y');
-										$payrollPeriods[] = $payrollPeriod;
+										$payrollPeriods->push($payrollPeriod);
 										$startDate = Carbon::create($year, $month, 16);
 						} else {
 										$payrollPeriod = Carbon::create($year, $month, 16)->format('m/d/Y') . ' - ' . Carbon::create($year, $month)->endOfMonth()->format('m/d/Y');
-										$payrollPeriods[] = $payrollPeriod;
+									 $payrollPeriods->push($payrollPeriod);
 										$startDate = Carbon::create($year, $month)->startOfMonth()->addMonth();
 						}
 		}
+		$totalData = $payrollPeriods->count();
+		$totalFiltered = $payrollPeriods->count();
 
-		//get the total number of data in User table
-		$totalData = count($payrollPeriods);
+		$payrollPeriods = $payrollPeriods->sortByDesc(function($item) {
+			return strtotime(explode(" - ", $item)[0]);
+});
 
-		//total number of filtered data
-		$totalFiltered =  count($payrollPeriods);
+		$payrollPeriods = $payrollPeriods->slice($start, $limit);
+
 						
 		$data = array();
 
 		if ($payrollPeriods) {
 			//loop posts collection to transfer in another array $nestedData
-			usort($payrollPeriods, function($a, $b) {
-				return $this->getStartDate($b) -  $this->getStartDate($a);
-		});
+	
+			
 			foreach ($payrollPeriods as $r) {
 				$parts = explode(" - ", $r);
 				$start_date = $parts[0];
