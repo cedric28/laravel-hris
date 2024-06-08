@@ -176,17 +176,22 @@ class DeploymentFetchController extends Controller
 			->get();
 
 		//total number of filtered data
-		$totalFiltered = Deployment::onlyTrashed()->count();
+		$totalFiltered = Deployment::onlyTrashed()->select(DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'),'clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
+		->join('employees', 'deployments.employee_id', '=', 'employees.id')
+		->join('clients', 'deployments.client_id', '=', 'clients.id')->count();
 	} else {
 		$search = $request->input('search.value');
 
-		$posts = Deployment::onlyTrashed()->where(function ($query) use ($search) {
+		$posts = Deployment::onlyTrashed()->select(DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'),'clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
+		->join('employees', 'deployments.employee_id', '=', 'employees.id')
+		->join('clients', 'deployments.client_id', '=', 'clients.id')
+		->orWhere(function ($query) use ($search) {
 			$query->whereHas('employee', function ($query) use ($search) {
 				$query->where('first_name', 'like', "%{$search}%")
 				->orWhere('middle_name', 'like', "%{$search}%")
 				->orWhere('last_name', 'like', "%{$search}%");
 			})
-			->whereHas('client', function ($query) use ($search) {
+			->orWhereHas('client', function ($query) use ($search) {
 				$query->where('name', 'like', "%{$search}%");
 			})
 				->orWhere('position', 'like', "%{$search}%")
@@ -200,13 +205,16 @@ class DeploymentFetchController extends Controller
 			->get();
 
 		//total number of filtered data matching the search value request in the Supplier table	
-		$totalFiltered = Deployment::onlyTrashed()->where(function ($query) use ($search) {
+		$totalFiltered = Deployment::onlyTrashed()->select(DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'),'clients.name as client_name','deployments.position','deployments.status','deployments.start_date','deployments.end_date', 'deployments.id as id')
+		->join('employees', 'deployments.employee_id', '=', 'employees.id')
+		->join('clients', 'deployments.client_id', '=', 'clients.id')
+		->orWhere(function ($query) use ($search) {
 			$query->whereHas('employee', function ($query) use ($search) {
 				$query->where('first_name', 'like', "%{$search}%")
 					->orWhere('middle_name', 'like', "%{$search}%")
 					->orWhere('last_name', 'like', "%{$search}%");
 			})
-			->whereHas('client', function ($query) use ($search) {
+			->orWhereHas('client', function ($query) use ($search) {
 				$query->where('name', 'like', "%{$search}%");
 			})
 				->orWhere('position', 'like', "%{$search}%")
