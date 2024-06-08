@@ -219,7 +219,7 @@ class FeedBackController extends Controller
                     ->exists();
         
                     if ($attendance) {
-                        $fail('Feedback for this Year already assigned to this Employee');
+                        $fail('Performance Evaluation for this Year already assigned to this Employee');
                     }
                 },
             ],
@@ -262,7 +262,7 @@ class FeedBackController extends Controller
             $feedback->save();
 
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " create feedback " . $feedback->id . " at " . Carbon::now();
+            $log->log = "User " . \Auth::user()->email . " create Performance Evaluation " . $feedback->id . " at " . Carbon::now();
             $log->creator_id =  \Auth::user()->id;
             $log->updater_id =  \Auth::user()->id;
             $log->save();
@@ -272,7 +272,7 @@ class FeedBackController extends Controller
             \DB::commit();
 
             return redirect()->route('feedback.create')
-            ->with('successMsg', 'FeedBack Save Successful');
+            ->with('successMsg', 'Performance Evaluation Save Successful');
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
@@ -518,7 +518,7 @@ class FeedBackController extends Controller
              $feedback->save();
  
              $log = new Log();
-             $log->log = "User " . \Auth::user()->email . " edit feedback " .  $feedback->id . " at " . Carbon::now();
+             $log->log = "User " . \Auth::user()->email . " edit Performance Evaluation " .  $feedback->id . " at " . Carbon::now();
              $log->creator_id =  \Auth::user()->id;
              $log->updater_id =  \Auth::user()->id;
              $log->save();
@@ -528,7 +528,7 @@ class FeedBackController extends Controller
              \DB::commit();
  
              return redirect()->route('feedback.edit', $feedback->id)
-             ->with('successMsg', 'Feedback Data update Successfully');
+             ->with('successMsg', 'Performance Evaluation Data update Successfully');
          } catch (\Exception $e) {
              //if error occurs rollback the data from it's previos state
              \DB::rollback();
@@ -552,7 +552,7 @@ class FeedBackController extends Controller
         $feedback->delete();
 
         $log = new Log();
-        $log->log = "User " . \Auth::user()->email . " delete feedback " . $feedback->id . " at " . Carbon::now();
+        $log->log = "User " . \Auth::user()->email . " delete Performance Evaluation " . $feedback->id . " at " . Carbon::now();
         $log->creator_id =  \Auth::user()->id;
         $log->updater_id =  \Auth::user()->id;
         $log->save();
@@ -575,7 +575,7 @@ class FeedBackController extends Controller
             $feedback->restore();
 
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " restore feedback " . $feedback->id . " at " . Carbon::now();
+            $log->log = "User " . \Auth::user()->email . " restore Performance Evaluation " . $feedback->id . " at " . Carbon::now();
             $log->creator_id =  \Auth::user()->id;
             $log->updater_id =  \Auth::user()->id;
             $log->save();

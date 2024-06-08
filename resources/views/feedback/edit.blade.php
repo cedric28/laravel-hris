@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Feedback - {{ ucwords($feedback->deployment->employee->name)}} to {{ ucwords($feedback->deployment->client->name)}} Company</h1>
+            <h1>Performance Evaluation - {{ ucwords($feedback->deployment->employee->name)}} to {{ ucwords($feedback->deployment->client->name)}} Company</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
@@ -26,7 +26,7 @@
 							@include('partials.message')
 							@include('partials.errors')
 							<div class="row">
-								<h3 class="card-title">Feedback Edit Form</h3>
+								<h3 class="card-title">Performance Evaluation Edit Form</h3>
 							</div>
 						</div>
 						<!-- /.card-header -->

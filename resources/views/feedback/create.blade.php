@@ -5,13 +5,13 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Feedback - New Record</h1>
+            <h1>Performance Evaluation - New Record</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
               <li class="breadcrumb-item"><a href="{{ route('feedback.index')}}">Feedbacks</a></li>
-			  									<li class="breadcrumb-item">Add New Feedback</li>
+			  									<li class="breadcrumb-item">Add New Performance Evaluation</li>
             </ol>
           </div>
         </div>
@@ -26,7 +26,7 @@
 							@include('partials.message')
 							@include('partials.errors')
 							<div class="row">
-								<h3 class="card-title">Feedback Form</h3>
+								<h3 class="card-title">Performance Evaluation Form</h3>
 							</div>
 						</div>
 						<!-- /.card-header -->

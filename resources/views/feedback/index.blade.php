@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Employee Feedback</h1>
+            <h1>Employee Performance Evaluation</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item">Employee Feedback</li>
+              <li class="breadcrumb-item">Employee Performance Evaluation</li>
             </ol>
           </div>
         </div>
@@ -22,7 +22,7 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							<a type="button" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);" href="{{ route('feedback.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Feedback</a>
+							<a type="button" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);" href="{{ route('feedback.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Performance Evaluation</a>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
@@ -30,10 +30,10 @@
                                 <div class="card-header p-0 border-bottom-0">
                                     <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Active Feedback</a>
+                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Active Performance Evaluation</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Inactive Feedback</a>
+                                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Inactive Performance Evaluation</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -169,21 +169,21 @@
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Employee Feedback-List',
+                                'title' : 'Employee Performance Evaluation-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Employee Feedback-List',
+                                'title' : 'Employee Performance Evaluation-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Employee Feedback-List',
+                                'title' : 'Employee Performance Evaluation-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
@@ -224,21 +224,21 @@
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                 'title' : 'Employee Feedback-List',
+                                 'title' : 'Employee Performance Evaluation-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                 'title' : 'Employee Feedback-List',
+                                 'title' : 'Employee Performance Evaluation-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                 'title' : 'Employee Feedback-List',
+                                 'title' : 'Employee Performance Evaluation-List',
                                 "exportOptions": {
                                     "columns": [0,1,2]
                                 }

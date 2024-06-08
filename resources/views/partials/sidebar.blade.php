@@ -77,7 +77,7 @@
             <li class="nav-item">
                     <a href="{{ route('feedback.index')}}" class="nav-link {{ (request()->is('feedback*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-user-times"></i>
-                    <p>Feedback</p>
+                    <p>Performance Evaluation</p>
                 </a>
             </li>
  
