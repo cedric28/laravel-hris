@@ -147,7 +147,7 @@ class DeploymentController extends Controller
             $deployment->creator_id = $user;
             $deployment->updater_id = $user;
             $deployment->save();
-
+            
             $salary = new Salary();
             $salary->deployment_id = $deployment->id;
             $salary->creator_id = $user;
@@ -395,6 +395,10 @@ class DeploymentController extends Controller
                 'label' => 'Hourly',
                 'value' => 'hourly'
             ]];
+
+        $birthdate = Carbon::createFromFormat('Y-m-d', $deployment->employee->birthdate);
+
+        $age = $birthdate->diffInYears();
         return view('deployment.work-details', [
            'deployment' => $deployment,
            'schedule'=> $schedule,
@@ -402,7 +406,8 @@ class DeploymentController extends Controller
            'overtimes' => $overtimes,
            'leaveTypes' => $leaveTypes,
            'salary' => $salary,
-           'baseRate' => $baseRate
+           'baseRate' => $baseRate,
+           'age' => $age
         ]);
     }
 

@@ -46,6 +46,10 @@
 											<th>Date of Birth</th>
 											<td>{{ $employee->birthdate }}</td>
 										</tr>
+											<tr>
+											<th>Age</th>
+											<td>{{ $age }}</td>
+										</tr>
 										<tr>
 											<th>Gender</th>
 											<td>{{ $employee->gender->name }}</td>

@@ -277,6 +277,10 @@ class EmployeeController extends Controller
         $employment_histories = $employee->employment_histories;
         $educ_backgrounds = $employee->educ_backgrounds;
 
+        $birthdate = Carbon::createFromFormat('Y-m-d', $employee->birthdate);
+
+        $age = $birthdate->diffInYears();
+
         return view('employee.show', [
             'employee' => $employee,
             'employmentTypes' => $employmentTypes,
@@ -284,7 +288,8 @@ class EmployeeController extends Controller
             'civilStatus' => $civilStatus,
             'gender' => $gender,
             'employment_histories' => $employment_histories,
-            'educ_backgrounds' => $educ_backgrounds
+            'educ_backgrounds' => $educ_backgrounds,
+            'age' => $age
         ]);
     }
 

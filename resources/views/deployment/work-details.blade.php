@@ -568,6 +568,10 @@
                                                                     <td>{{ $deployment->employee->birthdate }}</td>
                                                                 </tr>
                                                                 <tr>
+                                                                    <th>Age</th>
+                                                                    <td>{{ $age }}</td>
+                                                                </tr>
+                                                                <tr>
                                                                     <th>Gender</th>
                                                                     <td>{{ $deployment->employee->gender->name }}</td>
                                                                 </tr>

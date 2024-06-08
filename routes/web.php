@@ -110,6 +110,7 @@ Route::middleware('auth')->group(function () {
 
     //OverTime
     Route::resource('/overtime', 'OverTime\OverTimeController');
+    Route::post('bulk-overtime', 'OverTime\OverTimeFetchController@bulkOverTime')->name('bulkOverTime');
     Route::post('overtime/fetch/q', 'OverTime\OverTimeFetchController@fetchOverTime')->name('activeOverTime');
     Route::post('inactive-overtime/fetch/q', 'OverTime\OverTimeFetchController@fetchInactiveAttendace')->name('InactiveOverTime');
     Route::get('overtime/destroy/{id}', 'OverTime\OverTimeController@destroy');

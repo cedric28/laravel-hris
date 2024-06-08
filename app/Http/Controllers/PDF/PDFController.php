@@ -126,7 +126,7 @@ class PDFController extends Controller
     $end_date = $request->input('end_date');
     $startDate = Carbon::parse($request->input('start_date'))->format('Y-m-d');
     $endDate =  Carbon::parse($request->input('end_date'))->format('Y-m-d');
-    // //check current user
+    //check current user
     $user = \Auth::user();
     $employeeDetails = Deployment::findOrFail($id);
     $totalHoursWorked = Attendance::where('deployment_id', $id)
