@@ -14,6 +14,9 @@ use App\Salary;
 use App\Schedule;
 use App\LateTime;
 use App\OverTime;
+use App\Industry;
+use App\CivilStatus;
+use App\Gender;
 use App\LeaveType;
 use Validator, Hash, DB;
 use Carbon\Carbon;
@@ -212,6 +215,31 @@ class DeploymentController extends Controller
         $this->authorize("isHROrAdmin");
 
         $deployment = Deployment::withTrashed()->findOrFail($id);
+        $employee = Employee::withTrashed()->findOrFail($deployment->employee_id);
+        $industries = Industry::all();
+        $civilStatus =  CivilStatus::all();
+        $gender = Gender::all();
+
+        $employment_histories = $employee->employment_histories;
+        $educ_backgrounds = $employee->educ_backgrounds;
+
+
+        $educationLevel = [ 
+            [ 
+                'name' => 'Primary'
+            ],
+            [
+                'name' => 'Secondary'
+            ],
+            [
+                'name' => 'Tertiary'
+            ], 
+            [
+                'name' => 'Vocational'
+            ]
+        ];
+
+
         $employmentTypes = EmploymentType::all();
         $clients = Client::all();
         $employees = Employee::all();
@@ -236,7 +264,14 @@ class DeploymentController extends Controller
             'employees' => $employees,
             'employmentTypes' => $employmentTypes,
             'deployment' => $deployment,
-            'statuses' => $statuses
+            'statuses' => $statuses,
+            'employee' => $employee,
+            'industries' => $industries,
+            'civilStatus' => $civilStatus,
+            'gender' => $gender,
+            'employment_histories' => $employment_histories,
+            'educ_backgrounds' => $educ_backgrounds,
+            'educationLevel' => $educationLevel
         ]);
     }
 

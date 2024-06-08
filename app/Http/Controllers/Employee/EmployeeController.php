@@ -657,7 +657,7 @@ class EmployeeController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return back()->with("successMsg", "Employee Update Successfully");
+            return back()->with("successMsg", "Employee Personal Information Update Successfully");
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
