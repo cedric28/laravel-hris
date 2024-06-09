@@ -36,7 +36,7 @@ class RegularizationFetchController extends Controller
 					FROM attendances
 					WHERE deployment_id = deployments.id
 					AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
-		) >= 11')->count();
+		) >= 11')->where('status','new')->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -64,6 +64,7 @@ class RegularizationFetchController extends Controller
 															WHERE deployment_id = deployments.id
 															AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
 												) >= 11')
+												->where('status','new')
             ->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
@@ -84,7 +85,7 @@ class RegularizationFetchController extends Controller
 														FROM attendances
 														WHERE deployment_id = deployments.id
 														AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
-											) >= 11')->count();
+											) >= 11')->where('status','new')->count();
 
 		} else {
 			$search = $request->input('search.value');
@@ -109,6 +110,7 @@ class RegularizationFetchController extends Controller
 															->orWhere('employees.last_name', 'like', "%{$search}%")
 															->orWhere('clients.name', 'like', "%{$search}%")
 															->orWhere('feedback.rate', 'like', "%{$search}%")
+															->where('status','new')
 															->offset($start)
 															->limit($limit)
 															->orderBy($order, $dir)
@@ -130,6 +132,7 @@ class RegularizationFetchController extends Controller
 																								WHERE deployment_id = deployments.id
 																								AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
 																					) >= 11')
+																				->where('status','new')
 																				->orWhere('employees.first_name', 'like', "%{$search}%")
 																				->orWhere('employees.middle_name', 'like', "%{$search}%")
 																				->orWhere('employees.last_name', 'like', "%{$search}%")
