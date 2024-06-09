@@ -845,30 +845,40 @@
 			$(function () {
 				$('.select2').select2()
 				//Date picker
-								$('#time_in').datetimepicker({
-      format: 'LT'
-    })
+				$('#time_in').datetimepicker({
+                format: 'LT'
+                })
 
 				$('#time_out').datetimepicker({
-      format: 'LT'
-    })
-			});
-		</script>
-			<script>
-            $(`#attendance_time`).datetimepicker({
+                format: 'LT'
+                })
+                  $(`#attendance_time`).datetimepicker({
                 format: 'LT'
             })
 
              $(`#attendance_out`).datetimepicker({
                 format: 'LT'
             })
+                 var today = new Date(); 
+             var maxDate = new Date("<?= $deployment->end_date ?>");
+
+               if (maxDate < today) {
+                    maxDate = today; // If it's less, set maxDate to today's date
+                } else {
+                    maxDate = maxDate;
+                }
 
             $(`#attendance_date`).datetimepicker({
                 format: 'L',
                 minDate: "<?= $deployment->start_date ?>",
-                maxDate: "<?= $deployment->end_date ?>",
-                daysOfWeekDisabled: [0, 6]
+                 maxDate: maxDate,
+                daysOfWeekDisabled: [0, 6],
+                defaultDate: maxDate
             });
+			});
+		</script>
+			<script>
+          
 
 var tableActiveAttendances = $('#employee_attendances').DataTable({
 				"responsive": true, 
@@ -1031,12 +1041,23 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                 format: 'LT'
             })
 
+              var today = new Date(); 
+             var maxDateForOver = new Date("<?= $deployment->end_date ?>");
+
+               if (maxDateForOver < today) {
+                    maxDateForOver = today; // If it's less, set maxDateForOver to today's date
+                } else {
+                    maxDateForOver = maxDateForOver;
+                }
+
+
 
             $(`#overtime_date`).datetimepicker({
                 format: 'L',
                 minDate: "<?= $deployment->start_date ?>",
-                maxDate: "<?= $deployment->end_date ?>",
-                daysOfWeekDisabled: [0, 6]
+                maxDate: maxDateForOver,
+                daysOfWeekDisabled: [0, 6],
+                 defaultDate: maxDateForOver
             });
 
 var tableActiveOverTime = $('#employee_overtime').DataTable({
