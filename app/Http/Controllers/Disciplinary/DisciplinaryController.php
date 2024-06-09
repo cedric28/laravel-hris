@@ -14,7 +14,7 @@ class DisciplinaryController extends Controller
      */
     public function index()
     {
-        //
+        return view("for-termination.index");
     }
 
     /**

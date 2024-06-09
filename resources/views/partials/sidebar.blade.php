@@ -82,7 +82,7 @@
             </li>
 
              <li class="nav-item">
-                    <a href="{{ route('feedback.index')}}" class="nav-link {{ (request()->is('feedback*')) ? 'nav-link active' : '' }}">
+                    <a href="{{ route('for-termination.index')}}" class="nav-link {{ (request()->is('for-termination*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-book"></i>
                     <p>Disciplinary</p>
                 </a>
