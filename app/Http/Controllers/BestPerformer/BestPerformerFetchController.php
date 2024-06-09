@@ -37,6 +37,9 @@ class BestPerformerFetchController extends Controller
         ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
             $query->whereMonth('created_at', $currentMonth);
         })
+        ->whereDoesntHave('deployment.attendances', function ($query) {
+            $query->where('status', 'Absent');
+        })
         ->where([
             ['feedback.rate','=',10],
             ['deployments.status','=','new']
@@ -67,6 +70,9 @@ class BestPerformerFetchController extends Controller
             ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
                 $query->whereMonth('created_at', $currentMonth);
             })
+            ->whereDoesntHave('deployment.attendances', function ($query) {
+                $query->where('status', 'Absent');
+            })
             ->where([
                 ['feedback.rate','=',10],
                 ['deployments.status','=','new']
@@ -89,6 +95,9 @@ class BestPerformerFetchController extends Controller
             })
             ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
                 $query->whereMonth('created_at', $currentMonth);
+            })
+            ->whereDoesntHave('deployment.attendances', function ($query) {
+                $query->where('status', 'Absent');
             })
             ->where([
                 ['feedback.rate','=',10],
@@ -115,6 +124,9 @@ class BestPerformerFetchController extends Controller
                 ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
                     $query->whereMonth('created_at', $currentMonth);
                 })
+                ->whereDoesntHave('deployment.attendances', function ($query) {
+                    $query->where('status', 'Absent');
+                })
                 ->where([
                     ['feedback.rate','=',10],
                     ['deployments.status','=','new']
@@ -138,6 +150,9 @@ class BestPerformerFetchController extends Controller
                         $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
                                         ->whereNotIn('day_of_week', [6, 0])
                                         ->whereDate('attendance_date', '<=', $threeDaysBeforeEndOfMonth);
+                    })
+                    ->whereDoesntHave('deployment.attendances', function ($query) {
+                        $query->where('status', 'Absent');
                     })
                     ->whereDoesntHave('deployment.lates', function ($query) use ($currentMonth) {
                         $query->whereMonth('created_at', $currentMonth);

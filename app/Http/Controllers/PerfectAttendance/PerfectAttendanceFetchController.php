@@ -32,6 +32,9 @@ class PerfectAttendanceFetchController extends Controller
 	->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 		$query->whereMonth('created_at', $currentMonth);
 	})
+	->whereDoesntHave('attendances', function ($query) {
+		$query->where('status', 'Absent');
+})
 ->where([
 			['deployments.deleted_at', '=', null]
 ])->count();
@@ -57,6 +60,9 @@ class PerfectAttendanceFetchController extends Controller
 																->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 																	$query->whereMonth('created_at', $currentMonth);
 																})
+																->whereDoesntHave('attendances', function ($query) {
+																			$query->where('status', 'Absent');
+															})
                 ->where([
                     ['deployments.deleted_at', '=', null]
                 ])
@@ -73,6 +79,9 @@ class PerfectAttendanceFetchController extends Controller
 						})
 						->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 							$query->whereMonth('created_at', $currentMonth);
+						})
+						->whereDoesntHave('attendances', function ($query) {
+										$query->where('status', 'Absent');
 						})
 						->where([
 										['deployments.deleted_at', '=', null]
@@ -98,6 +107,9 @@ class PerfectAttendanceFetchController extends Controller
 												})
 													->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 														$query->whereMonth('created_at', $currentMonth);
+													})
+													->whereDoesntHave('attendances', function ($query) {
+																	$query->where('status', 'Absent');
 													})
 													->where([
 														['deployments.deleted_at', '=', null]
@@ -126,6 +138,9 @@ class PerfectAttendanceFetchController extends Controller
 																				})
 																				->whereDoesntHave('lates', function ($query) use ($currentMonth) {
 																					$query->whereMonth('created_at', $currentMonth);
+																				})
+																				->whereDoesntHave('attendances', function ($query) {
+																					$query->where('status', 'Absent');
 																				})
 																				->where([
 																					['deployments.deleted_at', '=', null]

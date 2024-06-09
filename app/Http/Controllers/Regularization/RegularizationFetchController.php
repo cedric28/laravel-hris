@@ -31,12 +31,13 @@ class RegularizationFetchController extends Controller
 				$query->where('rate', '>=', 7)
 				->whereYear('created_at', $currentYear);
 		})
-		->whereRaw('(
-					SELECT COUNT(DISTINCT MONTH(attendance_date))
-					FROM attendances
-					WHERE deployment_id = deployments.id
-					AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
-		) >= 11')->where('status','new')->count();
+	 ->whereRaw('(
+			SELECT COUNT(DISTINCT MONTH(attendance_date))
+			FROM attendances
+			WHERE deployment_id = deployments.id
+							AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+							AND status != "Absent" /* Exclude Absent status */
+) >= 11')->where('status','new')->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -59,10 +60,11 @@ class RegularizationFetchController extends Controller
 														->whereYear('created_at', $currentYear);
 												})
 												->whereRaw('(
-															SELECT COUNT(DISTINCT MONTH(attendance_date))
-															FROM attendances
-															WHERE deployment_id = deployments.id
-															AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+																SELECT COUNT(DISTINCT MONTH(attendance_date))
+																FROM attendances
+																WHERE deployment_id = deployments.id
+																				AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+																				AND status != "Absent" /* Exclude Absent status */
 												) >= 11')
 												->where('status','new')
             ->offset($start)
@@ -80,12 +82,13 @@ class RegularizationFetchController extends Controller
 													$query->where('rate', '>=', 7)
 													->whereYear('created_at', $currentYear);
 											})
-											->whereRaw('(
-														SELECT COUNT(DISTINCT MONTH(attendance_date))
-														FROM attendances
-														WHERE deployment_id = deployments.id
-														AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
-											) >= 11')->where('status','new')->count();
+										 ->whereRaw('(
+												SELECT COUNT(DISTINCT MONTH(attendance_date))
+												FROM attendances
+												WHERE deployment_id = deployments.id
+																AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+																AND status != "Absent" /* Exclude Absent status */
+								) >= 11')->where('status','new')->count();
 
 		} else {
 			$search = $request->input('search.value');
@@ -99,12 +102,13 @@ class RegularizationFetchController extends Controller
 																		$query->where('rate', '>=', 7)
 																		->whereYear('created_at', $currentYear);
 																})
-																->whereRaw('(
-																			SELECT COUNT(DISTINCT MONTH(attendance_date))
-																			FROM attendances
-																			WHERE deployment_id = deployments.id
-																			AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
-																) >= 11')
+															 ->whereRaw('(
+																	SELECT COUNT(DISTINCT MONTH(attendance_date))
+																	FROM attendances
+																	WHERE deployment_id = deployments.id
+																					AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+																					AND status != "Absent" /* Exclude Absent status */
+													) >= 11')
 															->orWhere('employees.first_name', 'like', "%{$search}%")
 															->orWhere('employees.middle_name', 'like', "%{$search}%")
 															->orWhere('employees.last_name', 'like', "%{$search}%")
@@ -126,12 +130,13 @@ class RegularizationFetchController extends Controller
 																							$query->where('rate', '>=', 7)
 																							->whereYear('created_at', $currentYear);
 																					})
-																					->whereRaw('(
-																								SELECT COUNT(DISTINCT MONTH(attendance_date))
-																								FROM attendances
-																								WHERE deployment_id = deployments.id
-																								AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
-																					) >= 11')
+																				 ->whereRaw('(
+																						SELECT COUNT(DISTINCT MONTH(attendance_date))
+																						FROM attendances
+																						WHERE deployment_id = deployments.id
+																										AND DAYOFWEEK(attendance_date) NOT IN (1, 7) /* Exclude Sundays (1) and Saturdays (7) */
+																										AND status != "Absent" /* Exclude Absent status */
+																		) >= 11')
 																				->where('status','new')
 																				->orWhere('employees.first_name', 'like', "%{$search}%")
 																				->orWhere('employees.middle_name', 'like', "%{$search}%")
