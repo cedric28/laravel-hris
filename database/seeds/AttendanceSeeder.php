@@ -17,8 +17,8 @@ class AttendanceSeeder extends Seeder
         |---------------------------------------------*/
         \DB::beginTransaction();
 
-        $currentMonth = '5';
-        $currentYear = '2024';
+        $currentMonth = '6';
+        $currentYear = '2023';
         $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
         
         for ($day = 1; $day <= $daysInMonth; $day++) {
@@ -35,7 +35,7 @@ class AttendanceSeeder extends Seeder
                         'attendance_out' => '16:00:00',
                         'attendance_date' => date('Y-m-d', $date),
                         'day_of_week' => $dayOfWeek,
-                        'status' => 1,
+                        'status' => 'Present',
                         'hours_worked' => 8,
                         'creator_id' => 1,
                         'updater_id' => 1
