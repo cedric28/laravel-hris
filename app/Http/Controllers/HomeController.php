@@ -65,6 +65,12 @@ class HomeController extends Controller
                       ->whereRaw('deployments.id = attendances.deployment_id')
                       ->where('deployments.status', 'new');
             })
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('attendances')
+                    ->whereRaw('attendances.deployment_id = deployments.id')
+                    ->where('attendances.status', '!=', 'Absent');
+            })
             ->whereRaw("DAY(LAST_DAY(attendance_date)) - DAY(attendance_date) <= ?", [$threeDaysBeforeEndOfMonth])
             ->groupBy(DB::raw('MONTHNAME(attendance_date)'))
             ->get();
