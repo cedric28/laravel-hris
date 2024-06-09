@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Deployment;
+use Carbon\Carbon;
 
 class CheckAttendanceCommand extends Command
 {
@@ -30,24 +31,22 @@ class CheckAttendanceCommand extends Command
         $endDate = $employee->end_date;
 
         // Check if the current date is within the employee's start and end dates
-        $currentDate = Carbon::today()->format('Y-m-d');
+        $currentDate = Carbon::today();
         if ($currentDate->greaterThanOrEqualTo($startDate) && $currentDate->lessThanOrEqualTo($endDate)) {
             if (!$currentDate->isWeekend()) {
                 // Check if the employee has attendance for today
                 $attendanceToday = Attendance::where('deployment_id', $employee->id)
-                    ->whereDate('attendance_date', Carbon::today()->format('Y-m-d'))
-                    ->exists();
+                ->whereDate('attendance_date', $currentDate)
+                ->exists();
 
                 if (!$attendanceToday) {
-
-                    $attendanceDate =  Carbon::today()->format('Y-m-d');
                     // Insert attendance if not present
-                    Attendance::create([
+                    $attendance = Attendance::create([
                         'attendance_time' => '00:00:00',
                         'attendance_out' => '00:00:00',
-                        'attendance_date' => Carbon::today()->format('Y-m-d'),
+                        'attendance_date' =>$currentDate->format('Y-m-d'),
                         'deployment_id' => $employee->id,
-                        'day_of_week' =>  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1,
+                        'day_of_week' =>  $currentDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1,
                         'hours_worked' => 0,
                         'status' => 'Absent',
                         'creator_id' => 1,

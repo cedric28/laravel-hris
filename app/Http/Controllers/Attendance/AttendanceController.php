@@ -71,9 +71,15 @@ class AttendanceController extends Controller
                     function ($attribute, $value, $fail) use ($request, $deployment) {
                         $attendanceDate = Carbon::parse($value);
                         $attendanceDateFormatted = $attendanceDate->format('Y-m-d');
+
+                        // Check if the attendance date falls on a weekend
+                        if ($attendanceDate->isWeekend()) {
+                            $fail('Attendance Date cannot be on a weekend');
+                        }
                         
                         $attendance = Attendance::where('attendance_date', $attendanceDateFormatted)
                             ->where('deployment_id', $request->deployment_id)
+                            ->where('status','Present')
                             ->exists();
                     
                         if ($attendance) {
@@ -248,6 +254,18 @@ class AttendanceController extends Controller
 
          //delete Attendance
          $attendance = Attendance::findOrFail($id);
+        // Create a new instance of Attendance model
+        $newAttendance = new Attendance();
+        $attributes = $attendance->getAttributes();
+        unset($attributes['id']);
+        $newAttendance->fill($attributes);
+        $newAttendance->attendance_time = '00:00:00';
+        $newAttendance->attendance_out = '00:00:00';
+        $newAttendance->hours_worked = 0;
+        $newAttendance->status = 'Absent';
+
+        // Save the new instance
+        $newAttendance->save();
 
          $late = LateTime::where('attendance_id', $attendance->id)->first();
 
@@ -382,6 +400,7 @@ class AttendanceController extends Controller
                             $attendanceDateFormatted = $attendanceDate->format('Y-m-d');
                             
                             $attendance = Attendance::where('attendance_date', $attendanceDateFormatted)
+                                ->where('status','Present')
                                 ->where('deployment_id', $request->deployment_id)
                                 ->exists();
                 
