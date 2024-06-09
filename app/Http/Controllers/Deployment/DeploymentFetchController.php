@@ -142,7 +142,7 @@ class DeploymentFetchController extends Controller
 	{
 	//column list in the table Prpducts
 	$columns = array(
-		0 => 'first_name',
+		0 => 'full_name',
 		1 => 'client_name',
 		2 => 'position',
 		3 => 'status',

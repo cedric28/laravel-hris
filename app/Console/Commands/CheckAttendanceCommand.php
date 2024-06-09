@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Deployment;
+use App\Attendance;
 use Carbon\Carbon;
 
 class CheckAttendanceCommand extends Command
@@ -46,12 +47,12 @@ class CheckAttendanceCommand extends Command
                         'attendance_out' => '00:00:00',
                         'attendance_date' =>$currentDate->format('Y-m-d'),
                         'deployment_id' => $employee->id,
-                        'day_of_week' =>  $currentDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1,
+                        'day_of_week' =>  $currentDate->dayOfWeek == 7 ? 0 : $currentDate->dayOfWeek + 1,
                         'hours_worked' => 0,
                         'status' => 'Absent',
                         'creator_id' => 1,
                         'updater_id' => 1
-                    ]);
+                    ]); 
                 }
             }
         }

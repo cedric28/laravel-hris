@@ -80,6 +80,13 @@
                     <p>Performance Evaluation</p>
                 </a>
             </li>
+
+             <li class="nav-item">
+                    <a href="{{ route('feedback.index')}}" class="nav-link {{ (request()->is('feedback*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-book"></i>
+                    <p>Disciplinary</p>
+                </a>
+            </li>
  
 
             <li class="nav-header">REPORTS</li>

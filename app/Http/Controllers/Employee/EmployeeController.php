@@ -136,7 +136,7 @@ class EmployeeController extends Controller
             $employee = new Employee();
             $employee->reference_no = $this->generateUniqueCode();
             $employee->first_name = $request->first_name;
-            $employee->middle_name = $request->middle_name;
+            $employee->middle_name = $request->middle_name ?? '';
             $employee->last_name = $request->last_name;
             $employee->nickname = $request->nickname;
             $employee->nationality = $request->nationality;
@@ -554,7 +554,7 @@ class EmployeeController extends Controller
 
             //save the update value
             $employee->first_name = $request->first_name;
-            $employee->middle_name = $request->middle_name;
+            $employee->middle_name = $request->middle_name ?? '';
             $employee->last_name = $request->last_name;
             $employee->nickname = $request->nickname;
             $employee->gender_id = $request->gender_id;
@@ -608,7 +608,7 @@ class EmployeeController extends Controller
                     $employment = EmploymentHistory::firstOrNew([
                         'employee_id' => $employee->id,
                     ]);
-                    $employment->employment_type_id = $employmentTypes[$i];
+                    $employment->employment_type_id = $employmentTypes[$i] ?? '';
                     $employment->title = $titles[$i] ?? '';
                     $employment->company = $company[$i] ?? '';
                     $employment->location = $location[$i] ?? '';
@@ -682,6 +682,21 @@ class EmployeeController extends Controller
 
         $log = new Log();
         $log->log = "User " . \Auth::user()->email . " delete employee " . $employee->reference_no . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+    }
+
+    public function destroyEmploymentHistory($id)
+    {
+          //prevent other user to access to this page
+          $this->authorize("isHROrAdmin");
+        //delete employee
+        $employeeHistory = EmploymentHistory::findOrFail($id);
+        $employeeHistory->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete employment history " . $employeeHistory->id . " at " . Carbon::now();
         $log->creator_id =  \Auth::user()->id;
         $log->updater_id =  \Auth::user()->id;
         $log->save();

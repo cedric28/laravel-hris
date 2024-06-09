@@ -381,7 +381,8 @@
 																	</div>
 																	<br/>
 																	<div class="row">
-																			<table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employment_histories_list">
+																		<div class="col-md-12">
+																			<table class="table table-hover table-striped w-100" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employment_histories_list">
 																				<thead>
 																								<tr style="text-align:center;">
 																									<th>JOB TITLE</th>
@@ -413,6 +414,7 @@
 																								@endforeach
 																				</tbody>
 																			</table>
+																			</div>
 																	</div>
 											
 																</div>
@@ -521,11 +523,39 @@
 			</div>
 		</div>	
 	</section>
+		<!-- /page content -->
+	<div id="confirmModalHistory" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4 align="center" style="margin:0;">Are you sure you want to move this data to archive?</h4>
+                </div>
+                <div class="modal-footer">
+                 <button type="button" name="ok_button_emp_history" id="ok_button_emp_history" class="btn btn-danger">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<!-- /page content -->
         @push('scripts')
         <!-- Javascript -->
         <!-- Vendors -->
-      
+							<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
         <script src="{{ asset('vendors/bower_components/popper.js/dist/umd/popper.min.js') }}"></script>
         <script src="{{ asset('vendors/bower_components/popper.js/dist/umd/popper.min.js') }}"></script>
         <script src="{{ asset('vendors/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
@@ -533,7 +563,9 @@
         <script src="{{ asset('vendors/bower_components/jquery-scrollLock/jquery-scrollLock.min.js') }}"></script>
 
 								<script>
-									$(document).ready(function(){
+
+						
+	$(document).ready(function(){
 												let row_number = {{ count(old('employment_histories', [''])) }};
 												$("#add_row").click(function(e){
 													e.preventDefault();
@@ -550,7 +582,6 @@
 													}
 												});
 									});	
-
 
 
 									$(document).ready(function(){
@@ -612,6 +643,98 @@
 								
 									bindDatePicker();
 		});
+	</script>
+	<script>
+			   var table = $('#employment_histories_list').DataTable({
+				"responsive": true, 
+				"lengthChange": false, 
+				"autoWidth": false,
+      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activeEmployeeHistories') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{
+																					"_token":"<?= csrf_token() ?>",
+																					"employee_id" : "<?= $employee->id ?>"
+																					}
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Employment-Histories-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                'title' : 'Employment-Histories-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : 'Employment-Histories-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2,3,4,5,6]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"title"},
+                    {"data":"employment_type"},
+                    {"data":"company"},
+                    {"data":"location"},
+                    {"data":"start_date"},
+                    {"data":"end_date"},
+                    {"data":"industry"},
+																				{"data":"job_description"},
+                    {"data":"action","searchable":false,"orderable":false}
+                ],
+                "columnDefs": [
+				{
+					"targets": [0,1,2,3,4,5,6],   // target column
+					"className": "textCenter",
+				}]
+            });
+
+
+												 var employee_id;
+            $(document).on('click', '#delete_emp_histories', function(e){
+															e.preventDefault();
+                employee_id = $(this).attr('data-id');
+                $('#confirmModalHistory').modal('show');
+            });
+
+            $('#ok_button_emp_history').click(function(e){
+															e.preventDefault();
+                $.ajax({
+                    url:"/employee-history/destroy/"+employee_id,
+                    beforeSend:function(){
+                        $('#ok_button_emp_history').text('Archiving...');
+                    },
+                    success:function(data)
+                    {
+                        setTimeout(function(){
+                            $('#confirmModalHistory').modal('hide');
+																												table.ajax.reload();
+                            $('#ok_button_emp_history').text('OK');
+                        }, 2000);
+                    }
+                })
+            });
+
 	</script>
         @endpush('scripts')
 @endsection
