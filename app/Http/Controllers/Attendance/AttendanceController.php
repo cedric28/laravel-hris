@@ -125,17 +125,39 @@ class AttendanceController extends Controller
 
             $totalHours = ($attendanceOut - $attendanceTime) / 3600; 
             //save attendance
-            $attendance = new Attendance();
-            $attendance->attendance_time = Carbon::parse($request->attendance_time)->format('H:i:s');
-            $attendance->attendance_out = Carbon::parse($request->attendance_out)->format('H:i:s');
-            $attendance->attendance_date = Carbon::parse($request->attendance_date)->format('Y-m-d');
-            $attendance->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
-            $attendance->hours_worked = $totalHours = ($totalHours <= 4) ? $totalHours : (($totalHours >= 5 && $totalHours <= 9) ? ($totalHours - 1) : 8);
-            $attendance->deployment_id = $request->deployment_id;
-            $attendance->status = 'Present';
-            $attendance->creator_id = $user;
-            $attendance->updater_id = $user;
-            $attendance->save();
+            $isExist = Attendance::where('attendance_date', Carbon::parse($request->attendance_date)->format('Y-m-d'))
+                            ->where('deployment_id', $request->deployment_id)
+                            ->first();
+
+            $attendanceId = "";
+            if($isExist){
+                $isExist->attendance_time = Carbon::parse($request->attendance_time)->format('H:i:s');
+                $isExist->attendance_out = Carbon::parse($request->attendance_out)->format('H:i:s');
+                $isExist->attendance_date = Carbon::parse($request->attendance_date)->format('Y-m-d');
+                $isExist->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
+                $isExist->hours_worked = $totalHours = ($totalHours <= 4) ? $totalHours : (($totalHours >= 5 && $totalHours <= 9) ? ($totalHours - 1) : 8);
+                $isExist->deployment_id = $request->deployment_id;
+                $isExist->status = 'Present';
+                $isExist->updater_id = $user;
+                $isExist->save();
+
+                $attendanceId =  $isExist->id;
+            } else {
+                $attendance = new Attendance();
+                $attendance->attendance_time = Carbon::parse($request->attendance_time)->format('H:i:s');
+                $attendance->attendance_out = Carbon::parse($request->attendance_out)->format('H:i:s');
+                $attendance->attendance_date = Carbon::parse($request->attendance_date)->format('Y-m-d');
+                $attendance->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
+                $attendance->hours_worked = $totalHours = ($totalHours <= 4) ? $totalHours : (($totalHours >= 5 && $totalHours <= 9) ? ($totalHours - 1) : 8);
+                $attendance->deployment_id = $request->deployment_id;
+                $attendance->status = 'Present';
+                $attendance->creator_id = $user;
+                $attendance->updater_id = $user;
+                $attendance->save();
+
+                $attendanceId = $attendance->id;
+            }
+           
 
             $employee = Deployment::find($request->deployment_id);
             $schedule = $employee->schedule;
@@ -146,7 +168,7 @@ class AttendanceController extends Controller
             if($lateTimeDuration > 0){
                 $late = new LateTime();
                 $late->deployment_id = $request->deployment_id;
-                $late->attendance_id = $attendance->id;
+                $late->attendance_id = $attendanceId;
                 $late->duration = Carbon::createFromTime(0, $lateTimeDuration, 0)->format('H:i:s');
                 $late->latetime_date =  Carbon::parse($request->attendance_date)->format('Y-m-d');
                 $late->creator_id = $user;
@@ -155,7 +177,7 @@ class AttendanceController extends Controller
             }
              
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " create attendance " . $attendance->id . " at " . Carbon::now();
+            $log->log = "User " . \Auth::user()->email . " create attendance " . $attendanceId . " at " . Carbon::now();
             $log->creator_id =  \Auth::user()->id;
             $log->updater_id =  \Auth::user()->id;
             $log->save();
@@ -398,8 +420,6 @@ class AttendanceController extends Controller
             return redirect()->back()->withErrors(['Too many rows in the Excel file. Maximum allowed is 200.'])->withInput();
         }
     
-     
-    
         // Process the valid rows
         foreach ($validRows as $row) {
             // Create a new attendance record
@@ -411,7 +431,24 @@ class AttendanceController extends Controller
             $attendanceOut = strtotime($row['attendance_out']);
             $totalHours = ($attendanceOut - $attendanceTime) / 3600; 
 
-              //save attendance
+            $isExist = Attendance::where('attendance_date', Carbon::parse($row['attendance_date'])->format('Y-m-d'))
+            ->where('deployment_id', $request->deployment_id)
+            ->first();
+            $attendanceId = "";
+            if($isExist){
+                $isExist->attendance_time = Carbon::parse($row['attendance_time'])->format('H:i:s');
+                $isExist->attendance_out = Carbon::parse($row['attendance_out'])->format('H:i:s');
+                $isExist->attendance_date = $attendanceDate->format('Y-m-d');
+                $isExist->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
+                $isExist->deployment_id = $employee->id;
+                $isExist->hours_worked =$totalHours = ($totalHours <= 4) ? $totalHours : (($totalHours >= 5 && $totalHours <= 9) ? ($totalHours - 1) : 8);
+                $isExist->status = 'Present';
+                $isExist->updater_id = $user;
+                $isExist->save();
+
+                $attendanceId = $isExist->id;
+            } else {
+                //save attendance
               $attendance = new Attendance();
               $attendance->attendance_time = Carbon::parse($row['attendance_time'])->format('H:i:s');
               $attendance->attendance_out = Carbon::parse($row['attendance_out'])->format('H:i:s');
@@ -423,30 +460,33 @@ class AttendanceController extends Controller
               $attendance->creator_id = $user;
               $attendance->updater_id = $user;
               $attendance->save();
+
+              $attendanceId = $attendance->id;
+            }
+            
+            $employee = Deployment::find($employee->id);
+            $schedule = $employee->schedule;
+            
+            $timeIn = Carbon::parse($row['attendance_time'])->format('H:i:s');
+            $timeOut = Carbon::parse($row['attendance_out'])->format('H:i:s');
+            $lateTimeDuration = $this->computeLateTimeDuration($schedule, $timeIn, $timeOut);
   
-              $employee = Deployment::find($employee->id);
-              $schedule = $employee->schedule;
-              
-              $timeIn = Carbon::parse($row['attendance_time'])->format('H:i:s');
-              $timeOut = Carbon::parse($row['attendance_out'])->format('H:i:s');
-              $lateTimeDuration = $this->computeLateTimeDuration($schedule, $timeIn, $timeOut);
-  
-              if($lateTimeDuration > 0){
-                  $late = new LateTime();
-                  $late->deployment_id = $employee->id;
-                  $late->attendance_id = $attendance->id;
-                  $late->duration = Carbon::createFromTime(0, $lateTimeDuration, 0)->format('H:i:s');
-                  $late->latetime_date =  Carbon::parse($row['attendance_date'])->format('Y-m-d');
-                  $late->creator_id = $user;
-                  $late->updater_id = $user;
-                  $late->save();
-              }
+            if($lateTimeDuration > 0){
+                $late = new LateTime();
+                $late->deployment_id = $employee->id;
+                $late->attendance_id = $attendanceId;
+                $late->duration = Carbon::createFromTime(0, $lateTimeDuration, 0)->format('H:i:s');
+                $late->latetime_date =  Carbon::parse($row['attendance_date'])->format('Y-m-d');
+                $late->creator_id = $user;
+                $late->updater_id = $user;
+                $late->save();
+            }
                
-              $log = new Log();
-              $log->log = "User " . \Auth::user()->email . " create attendance " . $attendance->id . " at " . Carbon::now();
-              $log->creator_id =  \Auth::user()->id;
-              $log->updater_id =  \Auth::user()->id;
-              $log->save();
+            $log = new Log();
+            $log->log = "User " . \Auth::user()->email . " create attendance " . $attendanceId . " at " . Carbon::now();
+            $log->creator_id =  \Auth::user()->id;
+            $log->updater_id =  \Auth::user()->id;
+            $log->save();
             /*
             | @End Transaction
             |---------------------------------------------*/
