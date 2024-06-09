@@ -702,6 +702,21 @@ class EmployeeController extends Controller
         $log->save();
     }
 
+    public function destroyEmploymentEducation($id)
+    {
+          //prevent other user to access to this page
+          $this->authorize("isHROrAdmin");
+        //delete employee
+        $employeeEducation = EducationalBackground::findOrFail($id);
+        $employeeEducation->delete();
+
+        $log = new Log();
+        $log->log = "User " . \Auth::user()->email . " delete employment educational background " . $employeeEducation->id . " at " . Carbon::now();
+        $log->creator_id =  \Auth::user()->id;
+        $log->updater_id =  \Auth::user()->id;
+        $log->save();
+    }
+
     /**
      * Restore the specified resource from storage.
      *

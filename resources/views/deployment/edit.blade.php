@@ -623,6 +623,23 @@
             </div>
         </div>
     </div>
+
+				<div id="confirmModalEducation" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h4 align="center" style="margin:0;">Are you sure you want to move this data to archive?</h4>
+                </div>
+                <div class="modal-footer">
+                 <button type="button" name="ok_button_emp_education" id="ok_button_emp_education" class="btn btn-danger">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<!-- /page content -->
         @push('scripts')
         <!-- Javascript -->
@@ -646,7 +663,6 @@
         <script src="{{ asset('vendors/bower_components/jquery.scrollbar/jquery.scrollbar.min.js') }}"></script>
         <script src="{{ asset('vendors/bower_components/jquery-scrollLock/jquery-scrollLock.min.js') }}"></script>
 								   <script>
-											console.log('employee',"<?= $employee->id ?>")
 			$(function () {
 				$('.select2').select2()
 				//Date picker
@@ -749,6 +765,91 @@
                             $('#confirmModalHistory').modal('hide');
 																												table.ajax.reload();
                             $('#ok_button_emp_history').text('OK');
+                        }, 2000);
+                    }
+                })
+            });
+
+													var tableEducation = $('#educational_backgrounds_list').DataTable({
+				"responsive": true, 
+				"lengthChange": false, 
+				"autoWidth": false,
+      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url":"<?= route('activeEmployeeEducations') ?>",
+                    "dataType":"json",
+                    "type":"POST",
+                    "data":{
+																					"_token":"<?= csrf_token() ?>",
+																					"employee_id" : "<?= $deployment->employee_id ?>"
+																					}
+                },
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        "extend": 'collection',
+                        "text": 'Export',
+                        "buttons": [
+                            {
+                                "extend": 'csv',
+                                'title' : 'Employment-Educational-Background-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'pdf',
+                                 'title' : 'Employment-Educational-Background-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            },
+                            {
+                                "extend": 'print',
+                                'title' : 'Employment-Educational-Background-List',
+                                "exportOptions": {
+                                    "columns": [0,1,2]
+                                }
+                            }
+                        ],
+                    }
+                ],
+                "columns":[
+                    {"data":"school_name"},
+                    {"data":"date_graduated"},
+                    {"data":"level"},
+                    {"data":"action","searchable":false,"orderable":false}
+                ],
+                "columnDefs": [
+				{
+					"targets": [0,1,2],   // target column
+					"className": "textCenter",
+				}]
+            });
+
+
+												 var educationId;
+            $(document).on('click', '#delete_emp_education', function(e){
+															e.preventDefault();
+                educationId = $(this).attr('data-id');
+                $('#confirmModalEducation').modal('show');
+            });
+
+            $('#ok_button_emp_education').click(function(e){
+															e.preventDefault();
+                $.ajax({
+                    url:"/employee-education/destroy/"+educationId,
+                    beforeSend:function(){
+                        $('#ok_button_emp_education').text('Archiving...');
+                    },
+                    success:function(data)
+                    {
+                        setTimeout(function(){
+                            $('#confirmModalEducation').modal('hide');
+																												tableEducation.ajax.reload();
+                            $('#ok_button_emp_education').text('OK');
                         }, 2000);
                     }
                 })

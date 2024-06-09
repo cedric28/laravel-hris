@@ -73,7 +73,9 @@ Route::middleware('auth')->group(function () {
     Route::post('employee/fetch/q', 'Employee\EmployeeFetchController@fetchEmployee')->name('activeEmployee');
     Route::post('inactive-employee/fetch/q', 'Employee\EmployeeFetchController@fetchInactiveEmployee')->name('InactiveEmployee');
     Route::post('employee-histories/fetch/q', 'Employee\EmployeeFetchController@fetchEmploymentHistory')->name('activeEmployeeHistories');
+    Route::post('employee-educations/fetch/q', 'Employee\EmployeeFetchController@fetchEmploymentEducation')->name('activeEmployeeEducations');
     Route::get('employee-history/destroy/{id}', 'Employee\EmployeeController@destroyEmploymentHistory');
+    Route::get('employee-education/destroy/{id}', 'Employee\EmployeeController@destroyEmploymentEducation');
     Route::get('employee/destroy/{id}', 'Employee\EmployeeController@destroy');
     Route::get('employee/restore/{id}', 'Employee\EmployeeController@restore');
 

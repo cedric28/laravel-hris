@@ -351,4 +351,88 @@ class EmployeeFetchController extends Controller
 		//return the data in json response
 		return response()->json($json_data);
 	}
+
+
+	public function fetchEmploymentEducation(Request $request)
+	{
+		//column list in the table Employee
+		$columns = array(
+			0 => 'school_name',
+   1 => 'level',
+			2 => 'date_graduated',
+			3 => 'action'
+		);
+
+		//get the total number of data in Employee table
+		$totalData = EducationalBackground::where('employee_id',$request->employee_id)->count();
+		//total number of data that will show in the datatable default 10
+		$limit = $request->input('length');
+		//start number for pagination ,default 0
+		$start = $request->input('start');
+		//order list of the column
+		$order = $columns[$request->input('order.0.column')];
+		//order by ,default asc 
+		$dir = $request->input('order.0.dir');
+
+		//check if user search for a value in the Employee datatable
+		if (empty($request->input('search.value'))) {
+			//get all the Supplier data
+			$posts = EducationalBackground::where('employee_id',$request->employee_id)
+				->offset($start)
+				->limit($limit)
+				->orderBy($order, $dir)
+				->get();
+
+			//total number of filtered data
+			$totalFiltered = EducationalBackground::where('employee_id',$request->employee_id)->count();
+		} else {
+			$search = $request->input('search.value');
+
+			$posts = EducationalBackground::where(function ($query) use ($search) {
+				$query->where('school_name', 'like', "%{$search}%")
+					->orWhere('level', 'like', "%{$search}%")
+					->orWhere('date_graduated', 'like', "%{$search}%");
+			})
+				->where('employee_id',$request->employee_id)
+				->offset($start)
+				->limit($limit)
+				->orderBy($order, $dir)
+				->get();
+
+			//total number of filtered data matching the search value request in the Employee table	
+			$totalFiltered = EducationalBackground::where(function ($query) use ($search) {
+				$query->where('school_name', 'like', "%{$search}%")
+					->orWhere('level', 'like', "%{$search}%")
+					->orWhere('date_graduated', 'like', "%{$search}%");
+			})
+				->where('employee_id',$request->employee_id)
+				->count();
+		}
+
+
+		$data = array();
+
+		if ($posts) {
+			//loop posts collection to transfer in another array $nestedData
+			foreach ($posts as $r) {
+				$nestedData['school_name'] = $r->school_name;
+    $nestedData['level'] = $r->level;
+				$nestedData['date_graduated'] = date('m-d-Y', strtotime($r->date_graduated));
+				$nestedData['action'] = '
+					<button name="delete_emp_education" id="delete_emp_education" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+				';
+				$data[] = $nestedData;
+			}
+		}
+
+		$json_data = array(
+			"draw"			    => intval($request->input('draw')),
+			"recordsTotal"	    => intval($totalData),
+			"recordsFiltered"   => intval($totalFiltered),
+			"data"			    => $data
+		);
+
+		//return the data in json response
+		return response()->json($json_data);
+	}
 }
