@@ -58,7 +58,7 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-form-label">Password:</label>
 										<div class="col-lg-9">
-											<input type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" name="password" autocomplete="new-password">
+											<input type="password" class="form-control @error('password') is-invalid @enderror" placeholder="New Password" name="password" autocomplete="new-password">
 										</div>
 									</div>
 
@@ -66,7 +66,7 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-form-label">Confirm Password:</label>
 										<div class="col-lg-9">
-											<input type="password" class="form-control" name="confirm-password"  placeholder="Confirm Password"  autocomplete="new-password">
+											<input type="password" class="form-control" name="confirm-password"  placeholder="Confirm New Password"  autocomplete="new-password">
 										</div>
 									</div>
 					
