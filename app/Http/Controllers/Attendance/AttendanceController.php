@@ -472,6 +472,14 @@ class AttendanceController extends Controller
             $lateTimeDuration = $this->computeLateTimeDuration($schedule, $timeIn, $timeOut);
   
             if($lateTimeDuration > 0){
+                $isExist = LateTime::where('latetime_date', Carbon::parse($row['attendance_date'])->format('Y-m-d'))
+                ->where('deployment_id',  $employee->id)
+                ->first();
+
+                if($isExist) {
+                    $isExist->delete();
+                }
+
                 $late = new LateTime();
                 $late->deployment_id = $employee->id;
                 $late->attendance_id = $attendanceId;
@@ -480,6 +488,14 @@ class AttendanceController extends Controller
                 $late->creator_id = $user;
                 $late->updater_id = $user;
                 $late->save();
+            } else {
+                $isExist = LateTime::where('latetime_date', Carbon::parse($row['attendance_date'])->format('Y-m-d'))
+                ->where('deployment_id',  $employee->id)
+                ->first();
+
+                if($isExist) {
+                    $isExist->delete();
+                }
             }
                
             $log = new Log();
