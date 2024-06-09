@@ -94,18 +94,6 @@
 									</div>
 								</div>
 
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">End Date</label>
-									<div class="col-lg-9">	
-											<div class="input-group date" id="enddate" data-target-input="nearest">
-													<input type="text" name="end_date"  value="{{ old('end_date')}}" class="form-control datetimepicker-input" data-target="#enddate"/>
-														<div class="input-group-append" data-target="#enddate" data-toggle="datetimepicker">
-															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-														</div>
-										</div>
-									</div>
-								</div>
-
 								<div class="text-right">
 									<button type="submit" class="btn btn-success" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">Save <i class="icon-paperplane ml-2"></i></button>
 								</div>

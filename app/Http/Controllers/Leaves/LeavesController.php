@@ -85,6 +85,7 @@ class LeavesController extends Controller
                     function ($attribute, $value, $fail) use ($request) {
                       $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
                         ->where('deployment_id', $request->deployment_id)
+                        ->where('status', 'Absent')
                         ->exists();
 
                         $leaves = Leave::where('leave_date',Carbon::parse($value)->format('Y-m-d'))

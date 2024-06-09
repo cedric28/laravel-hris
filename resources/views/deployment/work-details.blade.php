@@ -181,6 +181,7 @@
                                                                                                                                                                                 <th>ATTENDANCE DATE </th>
                                                                                                                                                                                 <th>ATTENDANCE TIME IN</th>
                                                                                                                                                                                 <th>ATTENDANCE TIME OUT</th>
+                                                                                                                                                                                <th>STATUS</th>
                                                                                                                                                                                 <th>ACTION</th>
                                                                                                                                                                 </tr>
                                                                                                                                                 </thead>
@@ -190,6 +191,7 @@
                                                                                                                                                                                                 <td>{{ $attendance->attendance_date }}</td>
                                                                                                                                                                                                 <td>{{ $attendance->attendance_time }}</td>
                                                                                                                                                                                                 <td>{{ $attendance->attendance_out }}</td>
+                                                                                                                                                                                                 <td>{{ $attendance->status }}</td>
                                                                                                                                                                                                 <td>
                                                                                                                                                                                                                                                                                                                 
                                                                                                                                                                                                 </td>
@@ -894,21 +896,21 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                                 "extend": 'csv',
                                 'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'pdf',
                                 'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'print',
                                 'title' : 'Employee Attendances-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2]
+                                    "columns": [0,1,2,3]
                                 }
                             }
                         ],
@@ -918,10 +920,11 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                     {"data":"attendance_date"},
                     {"data":"attendance_time"},
                       {"data":"attendance_out"},
+                       {"data":"status"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
                 "columnDefs": [{
-					"targets": [0,1,2],   // target column
+					"targets": [0,1,2,3],   // target column
 					"className": "textCenter",
 				}]
             });

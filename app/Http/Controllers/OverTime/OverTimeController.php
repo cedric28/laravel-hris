@@ -60,6 +60,7 @@ class OverTimeController extends Controller
                   function ($attribute, $value, $fail) use ($request) {
                     $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
                       ->where('deployment_id', $request->deployment_id)
+                      ->where('status', 'Present')
                       ->exists();
 
                     $overtime = OverTime::where('overtime_date',Carbon::parse($value)->format('Y-m-d'))
@@ -90,7 +91,7 @@ class OverTimeController extends Controller
                       }
                   },
               ],
-          ];
+            ];
 
         // Custom error messages
         $messages = [
@@ -273,27 +274,37 @@ class OverTimeController extends Controller
                         }
                     },
                 ],
-                'attendance_time' => 'required|date_format:H:i:s',
-                'attendance_out' => [
+                'overtime_in' => 'required|date_format:H:i:s',
+                'overtime_out' => [
                     'required',
                     'date_format:H:i:s',
-                    'after:attendance_time',
+                    'after:overtime_in',
                     function ($attribute, $value, $fail) use ($row) {
-                        $attendanceTime = strtotime($row['attendance_time']);
+                        $attendanceTime = strtotime($row['overtime_in']);
                         $attendanceOut = strtotime($value);
-            
-                        if ($attendanceOut <= $attendanceTime) {
-                            $fail('The attendance out time must be greater than the attendance time in.');
-                        }
 
-                        $totalHours = ($attendanceOut - $attendanceTime) / 3600; // convert seconds to hours
+                        $deployment = Deployment::where('status','new')
+                        ->where('reference_no', $row['employee_no'])
+                        ->first();
 
-                        if ($totalHours > 9) {
-                            $fail('The total attendance time must be less than or equal to 9 hours.');
+                        if ($deployment != null) {  
+                            $schedule = $employee->schedule;
+                            $timeIn = Carbon::parse($row['overtime_in'])->format('H:i:s');
+                            $timeOut = Carbon::parse($value)->format('H:i:s');
+                            $overTimeDuration = $this->computeOverTimeDuration($schedule, $timeIn, $timeOut);
+    
+                            
+                            if ($attendanceOut <= $attendanceTime) {
+                                $fail('The overtime out time must be greater than the overtime in.');
+                            }
+
+                            if($overTimeDuration < 60) {
+                                $fail( "Note: We do not acknowledge overtime periods shorter than 1 hour.");
+                            }
                         }
                     },
                 ],
-                'attendance_date' => [
+                'overtime_date' => [
                     'required',
                     'date_format:Y-m-d',
                     'not_weekend',
@@ -305,9 +316,19 @@ class OverTimeController extends Controller
                         if($deployment != null) {
                             $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
                             ->where('deployment_id', $deployment->id)
+                            ->where('status', 'Present')
                             ->exists();
-                            if ($attendance) {
-                                $fail('Attendance Date already exist for this Employee');
+      
+                            $overtime = OverTime::where('overtime_date',Carbon::parse($value)->format('Y-m-d'))
+                            ->where('deployment_id', $deployment->id)
+                            ->exists();
+        
+                            if($attendance) {
+                                if ($overtime) {
+                                    $fail('Overtime Date already exist for this Employee');
+                                }
+                            } else {
+                                $fail('Date requested doesnt exist for this Employee. File an attendance first to continue.');
                             }
                         }
                        
@@ -345,56 +366,34 @@ class OverTimeController extends Controller
             $employee = Deployment::where('reference_no',  $row['employee_no'])->first();
             //check current user
             $user = \Auth::user()->id;
-            $attendanceDate = Carbon::parse($row['attendance_date']); 
-            $attendanceTime = strtotime($row['attendance_time']);
-            $attendanceOut = strtotime($row['attendance_out']);
-            $totalHours = ($attendanceOut - $attendanceTime) / 3600; 
+            $schedule = $employee->schedule;
+            $timeIn = Carbon::parse($request->overtime_in)->format('H:i:s');
+            $timeOut = Carbon::parse($request->overtime_out)->format('H:i:s');
+            $overTimeDuration = $this->computeOverTimeDuration($schedule, $timeIn, $timeOut);
+        
+            $attendance = Attendance::where('attendance_date',Carbon::parse($row['overtime_date'])->format('Y-m-d'))
+                                ->where('deployment_id', $employee->id)
+                                ->first();
 
-              //save attendance
-              $attendance = new Attendance();
-              $attendance->attendance_time = Carbon::parse($row['attendance_time'])->format('H:i:s');
-              $attendance->attendance_out = Carbon::parse($row['attendance_out'])->format('H:i:s');
-              $attendance->attendance_date = $attendanceDate->format('Y-m-d');
-              $attendance->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
-              $attendance->deployment_id = $employee->id;
-              $attendance->hours_worked =  $totalHours <= 4 ? $totalHours : $totalHours - 1; 
-              $attendance->status = 1;
-              $attendance->creator_id = $user;
-              $attendance->updater_id = $user;
-              $attendance->save();
-  
-              $employee = Deployment::find($employee->id);
-              $schedule = $employee->schedule;
-              
-              $timeIn = Carbon::parse($row['attendance_time'])->format('H:i:s');
-              $timeOut = Carbon::parse($row['attendance_out'])->format('H:i:s');
-              $lateTimeDuration = $this->computeLateTimeDuration($schedule, $timeIn, $timeOut);
-  
-              if($lateTimeDuration > 0){
-                  $late = new LateTime();
-                  $late->deployment_id = $employee->id;
-                  $late->attendance_id = $attendance->id;
-                  $late->duration = Carbon::createFromTime(0, $lateTimeDuration, 0)->format('H:i:s');
-                  $late->latetime_date =  Carbon::parse($row['attendance_date'])->format('Y-m-d');
-                  $late->creator_id = $user;
-                  $late->updater_id = $user;
-                  $late->save();
-              }
-               
-              $log = new Log();
-              $log->log = "User " . \Auth::user()->email . " create attendance " . $attendance->id . " at " . Carbon::now();
-              $log->creator_id =  \Auth::user()->id;
-              $log->updater_id =  \Auth::user()->id;
-              $log->save();
+            $overtime = new OverTime();
+            $overtime->deployment_id = $employee->id;
+            $overtime->duration = Carbon::createFromTime(0, 0, 0)->addMinutes($overTimeDuration);
+            $overtime->overtime_date =  Carbon::parse($request->overtime_date)->format('Y-m-d');
+            $overtime->overtime_in = $timeIn;
+            $overtime->overtime_out = $timeOut;
+            $overtime->attendance_id = $attendance->id;
+            $overtime->creator_id = $user;
+            $overtime->updater_id = $user;
+            $overtime->save();
+         
             /*
             | @End Transaction
             |---------------------------------------------*/
             \DB::commit();
-    
         }
 
         
-        return redirect()->route('attendance.index')->with('successMsg', 'Attendance Data Save Successful');
+        return redirect()->route('overtime.index')->with('successMsg', 'OverTime Data Save Successful');
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();

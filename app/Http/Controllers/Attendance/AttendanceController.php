@@ -68,13 +68,20 @@ class AttendanceController extends Controller
                 'attendance_date' => [
                     'required',
                     'string',
-                    function ($attribute, $value, $fail) use ($request) {
-                        $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
-                        ->where('deployment_id', $request->deployment_id)
-                        ->exists();
-            
+                    function ($attribute, $value, $fail) use ($request, $deployment) {
+                        $attendanceDate = Carbon::parse($value);
+                        $attendanceDateFormatted = $attendanceDate->format('Y-m-d');
+                        
+                        $attendance = Attendance::where('attendance_date', $attendanceDateFormatted)
+                            ->where('deployment_id', $request->deployment_id)
+                            ->exists();
+                    
                         if ($attendance) {
-                            $fail('Attendance Date already exist for this Employee');
+                            $fail('Attendance Date already exists for this Employee');
+                        }
+                    
+                        if (!$attendanceDate->between($deployment->start_date, $deployment->end_date)) {
+                            $fail('Attendance Date should be within the contract period: Start Date '.$deployment->start_date.' and End Date '.$deployment->end_date);
                         }
                     },
                 ],
@@ -90,10 +97,8 @@ class AttendanceController extends Controller
                             $fail('The attendance out time must be greater than the attendance time in.');
                         }
 
-                        $totalHours = ($attendanceOut - $attendanceTime) / 3600; // convert seconds to hours
-
-                        if ($totalHours > 9) {
-                            $fail('The total attendance time must be less than or equal to 9 hours.');
+                        if ($attendanceTime >= $attendanceOut) {
+                            $fail('The attendance time in must be less than the attendance time out.');
                         }
                     },
                 ],
@@ -125,9 +130,9 @@ class AttendanceController extends Controller
             $attendance->attendance_out = Carbon::parse($request->attendance_out)->format('H:i:s');
             $attendance->attendance_date = Carbon::parse($request->attendance_date)->format('Y-m-d');
             $attendance->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
-            $attendance->hours_worked =  $totalHours <= 4 ? $totalHours : $totalHours - 1; 
+            $attendance->hours_worked = $totalHours = ($totalHours <= 4) ? $totalHours : (($totalHours >= 5 && $totalHours <= 9) ? ($totalHours - 1) : 8);
             $attendance->deployment_id = $request->deployment_id;
-            $attendance->status = 1;
+            $attendance->status = 'Present';
             $attendance->creator_id = $user;
             $attendance->updater_id = $user;
             $attendance->save();
@@ -336,10 +341,8 @@ class AttendanceController extends Controller
                             $fail('The attendance out time must be greater than the attendance time in.');
                         }
 
-                        $totalHours = ($attendanceOut - $attendanceTime) / 3600; // convert seconds to hours
-
-                        if ($totalHours > 9) {
-                            $fail('The total attendance time must be less than or equal to 9 hours.');
+                        if ($attendanceTime >= $attendanceOut) {
+                            $fail('The attendance time in must be less than the attendance time out.');
                         }
                     },
                 ],
@@ -353,11 +356,19 @@ class AttendanceController extends Controller
                         ->where('reference_no', $row['employee_no'])
                         ->first();
                         if($deployment != null) {
-                            $attendance = Attendance::where('attendance_date',Carbon::parse($value)->format('Y-m-d'))
-                            ->where('deployment_id', $deployment->id)
-                            ->exists();
+                            $attendanceDate = Carbon::parse($value);
+                            $attendanceDateFormatted = $attendanceDate->format('Y-m-d');
+                            
+                            $attendance = Attendance::where('attendance_date', $attendanceDateFormatted)
+                                ->where('deployment_id', $request->deployment_id)
+                                ->exists();
+                
                             if ($attendance) {
                                 $fail('Attendance Date already exist for this Employee');
+                            }
+    
+                            if (!$attendanceDate->between($deployment->start_date, $deployment->end_date)) {
+                                $fail('Attendance Date should be within the contract period: Start Date '.$deployment->start_date.' and End Date '.$deployment->end_date);
                             }
                         }
                        
@@ -407,8 +418,8 @@ class AttendanceController extends Controller
               $attendance->attendance_date = $attendanceDate->format('Y-m-d');
               $attendance->day_of_week =  $attendanceDate->dayOfWeek == 7 ? 0 : $attendanceDate->dayOfWeek + 1;
               $attendance->deployment_id = $employee->id;
-              $attendance->hours_worked =  $totalHours <= 4 ? $totalHours : $totalHours - 1; 
-              $attendance->status = 1;
+              $attendance->hours_worked =$totalHours = ($totalHours <= 4) ? $totalHours : (($totalHours >= 5 && $totalHours <= 9) ? ($totalHours - 1) : 8);
+              $attendance->status = 'Present';
               $attendance->creator_id = $user;
               $attendance->updater_id = $user;
               $attendance->save();

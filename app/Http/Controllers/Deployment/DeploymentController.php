@@ -85,7 +85,6 @@ class DeploymentController extends Controller
                 'position.required' => 'Please enter a Position',
                 'position.max' => 'Position must not be more than 50 characters',
                 'start_date.required' => 'Please enter a Start Date',
-                'end_date.after' => 'End Date must be after Start Date',
             ];
             //validate request value
             $validator = Validator::make($request->all(), [
@@ -106,27 +105,27 @@ class DeploymentController extends Controller
                 'employment_type_id' => 'required|integer',
                 'position' => 'required|string|max:50',
                 'start_date' => 'required|string',
-                'end_date' => [
-                    'required',
-                    'string',
-                    'after:start_date',
-                    function ($attribute, $value, $fail) use ($request) {
-                        if ($request->start_date) {
-                            $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
-                            $endDate = Carbon::createFromFormat('m/d/Y', $value)->startOfDay();
+                // 'end_date' => [
+                //     'required',
+                //     'string',
+                //     'after:start_date',
+                //     function ($attribute, $value, $fail) use ($request) {
+                //         if ($request->start_date) {
+                //             $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
+                //             $endDate = Carbon::createFromFormat('m/d/Y', $value)->startOfDay();
 
-                             // Check if the end date falls on a weekend
-                            if ($endDate->isWeekend()) {
-                                // Move the end date to the next weekday
-                                $endDate = $endDate->next(Carbon::MONDAY);
-                            }
+                //              // Check if the end date falls on a weekend
+                //             if ($endDate->isWeekend()) {
+                //                 // Move the end date to the next weekday
+                //                 $endDate = $endDate->next(Carbon::MONDAY);
+                //             }
 
-                            if ($startDate->diffInMonths($endDate) !== 12 || !$endDate->eq($startDate->copy()->addYear())) {
-                                $fail('End Date must be exactly one year after Start Date');
-                            }
-                        }
-                    },
-                ],
+                //             if ($startDate->diffInMonths($endDate) !== 12 || !$endDate->eq($startDate->copy()->addYear())) {
+                //                 $fail('End Date must be exactly one year after Start Date');
+                //             }
+                //         }
+                //     },
+                // ],
             ], $messages);
 
 
@@ -137,6 +136,11 @@ class DeploymentController extends Controller
 
             //check current user
             $user = \Auth::user()->id;
+           
+            $startDate = Carbon::parse($request->start_date);
+           
+            $oneYearLater = $startDate->addYear();
+            $oneYearLaterFormatted = $oneYearLater->toDateString();
 
             //save deployment
             $deployment = new Deployment();
@@ -146,7 +150,7 @@ class DeploymentController extends Controller
             $deployment->client_id = $request->client_id;
             $deployment->position = $request->position;
             $deployment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-            $deployment->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
+            $deployment->end_date = $oneYearLaterFormatted;
             $deployment->creator_id = $user;
             $deployment->updater_id = $user;
             $deployment->save();
@@ -168,7 +172,7 @@ class DeploymentController extends Controller
             $schedule->save();
 
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " create deployment " . $deployment->id . " at " . Carbon::now();
+            $log->log = "User " . \Auth::user()->email . " create Employee Work Details" . $deployment->reference_no . " at " . Carbon::now();
             $log->creator_id =  \Auth::user()->id;
             $log->updater_id =  \Auth::user()->id;
             $log->save();
@@ -307,44 +311,49 @@ class DeploymentController extends Controller
                 'position' => 'required|string|max:50',
                 'start_date' => 'required|string|max:50',
                 'status' => 'required|string',
-                'end_date' => [
-                    'required',
-                    'string',
-                    'after:start_date',
-                    function ($attribute, $value, $fail) use ($request) {
-                        if ($request->start_date) {
-                            $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
-                            $endDate = Carbon::createFromFormat('m/d/Y', $value)->startOfDay();
+                // 'end_date' => [
+                //     'required',
+                //     'string',
+                //     'after:start_date',
+                //     function ($attribute, $value, $fail) use ($request) {
+                //         if ($request->start_date) {
+                //             $startDate = Carbon::createFromFormat('m/d/Y', $request->start_date)->startOfDay();
+                //             $endDate = Carbon::createFromFormat('m/d/Y', $value)->startOfDay();
 
-                             // Check if the end date falls on a weekend
-                            if ($endDate->isWeekend()) {
-                                // Move the end date to the next weekday
-                                $endDate = $endDate->next(Carbon::MONDAY);
-                            }
+                //              // Check if the end date falls on a weekend
+                //             if ($endDate->isWeekend()) {
+                //                 // Move the end date to the next weekday
+                //                 $endDate = $endDate->next(Carbon::MONDAY);
+                //             }
 
-                            if ($startDate->diffInMonths($endDate) !== 12 || !$endDate->eq($startDate->copy()->addYear())) {
-                                $fail('End Date must be exactly one year after Start Date');
-                            }
-                        }
-                    },
-                ],
+                //             if ($startDate->diffInMonths($endDate) !== 12 || !$endDate->eq($startDate->copy()->addYear())) {
+                //                 $fail('End Date must be exactly one year after Start Date');
+                //             }
+                //         }
+                //     },
+                // ],
             ], $messages);
 
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
 
+            $startDate = Carbon::parse($request->start_date);
+
+            $endDate = $startDate->addYear();
+            $oneYearLaterFormatted = $oneYearLater->toDateString();
+
             $deployment->employment_type_id = $request->employment_type_id;
             $deployment->client_id = $request->client_id;
             $deployment->position = $request->position;
             $deployment->status = $request->status;
             $deployment->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
-            $deployment->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
+            $deployment->end_date = $oneYearLaterFormatted;
             $deployment->updater_id = \Auth::user()->id;
             $deployment->save();
 
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " edit deployment " .  $deployment->id . " at " . Carbon::now();
+            $log->log = "User " . \Auth::user()->email . " edit Employee Work Details" .   $deployment->reference_no . " at " . Carbon::now();
             $log->creator_id =  \Auth::user()->id;
             $log->updater_id =  \Auth::user()->id;
             $log->save();

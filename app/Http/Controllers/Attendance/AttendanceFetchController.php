@@ -16,7 +16,8 @@ class AttendanceFetchController extends Controller
 			0 => 'attendance_date',
 			1 => 'attendance_time',
 			2 => 'attendance_out',
-			3 => 'action'
+			4 => 'status',
+			5 => 'action'
 		);
 
         $deployment_id = $request->deployment_id;
@@ -38,7 +39,7 @@ class AttendanceFetchController extends Controller
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
 			//get all the User data
-			$posts = Attendance::select('attendances.attendance_date','attendances.attendance_time','attendances.attendance_out','attendances.id as id')
+			$posts = Attendance::select('attendances.attendance_date','attendances.status','attendances.attendance_time','attendances.attendance_out','attendances.id as id')
                 ->where([
                     ['attendances.deployment_id', $deployment_id],
                     ['attendances.deleted_at', '=', null]
@@ -60,7 +61,8 @@ class AttendanceFetchController extends Controller
 			$posts = Attendance::where(function ($query) use ($search) {
                 $query->orWhere('attendance_date', 'like', "%{$search}%")
 					->orWhere('attendance_time', 'like', "%{$search}%")
-					->orWhere('attendance_out', 'like', "%{$search}%");
+					->orWhere('attendance_out', 'like', "%{$search}%")
+					->orWhere('status', 'like', "%{$search}%");
 			})
             ->where([
                 ['attendances.deployment_id', $deployment_id],
@@ -75,7 +77,8 @@ class AttendanceFetchController extends Controller
 			$totalFiltered = Attendance::where(function ($query) use ($search) {
                 $query->orWhere('attendance_date', 'like', "%{$search}%")
 																->orWhere('attendance_time', 'like', "%{$search}%")
-																->orWhere('attendance_out', 'like', "%{$search}%");
+																->orWhere('attendance_out', 'like', "%{$search}%")
+																->orWhere('status', 'like', "%{$search}%");
 												})
             ->where([
                 ['attendances.deployment_id', $deployment_id],
@@ -92,6 +95,7 @@ class AttendanceFetchController extends Controller
 				$nestedData['attendance_date'] = date('m-d-Y', strtotime($r->attendance_date));
 				$nestedData['attendance_time'] = Carbon::parse( $r->attendance_time)->format('g:i A');
 				$nestedData['attendance_out'] =  Carbon::parse($r->attendance_out)->format('g:i A');
+				$nestedData['status'] =  $r->status;
 				$nestedData['action'] = '
 						<button name="delete" id="delete_attendance" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
