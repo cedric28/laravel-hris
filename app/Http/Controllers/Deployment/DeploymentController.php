@@ -340,7 +340,7 @@ class DeploymentController extends Controller
 
             $startDate = Carbon::parse($request->start_date);
 
-            $endDate = $startDate->addYear();
+            $oneYearLater = $startDate->addYear();
             $oneYearLaterFormatted = $oneYearLater->toDateString();
 
             $deployment->employment_type_id = $request->employment_type_id;
