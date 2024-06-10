@@ -12,6 +12,7 @@ use App\Log;
 use App\LateTime;
 use App\Schedule;
 use Validator, Hash, DB;
+use App\Client;
 use Carbon\Carbon;
 use App\Rules\TimeNotGreaterThan;
 use Illuminate\Validation\Rule;
@@ -23,9 +24,14 @@ class AttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view("attendance.index");
+        $clientId = $request->query('clientId');
+        $clients = Client::all();
+        return view("attendance.index",[
+            'clients' => $clients,
+            'clientId' => $clientId
+        ]);
     }
 
     /**
@@ -323,15 +329,17 @@ class AttendanceController extends Controller
         \DB::beginTransaction();
 
         try {
-         
+        $messages = [
+            'client_id.required' => 'Select a Company is required'
+        ];
         $validator = Validator::make($request->all(), [
+            'client_id' => 'required|integer',
             'excel_file' => 'required|mimes:xlsx,xls',
-        ]);
+        ], $messages);
     
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
-
 
         $attendanceImport = new AttendanceImport;
         $excelFile = $request->file('excel_file');
@@ -401,7 +409,7 @@ class AttendanceController extends Controller
                             
                             $attendance = Attendance::where('attendance_date', $attendanceDateFormatted)
                                 ->where('status','Present')
-                                ->where('deployment_id', $request->deployment_id)
+                                ->where('deployment_id', $deployment->id)
                                 ->exists();
                 
                             if ($attendance) {
@@ -451,7 +459,7 @@ class AttendanceController extends Controller
             $totalHours = ($attendanceOut - $attendanceTime) / 3600; 
 
             $isExist = Attendance::where('attendance_date', Carbon::parse($row['attendance_date'])->format('Y-m-d'))
-            ->where('deployment_id', $request->deployment_id)
+            ->where('deployment_id', $employee->id)
             ->first();
             $attendanceId = "";
             if($isExist){
@@ -483,7 +491,6 @@ class AttendanceController extends Controller
               $attendanceId = $attendance->id;
             }
             
-            $employee = Deployment::find($employee->id);
             $schedule = $employee->schedule;
             
             $timeIn = Carbon::parse($row['attendance_time'])->format('H:i:s');
@@ -530,7 +537,7 @@ class AttendanceController extends Controller
         }
 
         
-        return redirect()->route('attendance.index')->with('successMsg', 'Attendance Data Save Successful');
+        return redirect()->route('attendance.index', ['clientId' => $request->client_id])->with('successMsg', 'Attendance Data Save Successful');
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
