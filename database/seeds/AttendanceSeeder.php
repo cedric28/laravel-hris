@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Attendance;
+use Carbon\Carbon;
 
 class AttendanceSeeder extends Seeder
 {
@@ -25,24 +26,29 @@ class AttendanceSeeder extends Seeder
             $date = strtotime("$currentYear-$currentMonth-$day");
             $dayOfWeek = date('N', $date);
             if ($dayOfWeek < 6) { // 6 represents Saturday, 7 represents Sunday
-                
+              
                 try {
-                
+                    $attendance = Attendance::where('attendance_date', date('Y-m-d', $date))
+                    ->where('deployment_id', 1)
+                    ->doesntExist();
                     // Create
-                    $civilStatusObj = Attendance::create([
-                        'deployment_id' => 1,
-                        'attendance_time' => '07:00:00',
-                        'attendance_out' => '16:00:00',
-                        'attendance_date' => date('Y-m-d', $date),
-                        'day_of_week' => $dayOfWeek,
-                        'status' => 'Present',
-                        'hours_worked' => 8,
-                        'creator_id' => 1,
-                        'updater_id' => 1
-                    ]);
-
-                    echo date('Y-m-d', $date) . ' | ';
-
+                    if ($attendance) {
+                        $civilStatusObj = Attendance::create([
+                            'deployment_id' => 1,
+                            'attendance_time' => '07:00:00',
+                            'attendance_out' => '16:00:00',
+                            'attendance_date' => date('Y-m-d', $date),
+                            'day_of_week' => $dayOfWeek,
+                            'status' => 'Present',
+                            'hours_worked' => 8,
+                            'creator_id' => 1,
+                            'updater_id' => 1
+                        ]);
+    
+                        echo date('Y-m-d', $date) . ' | ';
+    
+                    }
+                   
                 } catch (Exception $e) {
                     echo 'Duplicate Attendance ' . date('Y-m-d', $date) . ' | ';
                 }   
