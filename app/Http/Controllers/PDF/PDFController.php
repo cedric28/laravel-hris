@@ -9,6 +9,7 @@ use App\Feedback;
 use App\Deployment;
 use App\Attendance;
 use App\OverTime;
+use App\LateTime;
 use Carbon\Carbon;
 use PDF, DB;
 
@@ -126,25 +127,32 @@ class PDFController extends Controller
     $end_date = $request->input('end_date');
     $startDate = Carbon::parse($request->input('start_date'))->format('Y-m-d');
     $endDate =  Carbon::parse($request->input('end_date'))->format('Y-m-d');
+    $payrollDate = Carbon::parse($request->input('end_date'))->addDays(10)->format('Y-m-d');
     //check current user
     $user = \Auth::user();
     $employeeDetails = Deployment::findOrFail($id);
     $totalHoursWorked = Attendance::where('deployment_id', $id)
+                        ->where('status','Present')
                         ->whereBetween('attendance_date', [$startDate, $endDate])
                         ->sum('hours_worked');
     $totalHoursOverTime = OverTime::where('deployment_id', $id)
                         ->whereBetween('overtime_date', [$startDate, $endDate])
+                        ->sum(DB::raw('TIME_TO_SEC(duration) / 60'));
+    $totalHoursLate = LateTime::where('deployment_id', $id)
+                        ->whereBetween('latetime_date', [$startDate, $endDate])
                         ->sum(DB::raw('TIME_TO_SEC(duration) / 60'));
     $employee = ucwords($employeeDetails->employee->last_name).", ".ucwords($employeeDetails->employee->first_name)." ".ucwords($employeeDetails->employee->middle_name);
     $company = ucwords($employeeDetails->client->name);
     $position = ucwords($employeeDetails->position);
     $basicSalary =  $employeeDetails->salary->basic_salary ?? 0;
     $basicSalaryTotal =  ($basicSalary / 8 ) * $totalHoursWorked;
-    $overTimeTotal = ($totalHoursOverTime /60) * (($basicSalary / 8 ) * 1.25);
+    $ratePerHour = ($basicSalary / 8 );
+    $overTimeTotal = ($totalHoursOverTime / 60) * (($basicSalary / 8 ) * 1.25);
+    $lateTotalDeduction = (($totalHoursLate / 60) * ($basicSalary / 8 )) ?? 0;
     $deMinimisBenefits = ($employeeDetails->salary->meal_allowance ?? 0 ) + ($employeeDetails->salary->laundry_allowance ?? 0 ) + ($employeeDetails->salary->transportation_allowance ?? 0 ) + ($employeeDetails->salary->cola ?? 0 );
-    $totalCompensation = $basicSalaryTotal + $deMinimisBenefits + $overTimeTotal;
+    $totalCompensation = ($basicSalaryTotal + $deMinimisBenefits + $overTimeTotal) - $lateTotalDeduction;
     $tax = $basicSalaryTotal >= 21000 ? $basicSalaryTotal / $employeeDetails->salary->tax ?? 0 : 0;
-    $totalDeduction = ($employeeDetails->salary->sss ?? 0) + ($employeeDetails->salary->philhealth ?? 0) + ($employeeDetails->salary->pagibig ?? 0) + ($employeeDetails->salary->uniform ?? 0) + ($tax ?? 0);
+    $totalDeduction = ($employeeDetails->salary->sss ?? 0) + ($employeeDetails->salary->philhealth ?? 0) + ($employeeDetails->salary->pagibig ?? 0) + ($employeeDetails->salary->uniform ?? 0) + ($tax ?? 0) + ($lateTotalDeduction ?? 0);
     $netPay =  $totalCompensation - $totalDeduction;
   //  // return view("pdf.payslip");
   //   // // view()->share('for_regularization', $user);
@@ -162,6 +170,13 @@ class PDFController extends Controller
       'overTimeTotal' => $overTimeTotal,
       'totalDeduction' => $totalDeduction,
       'netPay' => $netPay  < 0 ? 0 : $netPay,
+      'payrollDate' => $payrollDate,
+      'basicSalary' => $basicSalary,
+      'ratePerHour' => $ratePerHour,
+      'totalHoursWorked' =>   $totalHoursWorked,
+      'totalHoursLate' => $totalHoursLate,
+      'totalHoursOverTime' => $totalHoursOverTime,
+      'lateTotalDeduction' => $lateTotalDeduction
     ]);
 
 

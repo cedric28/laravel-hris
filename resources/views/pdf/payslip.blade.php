@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 		<title>PAYSLIP</title>
+    
 <style>
   body {
       font-family: Arial, sans-serif;
@@ -43,6 +44,20 @@ tr:nth-child(even) {
       margin-bottom: 5px;
     }
 
+    .col-md-6 {
+    /* Your styles here */
+    float: left;
+    width: 50%;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+
 </style>
 </head>
 <body>
@@ -65,7 +80,7 @@ tr:nth-child(even) {
     <th>NAME:</th>
     <td>{{ $employee }}</td>
     <th>PAYROLL DATE:</th>
-    <td>{{ date("F j, Y",strtotime($endDate)) }}</td>
+    <td>{{ date("F j, Y",strtotime($payrollDate)) }}</td>
   </tr>
   <tr>
     <th>TIN:</th>
@@ -93,31 +108,49 @@ tr:nth-child(even) {
   </tr>
  
 </table>
-
-<h3>COMPENSATION</h3>
+<div class="row">
+  <div class="col-md-6 custom-gap">
+    <h3 style="text-align:center">COMPENSATION</h3>
 <table>
   <tr>
-    <td>BASIC</td>
+    <td>RATE PER HOUR</td>
+    <td>{{ Config::get('app.currency') }} {{  Str::currency($ratePerHour) }}</td>
+  </tr>
+  <tr>
+    <td>TOTAL HOURS WORKED</td>
+    <td>{{  $totalHoursWorked }} hr/s</td>
+  </tr>
+    <tr>
+    <td>TOTAL HOURS OVERTIME</td>
+    <td>{{ $totalHoursOverTime }} hr/s</td>
+  </tr>
+    <tr>
+    <td>TOTAL HOURS LATE</td>
+    <td>{{ $totalHoursLate }} hr/s</td>
+  </tr>
+ 
+  <tr>
+    <td>TOTAL OVERTIME PAY</td>
+    <td>{{ Config::get('app.currency') }} {{  Str::currency($overTimeTotal) }}</td>
+  </tr>
+  <tr>
+    <td>BASIC SALARY</td>
     <td>{{ Config::get('app.currency') }} {{  Str::currency($basicSalaryTotal) }}</td>
   </tr>
+ 
   <tr>
     <td>DE MINIMIS BENEFITS</td>
     <td>{{ Config::get('app.currency') }} {{  Str::currency($deMinimisBenefits) }}</td>
   </tr>
-  @if($overTimeTotal > 0)
-   <tr>
-    <td>OVERTIME</td>
-    <td>{{ Config::get('app.currency') }} {{  Str::currency($overTimeTotal) }}</td>
-  </tr>
-  @endif
   <tr>
     <td><b>TOTAL COMPENSATION</b></td>
     <td><b>{{ Config::get('app.currency') }} {{  Str::currency($totalCompensation) }}</b></td>
   </tr>
  
 </table>
-
-<h3>DEDUCTIONS</h3>
+  </div>
+   <div class="col-md-6 custom-gap">
+   <h3 style="text-align:center">DEDUCTIONS</h3>
 <table>
   <tr>
     <td>SSS</td>
@@ -140,10 +173,19 @@ tr:nth-child(even) {
     <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->uniform) }}</td>
   </tr>
   <tr>
+    <td>TOTAL LATE DEDUCTION</td>
+    <td>{{ Config::get('app.currency') }} {{ Str::currency($lateTotalDeduction) }}</td>
+  </tr>
+  <tr>
     <td><b>TOTAL DEDUCTIONS</b></td>
     <td><b>{{ Config::get('app.currency') }} {{ Str::currency($totalDeduction) }}</b></td>
   </tr>
 </table>
+   </div>
+</div>
+
+
+
 <br/>
 <hr/>
 <br/>

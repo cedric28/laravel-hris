@@ -859,11 +859,11 @@
              $(`#attendance_out`).datetimepicker({
                 format: 'LT'
             })
-                 var today = new Date(); 
+                 var todayAttendance = new Date(); 
              var maxDate = new Date("<?= $deployment->end_date ?>");
 
-               if (maxDate < today) {
-                    maxDate = today; // If it's less, set maxDate to today's date
+               if (maxDate < todayAttendance) {
+                    maxDate = todayAttendance; // If it's less, set maxDate to today's date
                 } else {
                     maxDate = maxDate;
                 }
@@ -880,7 +880,7 @@
 			<script>
           
 
-var tableActiveAttendances = $('#employee_attendances').DataTable({
+            var tableActiveAttendances = $('#employee_attendances').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -1032,7 +1032,7 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
 
             </script>
 
-												<script>
+			<script>
             $(`#overtime_in`).datetimepicker({
                 format: 'LT'
             })
@@ -1060,7 +1060,7 @@ var tableActiveAttendances = $('#employee_attendances').DataTable({
                  defaultDate: maxDateForOver
             });
 
-var tableActiveOverTime = $('#employee_overtime').DataTable({
+            var tableActiveOverTime = $('#employee_overtime').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -1154,7 +1154,7 @@ var tableActiveOverTime = $('#employee_overtime').DataTable({
 
 
             </script>
-													<script>
+		    <script>
               $('#leavetime').datetimepicker({
                         format: 'LT'
                 })
@@ -1166,7 +1166,7 @@ var tableActiveOverTime = $('#employee_overtime').DataTable({
                 daysOfWeekDisabled: [0, 6]
             });
 
-var tableActiveLeaves = $('#employee_leaves').DataTable({
+            var tableActiveLeaves = $('#employee_leaves').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -1250,9 +1250,15 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
             });
 
 
-
-
-            var tableActiveCompensation = $('#employee_compensation').DataTable({
+            
+            $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+                $('.table:visible').each( function(e) {
+                    $(this).DataTable().columns.adjust().responsive.recalc();
+                });
+            });
+            </script>
+            <script>
+             var tableActiveCompensation = $('#employee_compensation').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -1314,14 +1320,6 @@ var tableActiveLeaves = $('#employee_leaves').DataTable({
                 let endDate = $(this).attr('data-enddate');
                 window.open(`/generate-payslip/<?= $deployment->id ?>?start_date=${startDate}&end_date=${endDate}`,'_blank');
             })
-
-
-            
-            $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
-                $('.table:visible').each( function(e) {
-                    $(this).DataTable().columns.adjust().responsive.recalc();
-                });
-            });
             </script>
         @endpush('scripts')
 @endsection
