@@ -111,7 +111,7 @@ class EmployeeFetchController extends Controller
 				$nestedData['contact_number'] = $r->contact_number;
 				$nestedData['email'] = $r->email;
 				$nestedData['address'] = $r->unit.' '.$r->lot_block.' '.$r->street.' '.$r->subdivision.' '.$r->barangay.' '.$r->municipality.' '.$r->province;
-				$nestedData['created_at'] = date('m-d-Y', strtotime($r->created_at));
+				$nestedData['created_at'] =date('M d, Y', strtotime($r->created_at));
 				$nestedData['action'] = '
                     <button  data-toggle="tooltip" name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
 					<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
@@ -225,7 +225,7 @@ class EmployeeFetchController extends Controller
 				$nestedData['contact_number'] = $r->contact_number;
 				$nestedData['email'] = $r->email;
 				$nestedData['address'] = $r->address;
-				$nestedData['created_at'] = date('m-d-Y', strtotime($r->created_at));
+				$nestedData['created_at'] =date('M d, Y', strtotime($r->created_at));
 				$nestedData['action'] = '
                     <button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
 				';
@@ -330,8 +330,8 @@ class EmployeeFetchController extends Controller
     $nestedData['employment_type'] = $r->employment_type->name;
 				$nestedData['company'] = $r->company;
 				$nestedData['location'] = $r->location;
-				$nestedData['start_date'] = date('m-d-Y', strtotime($r->start_date));
-				$nestedData['end_date'] = date('m-d-Y', strtotime($r->created_at));
+				$nestedData['start_date'] =date('M d, Y', strtotime($r->start_date));
+				$nestedData['end_date'] =date('M d, Y', strtotime($r->created_at));
 				$nestedData['industry'] = $r->industry->name;
 				$nestedData['job_description'] = $r->job_description;
 				$nestedData['action'] = '
@@ -417,7 +417,7 @@ class EmployeeFetchController extends Controller
 			foreach ($posts as $r) {
 				$nestedData['school_name'] = $r->school_name;
     $nestedData['level'] = $r->level;
-				$nestedData['date_graduated'] = date('m-d-Y', strtotime($r->date_graduated));
+				$nestedData['date_graduated'] =date('M d, Y', strtotime($r->date_graduated));
 				$nestedData['action'] = '
 					<button name="delete_emp_education" id="delete_emp_education" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 				';

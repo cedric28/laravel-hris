@@ -84,7 +84,7 @@ class ClientFetchController extends Controller
 				$nestedData['contact_number'] = $r->contact_number;
 				$nestedData['email'] = $r->email;
 				$nestedData['address'] = $r->address;
-				$nestedData['created_at'] = date('m-d-Y', strtotime($r->created_at));
+				$nestedData['created_at'] = date('M d, Y', strtotime($r->created_at));
 				$nestedData['action'] = '
                     <button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="fas fa-eye"></i></button>
 					<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
@@ -183,7 +183,7 @@ class ClientFetchController extends Controller
 				$nestedData['contact_number'] = $r->contact_number;
 				$nestedData['email'] = $r->email;
 				$nestedData['address'] = $r->address;
-				$nestedData['created_at'] = date('m-d-Y', strtotime($r->created_at));
+				$nestedData['created_at'] =date('M d, Y', strtotime($r->created_at));
 				$nestedData['action'] = '
                     <button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
 				';

@@ -93,7 +93,7 @@ class LeavesFetchController extends Controller
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
 				$nestedData['leave_type'] = $r->leave_type;
-				$nestedData['leave_date'] = date('m-d-Y', strtotime($r->leave_date));
+				$nestedData['leave_date'] =date('M d, Y', strtotime($r->leave_date));
 				$nestedData['leave_time'] = $r->leave_time;
 				$nestedData['action'] = '
 						<button name="delete" id="delete_leaves" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>

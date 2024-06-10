@@ -86,7 +86,7 @@ class OverTimeFetchController extends Controller
 			foreach ($posts as $r) {
                 $carbonTime = Carbon::createFromFormat('H:i:s', $r->duration);
                 $totalMinutes = $carbonTime->hour * 60 + $carbonTime->minute;
-				$nestedData['overtime_date'] =  date('m-d-Y', strtotime($r->overtime_date));
+				$nestedData['overtime_date'] = date('M d, Y', strtotime($r->overtime_date));
 				$nestedData['duration'] = $totalMinutes." mins";
                 $nestedData['action'] = '
                     <button name="delete" id="delete_overtime" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>

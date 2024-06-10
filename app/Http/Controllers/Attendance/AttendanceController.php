@@ -91,9 +91,9 @@ class AttendanceController extends Controller
                         if ($attendance) {
                             $fail('Attendance Date already exists for this Employee');
                         }
-                    
+
                         if (!$attendanceDate->between($deployment->start_date, $deployment->end_date)) {
-                            $fail('Attendance Date should be within the contract period: Start Date '.$deployment->start_date.' and End Date '.$deployment->end_date);
+                            $fail('Attendance Date should be within the contract period: Start Date '.Carbon::parse($deployment->start_date)->format('F jS, Y').' and End Date '.Carbon::parse($deployment->end_date)->format('F jS, Y'));
                         }
                     },
                 ],
@@ -406,7 +406,6 @@ class AttendanceController extends Controller
                         if($deployment != null) {
                             $attendanceDate = Carbon::parse($value);
                             $attendanceDateFormatted = $attendanceDate->format('Y-m-d');
-                            
                             $attendance = Attendance::where('attendance_date', $attendanceDateFormatted)
                                 ->where('status','Present')
                                 ->where('deployment_id', $deployment->id)
@@ -417,7 +416,7 @@ class AttendanceController extends Controller
                             }
     
                             if (!$attendanceDate->between($deployment->start_date, $deployment->end_date)) {
-                                $fail('Attendance Date should be within the contract period: Start Date '.$deployment->start_date.' and End Date '.$deployment->end_date);
+                                $fail('Attendance Date should be within the contract period: Start Date '.Carbon::parse($deployment->start_date)->format('F jS, Y').' and End Date '.Carbon::parse($deployment->end_date)->format('F jS, Y'));
                             }
                         }
                        

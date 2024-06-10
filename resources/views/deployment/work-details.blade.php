@@ -869,7 +869,7 @@
                 }
 
             $(`#attendance_date`).datetimepicker({
-                   format: 'DD/MM/yyyy',
+                   format: 'L',
                 minDate: "<?= $deployment->start_date ?>",
                  maxDate: maxDate,
                 daysOfWeekDisabled: [0, 6],

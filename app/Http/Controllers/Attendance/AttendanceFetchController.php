@@ -94,7 +94,7 @@ class AttendanceFetchController extends Controller
 		if ($posts) {
 			//loop posts collection to transfer in another array $nestedData
 			foreach ($posts as $r) {
-				$nestedData['attendance_date'] = date('d-m-Y', strtotime($r->attendance_date));
+				$nestedData['attendance_date'] = date('M d, Y', strtotime($r->attendance_date));
 				$nestedData['attendance_time'] = Carbon::parse( $r->attendance_time)->format('g:i A');
 				$nestedData['attendance_out'] =  Carbon::parse($r->attendance_out)->format('g:i A');
 				$nestedData['status'] =  $r->status;
@@ -232,7 +232,7 @@ class AttendanceFetchController extends Controller
 			foreach ($posts as $r) {
 				$nestedData['company'] = $r->company;
 				$nestedData['fullname'] = $r->full_name;
-				$nestedData['attendance_date'] = date('d-m-Y', strtotime($r->attendance_date));
+				$nestedData['attendance_date'] = date('M d, Y', strtotime($r->attendance_date));
 				$nestedData['status'] =  $r->status;
 				$nestedData['action'] = '
 						<button name="generate_pdf" id="generate_pdf" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Generate Certificate</button>
