@@ -195,7 +195,7 @@ class EmployeeController extends Controller
 
                 // resize image to fixed size
                 $imgPagibig->resize(500, 500);
-                $imgPagibig->save($photoPathPagibig . $sssFile);
+                $imgPagibig->save($photoPathPagibig . $pagibigFile);
 
                 //tin
                 $photoPathTin = public_path('images/tin/' . $employee->id . '/');
