@@ -116,6 +116,10 @@ tr:nth-child(even) {
     <td>RATE PER HOUR</td>
     <td>{{ Config::get('app.currency') }} {{  Str::currency($ratePerHour) }}</td>
   </tr>
+   <tr>
+    <td>TOTAL DAYS WORKED</td>
+    <td>{{ $totalHoursWorkedDays }} day/s</td>
+  </tr>
   <tr>
     <td>TOTAL HOURS WORKED</td>
     <td>{{  $totalHoursWorked }} hr/s</td>

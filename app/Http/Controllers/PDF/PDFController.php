@@ -135,6 +135,11 @@ class PDFController extends Controller
                         ->where('status','Present')
                         ->whereBetween('attendance_date', [$startDate, $endDate])
                         ->sum('hours_worked');
+
+    $totalHoursWorkedDays = Attendance::where('deployment_id', $id)
+                        ->where('status','Present')
+                        ->whereBetween('attendance_date', [$startDate, $endDate])
+                        ->count();
     $totalHoursOverTime = OverTime::where('deployment_id', $id)
                         ->whereBetween('overtime_date', [$startDate, $endDate])
                         ->sum(DB::raw('TIME_TO_SEC(duration) / 60'));
@@ -174,9 +179,10 @@ class PDFController extends Controller
       'basicSalary' => $basicSalary,
       'ratePerHour' => $ratePerHour,
       'totalHoursWorked' =>   $totalHoursWorked,
-      'totalHoursLate' => floatval($totalHoursLate),
-      'totalHoursOverTime' => floatval($totalHoursOverTime),
-      'lateTotalDeduction' => $lateTotalDeduction
+      'totalHoursLate' => floatval($totalHoursLate / 60),
+      'totalHoursOverTime' => floatval($totalHoursOverTime /60),
+      'lateTotalDeduction' => $lateTotalDeduction,
+      'totalHoursWorkedDays' => $totalHoursWorkedDays
     ]);
 
 
