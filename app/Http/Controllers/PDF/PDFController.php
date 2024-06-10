@@ -174,8 +174,8 @@ class PDFController extends Controller
       'basicSalary' => $basicSalary,
       'ratePerHour' => $ratePerHour,
       'totalHoursWorked' =>   $totalHoursWorked,
-      'totalHoursLate' => $totalHoursLate,
-      'totalHoursOverTime' => $totalHoursOverTime,
+      'totalHoursLate' => floatval($totalHoursLate),
+      'totalHoursOverTime' => floatval($totalHoursOverTime),
       'lateTotalDeduction' => $lateTotalDeduction
     ]);
 
