@@ -42,7 +42,9 @@ class AttendanceSeeder extends Seeder
                             'status' => 'Present',
                             'hours_worked' => 8,
                             'creator_id' => 1,
-                            'updater_id' => 1
+                            'updater_id' => 1,
+                            'created_at' =>  date('Y-m-d H:i:s', $date),
+                            'updated_at' =>  date('Y-m-d H:i:s', $date)
                         ]);
     
                         echo date('Y-m-d', $date) . ' | ';
