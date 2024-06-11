@@ -31,7 +31,7 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<form action="{{ route('bulkAttendance')}}" method="POST"  enctype="multipart/form-data">
+							<form action="{{ route('bulkOverTime')}}" method="POST"  enctype="multipart/form-data">
 								@csrf
 		      <div class="form-group row">
          <label class="col-lg-3 col-form-label">File Over-Time:</label>
