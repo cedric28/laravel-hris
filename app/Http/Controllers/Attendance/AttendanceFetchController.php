@@ -130,7 +130,7 @@ class AttendanceFetchController extends Controller
 		$clientId = $request->client_id;
 		//get the total number of data in User table
 		$totalData = Deployment::whereHas('attendances', function ($query) use ($currentDate) {
-																$query->whereDate('created_at', $currentDate);
+																$query->whereDate('updated_at', $currentDate);
 															})
 															->where([
 																		['deployments.client_id', '=', $clientId],
@@ -152,7 +152,7 @@ class AttendanceFetchController extends Controller
 																->join('clients', 'deployments.client_id', '=', 'clients.id')
 																->join('attendances', 'deployments.id', '=', 'attendances.deployment_id')
 																->whereHas('attendances', function ($query) use ($currentDate) {
-																	$query->whereDate('created_at', $currentDate);
+																	$query->whereDate('updated_at', $currentDate);
 																})
 															->where([
 																		['deployments.client_id', '=', $clientId],
@@ -169,7 +169,7 @@ class AttendanceFetchController extends Controller
 																				->join('clients', 'deployments.client_id', '=', 'clients.id')
 																				->join('attendances', 'deployments.id', '=', 'attendances.deployment_id')
 																				->whereHas('attendances', function ($query) use ($currentDate) {
-																					$query->whereDate('created_at', $currentDate);
+																					$query->whereDate('updated_at', $currentDate);
 																				})
 																			->where([
 																						['deployments.client_id', '=', $clientId],
@@ -191,7 +191,7 @@ class AttendanceFetchController extends Controller
 															$query->where('name', 'like', "%{$search}%");
 													})
 													->whereHas('attendances', function ($query) use ($currentDate) {
-														$query->whereDate('created_at', $currentDate);
+														$query->whereDate('updated_at', $currentDate);
 													})
 												->where([
 															['deployments.client_id', '=', $clientId],
@@ -216,7 +216,7 @@ class AttendanceFetchController extends Controller
 																								$query->where('name', 'like', "%{$search}%");
 																						})
 																					->whereHas('attendances', function ($query) use ($currentDate) {
-																						$query->whereDate('created_at', $currentDate);
+																						$query->whereDate('updated_at', $currentDate);
 																					})
 																					->where([
 																								['deployments.client_id', '=', $clientId],

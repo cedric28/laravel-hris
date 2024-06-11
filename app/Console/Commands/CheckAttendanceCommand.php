@@ -45,13 +45,15 @@ class CheckAttendanceCommand extends Command
                     $attendance = Attendance::create([
                         'attendance_time' => '00:00:00',
                         'attendance_out' => '00:00:00',
-                        'attendance_date' =>$currentDate->format('Y-m-d'),
+                        'attendance_date' => $currentDate->format('Y-m-d'),
                         'deployment_id' => $employee->id,
                         'day_of_week' =>  $currentDate->dayOfWeek == 7 ? 0 : $currentDate->dayOfWeek + 1,
                         'hours_worked' => 0,
                         'status' => 'Absent',
                         'creator_id' => 1,
-                        'updater_id' => 1
+                        'updater_id' => 1,
+                        'created_at' =>  $currentDate->format('Y-m-d H:i:s'),
+                        'updated_at' =>  $currentDate->format('Y-m-d H:i:s')
                     ]); 
                 }
             }
