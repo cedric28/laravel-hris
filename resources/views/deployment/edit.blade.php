@@ -855,6 +855,25 @@
                 })
             });
 
+													var bindDatePicker = function() {
+											$("#birthdate").datetimepicker({
+												showClear: true,
+												showClose: true,
+												allowInputToggle: true,
+												useCurrent: false,
+												ignoreReadonly: true,
+												format:'YYYY-MM-DD',
+												icons: {
+													time: "fas fa-clock",
+													date: "fas fa-calendar",
+													up: "fas fa-chevron-up",
+													down: "fas fa-chevron-down"
+												}
+											});
+									}
+								
+									bindDatePicker();
+
 	</script>
         @endpush('scripts')
 @endsection

@@ -9,7 +9,9 @@ use App\Deployment;
 use App\Log;
 use App\OverTime;
 use App\Attendance;
+use App\Schedule;
 use Validator, Hash, DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 
 class OverTimeController extends Controller
@@ -288,7 +290,7 @@ class OverTimeController extends Controller
                         ->first();
 
                         if ($deployment != null) {  
-                            $schedule = $employee->schedule;
+                            $schedule = $deployment->schedule;
                             $timeIn = Carbon::parse($row['overtime_in'])->format('H:i:s');
                             $timeOut = Carbon::parse($value)->format('H:i:s');
                             $overTimeDuration = $this->computeOverTimeDuration($schedule, $timeIn, $timeOut);
