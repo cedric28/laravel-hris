@@ -24,35 +24,28 @@ class PerfectAttendanceFetchController extends Controller
 
 		$currentMonth = Carbon::now()->month;
 		$currentYear = Carbon::now()->year;
-		$threeDaysBeforeEndOfMonth = Carbon::now()->endOfMonth()->subDays(3)->day;
+		$endOfMonth = Carbon::now()->endOfMonth()->subDays(3);
 
 		//get the total number of data in User table
-		$totalData = Attendance::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
-		->join('deployments', 'deployments.id', '=', 'attendances.deployment_id')
+		$totalData = Deployment::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
 		->join('employees', 'deployments.employee_id', '=', 'employees.id')
 		->join('clients', 'deployments.client_id', '=', 'clients.id')
-		->where(function ($query) use ($currentMonth,$threeDaysBeforeEndOfMonth,	$currentYear) {
-			 $query->whereYear('attendance_date', $currentYear)
-           ->whereMonth('attendance_date', $currentMonth)
-										->whereNotIn(DB::raw('DAYOFWEEK(attendance_date)'), [1, 7])
-										->where('attendances.status', 'Present')
-										->whereDoesntHave('lates', function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth,	$currentYear) {
-													 $query->whereYear('attendance_date', $currentYear)
-            						->whereMonth('attendance_date', $currentMonth)
-																		->whereRaw("DAY(LAST_DAY(created_at)) - DAY(created_at) <=?", [$threeDaysBeforeEndOfMonth]);
-										});
-		})
-    ->groupBy(
-    'deployments.id',
-    'employees.first_name',
-    'employees.middle_name',
-    'employees.last_name',
-    'clients.name',
-    'attendances.attendance_date' // Add this line
-)
-				->havingRaw("SUM(CASE WHEN attendances.status = 'Present' AND DAY(LAST_DAY(attendances.attendance_date)) - DAY(attendances.attendance_date) <= 3 THEN 1 ELSE 0 END) = DAY(LAST_DAY(attendance_date)) - DAY(MIN(attendance_date)) + 1")
-				->havingRaw("SUM(hours_worked) >= 8 * (DAY(LAST_DAY(attendances.attendance_date)) - DAY(MIN(attendances.attendance_date)) + 1)")
-->count();
+		->whereHas('attendances', function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+						$query->whereYear('attendance_date', $currentYear)
+												->whereMonth('attendance_date', $currentMonth)
+												->where('attendance_date', '>=', $endOfMonth)
+												->where('status', 'Present')
+												->where('hours_worked', '>=', 8);
+			})->whereNotExists(function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+						$query->from('late_times')
+												->whereYear('latetime_date', $currentYear)
+												->whereMonth('latetime_date', $currentMonth);
+			})->whereDoesntHave('attendances', function ($query) use  ($currentMonth, $currentYear, $endOfMonth) {
+						$query->whereYear('attendance_date', $currentYear)
+												->whereMonth('attendance_date', $currentMonth)
+												->where('status', '<>', 'Present');
+			})
+		->count();
 		//total number of data that will show in the datatable default 10
 		$limit = $request->input('length');
 		//start number for pagination ,default 0
@@ -64,91 +57,76 @@ class PerfectAttendanceFetchController extends Controller
 
 		//check if user search for a value in the User datatable
 		if (empty($request->input('search.value'))) {
-			$posts =  Attendance::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company', 'attendances.attendance_date' )
-			->join('deployments', 'deployments.id', '=', 'attendances.deployment_id')
-			->join('employees', 'deployments.employee_id', '=', 'employees.id')
-			->join('clients', 'deployments.client_id', '=', 'clients.id')
-			->where(function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth, $currentYear) {
-				 $query->whereYear('attendance_date', $currentYear)
-            ->whereMonth('attendance_date', $currentMonth)
-											->whereNotIn(DB::raw('DAYOFWEEK(attendance_date)'), [1, 7])
-											->where('attendances.status', 'Present')
-											->whereDoesntHave('lates', function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth, $currentYear) {
-														 $query->whereYear('attendance_date', $currentYear)
-            							->whereMonth('attendance_date', $currentMonth)
-																			->whereRaw("DAY(LAST_DAY(created_at)) - DAY(created_at) <=?", [$threeDaysBeforeEndOfMonth]);
-											});
-			})
-	    ->groupBy('deployments.id', 'employees.first_name', 'employees.middle_name', 'employees.last_name', 'clients.name','attendances.attendance_date' )
-			->havingRaw("SUM(CASE WHEN attendances.status = 'Present' AND DAY(LAST_DAY(attendances.attendance_date)) - DAY(attendances.attendance_date) <= 3 THEN 1 ELSE 0 END) = DAY(LAST_DAY(attendance_date)) - DAY(MIN(attendance_date)) + 1")
-			->havingRaw("SUM(hours_worked) >= 8 * (DAY(LAST_DAY(attendances.attendance_date)) - DAY(MIN(attendances.attendance_date)) + 1)")
+						$posts =  Deployment::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
+						->join('employees', 'deployments.employee_id', '=', 'employees.id')
+						->join('clients', 'deployments.client_id', '=', 'clients.id')
+						->whereHas('attendances', function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+							$query->whereYear('attendance_date', $currentYear)
+													->whereMonth('attendance_date', $currentMonth)
+													->where('attendance_date', '>=', $endOfMonth)
+													->where('status', 'Present')
+													->where('hours_worked', '>=', 8);
+				})->whereNotExists(function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+							$query->from('late_times')
+													->whereYear('latetime_date', $currentYear)
+													->whereMonth('latetime_date', $currentMonth);
+				})->whereDoesntHave('attendances', function ($query) use ($currentMonth, $currentYear,$endOfMonth) {
+							$query->whereYear('attendance_date', $currentYear)
+													->whereMonth('attendance_date', $currentMonth)
+													->where('status', '<>', 'Present');
+				})
 			->offset($start)
 			->limit($limit)
 			->orderBy($order, $dir)
 			->get();
 
 			//total number of filtered data
-			$totalFiltered =Attendance::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company', 'attendances.attendance_date' )
-			->join('deployments', 'deployments.id', '=', 'attendances.deployment_id')
-			->join('employees', 'deployments.employee_id', '=', 'employees.id')
-			->join('clients', 'deployments.client_id', '=', 'clients.id')
-			->where(function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth, $currentYear) {
-				 $query->whereYear('attendance_date', $currentYear)
-            ->whereMonth('attendance_date', $currentMonth)
-											->whereNotIn(DB::raw('DAYOFWEEK(attendance_date)'), [1, 7])
-											->where('attendances.status', 'Present')
-											->whereDoesntHave('lates', function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth, $currentYear) {
-														 $query->whereYear('attendance_date', $currentYear)
-            							->whereMonth('attendance_date', $currentMonth)
-																			->whereRaw("DAY(LAST_DAY(created_at)) - DAY(created_at) <=?", [$threeDaysBeforeEndOfMonth]);
-											});
-			})
-	    ->groupBy(
-    'deployments.id',
-    'employees.first_name',
-    'employees.middle_name',
-    'employees.last_name',
-    'clients.name',
-    'attendances.attendance_date' // Add this line
-)
-			->havingRaw("SUM(CASE WHEN attendances.status = 'Present' AND DAY(LAST_DAY(attendances.attendance_date)) - DAY(attendances.attendance_date) <= 3 THEN 1 ELSE 0 END) = DAY(LAST_DAY(attendance_date)) - DAY(MIN(attendance_date)) + 1")
-			->havingRaw("SUM(hours_worked) >= 8 * (DAY(LAST_DAY(attendances.attendance_date)) - DAY(MIN(attendances.attendance_date)) + 1)")
-			->count();
+			$totalFiltered =Deployment::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
+												->join('employees', 'deployments.employee_id', '=', 'employees.id')
+												->join('clients', 'deployments.client_id', '=', 'clients.id')
+												->whereHas('attendances', function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+													$query->whereYear('attendance_date', $currentYear)
+																			->whereMonth('attendance_date', $currentMonth)
+																			->where('attendance_date', '>=', $endOfMonth)
+																			->where('status', 'Present')
+																			->where('hours_worked', '>=', 8);
+										})->whereNotExists(function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+													$query->from('late_times')
+																			->whereYear('latetime_date', $currentYear)
+																			->whereMonth('latetime_date', $currentMonth);
+																		})->whereDoesntHave('attendances', function ($query) use ($currentMonth, $currentYear,$endOfMonth) {
+																			$query->whereYear('attendance_date', $currentYear)
+																									->whereMonth('attendance_date', $currentMonth)
+																									->where('status', '<>', 'Present');
+											})->count();
 		} else {
 			$search = $request->input('search.value');
 
-			$posts =	 Attendance::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company', 'attendances.attendance_date' )
-			->join('deployments', 'deployments.id', '=', 'attendances.deployment_id')
-			->join('employees', 'deployments.employee_id', '=', 'employees.id')
-			->join('clients', 'deployments.client_id', '=', 'clients.id')
-			->where(function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth, $currentYear) {
-				 $query->whereYear('attendance_date', $currentYear)
-            ->whereMonth('attendance_date', $currentMonth)
-											->whereNotIn(DB::raw('DAYOFWEEK(attendance_date)'), [1, 7])
-											->where('attendances.status', 'Present')
-											->whereDoesntHave('lates', function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth, $currentYear) {
-														 $query->whereYear('attendance_date', $currentYear)
-            							->whereMonth('attendance_date', $currentMonth)
-																			->whereRaw("DAY(LAST_DAY(created_at)) - DAY(created_at) <=?", [$threeDaysBeforeEndOfMonth]);
-											});
+			$posts =	Attendance::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
+						->join('employees', 'deployments.employee_id', '=', 'employees.id')
+						->join('clients', 'deployments.client_id', '=', 'clients.id')
+						->whereHas('attendances', function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+							$query->whereYear('attendance_date', $currentYear)
+													->whereMonth('attendance_date', $currentMonth)
+													->where('attendance_date', '>=', $endOfMonth)
+													->where('status', 'Present')
+													->where('hours_worked', '>=', 8);
+				})->whereNotExists(function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+							$query->from('late_times')
+													->whereYear('latetime_date', $currentYear)
+													->whereMonth('latetime_date', $currentMonth);
+												})->whereDoesntHave('attendances', function ($query) use ($currentMonth, $currentYear,$endOfMonth) {
+													$query->whereYear('attendance_date', $currentYear)
+																			->whereMonth('attendance_date', $currentMonth)
+																			->where('status', '<>', 'Present');
+					})
+				->orWhereHas('employee', function ($query) use ($search) {
+					$query->where('first_name', 'like', "%{$search}%")
+									->orWhere('middle_name', 'like', "%{$search}%")
+									->orWhere('last_name', 'like', "%{$search}%");
 			})
-	    ->groupBy(
-    'deployments.id',
-    'employees.first_name',
-    'employees.middle_name',
-    'employees.last_name',
-    'clients.name',
-    'attendances.attendance_date' // Add this line
-)
-			->havingRaw("SUM(CASE WHEN attendances.status = 'Present' AND DAY(LAST_DAY(attendances.attendance_date)) - DAY(attendances.attendance_date) <= 3 THEN 1 ELSE 0 END) = DAY(LAST_DAY(attendance_date)) - DAY(MIN(attendance_date)) + 1")
-			->havingRaw("SUM(hours_worked) >= 8 * (DAY(LAST_DAY(attendances.attendance_date)) - DAY(MIN(attendances.attendance_date)) + 1)")
-			->whereHas('deployments.employee', function ($query) use ($search) {
-							$query->where('first_name', 'like', "%{$search}%")
-											->orWhere('middle_name', 'like', "%{$search}%")
-											->orWhere('last_name', 'like', "%{$search}%");
-			})
-			->orWhereHas('deployments.client', function ($query) use ($search) {
-							$query->where('name', 'like', "%{$search}%");
+			->orWhereHas('client', function ($query) use ($search) {
+					$query->where('name', 'like', "%{$search}%");
 			})
 			->offset($start)
 			->limit($limit)
@@ -156,40 +134,32 @@ class PerfectAttendanceFetchController extends Controller
 			->get();
 
 			//total number of filtered data matching the search value request in the Supplier table	
-			$totalFiltered = Attendance::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
-			->join('deployments', 'deployments.id', '=', 'attendances.deployment_id')
+			$totalFiltered = Deployment::select('deployments.id as id', DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
 			->join('employees', 'deployments.employee_id', '=', 'employees.id')
 			->join('clients', 'deployments.client_id', '=', 'clients.id')
-			->where(function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth, $currentYear) {
-				 $query->whereYear('attendance_date', $currentYear)
-            ->whereMonth('attendance_date', $currentMonth)
-											->whereNotIn(DB::raw('DAYOFWEEK(attendance_date)'), [1, 7])
-											->where('attendances.status', 'Present')
-											->whereDoesntHave('lates', function ($query) use ($currentMonth, $threeDaysBeforeEndOfMonth, $currentYear) {
-														 $query->whereYear('attendance_date', $currentYear)
-            							->whereMonth('attendance_date', $currentMonth)
-																			->whereRaw("DAY(LAST_DAY(created_at)) - DAY(created_at) <=?", [$threeDaysBeforeEndOfMonth]);
-											});
-			})
-	    ->groupBy(
-    'deployments.id',
-    'employees.first_name',
-    'employees.middle_name',
-    'employees.last_name',
-    'clients.name',
-    'attendances.attendance_date' // Add this line
-)
-			->havingRaw("SUM(CASE WHEN attendances.status = 'Present' AND DAY(LAST_DAY(attendances.attendance_date)) - DAY(attendances.attendance_date) <= 3 THEN 1 ELSE 0 END) = DAY(LAST_DAY(attendance_date)) - DAY(MIN(attendance_date)) + 1")
-			->havingRaw("SUM(hours_worked) >= 8 * (DAY(LAST_DAY(attendances.attendance_date)) - DAY(MIN(attendances.attendance_date)) + 1)")
-			->whereHas('deployments.employee', function ($query) use ($search) {
+			->whereHas('attendances', function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+				$query->whereYear('attendance_date', $currentYear)
+										->whereMonth('attendance_date', $currentMonth)
+										->where('attendance_date', '>=', $endOfMonth)
+										->where('status', 'Present')
+										->where('hours_worked', '>=', 8);
+	})->whereNotExists(function ($query) use ($currentMonth, $currentYear, $endOfMonth) {
+				$query->from('late_times')
+										->whereYear('latetime_date', $currentYear)
+										->whereMonth('latetime_date', $currentMonth);
+									})->whereDoesntHave('attendances', function ($query) use ($currentMonth, $currentYear,$endOfMonth) {
+										$query->whereYear('attendance_date', $currentYear)
+																->whereMonth('attendance_date', $currentMonth)
+																->where('status', '<>', 'Present');
+		})
+			->orWhereHas('employee', function ($query) use ($search) {
 							$query->where('first_name', 'like', "%{$search}%")
 											->orWhere('middle_name', 'like', "%{$search}%")
 											->orWhere('last_name', 'like', "%{$search}%");
 			})
-			->orWhereHas('deployments.client', function ($query) use ($search) {
+			->orWhereHas('client', function ($query) use ($search) {
 							$query->where('name', 'like', "%{$search}%");
-			})
-->count();
+			})->count();
 		}
 
 		$data = array();

@@ -15,7 +15,7 @@ class Attendance extends Model
         return $this->belongsTo(Deployment::class)->withTrashed();
     }
 
-    public function lates()
+    public function late()
     {
         return $this->hasOne(LateTime::class,'attendance_id','id')->withTrashed();
     }
