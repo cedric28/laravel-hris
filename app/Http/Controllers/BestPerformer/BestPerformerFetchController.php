@@ -61,7 +61,7 @@ class BestPerformerFetchController extends Controller
             ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->whereMonth('feedback.created_at', $currentMonth)
+            ->whereYear('feedback.created_at', $currentYear)
             ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
                 $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
                                 ->whereNotIn('day_of_week', [6, 0])
@@ -87,7 +87,7 @@ class BestPerformerFetchController extends Controller
             ->join('deployments', 'deployments.id', '=', 'feedback.deployment_id')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->whereMonth('feedback.created_at', $currentMonth)
+            ->whereYear('feedback.created_at', $currentYear)
             ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
                 $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
                                 ->whereNotIn('day_of_week', [6, 0])
@@ -115,7 +115,7 @@ class BestPerformerFetchController extends Controller
                 ->orWhere('employees.middle_name', 'like', "%{$search}%")
                 ->orWhere('employees.last_name', 'like', "%{$search}%")
 				->orWhere('clients.name', 'like', "%{$search}%")
-                ->whereMonth('feedback.created_at', $currentMonth)
+                ->whereYear('feedback.created_at', $currentYear)
                 ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
                     $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
                                     ->whereNotIn('day_of_week', [6, 0])
@@ -145,7 +145,7 @@ class BestPerformerFetchController extends Controller
                     ->orWhere('employees.middle_name', 'like', "%{$search}%")
                     ->orWhere('employees.last_name', 'like', "%{$search}%")
                     ->orWhere('clients.name', 'like', "%{$search}%")
-                    ->whereMonth('feedback.created_at', $currentMonth)
+                    ->whereYear('feedback.created_at', $currentYear)
                     ->whereHas('deployment.attendances', function ($query) use ($current_month, $threeDaysBeforeEndOfMonth) {
                         $query->whereBetween('attendance_date', [$current_month . '-01', $current_month . '-31'])
                                         ->whereNotIn('day_of_week', [6, 0])
