@@ -37,12 +37,12 @@
                                 <div class="card-body">
                                     <div class="tab-content" id="custom-tabs-four-tabContent">
                                         <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="for-termination">
+                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);" id="termination">
                                                 <thead>
                                                     <tr style="text-align:center;">
                                                         <th>EMPLOYEE NAME</th>
                                                         <th>COMPANY</th>
-                                                        <th>ACTION</th>
+                                                       
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -50,10 +50,8 @@
                                                         <tr>
                                                             <td></td>
                                                             <td></td>
-                                                            <td></td>
-                                                            <td>
-                                                                
-                                                            </td>
+                                                          
+                        
                                                         </tr>
                                                  
                                                 </tbody>
@@ -74,9 +72,9 @@
 	</section>
 	<!-- /page content -->
 
-    @push('scripts')
+   @push('scripts')
 		<!-- Javascript -->
-		<!-- DataTables  & Plugins -->
+			<!-- DataTables  & Plugins -->
 		<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -91,7 +89,7 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 		<script>
 
-            var table = $('#for-termination').DataTable({
+            var table = $('#termination').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -136,17 +134,13 @@
                 ],
                 "columns":[
                     {"data":"fullname"},
-                    {"data":"client_name"},
-                    {"data":"action","searchable":false,"orderable":false}
+                    {"data":"client_name"}
                 ],
                 "columnDefs": [{
 					"targets": [0,1],   // target column
 					"className": "textCenter",
 				}]
             });
-
-
-
             
             $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
                 $('.table:visible').each( function(e) {

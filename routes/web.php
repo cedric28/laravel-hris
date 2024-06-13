@@ -136,10 +136,6 @@ Route::middleware('auth')->group(function () {
     Route::get('generate-certificate-perfect-attendance/{id}', 'PDF\PDFController@generatePerfectAttendance')->name('generatePerfectAttendance');
 
     //For Regularization
-    Route::resource('/for-termination', 'Disciplinary\DisciplinaryController');
-    Route::post('for-termination/fetch/q', 'Disciplinary\DisciplinaryFetchController@fetchForTermination')->name('activeForTermination');
-
-    //For Regularization
     Route::resource('/for-regularization', 'Regularization\RegularizationController');
     Route::post('for-regularization/fetch/q', 'Regularization\RegularizationFetchController@fetchForRegularization')->name('activeForRegularization');
     Route::get('generate-certificate-regularization/{id}', 'PDF\PDFController@generateForRegularization')->name('generateForRegularization');
@@ -159,6 +155,11 @@ Route::middleware('auth')->group(function () {
     Route::post('inactive-feedback/fetch/q', 'FeedBack\FeedBackFetchController@fetchInactiveFeedBack')->name('InactiveFeedBack');
     Route::get('feedback/destroy/{id}', 'FeedBack\FeedBackController@destroy');
     Route::get('feedback/restore/{id}', 'FeedBack\FeedBackController@restore');
+
+    
+    //For Termination
+    Route::resource('/for-termination', 'Disciplinary\DisciplinaryController');
+    Route::post('for-termination/fetch/q', 'Disciplinary\DisciplinaryFetchController@fetchForTermination')->name('activeForTermination');
 
     
     //Logs

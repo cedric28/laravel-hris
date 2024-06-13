@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Disciplinary;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Deployment;
+use DB;
 
 class DisciplinaryFetchController extends Controller
 {
@@ -22,14 +25,16 @@ class DisciplinaryFetchController extends Controller
 		DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
 		->join('employees', 'deployments.employee_id', '=', 'employees.id')
 		->join('clients', 'deployments.client_id', '=', 'clients.id')
-		->where('status','new')
+		->join('late_times', 'deployments.id', '=', 'late_times.deployment_id')
+		->join('attendances', 'deployments.id', '=', 'attendances.deployment_id')
+		->where('deployments.status','new')
 		->where(function($query) {
-			$query->where('lates.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
+			$query->where('late_times.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
 									->orWhere('attendances.status', 'Absent')
 									->where('attendances.attendance_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 12 MONTH)'));
 })
-->groupBy('deployments.id') // Add this if you need to group by employee ID
-->havingRaw('COUNT(DISTINCT lates.id) >= 10')
+->groupBy('deployments.id','clients.name','employees.last_name','employees.first_name', 'employees.middle_name') // Add this if you need to group by employee ID
+->havingRaw('COUNT(DISTINCT late_times.id) >= 10')
 ->havingRaw('COUNT(CASE WHEN attendances.status = "Absent" THEN 1 END) >= 10')
 		->count();
 		//total number of data that will show in the datatable default 10
@@ -48,14 +53,16 @@ class DisciplinaryFetchController extends Controller
             DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
             ->join('clients', 'deployments.client_id', '=', 'clients.id')
-            ->where('status','new')
+												->join('late_times', 'deployments.id', '=', 'late_times.deployment_id')
+												->join('attendances', 'deployments.id', '=', 'attendances.deployment_id')
+            ->where('deployments.status','new')
 												->where(function($query) {
-															$query->where('lates.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
+															$query->where('late_times.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
 																					->orWhere('attendances.status', 'Absent')
 																					->where('attendances.attendance_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 12 MONTH)'));
 												})
-												->groupBy('deployments.id') // Add this if you need to group by employee ID
-												->havingRaw('COUNT(DISTINCT lates.id) >= 10')
+											->groupBy('deployments.id','clients.name','employees.last_name','employees.first_name', 'employees.middle_name') // Add this if you need to group by employee ID
+												->havingRaw('COUNT(DISTINCT late_times.id) >= 10')
 												->havingRaw('COUNT(CASE WHEN attendances.status = "Absent" THEN 1 END) >= 10')
             ->offset($start)
             ->limit($limit)
@@ -67,14 +74,16 @@ class DisciplinaryFetchController extends Controller
                             DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
                             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
                             ->join('clients', 'deployments.client_id', '=', 'clients.id')
-                            ->where('status','new')
+																												->join('late_times', 'deployments.id', '=', 'late_times.deployment_id')
+																												->join('attendances', 'deployments.id', '=', 'attendances.deployment_id')
+                           ->where('deployments.status','new')
 																												->where(function($query) {
-																													$query->where('lates.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
+																													$query->where('late_times.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
 																																			->orWhere('attendances.status', 'Absent')
 																																			->where('attendances.attendance_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 12 MONTH)'));
 																												})
-																												->groupBy('deployments.id') // Add this if you need to group by employee ID
-																												->havingRaw('COUNT(DISTINCT lates.id) >= 10')
+																											->groupBy('deployments.id','clients.name','employees.last_name','employees.first_name', 'employees.middle_name') // Add this if you need to group by employee ID
+																												->havingRaw('COUNT(DISTINCT late_times.id) >= 10')
 																												->havingRaw('COUNT(CASE WHEN attendances.status = "Absent" THEN 1 END) >= 10')
 																												->count();
 
@@ -85,19 +94,21 @@ class DisciplinaryFetchController extends Controller
                     DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
                     ->join('employees', 'deployments.employee_id', '=', 'employees.id')
                     ->join('clients', 'deployments.client_id', '=', 'clients.id')
+																				->join('late_times', 'deployments.id', '=', 'late_times.deployment_id')
+																				->join('attendances', 'deployments.id', '=', 'attendances.deployment_id')
                     ->orWhere('employees.first_name', 'like', "%{$search}%")
                     ->orWhere('employees.middle_name', 'like', "%{$search}%")
                     ->orWhere('employees.last_name', 'like', "%{$search}%")
                     ->orWhere('clients.name', 'like', "%{$search}%")
 																				->where(function($query) {
-																					$query->where('lates.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
+																					$query->where('late_times.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
 																											->orWhere('attendances.status', 'Absent')
 																											->where('attendances.attendance_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 12 MONTH)'));
 																				})
-																				->groupBy('deployments.id') // Add this if you need to group by employee ID
-																				->havingRaw('COUNT(DISTINCT lates.id) >= 10')
+																			->groupBy('deployments.id','clients.name','employees.last_name','employees.first_name', 'employees.middle_name') // Add this if you need to group by employee ID
+																				->havingRaw('COUNT(DISTINCT late_times.id) >= 10')
 																				->havingRaw('COUNT(CASE WHEN attendances.status = "Absent" THEN 1 END) >= 10')
-                    ->where('status','new')
+                   	->where('deployments.status','new')
                     ->offset($start)
                     ->limit($limit)
                     ->orderBy($order, $dir)
@@ -108,18 +119,20 @@ class DisciplinaryFetchController extends Controller
                             DB::raw('CONCAT(employees.last_name, ", ", employees.first_name, " ", employees.middle_name) AS full_name'), 'clients.name as company')
                             ->join('employees', 'deployments.employee_id', '=', 'employees.id')
                             ->join('clients', 'deployments.client_id', '=', 'clients.id')
+																												->join('clients', 'deployments.client_id', '=', 'clients.id')
+																												->join('late_times', 'deployments.id', '=', 'late_times.deployment_id')
                             ->orWhere('employees.first_name', 'like', "%{$search}%")
                             ->orWhere('employees.middle_name', 'like', "%{$search}%")
                             ->orWhere('employees.last_name', 'like', "%{$search}%")
                             ->orWhere('clients.name', 'like', "%{$search}%")
-																												->where('status','new')
+																												->where('deployments.status','new')
 																												->where(function($query) {
-																													$query->where('lates.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
+																													$query->where('late_times.latetime_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 11 MONTH)'))
 																																			->orWhere('attendances.status', 'Absent')
 																																			->where('attendances.attendance_date', '>=', DB::raw('DATE_SUB(deployments.start_date, INTERVAL 12 MONTH)'));
 																												})
-																												->groupBy('deployments.id') // Add this if you need to group by employee ID
-																												->havingRaw('COUNT(DISTINCT lates.id) >= 10')
+																											->groupBy('deployments.id','clients.name','employees.last_name','employees.first_name', 'employees.middle_name') // Add this if you need to group by employee ID
+																												->havingRaw('COUNT(DISTINCT late_times.id) >= 10')
 																												->havingRaw('COUNT(CASE WHEN attendances.status = "Absent" THEN 1 END) >= 10')
                             ->count();
 		}
