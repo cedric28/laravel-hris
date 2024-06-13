@@ -5,9 +5,10 @@ namespace App\Imports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Carbon\Carbon;
 
-class OverTimeImport implements ToCollection, WithHeadingRow {
+class OverTimeImport implements ToCollection, WithHeadingRow, SkipsEmptyRows {
 
     public $data;
 
