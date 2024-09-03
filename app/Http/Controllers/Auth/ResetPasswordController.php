@@ -82,7 +82,6 @@ class ResetPasswordController extends Controller
                 $user->password = bcrypt($request->password);
             }
 
-            $user->hint = $request->hint;
             $user->email = $request->email;
             $user->save();
 
@@ -97,7 +96,7 @@ class ResetPasswordController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('login');
+            return redirect()->route('resetPage')->with('successMsg', 'Success resetting the password');
         } catch (\Exception $e) {
             \DB::rollback();
             return back()->withErrors($e->getMessage());
