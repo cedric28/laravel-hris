@@ -14,6 +14,7 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
         <div class="card-body">
         <p class="login-box-msg">Rest your password to start your session</p>
         @include('partials.message')
+        	@include('partials.errors')
         <form class="login-form" method="POST" action="{{ route('resetPassword') }}">
             @csrf
             <div class="input-group mb-3">
