@@ -20,6 +20,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+
+Route::get('/reset', 'Auth\ResetPasswordController@index')->name('resetPage');
+Route::post('/reset-password', 'Auth\ResetPasswordController@resetPassword')->name('resetPassword');
+
 //register route disable
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
 

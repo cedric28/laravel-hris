@@ -62,6 +62,7 @@ class UserController extends Controller
                 'first_name' => 'required|max:50',
                 'last_name' => 'required|max:50',
                 'email' => 'required|email|unique:users,email',
+                'hint' => 'required|max:50',
                 // 'password' => 'required|same:confirm-password',
                 'role_id' => 'required|integer'
             ]);
@@ -78,6 +79,7 @@ class UserController extends Controller
             //save user
             $user = new User();
             $user->first_name = $request->first_name;
+            $user->hint = $request->hint;
             $user->last_name = $request->last_name;
             $user->password = $password;
             $user->email = $request->email;
@@ -156,6 +158,7 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|max:50',
                 'last_name' => 'required|max:50',
+                'hint' => 'required|max:50',
                 'email' => 'required|email|unique:users,email,' . $user->id,
                 'password' => 'same:confirm-password',
                 'role_id' => 'required|integer'
@@ -171,6 +174,7 @@ class UserController extends Controller
 
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
+            $user->hint = $request->hint;
             $user->email = $request->email;
             $user->save();
 

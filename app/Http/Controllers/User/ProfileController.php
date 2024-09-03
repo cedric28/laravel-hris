@@ -33,6 +33,7 @@ class ProfileController extends Controller
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|max:50',
                 'last_name' => 'required|max:50',
+                'hint' => 'required|max:50',
                 'email' => 'required|email|unique:users,email,' . $user->id,
                 'password' => 'same:confirm-password'
             ]);
@@ -47,6 +48,7 @@ class ProfileController extends Controller
 
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
+            $user->hint = $request->hint;
             $user->email = $request->email;
             $user->save();
 

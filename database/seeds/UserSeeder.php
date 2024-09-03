@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Super Administrator', 
                 'email' => 'admin@admin.com', 
                 'pw' => 'passw0rd',
+                'hint' => 'Super Administrator',
                 'role_id' => 1
             ],
             [ 
@@ -25,6 +26,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'HR', 
                 'email' => 'hr@hr.com', 
                 'pw' => 'passw0rd',
+                'hint' => 'HR',
                 'role_id' => 2
             ]
         ];
@@ -46,6 +48,7 @@ class UserSeeder extends Seeder
                     'first_name' => $user['first_name'],
                     'last_name' => $user['last_name'],
                     'email' => $user['email'],
+                    'hint' => $user['hint'],
                     'password' => bcrypt($user['pw']),
                     'role_id' => $user['role_id'],
                     'creator_id' => 1,

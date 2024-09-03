@@ -58,7 +58,16 @@
 									</div>
 								</div>
 
-                                <div class="form-group row">
+								<div class="form-group row">
+									<label class="col-lg-3 col-form-label">Hint:</label>
+									<div class="col-lg-9">	
+										<div class="input-group mb-3">			
+											<input type="text" name="hint" value="{{ old('hint') }}" class="@error('hint') is-invalid @enderror form-control" placeholder="Hint" >
+										</div>
+									</div>
+								</div>
+
+        <div class="form-group row">
 									<label class="col-lg-3 col-form-label">Roles:</label>
 									<div class="col-lg-9">
 										<select id="role-id" name="role_id" class="form-control select2">
