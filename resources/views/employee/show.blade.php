@@ -22,12 +22,12 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Applicant - {{ ucwords($employee->name) }} Details</h1>
+            <h1>Employee - {{ ucwords($employee->name) }} Details</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('employee.index')}}">Applicants</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('employee.index')}}">Employees</a></li>
 			           <li class="breadcrumb-item">{{ ucwords($employee->name) }} Details</li>
             </ol>
           </div>
@@ -48,7 +48,7 @@
 											<div class="card-footer p-0">
 														<table class="table table-bordered w-100">
 										<tr>
-											<th>Applicant No</th>
+											<th>Employee No</th>
 											<td>{{ $employee->reference_no }}</td>
 										</tr>
 										<tr>

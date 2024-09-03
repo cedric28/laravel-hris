@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Employees</h1>
+            <h1>Holiday Settings</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item">Employees</li>
+              <li class="breadcrumb-item">Holiday Settings</li>
             </ol>
           </div>
         </div>
@@ -22,7 +22,7 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							<a type="button" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);" href="{{ route('employee.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Employee</a>
+							<a type="button" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);" href="{{ route('holiday-setting.create')}}" class="btn btn-outline-success btn-sm float-left"><i class="fas fa-users mr-2"></i> Add Holiday</a>
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
@@ -30,76 +30,44 @@
                                 <div class="card-header p-0 border-bottom-0">
                                     <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Active Employees</a>
+                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Active Holiday</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Inactive Employees</a>
+                                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Inactive Holiday</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="card-body">
                                     <div class="tab-content" id="custom-tabs-four-tabContent">
                                         <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="employee">
+                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="holidays">
                                                 <thead>
                                                     <tr style="text-align:center;">
-                                                     <th>EMPLOYEE NO</th>
-                                                     <th>FULLNAME</th>
-                                                     <th>NICKNAME</th>
-                                                     <th>CONTACT NO</th>
-                                                     <th>EMAIL</th>
-                                                     <th>ADDRESS</th>
-                                                     <th>DATE APPLIED</th>
-                                                     <th>ACTION</th>
+                                                        <th>HOLIDAY</th>
+                                                        <th>DATE</th>
+                                                        <th>PERCENTAGE</th>
+                                                        <th>DATE ADDED</th>
+                                                        <th>ACTION</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($employees as $employee)
-                                                        <tr>
-                                                            <td>{{ $employee->reference_no }}</td>
-                                                            <td>{{ $employee->name }}</td>
-                                                            <td>{{ $employee->nickname }}</td>
-                                                            <td>{{ $employee->contact_number }}</td>
-                                                            <td>{{ $employee->email }}</td>
-                                                            <td>{{ $employee->address }}</td>
-                                                            <td>{{ $employee->created_at }}</td>
-                                                            <td>
-                                                                
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
+                                                  
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab"> 
-                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="inactive-employee">
+                                            <table class="table table-hover table-striped" style="box-shadow: 1px 16px 20px 0px rgba(19,54,30,0.75);"id="inactive-holidays">
                                                 <thead>
                                                     <tr style="text-align:center;">
-                                                     <th>EMPLOYEE NO</th>
-                                                     <th>FULLNAME</th>
-                                                     <th>NICKNAME</th>
-                                                     <th>CONTACT NO</th>
-                                                     <th>EMAIL</th>
-                                                     <th>ADDRESS</th>
-                                                     <th>DATE APPLIED</th>
-                                                     <th>ACTION</th>
+                                                        <th>HOLIDAY</th>
+                                                        <th>DATE</th>
+                                                        <th>PERCENTAGE</th>
+                                                        <th>DATE ADDED</th>
+                                                        <th>ACTION</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($InactiveEmployee as $employee)
-                                                        <tr>
-                                                            <td>{{ $employee->reference_no }}</td>
-                                                            <td>{{ $employee->name }}</td>
-                                                            <td>{{ $employee->nickname }}</td>
-                                                            <td>{{ $employee->contact_number }}</td>
-                                                            <td>{{ $employee->email }}</td>
-                                                            <td>{{ $employee->address }}</td>
-                                                            <td>{{ $employee->created_at }}</td>
-                                                            <td>
-                                                                
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
+                                                  
                                                 </tbody>
                                             </table>
                                         </div>
@@ -166,7 +134,7 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 		<script>
 
-            var table = $('#employee').DataTable({
+            var table = $('#holidays').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -174,7 +142,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url":"<?= route('activeEmployee') ?>",
+                    "url":"<?= route('activeHolidays') ?>",
                     "dataType":"json",
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
@@ -187,46 +155,42 @@
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Employee-List',
+                                'title' : 'Holidays-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                     "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Employee-List',
+                                 'title' : 'Holidays-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                     "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Employee-List',
+                                 'title' : 'Holidays-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                     "columns": [0,1,2,3]
                                 }
                             }
                         ],
                     }
                 ],
                 "columns":[
-                    {"data":"reference_no"},
                     {"data":"name"},
-                    {"data":"nickname"},
-                    {"data":"contact_number"},
-                    {"data":"email"},
-                    {"data":"address"},
+                    {"data":"holiday"},
+                    {"data":"percentage"},
                     {"data":"created_at"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
-                "columnDefs": [
-				{
-					"targets": [6],   // target column
+                "columnDefs": [{
+					"targets": [3],   // target column
 					"className": "textCenter",
 				}]
             });
 
-            var tableInactive = $('#inactive-employee').DataTable({
+            var tableInactive = $('#inactive-holidays').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
@@ -234,7 +198,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url":"<?= route('InactiveEmployee') ?>",
+                    "url":"<?= route('InactiveHolidays') ?>",
                     "dataType":"json",
                     "type":"POST",
                     "data":{"_token":"<?= csrf_token() ?>"}
@@ -247,66 +211,62 @@
                         "buttons": [
                             {
                                 "extend": 'csv',
-                                'title' : 'Inactive Employee-List',
+                                 'title' : 'Holidays-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                     "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'pdf',
-                                'title' : 'Inactive Employee-List',
+                                 'title' : 'Holidays-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                     "columns": [0,1,2,3]
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Inactive Employee-List',
+                                 'title' : 'Holidays-List',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                    "columns": [0,1,2,3]
                                 }
                             }
                         ],
                     }
                 ],
                 "columns":[
-                    {"data":"reference_no"},
-                    {"data":"name"},
-                    {"data":"nickname"},
-                    {"data":"contact_number"},
-                    {"data":"email"},
-                    {"data":"address"},
+                     {"data":"name"},
+                    {"data":"holiday"},
+                    {"data":"percentage"},
                     {"data":"created_at"},
                     {"data":"action","searchable":false,"orderable":false}
                 ],
-                "columnDefs": [
-				{
-					"targets": [6],   // target column
+                "columnDefs": [{
+					"targets": [3],   // target column
 					"className": "textCenter",
 				}]
             });
 
 			$(document).on('click', '#show', function(){
-                var employeeId = $(this).attr('data-id');
-                window.location.href = 'employee/'+employeeId;
+                var userId = $(this).attr('data-id');
+                window.location.href = 'holiday-setting/'+userId;
             });
 
             $(document).on('click', '#edit', function(){
                 var id = $(this).attr('data-id');
-                window.location.href = 'employee/'+id+'/edit';
+                window.location.href = 'holiday-setting/'+id+'/edit';
             });
 
             
    
-            var employee_id;
+            var user_id;
             $(document).on('click', '#delete', function(){
-                employee_id = $(this).attr('data-id');
+                user_id = $(this).attr('data-id');
                 $('#confirmModal').modal('show');
             });
 
             $('#ok_button').click(function(){
                 $.ajax({
-                    url:"employee/destroy/"+employee_id,
+                    url:"holiday-setting/destroy/"+user_id,
                     beforeSend:function(){
                         $('#ok_button').text('Archiving...');
                     },
@@ -322,15 +282,15 @@
                 })
             });
 
-            var employeeId;
+            var userId;
             $(document).on('click', '#restore', function(){
-                employeeId = $(this).attr('data-id');
+                userId = $(this).attr('data-id');
                 $('#restoreModal').modal('show');
             });
 
             $('#restore_button').click(function(){
                 $.ajax({
-                    url:"employee/restore/"+employeeId,
+                    url:"holiday-setting/restore/"+userId,
                     beforeSend:function(){
                         $('#restore_button').text('Restoring...');
                     },
@@ -346,7 +306,7 @@
                 })
             });
 
-        
+            
             $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
                 $('.table:visible').each( function(e) {
                     $(this).DataTable().columns.adjust().responsive.recalc();

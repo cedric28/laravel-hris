@@ -161,7 +161,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('/for-termination', 'Disciplinary\DisciplinaryController');
     Route::post('for-termination/fetch/q', 'Disciplinary\DisciplinaryFetchController@fetchForTermination')->name('activeForTermination');
 
-    
+
+     //Holidays
+     Route::resource('/holiday-setting', 'HolidaySetting\HolidaySettingController');
+     Route::post('holiday-setting/fetch/q', 'HolidaySetting\HolidaySettingFetchController@fetchHolidays')->name('activeHolidays');
+     Route::post('inactive-holiday-setting/fetch/q', 'HolidaySetting\HolidaySettingFetchController@fetchInactiveHolidays')->name('InactiveHolidays');
+     Route::get('holiday-setting/destroy/{id}', 'HolidaySetting\HolidaySettingController@destroy');
+     Route::get('holiday-setting/restore/{id}', 'HolidaySetting\HolidaySettingController@restore');
+
     //Logs
     Route::resource('logs', 'Logs\LogController');
 

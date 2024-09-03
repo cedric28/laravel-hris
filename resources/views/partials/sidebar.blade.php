@@ -53,13 +53,13 @@
              <li class="nav-item">
                 <a href="{{ route('employee.index')}}" class="nav-link {{ (request()->is('employee*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-address-card"></i>
-                    <p>Applicant</p>
+                    <p>Employee</p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('deployment.index')}}" class="nav-link {{ (request()->is('deployment*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-user-tag"></i>
-                    <p>Employee</p>
+                    <p>Deployment</p>
                 </a>
             </li>
             <li class="nav-item">
@@ -72,6 +72,13 @@
                 <a href="{{ route('overtime.index')}}" class="nav-link {{ (request()->is('overtime*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-file-excel"></i>
                     <p>Bulk Over-Time</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('holiday-setting.index')}}" class="nav-link {{ (request()->is('holiday-setting*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-calendar"></i>
+                    <p>Holiday Setting</p>
                 </a>
             </li>
             <li class="nav-item">

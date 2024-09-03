@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h1>Applicant - {{ ucwords($employee->name)}} Details</h1>
+            <h1>Employee - {{ ucwords($employee->name)}} Details</h1>
           </div>
           <div class="col-sm-6 d-none d-sm-block">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('employee.index')}}">Applicants</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('employee.index')}}">Employees</a></li>
 			           <li class="breadcrumb-item">Edit Details</li>
             </ol>
           </div>
@@ -26,7 +26,7 @@
 							@include('partials.message')
 							@include('partials.errors')
 							<div class="row">
-								<h3 class="card-title">Applicant Edit Form</h3>
+								<h3 class="card-title">Employee Edit Form</h3>
 							</div>
 						</div>
 						<!-- /.card-header -->
@@ -59,7 +59,7 @@
 																<div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
 										
 																			<div class="form-group row">
-																				<label class="col-lg-3 col-form-label">Applicant No:</label>
+																				<label class="col-lg-3 col-form-label">Employee No:</label>
 																				<div class="col-lg-9">	
 																					<input type="text" disabled="disabled" name="reference_no" value="{{ old('reference_no', $employee->reference_no) }}" class="@error('reference_no') is-invalid @enderror form-control" placeholder="Reference No" >
 																				</div>
