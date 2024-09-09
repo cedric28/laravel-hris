@@ -12,8 +12,8 @@ class PayrollFetchController extends Controller
 	{
 		//column list in the table Client
 		$columns = array(
-            0 => 'start_date',
-            1 => 'end_date',
+            0 => 'end_date',
+            1 => 'start_date',
             2 => 'description',
 			3 => 'created_at',
 			4 => 'action'
@@ -95,8 +95,8 @@ class PayrollFetchController extends Controller
 	{
 		//column list in the table Client
         $columns = array(
-			0 => 'start_date',
-            1 => 'end_date',
+            0 => 'end_date',
+            1 => 'start_date',
             2 => 'description',
 			3 => 'created_at',
 			4 => 'action'
