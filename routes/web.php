@@ -166,12 +166,19 @@ Route::middleware('auth')->group(function () {
     Route::post('for-termination/fetch/q', 'Disciplinary\DisciplinaryFetchController@fetchForTermination')->name('activeForTermination');
 
 
-     //Holidays
-     Route::resource('/holiday-setting', 'HolidaySetting\HolidaySettingController');
-     Route::post('holiday-setting/fetch/q', 'HolidaySetting\HolidaySettingFetchController@fetchHolidays')->name('activeHolidays');
-     Route::post('inactive-holiday-setting/fetch/q', 'HolidaySetting\HolidaySettingFetchController@fetchInactiveHolidays')->name('InactiveHolidays');
-     Route::get('holiday-setting/destroy/{id}', 'HolidaySetting\HolidaySettingController@destroy');
-     Route::get('holiday-setting/restore/{id}', 'HolidaySetting\HolidaySettingController@restore');
+    //Holidays
+    Route::resource('/holiday-setting', 'HolidaySetting\HolidaySettingController');
+    Route::post('holiday-setting/fetch/q', 'HolidaySetting\HolidaySettingFetchController@fetchHolidays')->name('activeHolidays');
+    Route::post('inactive-holiday-setting/fetch/q', 'HolidaySetting\HolidaySettingFetchController@fetchInactiveHolidays')->name('InactiveHolidays');
+    Route::get('holiday-setting/destroy/{id}', 'HolidaySetting\HolidaySettingController@destroy');
+    Route::get('holiday-setting/restore/{id}', 'HolidaySetting\HolidaySettingController@restore');
+
+    //Payroll
+    Route::resource('/payroll', 'Payroll\PayrollController');
+    Route::post('payroll/fetch/q', 'Payroll\PayrollFetchController@fetchPayroll')->name('activePayroll');
+    Route::post('inactive-payroll/fetch/q', 'Payroll\PayrollFetchController@fetchInactivePayroll')->name('InactivePayroll');
+    Route::get('payroll/destroy/{id}', 'Payroll\PayrollController@destroy');
+    Route::get('payroll/restore/{id}', 'Payroll\PayrollController@restore');
 
     //Logs
     Route::resource('logs', 'Logs\LogController');

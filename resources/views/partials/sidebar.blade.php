@@ -81,6 +81,14 @@
                     <p>Holiday Setting</p>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ route('payroll.index')}}" class="nav-link {{ (request()->is('holiday-setting*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-calendar"></i>
+                    <p>Payroll Setting</p>
+                </a>
+            </li>
+
             <li class="nav-item">
                     <a href="{{ route('feedback.index')}}" class="nav-link {{ (request()->is('feedback*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-user-times"></i>

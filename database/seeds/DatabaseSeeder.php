@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ClientSeeder::class);
         $this->call(LeaveStatusSeeder::class);
         $this->call(ApplicantSeeder::class);
+        $this->call(PayrollSeeder::class);
     }
 }
