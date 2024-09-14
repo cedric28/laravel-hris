@@ -180,6 +180,14 @@ Route::middleware('auth')->group(function () {
     Route::get('payroll/destroy/{id}', 'Payroll\PayrollController@destroy');
     Route::get('payroll/restore/{id}', 'Payroll\PayrollController@restore');
 
+
+    //Payslip
+    Route::resource('/payslip', 'Payslip\PayslipController');
+    Route::post('payslip/fetch/q', 'Payslip\PayslipFetchController@fetchPayslip')->name('activePayslip');
+    Route::post('inactive-payslip/fetch/q', 'Payslip\PayslipFetchController@fetchInactivePayslip')->name('InactivePayslip');
+    Route::get('payslip/destroy/{id}', 'Payslip\PayslipController@destroy');
+    Route::get('payslip/restore/{id}', 'Payslip\PayslipController@restore');
+
     //Logs
     Route::resource('logs', 'Logs\LogController');
 
