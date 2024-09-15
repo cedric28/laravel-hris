@@ -34,9 +34,8 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
             </div>
 
               <div class="row mb-2">
-                <div class="col-12">
-                    <a href="/reset" class="btn btn-block btn-outline-danger" 
-style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">{{ __('Reset Password') }} <i class="icon-circle-right2 ml-2"></i></a>
+                <div class="col-12 text-center">
+                    <a href="/reset" class="text-center">{{ __('Reset Password') }} <i class="icon-circle-right2 ml-2"></i></a>
                 </div>
             <!-- /.col -->
             </div>

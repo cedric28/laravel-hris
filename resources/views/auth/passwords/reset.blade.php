@@ -12,7 +12,7 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
         </a>
         </div>
         <div class="card-body">
-        <p class="login-box-msg">Rest your password to start your session</p>
+        <p class="login-box-msg">You forgot your password? Here you can easily retrieve a new password.</p>
         @include('partials.message')
         	@include('partials.errors')
         <form class="login-form" method="POST" action="{{ route('resetPassword') }}">
@@ -52,17 +52,17 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
                     </div>
                 </div>
             </div>
-              <div class="row mb-2">
+         
+            <div class="row">
                 <div class="col-12">
-                    <a href="/login" class="btn btn-block btn-outline-primary" 
-style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">{{ __('Back To Login') }} <i class="icon-circle-right2 ml-2"></i></a>
+                    <button type="submit" class="btn btn-primary btn-block" 
+style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">{{ __('Reset Password') }} <i class="icon-circle-right2 ml-2"></i></button>
                 </div>
             <!-- /.col -->
             </div>
-            <div class="row">
+                 <div class="row mt-2">
                 <div class="col-12">
-                    <button type="submit" class="btn btn-success btn-block" 
-style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">{{ __('Reset Password') }} <i class="icon-circle-right2 ml-2"></i></button>
+                    <a href="/login" >{{ __('Back To Login') }} <i class="icon-circle-right2 ml-2"></i></a>
                 </div>
             <!-- /.col -->
             </div>
