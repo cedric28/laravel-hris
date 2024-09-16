@@ -541,6 +541,146 @@
                                             </form>
                                         </div>
                                         <div class="tab-pane fade" id="payslip" role="tabpanel" aria-labelledby="payslip-tab">
+                                            <div class="row">
+                                                <div class="col-md-6 col-lg-6">
+                                                    <div class="card card-primary">
+                                                        <div class="card-header">
+                                                            COMPENSATION
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table table-bordered w-100">
+                                                                <tr>
+                                                                    <th>BASIC SALARY</th>
+                                                                    <td>P {{  $salary->basic_salary  }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>DE MINIMIS BENEFITS</th>
+                                                                    <td>P {{ number_format($salary->meal_allowance + $salary->laundry_allowance + $salary->transportation_allowance + $salary->cola,2) }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>RATE PER HOUR</th>
+                                                                    <td>P {{  $salary->basic_salary / 8  }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>TOTAL HOURS WORKED</th>
+                                                                    <td id="total_hours_worked"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>TOTAL HOURS OVERTIME</th>
+                                                                    <td id="total_hours_overtime"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>TOTAL HOURS LATE</th>
+                                                                    <td id="total_hours_late"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>TOTAL OVERTIME PAY</th>
+                                                                    <td id="total_over_time_pay"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>HOLIDAY PAY</th>
+                                                                    <td id="holiday_pay"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>TOTAL COMPENSATION</th>
+                                                                    <td id="total_compensation"></td>
+                                                                </tr>
+                                                            </table>	
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6">
+                                                    <div class="card card-primary">
+                                                        <div class="card-header">
+                                                           DEDUCTIONS
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table table-bordered w-100">
+                                                                <tr>
+                                                                    <th>SSS</th>
+                                                                    <td>P {{ $salary->sss }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>PHILHEALTH</th>
+                                                                    <td>P {{ $salary->philhealth }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>HDMF</th>
+                                                                    <td>P {{ $salary->pagibig }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>TAX</th>
+                                                                    <td id="total_tax"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>UNIFORM</th>
+                                                                    <td>P {{ $salary->uniform }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>TOTAL LATE DEDUCTION</th>
+                                                                    <td id="total_late_deduction"></td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <th>TOTAL DEDUCTIONS</th>
+                                                                    <td id="total_deductions"></td>
+                                                                </tr>
+                                                            </table>	
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             <div class="row">
+                                                <div class="col-md-12 col-lg-12">
+                                                    <div class="card card-primary">
+                                                        <div class="card-header">
+                                                           OVER ALL CLAIM
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table table-bordered w-100">
+                                                                <tr>
+                                                                    <th>NET PAY</th>
+                                                                    <td id="net_pay"></td>
+                                                                </tr>
+                                                            </table>	
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                             <form action="{{ route('payslip.store')}}" method="POST">
+                                                @csrf
+                                                <input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label">Payroll Cut-Off:</label>
+                                                    <div class="col-lg-9">
+                                                        <select id="payroll-id" name="payroll_id" class="form-control select2">
+                                                            <option value="">Select cut off</option>
+                                                            @foreach ($payrollCutOffs as $payrollCutOff)
+                                                                <option value="{{ $payrollCutOff->id }}"{{ ($leaveType->id == old('payroll_id')) ? 'selected' : '' }}>Payroll Cut-Off {{ \Carbon\Carbon::parse($payrollCutOff->start_date)->format('F jS, Y') }} -  {{ \Carbon\Carbon::parse($payrollCutOff->end_date)->format('F jS, Y') }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label">OTHER ADDITIONAL PAY:</label>
+                                                    <div class="col-lg-9">	
+                                                        <input type="text" name="other_pay" value="{{ old('other_pay') }}" class="@error('other_pay') is-invalid @enderror form-control" placeholder="0.00" >
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label">OTHER DEDUCTION:</label>
+                                                    <div class="col-lg-9">	
+                                                        <input type="text" name="other_deduction" value="{{ old('other_deduction') }}" class="@error('other_deduction') is-invalid @enderror form-control" placeholder="0.00" >
+                                                    </div>
+                                                </div>
+
+                                                <div class="text-right">
+                                                    <button type="submit" class="btn btn-success" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">Save <i class="icon-paperplane ml-2"></i></button>
+                                                </div>
+                                            </form>
                                             <br/>
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -1320,6 +1460,62 @@
                 let endDate = $(this).attr('data-enddate');
                 window.open(`/generate-payslip/<?= $deployment->id ?>?start_date=${startDate}&end_date=${endDate}`,'_blank');
             })
+            </script>
+            <script>
+            $(document).ready(function() {
+                // Trigger calculation when select box is changed
+                $('#payroll-id').change(function() {
+                    calculateCompensation();
+                });
+
+                // Trigger recalculation on input changes
+                $('input[name="other_pay"], input[name="other_deduction"]').on('input', function() {
+                    calculateCompensation();
+                });
+            });
+
+            function calculateCompensation() {
+                var deploymentId = $('#deployment_id').val();
+                var payrollId = $('#payroll-id').val();
+                var otherPay = $('input[name="other_pay"]').val();
+                var otherDeduction = $('input[name="other_deduction"]').val();
+
+                // Only trigger AJAX if both payrollId and deploymentId are set
+                if (payrollId && deploymentId) {
+                    $.ajax({
+                        url: "<?= route('checkWorkDetails') ?>",
+                        type: 'POST',
+                        data: {
+                            _token: "<?= csrf_token() ?>",
+                            deployment_id: deploymentId,
+                            payroll_id: payrollId,
+                            other_pay: otherPay,
+                            other_deduction: otherDeduction
+                        },
+                        success: function(response) {
+                            // Update fields based on response
+                            $('#total_hours_worked').text(response.totalHoursWorked);
+                            $('#total_hours_overtime').text(response.totalHoursOverTime);
+                            $('#total_hours_late').text(response.totalHoursLate);
+                            $('#total_over_time_pay').text(response.overTimeTotal);
+                            $('#total_compensation').text(response.totalCompensation);
+                            $('#total_late_deduction').text(response.totalLateDeduction);
+                            $('#total_deductions').text(response.totalDeduction);
+                            $('#total_tax').text(response.tax);
+                            $('#holiday_pay').text(response.totalHolidayPay);
+                            $('#net_pay').text(response.netPay);
+                        },
+                        error: function(error) {
+                             swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while getting payroll data.',
+                                type: 'error',
+                            });
+                        }
+                    });
+                }
+            }
+
             </script>
         @endpush('scripts')
 @endsection

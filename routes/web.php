@@ -183,6 +183,7 @@ Route::middleware('auth')->group(function () {
 
     //Payslip
     Route::resource('/payslip', 'Payslip\PayslipController');
+    Route::post('/check-work-details', 'Payslip\PayslipController@checkWorkDetails')->name('checkWorkDetails');
     Route::post('payslip/fetch/q', 'Payslip\PayslipFetchController@fetchPayslip')->name('activePayslip');
     Route::post('inactive-payslip/fetch/q', 'Payslip\PayslipFetchController@fetchInactivePayslip')->name('InactivePayslip');
     Route::get('payslip/destroy/{id}', 'Payslip\PayslipController@destroy');

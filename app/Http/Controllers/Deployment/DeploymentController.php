@@ -18,6 +18,7 @@ use App\Industry;
 use App\CivilStatus;
 use App\Gender;
 use App\LeaveType;
+use App\Payroll;
 use Validator, Hash, DB;
 use Carbon\Carbon;
 
@@ -433,6 +434,7 @@ class DeploymentController extends Controller
         $lates = LateTime::withTrashed()->where('deployment_id', $deployment->id)->get();
         $overtimes = OverTime::withTrashed()->where('deployment_id', $deployment->id)->get();
         $leaveTypes = LeaveType::all();
+        $payrollCutOffs = Payroll::orderBy('start_date', 'desc')->get();
         $salary = Salary::withTrashed()->where('deployment_id', $deployment->id)->first();
         $baseRate =  [
             [ 
@@ -451,7 +453,8 @@ class DeploymentController extends Controller
            'leaveTypes' => $leaveTypes,
            'salary' => $salary,
            'baseRate' => $baseRate,
-           'age' => $age
+           'age' => $age,
+           'payrollCutOffs' => $payrollCutOffs
         ]);
     }
 

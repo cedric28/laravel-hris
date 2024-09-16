@@ -54,4 +54,9 @@ class Deployment extends Model
     {
         return $this->hasMany(LateTime::class,'deployment_id','id')->withTrashed();
     }
+
+    public function payslips()
+    {
+        return $this->hasMany(Payslip::class,'deployment_id','id')->withTrashed();
+    }
 }
