@@ -273,7 +273,7 @@ class PDFController extends Controller
 
 
     $log = new Log();
-    $log->log = "User " . \Auth::user()->email . " generate PDF For Regularization at " . Carbon::now();
+    $log->log = "User " . \Auth::user()->email . " generate PDF For Payslip at " . Carbon::now();
     $log->creator_id =  \Auth::user()->id;
     $log->updater_id =  \Auth::user()->id;
     $log->save();
