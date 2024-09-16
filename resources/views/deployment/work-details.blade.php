@@ -67,10 +67,10 @@
 											<a class="nav-link {{ request()->get('parent_index') == 5 ? 'active' : '' }}" id="salary-tab" data-toggle="pill" href="#salary" role="tab" aria-controls="salary" aria-selected="false">Salary</a>
 										</li>
                                          <li class="nav-item">
-											<a class="nav-link" data-toggle="pill" id="payslip-tab" href="#payslip" role="tab" aria-controls="payslip" aria-selected="false">Payslip</a>
+											<a class="nav-link {{ request()->get('parent_index') == 6 ? 'active' : '' }}" data-toggle="pill" id="payslip-tab" href="#payslip" role="tab" aria-controls="payslip" aria-selected="false">Payslip</a>
 										</li>
                                         <li class="nav-item">
-											<a class="nav-link" data-toggle="pill" id="employee-info-tab" href="#employee-info" role="tab" aria-controls="employee-info" aria-selected="false">Employee Information</a>
+											<a class="nav-link {{ request()->get('parent_index') == 7 ? 'active' : '' }}" data-toggle="pill" id="employee-info-tab" href="#employee-info" role="tab" aria-controls="employee-info" aria-selected="false">Employee Information</a>
 										</li>
 									</ul>
 								</div>
@@ -540,7 +540,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class="tab-pane fade" id="payslip" role="tabpanel" aria-labelledby="payslip-tab">
+                                        <div class="tab-pane fade {{ request()->get('parent_index') == 6 ? 'active show' : '' }}" id="payslip" role="tabpanel" aria-labelledby="payslip-tab">
                                             <div class="row">
                                                 <div class="col-md-6 col-lg-6">
                                                     <div class="card card-primary">
@@ -632,19 +632,12 @@
                                             </div>
                                              <div class="row">
                                                 <div class="col-md-12 col-lg-12">
-                                                    <div class="card card-primary">
-                                                        <div class="card-header">
-                                                           OVER ALL CLAIM
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <table class="table table-bordered w-100">
-                                                                <tr>
-                                                                    <th>NET PAY</th>
-                                                                    <td id="net_pay"></td>
-                                                                </tr>
-                                                            </table>	
-                                                        </div>
-                                                    </div>
+                                                    <table class="table table-bordered w-100">
+                                                        <tr>
+                                                            <th>NET PAY</th>
+                                                            <td id="net_pay"></td>
+                                                        </tr>
+                                                    </table>	
                                                 </div>
                                             </div>
                                             <br/>
@@ -698,7 +691,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="employee-info" role="tabpanel" aria-labelledby="employee-info-tab">
+                                        <div class="tab-pane fade {{ request()->get('parent_index') == 7 ? 'active show' : '' }}" id="employee-info" role="tabpanel" aria-labelledby="employee-info-tab">
                                             <div class="row">
                                                 <div class="col-md-4 col-lg-4">
                                                     <div class="card card-widget widget-user-2">
@@ -1406,7 +1399,7 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    "url":"<?= route('activeCompensation') ?>",
+                    "url":"<?= route('activePayslip') ?>",
                     "dataType":"json",
                     "type":"POST",
                     "data":{
@@ -1456,9 +1449,8 @@
 
             
             $(document).on('click', '#generate-payslip', function(){
-                let startDate = $(this).attr('data-startdate');
-                let endDate = $(this).attr('data-enddate');
-                window.open(`/generate-payslip/<?= $deployment->id ?>?start_date=${startDate}&end_date=${endDate}`,'_blank');
+                let payslipId = $(this).attr('data-id');
+                window.open(`/generate-payslip/${payslipId}`,'_blank');
             })
             </script>
             <script>

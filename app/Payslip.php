@@ -9,6 +9,8 @@ class Payslip extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['deployment_id','payroll_id', 'holiday_pay', 'other_deduction','other_pay','creator_id','updater_id'];
+
     public function deployment() {
         return $this->belongsTo(Deployment::class)->withTrashed();
     }

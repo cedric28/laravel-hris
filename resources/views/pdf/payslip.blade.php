@@ -9,6 +9,7 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      font-size: 0.6rem;
     }
 table {
   font-family: arial, sans-serif;
@@ -33,7 +34,7 @@ tr:nth-child(even) {
 
     .header {
       text-align: center;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     .header img {
@@ -41,7 +42,7 @@ tr:nth-child(even) {
     }
 
     .company-info {
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     .col-md-6 {
@@ -63,7 +64,7 @@ tr:nth-child(even) {
 <body>
   <div class="container">
     <div class="header">
-      <img src='{{  public_path('assets/img/logo.png') }}' width="100px" height="100px"alt="Company Logo">
+      <img src='{{  public_path('assets/img/logo.png') }}' width="60px" height="60px"alt="Company Logo">
     </div>
 
     <div class="company-info">
@@ -114,7 +115,7 @@ tr:nth-child(even) {
 <table>
   <tr>
     <td>RATE PER HOUR</td>
-    <td>{{ Config::get('app.currency') }} {{  Str::currency($ratePerHour) }}</td>
+    <td>{{ Config::get('app.currency') }} {{  $ratePerHour }}</td>
   </tr>
    <tr>
     <td>TOTAL DAYS WORKED</td>
@@ -138,13 +139,21 @@ tr:nth-child(even) {
     <td>{{ Config::get('app.currency') }} {{  Str::currency($overTimeTotal) }}</td>
   </tr>
   <tr>
-    <td>BASIC SALARY</td>
+    <td>SALARY</td>
     <td>{{ Config::get('app.currency') }} {{  Str::currency($basicSalaryTotal) }}</td>
   </tr>
  
   <tr>
     <td>DE MINIMIS BENEFITS</td>
     <td>{{ Config::get('app.currency') }} {{  Str::currency($deMinimisBenefits) }}</td>
+  </tr>
+  <tr>
+    <td>ADDITIONAL PAY</td>
+    <td>{{ Config::get('app.currency') }} {{  Str::currency($otherPay) }}</td>
+  </tr>
+   <tr>
+    <td>HOLIDAY PAY</td>
+    <td>{{ Config::get('app.currency') }} {{  Str::currency($totalHolidayPay) }}</td>
   </tr>
   <tr>
     <td><b>TOTAL COMPENSATION</b></td>
@@ -175,6 +184,10 @@ tr:nth-child(even) {
    <tr>
     <td>UNIFORM</td>
     <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->uniform) }}</td>
+  </tr>
+   <tr>
+    <td>OTHER DEDUCTION</td>
+    <td>{{ Config::get('app.currency') }} {{  Str::currency($otherDeduction) }}</td>
   </tr>
   <tr>
     <td>TOTAL LATE DEDUCTION</td>
