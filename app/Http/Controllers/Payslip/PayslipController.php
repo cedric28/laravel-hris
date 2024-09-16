@@ -102,6 +102,10 @@ class PayslipController extends Controller
                 ->whereNull('deleted_at')
                 ->whereBetween('attendance_date', [$startDate, $endDate])
                 ->sum('hours_worked');
+
+            if($totalHoursWorked <= 0){
+                return redirect()->route('workDetails',['id' => $request->deployment_id,'parent_index' => 6])->with('errorMsg', 'Create Attendance first');
+            }
         
             $totalHoursOverTime = OverTime::where('deployment_id', $deploymentId)
                 ->whereNull('deleted_at')
@@ -227,7 +231,7 @@ class PayslipController extends Controller
             |---------------------------------------------*/
             \DB::commit();
 
-            return redirect()->route('workDetails',['id' => $deploymentId,'parent_index' => 6]);
+            return redirect()->route('workDetails',['id' => $deploymentId,'parent_index' => 6])->with('successMsg', 'Successfully create payslip for '.$payroll->description);
         } catch (\Exception $e) {
             //if error occurs rollback the data from it's previos state
             \DB::rollback();
@@ -297,6 +301,10 @@ class PayslipController extends Controller
             ->whereNull('deleted_at')
             ->whereBetween('attendance_date', [$startDate, $endDate])
             ->sum('hours_worked');
+
+        if ($totalHoursWorked <= 0) {
+            return response()->json(['error' => 'Please create attendance first'], 404);
+        }
     
         $totalHoursOverTime = OverTime::where('deployment_id', $deploymentId)
             ->whereNull('deleted_at')

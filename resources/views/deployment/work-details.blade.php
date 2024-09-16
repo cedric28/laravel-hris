@@ -1512,9 +1512,12 @@
                             $('#net_pay').text(response.netPay);
                         },
                         error: function(error) {
+                            $('#payroll-id').val("").trigger('change'); 
+                            var otherPay = $('input[name="other_pay"]').val("");
+                            var otherDeduction = $('input[name="other_deduction"]').val("");
                              swal.fire({
                                 title: 'Error!',
-                                text: 'An error occurred while getting payroll data.',
+                                text: error.responseJSON?.error ?? 'An error occurred while getting payroll data.',
                                 type: 'error',
                             });
                         }
