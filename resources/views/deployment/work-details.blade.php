@@ -659,14 +659,14 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-3 col-form-label">OTHER ADDITIONAL PAY:</label>
                                                     <div class="col-lg-9">	
-                                                        <input type="text" name="other_pay" value="{{ old('other_pay') }}" class="@error('other_pay') is-invalid @enderror form-control" placeholder="0.00" >
+                                                        <input type="text" id="other_pay" name="other_pay" value="{{ old('other_pay') }}" class="@error('other_pay') is-invalid @enderror form-control" placeholder="0.00" >
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label class="col-lg-3 col-form-label">OTHER DEDUCTION:</label>
                                                     <div class="col-lg-9">	
-                                                        <input type="text" name="other_deduction" value="{{ old('other_deduction') }}" class="@error('other_deduction') is-invalid @enderror form-control" placeholder="0.00" >
+                                                        <input type="text" id="other_deduction" name="other_deduction" value="{{ old('other_deduction') }}" class="@error('other_deduction') is-invalid @enderror form-control" placeholder="0.00" >
                                                     </div>
                                                 </div>
 
@@ -1452,8 +1452,22 @@
                 let payslipId = $(this).attr('data-id');
                 window.open(`/generate-payslip/${payslipId}`,'_blank');
             })
+
+          
             </script>
             <script>
+
+            $(document).on('click', '#edit_payslip', function(){
+                let payrollId = $(this).attr('data-payrollId');
+                let otherDeduction = $(this).attr('data-otherDeduction');
+                let otherPay = $(this).attr('data-otherPay');
+                let deploymentId = $('#deployment_id').val();
+                $('#payroll-id').val(payrollId).trigger('change'); 
+                $('input[name="other_deduction"]').val(otherDeduction);
+                $('input[name="other_pay"]').val(otherPay);
+                calculateCompensation();
+            })
+
             $(document).ready(function() {
                 // Trigger calculation when select box is changed
                 $('#payroll-id').change(function() {
