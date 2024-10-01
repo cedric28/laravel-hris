@@ -184,7 +184,7 @@ tr:nth-child(even) {
   @if (!empty($generalDeductions))
       @foreach ($generalDeductions as $deduction)
         <tr>
-          <th>{{ strtoupper($deduction['name']) }}</th>
+          <td>{{ strtoupper($deduction['name']) }}</td>
           <td>{{ Config::get('app.currency') }} {{  Str::currency($deduction['amount'] / 2) }}</td>
         </tr>
       @endforeach
