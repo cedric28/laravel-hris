@@ -82,6 +82,13 @@
                 </a>
             </li>
 
+              <li class="nav-item">
+                <a href="{{ route('general-deductions.index')}}" class="nav-link {{ (request()->is('general-deductions*')) ? 'nav-link active' : '' }}">
+                    <i class="nav-icon fas fa-ruble-sign"></i>
+                    <p>General Deduction</p>
+                </a>
+            </li>
+
             <li class="nav-item">
                 <a href="{{ route('payroll.index')}}" class="nav-link {{ (request()->is('payroll*')) ? 'nav-link active' : '' }}">
                     <i class="nav-icon fas fa-calendar"></i>

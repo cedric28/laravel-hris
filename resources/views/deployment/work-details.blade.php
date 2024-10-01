@@ -456,6 +456,12 @@
                                                                     <div class="col-lg-9">	
                                                                         <input type="text" name="tax" value="{{ old('tax',$salary->tax) }}" class="@error('tax') is-invalid @enderror form-control" placeholder="0.00" >
                                                                     </div>
+                                                                 </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-lg-3 col-form-label">TAX SALARY RANGE:</label>
+                                                                    <div class="col-lg-9">	
+                                                                        <input type="text" name="tax_salary_range" value="{{ old('tax',$salary->tax_salary_range) }}" class="@error('tax_salary_range') is-invalid @enderror form-control" placeholder="0.00" >
+                                                                    </div>
                                                                 </div>
 
                                                                 <div class="form-group row">
@@ -471,6 +477,17 @@
                                                                         <input type="text" name="philhealth" value="{{ old('philhealth',$salary->philhealth) }}" class="@error('philhealth') is-invalid @enderror form-control" placeholder="0.00" >
                                                                     </div>
                                                                 </div>
+                                                                @if (!empty($generalDeductions))
+                                                                    @foreach ($generalDeductions as $deduction)
+                                                                        <div class="form-group row">
+                                                                            <label class="col-lg-3 col-form-label">{{ strtoupper($deduction['name']) }}:</label>
+                                                                            <div class="col-lg-9">    
+                                                                                <input type="text" name="{{ $deduction['name'] }}" value="{{ $deduction['amount'] }}" class="form-control" readonly> 
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                @endif
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -598,20 +615,26 @@
                                                             <table class="table table-bordered w-100">
                                                                 <tr>
                                                                     <th>SSS</th>
-                                                                    <td>P {{ $salary->sss }}</td>
+                                                                    <td>P {{ $salary->sss / 2 }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>PHILHEALTH</th>
-                                                                    <td>P {{ $salary->philhealth }}</td>
+                                                                    <td>P {{ $salary->philhealth / 2 }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>HDMF</th>
-                                                                    <td>P {{ $salary->pagibig }}</td>
+                                                                    <td>P {{ $salary->pagibig / 2 }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>TAX</th>
                                                                     <td id="total_tax"></td>
                                                                 </tr>
+                                                                @if (!empty($generalDeductions))
+                                                                    @foreach ($generalDeductions as $deduction)
+                                                                        <th>{{ strtoupper($deduction['name']) }}</th>
+                                                                        <td>P {{ $deduction['amount'] / 2 }}</td>
+                                                                    @endforeach
+                                                                @endif
                                                                 <tr>
                                                                     <th>UNIFORM</th>
                                                                     <td>P {{ $salary->uniform }}</td>

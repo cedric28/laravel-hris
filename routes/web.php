@@ -189,6 +189,14 @@ Route::middleware('auth')->group(function () {
     Route::get('payslip/destroy/{id}', 'Payslip\PayslipController@destroy');
     Route::get('payslip/restore/{id}', 'Payslip\PayslipController@restore');
 
+
+    //General deductions
+    Route::resource('/general-deductions', 'GeneralDeduction\GeneralDeductionController');
+    Route::post('general-deductions/fetch/q', 'GeneralDeduction\GeneralDeductionFetchController@fetchGeneralDeductions')->name('activeGeneralDeduction');
+    Route::post('inactive-general-deductions/fetch/q', 'GeneralDeduction\GeneralDeductionFetchController@fetchInactiveGeneralDeductions')->name('InactiveGeneralDeduction');
+    Route::get('general-deductions/destroy/{id}', 'GeneralDeduction\GeneralDeductionController@destroy');
+    Route::get('general-deductions/restore/{id}', 'GeneralDeduction\GeneralDeductionController@restore');
+
     //Logs
     Route::resource('logs', 'Logs\LogController');
 

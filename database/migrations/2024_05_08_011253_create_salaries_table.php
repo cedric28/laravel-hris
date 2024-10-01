@@ -20,6 +20,7 @@ class CreateSalariesTable extends Migration
             $table->enum('rate_base',['hourly','monthly'])->default('hourly');
             $table->decimal('sss', 8, 2)->default(560.43);
             $table->decimal('tax', 8, 2)->default(0.02);
+            $table->decimal('tax_salary_range', 8, 2)->default(21000);
             $table->decimal('pagibig', 8, 2)->default(100);
             $table->decimal('philhealth', 8, 2)->default(498.16);
             $table->decimal('uniform', 8, 2)->default(0);

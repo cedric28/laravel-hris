@@ -92,6 +92,10 @@
                                                     <div class="col-lg-9">	
                                                         <input type="text" name="tax" value="{{ old('tax',$salary->tax) }}" class="@error('tax') is-invalid @enderror form-control" placeholder="0.00" >
                                                     </div>
+                                                    <label class="col-lg-3 col-form-label">TAX SALARY RANGE:</label>
+                                                    <div class="col-lg-9">	
+                                                        <input type="text" name="tax_salary_range" value="{{ old('tax',$salary->tax_salary_range) }}" class="@error('tax_salary_range') is-invalid @enderror form-control" placeholder="0.00" >
+                                                    </div>
                                                 </div>
 
                                                 <div class="form-group row">

@@ -124,6 +124,7 @@ class SalaryController extends Controller
                 'rate_base' => 'required|string|in:hourly,monthly',
                 'sss' => 'required|numeric',
                 'tax' => 'required|numeric',
+                'tax_salary_range' => 'required|numeric',
                 'pagibig' => 'required|numeric',
                 'philhealth' => 'required|numeric',
                 'uniform' => 'required|numeric',
@@ -140,6 +141,7 @@ class SalaryController extends Controller
             $salary->rate_base = $request->rate_base;
             $salary->sss = $request->sss;
             $salary->tax = $request->tax;
+            $salary->tax_salary_range = $request->tax_salary_range;
             $salary->pagibig = $request->pagibig;
             $salary->philhealth = $request->philhealth;
             $salary->uniform = $request->uniform;

@@ -167,20 +167,28 @@ tr:nth-child(even) {
 <table>
   <tr>
     <td>SSS</td>
-    <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->sss) }}</td>
+    <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->sss / 2) }}</td>
   </tr>
   <tr>
     <td>PHILHEALTH</td>
-    <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->philhealth) }}</td>
+    <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->philhealth / 2) }}</td>
   </tr>
   <tr>
     <td>HDMF</td>
-    <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->pagibig) }}</td>
+    <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->pagibig / 2) }}</td>
   </tr>
   <tr>
     <td>TAX</td>
-    <td>{{ Config::get('app.currency') }} {{ Str::currency($tax) }}</td>
+    <td>{{ Config::get('app.currency') }} {{ Str::currency($tax / 2) }}</td>
   </tr>
+  @if (!empty($generalDeductions))
+      @foreach ($generalDeductions as $deduction)
+        <tr>
+          <th>{{ strtoupper($deduction['name']) }}</th>
+          <td>{{ Config::get('app.currency') }} {{  Str::currency($deduction['amount'] / 2) }}</td>
+        </tr>
+      @endforeach
+    @endif
    <tr>
     <td>UNIFORM</td>
     <td>{{ Config::get('app.currency') }} {{ Str::currency($employeeDetails->salary->uniform) }}</td>

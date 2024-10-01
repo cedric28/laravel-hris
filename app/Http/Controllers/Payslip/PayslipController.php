@@ -14,6 +14,7 @@ use App\LateTime;
 use App\Payroll;
 use App\Deployment;
 use App\HolidaySetting;
+use App\GeneralDeduction;
 use Validator, Hash, DB;
 
 class PayslipController extends Controller
@@ -189,21 +190,33 @@ class PayslipController extends Controller
                     $totalHolidayPay += $holidayAmount;
                 }
             }
-    
+
+            $generalDeductions = GeneralDeduction::all();
+            $totalGeneralDeductions = 0;
+            // Check if generalDeductions is not empty
+            if ($generalDeductions->isNotEmpty()) {
+              // Get all the amount values, divide by 2, and sum the results
+              $totalGeneralDeductions = $generalDeductions->sum(function ($deduction) {
+                  return $deduction->amount / 2;
+              });
+            } else {
+              $totalGeneralDeductions = 0; // Set to 0 if there are no deductions
+            }
+            
             // Additional pay and deductions
             $deMinimisBenefits = ($employeeDetails->salary->meal_allowance ?? 0 ) + ($employeeDetails->salary->laundry_allowance ?? 0 ) + ($employeeDetails->salary->transportation_allowance ?? 0 ) + ($employeeDetails->salary->cola ?? 0 );
             $totalCompensation = floatval($basicSalaryTotal) + $deMinimisBenefits + floatval($overTimeTotal) + (floatval($request->other_pay) ?? 0) + floatval($totalHolidayPay);
-            $totalDeduction = ($employeeDetails->salary->sss ?? 0) + 
-                              ($employeeDetails->salary->philhealth ?? 0) +
-                              ($employeeDetails->salary->pagibig ?? 0) + 
-                              ($employeeDetails->salary->uniform ?? 0) +
+            $totalDeduction = (($employeeDetails->salary->sss/2) ?? 0) + 
+                              (($employeeDetails->salary->philhealth / 2) ?? 0) +
+                              (($employeeDetails->salary->pagibig / 2) ?? 0) + 
+                              (($employeeDetails->salary->uniform / 2) ?? 0) +
                               ($tax ?? 0) + 
                               ($lateTotalDeduction ?? 0) +
-                              ($request->other_deduction ?? 0);
+                              ($request->other_deduction ?? 0) + $totalGeneralDeductions;
         
             $netPay =  $totalCompensation - $totalDeduction;
     
-            $tax = $totalCompensation >= 21000 ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
+            $tax = $totalCompensation >= $employeeDetails->salary->tax_salary_range ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
             
 
             $payslip = Payslip::firstOrNew(
@@ -390,21 +403,31 @@ class PayslipController extends Controller
         }
 
         
-    
+        $generalDeductions = GeneralDeduction::all();
+        $totalGeneralDeductions = 0;
+        // Check if generalDeductions is not empty
+        if ($generalDeductions->isNotEmpty()) {
+          // Get all the amount values, divide by 2, and sum the results
+          $totalGeneralDeductions = $generalDeductions->sum(function ($deduction) {
+              return $deduction->amount / 2;
+          });
+        } else {
+          $totalGeneralDeductions = 0; // Set to 0 if there are no deductions
+        }
         // Additional pay and deductions
         $deMinimisBenefits = ($employeeDetails->salary->meal_allowance ?? 0 ) + ($employeeDetails->salary->laundry_allowance ?? 0 ) + ($employeeDetails->salary->transportation_allowance ?? 0 ) + ($employeeDetails->salary->cola ?? 0 );
         $totalCompensation = floatval($basicSalaryTotal) + $deMinimisBenefits + floatval($overTimeTotal) + (floatval($request->other_pay) ?? 0) + floatval($totalHolidayPay);
-        $totalDeduction = ($employeeDetails->salary->sss ?? 0) + 
-                          ($employeeDetails->salary->philhealth ?? 0) +
-                          ($employeeDetails->salary->pagibig ?? 0) + 
+        $totalDeduction = ($employeeDetails->salary->sss / 2 ?? 0) + 
+                          ($employeeDetails->salary->philhealth / 2 ?? 0) +
+                          ($employeeDetails->salary->pagibig / 2 ?? 0) + 
                           ($employeeDetails->salary->uniform ?? 0) +
                           ($tax ?? 0) + 
                           ($lateTotalDeduction ?? 0) +
-                          ($request->other_deduction ?? 0);
+                          ($request->other_deduction ?? 0) + $totalGeneralDeductions;
     
         $netPay =  $totalCompensation - $totalDeduction;
 
-        $tax = $totalCompensation >= 21000 ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
+        $tax = $totalCompensation >= $employeeDetails->salary->tax_salary_range ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
     
         return response()->json([
             'totalHoursWorked' => $totalHoursWorked,

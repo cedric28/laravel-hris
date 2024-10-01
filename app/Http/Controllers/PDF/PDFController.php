@@ -13,6 +13,7 @@ use App\LateTime;
 use App\Payslip;
 use App\Payroll;
 use App\HolidaySetting;
+use App\GeneralDeduction;
 use Carbon\Carbon;
 use PDF, DB;
 
@@ -227,21 +228,31 @@ class PDFController extends Controller
     }
 
     
-
+    $generalDeductions = GeneralDeduction::all();
+    $totalGeneralDeductions = 0;
+    // Check if generalDeductions is not empty
+    if ($generalDeductions->isNotEmpty()) {
+      // Get all the amount values, divide by 2, and sum the results
+      $totalGeneralDeductions = $generalDeductions->sum(function ($deduction) {
+          return $deduction->amount / 2;
+      });
+    } else {
+      $totalGeneralDeductions = 0; // Set to 0 if there are no deductions
+    }
     // Additional pay and deductions
     $deMinimisBenefits = ($employeeDetails->salary->meal_allowance ?? 0 ) + ($employeeDetails->salary->laundry_allowance ?? 0 ) + ($employeeDetails->salary->transportation_allowance ?? 0 ) + ($employeeDetails->salary->cola ?? 0 );
     $totalCompensation = floatval($basicSalaryTotal) + $deMinimisBenefits + floatval($overTimeTotal) + (floatval($payslip->other_pay) ?? 0) + floatval($totalHolidayPay);
-    $totalDeduction = ($employeeDetails->salary->sss ?? 0) + 
-                      ($employeeDetails->salary->philhealth ?? 0) +
-                      ($employeeDetails->salary->pagibig ?? 0) + 
-                      ($employeeDetails->salary->uniform ?? 0) +
+    $totalDeduction = (($employeeDetails->salary->sss / 2) ?? 0) + 
+                      (($employeeDetails->salary->philhealth / 2) ?? 0) +
+                      (($employeeDetails->salary->pagibig /2 ) ?? 0) + 
+                      (($employeeDetails->salary->uniform / 2) ?? 0) +
                       ($tax ?? 0) + 
                       ($lateTotalDeduction ?? 0) +
-                      ($payslip->other_deduction ?? 0);
+                      ($payslip->other_deduction ?? 0) + $totalGeneralDeductions;
 
     $netPay =  $totalCompensation - $totalDeduction;
 
-    $tax = $totalCompensation >= 21000 ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
+    $tax = $totalCompensation >= $employeeDetails->salary->tax_salary_range ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
   //  // return view("pdf.payslip");
   //   // // view()->share('for_regularization', $user);
     $pdf = \PDF::loadView('pdf.payslip',[
@@ -268,7 +279,8 @@ class PDFController extends Controller
       'totalHoursWorkedDays' => $totalHoursWorkedDays,
       'totalHolidayPay' =>  $totalHolidayPay,
       'otherDeduction' => $payslip->other_deduction,
-      'otherPay' => $payslip->other_pay
+      'otherPay' => $payslip->other_pay,
+      'generalDeductions' => $generalDeductions
     ]);
 
 
