@@ -22,11 +22,18 @@ class BackupController extends Controller
         $tables = DB::select('SHOW TABLES');
 
         $tableCounts = [];
-
+        
+        $databaseName = env('DB_DATABASE');
+        
         foreach ($tables as $table) {
-            $tableName = $table->{'Tables_in_'. env('DB_DATABASE')};
-            $tableCounts[$tableName] = DB::table($tableName)->count();
+            // Get the table name dynamically using the property that holds the table name
+            $tableNameField = 'Tables_in_' . $databaseName;
+            if (property_exists($table, $tableNameField)) {
+                $tableName = $table->{$tableNameField};
+                $tableCounts[$tableName] = DB::table($tableName)->count();
+            }
         }
+        
         return view("backup-database.index",['tableCounts' => count($tableCounts)]);
     }
 
