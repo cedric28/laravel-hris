@@ -128,8 +128,8 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
           let months = perfectAttendanceMonths.map(item => {
                 return item.month;
           })
-  
-          Highcharts.chart('yearly', {
+
+        /*  Highcharts.chart('yearly', {
               title: {
                 text: 'Yearly Total Employee for Reguralization'
               },
@@ -185,7 +185,7 @@ style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 
               }]
             }
 
-          });
+          }); */
 
           Highcharts.chart('monthly', {
             chart: {

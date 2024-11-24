@@ -90,9 +90,9 @@ class ScheduleFetchController extends Controller
 				$nestedData['time_in']  = Carbon::parse($r->time_in)->format('g:i A');
 				$nestedData['time_out'] = Carbon::parse($r->time_out)->format('g:i A');
 				$nestedData['action'] = '
-						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
-						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
-						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+						<button name="show" title="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
+						<button name="edit" title="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
+						<button name="delete" title="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
 				$data[] = $nestedData;
 			}
@@ -188,7 +188,7 @@ class ScheduleFetchController extends Controller
 				$nestedData['time_in'] = $r->time_in;
 				$nestedData['time_out'] = $r->time_out;
 				$nestedData['action'] = '
-						<button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
+						<button name="restore" title="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
 					';
 				$data[] = $nestedData;
 			}

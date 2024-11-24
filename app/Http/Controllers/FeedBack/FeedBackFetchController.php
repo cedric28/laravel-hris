@@ -137,8 +137,8 @@ class FeedBackFetchController extends Controller
 				$nestedData['client_name'] = $r->company;
 				$nestedData['rate'] = $r->rate;
 				$nestedData['action'] = '
-						<button name="edit" id="edit" data-id="' . $r->feedbackId . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
-						<button name="delete" id="delete" data-id="' . $r->feedbackId . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+						<button name="edit" title="edit" id="edit" data-id="' . $r->feedbackId . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
+						<button name="delete" title="delete" id="delete" data-id="' . $r->feedbackId . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
 				$data[] = $nestedData;
 			}
@@ -272,7 +272,7 @@ class FeedBackFetchController extends Controller
 				$nestedData['client_name'] = $r->company;
 				$nestedData['rate'] = $r->rate;
 				$nestedData['action'] = '
-                <button name="restore" id="restore" data-id="' . $r->feedbackId . '" class="btn bg-gradient-success btn-sm">Restore</button>
+                <button name="restore" title="restore"  id="restore" data-id="' . $r->feedbackId . '" class="btn bg-gradient-success btn-sm">Restore</button>
 					';
 				$data[] = $nestedData;
 			}

@@ -170,7 +170,7 @@ class PerfectAttendanceFetchController extends Controller
 				$nestedData['fullname'] = $r->full_name;
 				$nestedData['company'] = $r->company;
 				$nestedData['action'] = '
-						<button name="generate_pdf" id="generate_pdf" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Generate Certificate</button>
+						<button name="generate_pdf" title="generate pdf" id="generate_pdf" data-id="' . $r->id . '" class="btn bg-gradient-info btn-sm">Generate Certificate</button>
 					';
 				$data[] = $nestedData;
 			}

@@ -96,7 +96,7 @@ class LeavesFetchController extends Controller
 				$nestedData['leave_date'] =date('M d, Y', strtotime($r->leave_date));
 				$nestedData['leave_time'] = $r->leave_time;
 				$nestedData['action'] = '
-						<button name="delete" id="delete_leaves" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+						<button name="delete" title="delete" id="delete_leaves" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
 				$data[] = $nestedData;
 			}

@@ -83,8 +83,8 @@ class PayslipFetchController extends Controller
 				foreach ($posts as $r) {
 					$nestedData['description'] = "Payroll Cut-Off ". date('M d, Y', strtotime($r->start_date)) ." - ".date('M d, Y', strtotime($r->end_date));
 						$nestedData['action'] = '
-						<button name="work-details" id="generate-payslip" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Generate Payslip</button>
-							<button name="edit" id="edit_payslip" data-id="' . $r->id . '" data-payrollId="' . $r->payrollId.'" 
+						<button name="work-details" title="generate payslip" id="generate-payslip" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm">Generate Payslip</button>
+							<button name="edit" title="edit" id="edit_payslip" data-id="' . $r->id . '" data-payrollId="' . $r->payrollId.'" 
 							data-otherDeduction="' . $r->other_deduction.'"
 							data-otherPay="' . $r->other_pay.'"
 							class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i> Edit Payslip</button>

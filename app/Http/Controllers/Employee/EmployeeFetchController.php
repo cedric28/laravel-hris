@@ -113,9 +113,9 @@ class EmployeeFetchController extends Controller
 				$nestedData['address'] = $r->unit.' '.$r->lot_block.' '.$r->street.' '.$r->subdivision.' '.$r->barangay.' '.$r->municipality.' '.$r->province;
 				$nestedData['created_at'] =date('M d, Y', strtotime($r->created_at));
 				$nestedData['action'] = '
-                    <button  data-toggle="tooltip" name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
-					<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
-					<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+                    <button  data-toggle="tooltip" title="show" name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
+					<button name="edit" title="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
+					<button name="delete" title="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 				';
 				$data[] = $nestedData;
 			}
@@ -227,7 +227,7 @@ class EmployeeFetchController extends Controller
 				$nestedData['address'] = $r->address;
 				$nestedData['created_at'] =date('M d, Y', strtotime($r->created_at));
 				$nestedData['action'] = '
-                    <button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
+                    <button name="restore" title="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
 				';
 				$data[] = $nestedData;
 			}
@@ -335,7 +335,7 @@ class EmployeeFetchController extends Controller
 				$nestedData['industry'] = $r->industry->name;
 				$nestedData['job_description'] = $r->job_description;
 				$nestedData['action'] = '
-					<button name="delete_emp_histories" id="delete_emp_histories" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+					<button name="delete_emp_histories" title="delete" id="delete_emp_histories" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 				';
 				$data[] = $nestedData;
 			}
@@ -419,7 +419,7 @@ class EmployeeFetchController extends Controller
     $nestedData['level'] = $r->level;
 				$nestedData['date_graduated'] =date('M d, Y', strtotime($r->date_graduated));
 				$nestedData['action'] = '
-					<button name="delete_emp_education" id="delete_emp_education" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+					<button name="delete_emp_education" title="delete" id="delete_emp_education" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 				';
 				$data[] = $nestedData;
 			}

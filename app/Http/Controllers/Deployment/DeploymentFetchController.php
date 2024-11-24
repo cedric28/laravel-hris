@@ -110,16 +110,16 @@ class DeploymentFetchController extends Controller
 				$nestedData['end_date'] =date('M d, Y', strtotime($r->end_date));
 				if($r->status != 'new'){
 					$nestedData['action'] = '
-						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
-						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
-						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+						<button name="show" id="show" title="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
+						<button name="edit" id="edit" title="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
+						<button name="delete" id="delete" title="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
 				} else {
 					$nestedData['action'] = '
-					<button name="work-details" id="work-details" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm"><i class="fas fa-book-reader"></i></button>
-						<button name="show" id="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
-						<button name="edit" id="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
-						<button name="delete" id="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
+					<button name="work-details" id="work-details"  title="work-details" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm"><i class="fas fa-book-reader"></i></button>
+						<button name="show" id="show" title="show" data-id="' . $r->id . '" class="btn bg-gradient-primary btn-sm"><i class="nav-icon fas fa-eye"></i></button>
+						<button name="edit" id="edit" title="edit" data-id="' . $r->id . '" class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i></button>
+						<button name="delete" id="delete" title="delete" data-id="' . $r->id . '" class="btn bg-gradient-danger btn-sm"><i class="fas fa-file-archive"></i></button>
 					';
 				}
 			
@@ -239,7 +239,7 @@ class DeploymentFetchController extends Controller
 				$nestedData['start_date'] =date('M d, Y', strtotime($r->start_date));
 				$nestedData['end_date'] =date('M d, Y', strtotime($r->end_date));
 				$nestedData['action'] = '
-						<button name="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
+						<button name="restore" title="restore" id="restore" data-id="' . $r->id . '" class="btn bg-gradient-success btn-sm">Restore</button>
 					';
 				$data[] = $nestedData;
 			}

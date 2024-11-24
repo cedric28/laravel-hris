@@ -76,7 +76,7 @@ class SalaryFetchController extends Controller
 				$end_date = $parts[1];
 				$nestedData['description'] = "Payroll for ".$r;
 				$nestedData['action'] = '
-						<button name="delete" id="generate-payslip" data-startdate="' . $start_date . '" data-enddate="' . $end_date . '" class="btn bg-gradient-info btn-sm">Generate Payslip</button>
+						<button name="delete" id="generate-payslip" title="generate payslip" data-startdate="' . $start_date . '" data-enddate="' . $end_date . '" class="btn bg-gradient-info btn-sm">Generate Payslip</button>
 					';
 				$data[] = $nestedData;
 			}
