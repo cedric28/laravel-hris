@@ -40,9 +40,7 @@
 	<link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
   	<link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   	<link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-			<link href="
-https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
-" rel="stylesheet">
+			<link href="{{ asset('dist/css/sweetalert2.min.css') }}" rel="stylesheet">
 	<!-- /global stylesheets -->
 	<style>
 	.bodyImage {
@@ -104,11 +102,11 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 			text-align : center;
 		}
 	</style>
-	<script src="https://code.highcharts.com/highcharts.js"></script>
-	<script src="https://code.highcharts.com/modules/series-label.js"></script>
-	<script src="https://code.highcharts.com/modules/exporting.js"></script>
-	<script src="https://code.highcharts.com/modules/export-data.js"></script>
-	<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+	<script src="{{ asset('dist/js/highcharts.js') }}"></script>
+	<script src="{{ asset('dist/js/series-label.js') }}"></script>
+	<script src="{{ asset('dist/js/exporting.js') }}"></script>
+	<script src="{{ asset('dist/js/export-data.js') }}"></script>
+	<script src="{{ asset('dist/js/accessibility.js') }}"></script>
 	@stack('styles')
 	<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 	<script src="{{ asset('assets/js/main.js') }}"></script>
@@ -173,9 +171,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.min.css
 	<script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 	<!-- AdminLTE App -->
 	<script src="{{ asset('dist/js/adminlte.js') }}"></script>
-	<script src="
-https://cdn.jsdelivr.net/npm/sweetalert2@11.11.0/dist/sweetalert2.all.min.js
-"></script>
+	<script src="{{ asset('dist/js/sweetalert2.all.min.js') }}"></script>
 
 	@yield('js')
 	@stack('scripts')
