@@ -34,10 +34,14 @@ class DeploymentController extends Controller
     {
         $deployments = Deployment::all();
         $InactiveDeployment = Deployment::onlyTrashed()->get();
-
+        $imagePath = public_path('assets/img/logo.png');
+        $base64Logo = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+        $currentUser = \Auth::user()->first_name . ' ' . \Auth::user()->last_name;
         return view("deployment.index", [
             'deployments' => $deployments,
-            'InactiveDeployment' => $InactiveDeployment
+            'InactiveDeployment' => $InactiveDeployment,
+            'base64Logo'=> $base64Logo,
+            'currentUser' => $currentUser
         ]);
     }
 
@@ -447,17 +451,22 @@ class DeploymentController extends Controller
         $birthdate = Carbon::createFromFormat('Y-m-d', $deployment->employee->birthdate);
 
         $age = $birthdate->diffInYears();
+        $imagePath = public_path('assets/img/logo.png');
+        $base64Logo = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+        $currentUser = \Auth::user()->first_name . ' ' . \Auth::user()->last_name;
         return view('deployment.work-details', [
-           'deployment' => $deployment,
-           'schedule'=> $schedule,
-           'lates' => $lates,
-           'overtimes' => $overtimes,
-           'leaveTypes' => $leaveTypes,
-           'salary' => $salary,
-           'baseRate' => $baseRate,
-           'age' => $age,
-           'payrollCutOffs' => $payrollCutOffs,
-           'generalDeductions' => $generalDeductions
+            'deployment' => $deployment,
+            'schedule'=> $schedule,
+            'lates' => $lates,
+            'overtimes' => $overtimes,
+            'leaveTypes' => $leaveTypes,
+            'salary' => $salary,
+            'baseRate' => $baseRate,
+            'age' => $age,
+            'payrollCutOffs' => $payrollCutOffs,
+            'generalDeductions' => $generalDeductions,
+            'base64Logo'=> $base64Logo,
+            'currentUser' => $currentUser
         ]);
     }
 

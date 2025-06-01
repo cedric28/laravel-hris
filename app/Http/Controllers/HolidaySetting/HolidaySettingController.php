@@ -21,10 +21,14 @@ class HolidaySettingController extends Controller
     {
         $holidays = HolidaySetting::all();
         $inActiveHolidays = HolidaySetting::onlyTrashed()->get();
-
+        $imagePath = public_path('assets/img/logo.png');
+        $base64Logo = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+        $currentUser = \Auth::user()->first_name . ' ' . \Auth::user()->last_name;
         return view("holiday-setting.index", [
             'holidays' => $holidays,
-            'inActiveHolidays' => $inActiveHolidays
+            'inActiveHolidays' => $inActiveHolidays,
+            'base64Logo'=> $base64Logo,
+            'currentUser' => $currentUser
         ]);
     }
 

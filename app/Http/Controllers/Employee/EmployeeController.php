@@ -27,9 +27,14 @@ class EmployeeController extends Controller
     {
         $employees = Employee::all();
         $InactiveEmployee = Employee::onlyTrashed()->get();
+        $imagePath = public_path('assets/img/logo.png');
+        $base64Logo = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+        $currentUser = \Auth::user()->first_name . ' ' . \Auth::user()->last_name;
         return view("employee.index", [
             'employees' => $employees,
-            'InactiveEmployee' => $InactiveEmployee
+            'InactiveEmployee' => $InactiveEmployee,
+            'base64Logo' => $base64Logo,
+            'currentUser' => $currentUser
         ]);
     }
 

@@ -21,9 +21,14 @@ class ClientController extends Controller
     {
         $clients = Client::all();
         $InactiveClient = Client::onlyTrashed()->get();
+        $imagePath = public_path('assets/img/logo.png');
+        $base64Logo = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+        $currentUser = \Auth::user()->first_name . ' ' . \Auth::user()->last_name;
         return view("client.index", [
             'clients' => $clients,
-            'InactiveClient' => $InactiveClient
+            'InactiveClient' => $InactiveClient,
+            'base64Logo'=> $base64Logo,
+            'currentUser' => $currentUser
         ]);
     }
 
@@ -48,35 +53,35 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //prevent other user to access to this page
+        // Prevent unauthorized access
         $this->authorize("isHROrAdmin");
-        /*
-        | @Begin Transaction
-        |---------------------------------------------*/
+    
+        // Begin Transaction
         \DB::beginTransaction();
-
+    
         try {
-            //validate request value
+            // Validate request
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:50|unique:clients,name',
                 'short_name' => 'required|string|max:10',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
                 'email' => 'required|email|max:50',
-                'contract' => 'required|image|mimes:jpg,png,jpeg,svg|max:2048',
+                'contract' => 'required|mimes:pdf|max:10240', // PDF only, max 10MB
             ]);
-
+    
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-
-            //check current user
+    
+            // Get current user ID
             $user = \Auth::user()->id;
-
-            $originalImage = $request->file('contract');
-            $photo = time() . $originalImage->getClientOriginalName();
-
-            //save client
+    
+            // Handle PDF file
+            $originalFile = $request->file('contract');
+            $fileName = time() . '_' . $originalFile->getClientOriginalName();
+    
+            // Save client
             $client = new Client();
             $client->reference_no = $this->generateUniqueCode();
             $client->name = $request->name;
@@ -84,42 +89,38 @@ class ClientController extends Controller
             $client->address = $request->address;
             $client->contact_number = $request->contact_number;
             $client->email = $request->email;
-            $client->contract = $photo;
+            $client->contract = $fileName;
             $client->creator_id = $user;
             $client->updater_id = $user;
+    
             if ($client->save()) {
-                $photoPath = public_path('images/' . $client->id . '/');
-
-                if (!file_exists($photoPath)) {
-                    mkdir($photoPath, 0777, true);
+                $filePath = public_path('files/' . $client->id . '/');
+    
+                if (!file_exists($filePath)) {
+                    mkdir($filePath, 0777, true);
                 }
-                // create instance
-                $img = \Image::make($originalImage->getRealPath());
-
-                // resize image to fixed size
-                $img->resize(500, 500);
-                $img->save($photoPath . $photo);
+    
+                // Move PDF to folder
+                $originalFile->move($filePath, $fileName);
             }
-
-
+    
+            // Save log
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " create client " . $client->reference_no . " at " . Carbon::now();
-            $log->creator_id =  \Auth::user()->id;
-            $log->updater_id =  \Auth::user()->id;
+            $log->log = "User " . \Auth::user()->email . " created client " . $client->reference_no . " at " . \Carbon\Carbon::now();
+            $log->creator_id = $user;
+            $log->updater_id = $user;
             $log->save();
-            /*
-            | @End Transaction
-            |---------------------------------------------*/
+    
+            // Commit transaction
             \DB::commit();
-
-            return redirect()->route('client.create')
-                ->with('successMsg', 'Client Save Successful');
+    
+            return redirect()->route('client.create')->with('successMsg', 'Client Save Successful');
         } catch (\Exception $e) {
-            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
     }
+    
 
     /**
      * Display the specified resource.
@@ -167,84 +168,79 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //prevent other user to access to this page
+        // Prevent unauthorized access
         $this->authorize("isHROrAdmin");
-
-        /*
-        | @Begin Transaction
-        |---------------------------------------------*/
+    
         \DB::beginTransaction();
-
+    
         try {
-            //check client if exist
+            // Check if client exists
             $client = Client::withTrashed()->findOrFail($id);
-
-            //validate the request value
+    
+            // Validate input
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|unique:clients,name,' . $client->id,
                 'short_name' => 'required|string|max:10',
                 'address' => 'required|string|max:50',
                 'contact_number' => 'required|digits:10',
                 'email' => 'required|email|max:50',
-                'contract' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'contract' => 'nullable|mimes:pdf|max:10240', // PDF only, max 10MB
             ]);
+    
             if ($validator->fails()) {
                 return back()->withErrors($validator->errors())->withInput();
             }
-
-            //check current user
+    
             $user = \Auth::user()->id;
-            $originalImage = $request->file('contract');
-            $currentPhoto = $client->contract;
-
-            $photo = "";
-            if ($originalImage) {
-                $photo = time() . $originalImage->getClientOriginalName();
-                $contractPhoto = public_path('images/' . $client->id . '/') . $currentPhoto;
-                $photoPath = public_path('images/' . $client->id . '/');
-                if (!file_exists($contractPhoto)) {
-                    mkdir($photoPath, 0777, true);
-                } else {
-                    @unlink($contractPhoto);
+            $newFile = $request->file('contract');
+            $currentFile = $client->contract;
+            $fileName = $currentFile;
+    
+            if ($newFile) {
+                $fileName = time() . '_' . $newFile->getClientOriginalName();
+                $filePath = public_path('files/' . $client->id . '/');
+    
+                // Create folder if it doesn't exist
+                if (!file_exists($filePath)) {
+                    mkdir($filePath, 0777, true);
                 }
-                // create instance
-                $img = \Image::make($originalImage->getRealPath());
-
-                // resize image to fixed size
-                $img->resize(500, 500);
-                $img->save($photoPath . $photo);
-            } else {
-                $photo = $currentPhoto;
+    
+                // Delete old file if it exists
+                $oldFilePath = $filePath . $currentFile;
+                if (file_exists($oldFilePath)) {
+                    @unlink($oldFilePath);
+                }
+    
+                // Move new file
+                $newFile->move($filePath, $fileName);
             }
-
-
-            //save the update value
+    
+            // Update client info
             $client->name = $request->name;
             $client->short_name = $request->short_name;
             $client->address = $request->address;
             $client->contact_number = $request->contact_number;
             $client->email = $request->email;
+            $client->contract = $fileName;
             $client->updater_id = $user;
-            $client->contract = $photo;
             $client->update();
-
+    
+            // Log the update
             $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " edit client " . $client->reference_no . " at " . Carbon::now();
-            $log->creator_id =  \Auth::user()->id;
-            $log->updater_id =  \Auth::user()->id;
+            $log->log = "User " . \Auth::user()->email . " edited client " . $client->reference_no . " at " . \Carbon\Carbon::now();
+            $log->creator_id = $user;
+            $log->updater_id = $user;
             $log->save();
-            /*
-            | @End Transaction
-            |---------------------------------------------*/
+    
             \DB::commit();
-
-            return back()->with("successMsg", "Client Update Successfully");
+    
+            return back()->with("successMsg", "Client updated successfully");
         } catch (\Exception $e) {
-            //if error occurs rollback the data from it's previos state
             \DB::rollback();
             return back()->withErrors($e->getMessage());
         }
     }
+    
 
     /**
      * Remove the specified resource from storage.

@@ -14,7 +14,13 @@ class DisciplinaryController extends Controller
      */
     public function index()
     {
-        return view("for-termination.index");
+        $imagePath = public_path('assets/img/logo.png');
+        $base64Logo = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+        $currentUser = \Auth::user()->first_name . ' ' . \Auth::user()->last_name;
+        return view("for-termination.index",[
+            'base64Logo'=> $base64Logo,
+            'currentUser' => $currentUser
+        ]);
     }
 
     /**

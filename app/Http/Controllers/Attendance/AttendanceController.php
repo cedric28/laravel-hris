@@ -28,9 +28,14 @@ class AttendanceController extends Controller
     {
         $clientId = $request->query('clientId');
         $clients = Client::all();
+        $imagePath = public_path('assets/img/logo.png');
+        $base64Logo = 'data:image/png;base64,' . base64_encode(file_get_contents($imagePath));
+        $currentUser = \Auth::user()->first_name . ' ' . \Auth::user()->last_name;
         return view("attendance.index",[
             'clients' => $clients,
-            'clientId' => $clientId
+            'clientId' => $clientId,
+            'base64Logo'=> $base64Logo,
+            'currentUser' => $currentUser
         ]);
     }
 

@@ -165,12 +165,13 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 		<script>
-
+            var base64Logo = @json($base64Logo);
+            var currentUser = @json(Auth::user()->first_name . ' ' . Auth::user()->last_name);
             var table = $('#employee').DataTable({
 				"responsive": true, 
 				"lengthChange": false, 
 				"autoWidth": false,
-      			"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
@@ -184,26 +185,143 @@
                     {
                         "extend": 'collection',
                         "text": 'Export',
-                        "buttons": [
-                            {
-                                "extend": 'csv',
-                                'title' : 'Employee-List',
-                                "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                        "buttons": [{
+                            extend: 'csv',
+                            filename: 'List of Employees as of <?= date('F j, Y') ?>',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
+                            },
+                            customize: function(csv) {
+
+                                function centerText(text, width = 80) {
+                                    let pad = Math.floor((width - text.length) / 2);
+                                    if (pad < 0) pad = 0;
+                                    return ' '.repeat(pad) + text;
                                 }
+
+                                var headerLines = [
+                                    centerText('REVMAN AGENCY'),
+                                    centerText(
+                                        'Address: 2nd Flr Medical Arts Bldg 1., University Of Perpetual Help System - Laguna Compound,'
+                                    ),
+                                    centerText(
+                                        'Old 3 National Highway Brgy. Sto Nino Binan City Laguna'),
+                                    centerText('Email: revman.applicant@gmail.com'),
+                                    centerText('Cellphone: +639359722646 / +639564729639'),
+                                    '',
+
+                                    'List of Employees as of <?= date('F j, Y') ?>',
+                                    ''
+                                ].join('\n');
+
+
+                                var footerLines = [
+                                    '',
+                                    'Prepared By: <?= $currentUser ?>',
+                                    ''
+                                ].join('\n');
+
+                                return headerLines + csv + footerLines;
+                            }
                             },
                             {
-                                "extend": 'pdf',
-                                'title' : 'Employee-List',
-                                "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                extend: 'pdfHtml5',
+                                title: '',
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5, 6]
+                                },
+                                filename: 'List of Employees as of {{ \Carbon\Carbon::now()->toFormattedDateString() }}',
+                                customize: function(doc) {
+                                    doc.pageMargins = [40, 160, 40,
+                                        60
+                                    ];
+                                    doc.defaultStyle.fontSize = 10;
+                                    doc.styles.tableHeader.fontSize = 10;
+                                    doc.content.unshift({
+                                        text: 'List of Employees as of {{ \Carbon\Carbon::now()->toFormattedDateString() }}',
+                                        alignment: 'left',
+                                        fontSize: 12,
+                                        bold: true,
+                                        margin: [0, 0, 0, 10]
+                                    });
+
+                                    doc['header'] = function() {
+                                        return {
+                                            margin: [40, 20, 40, 0],
+                                            alignment: 'center',
+                                            stack: [{
+                                                    image: base64Logo,
+                                                    width: 60,
+                                                    alignment: 'center',
+                                                    margin: [0, 0, 0, 5]
+                                                },
+                                                {
+                                                    text: 'REVMAN AGENCY',
+                                                    style: 'header',
+                                                    fontSize: 14,
+                                                    bold: true,
+                                                    alignment: 'center',
+                                                    margin: [0, 0, 0, 2]
+                                                },
+                                                {
+                                                    text: 'Address: 2nd Flr Medical Arts Bldg 1., University Of Perpetual Help System - Laguna Compound,\nOld 3 National Highway Brgy. Sto Nino Binan City Laguna',
+                                                    fontSize: 10,
+                                                    alignment: 'center',
+                                                    margin: [0, 0, 0, 1]
+                                                },
+                                                {
+                                                    text: 'Email: revman.applicant@gmail.com | Cellphone: +639359722646 / +639564729639',
+                                                    fontSize: 10,
+                                                    alignment: 'center',
+                                                    margin: [0, 0, 0, 0]
+                                                }
+                                            ]
+                                        };
+                                    };
+
+                                    doc['footer'] = function(page, pages) {
+                                        return {
+                                            columns: [{
+                                                    alignment: 'left',
+                                                    text: 'Prepared By: ' + currentUser,
+                                                    fontSize: 10
+                                                },
+                                                {
+                                                    alignment: 'right',
+                                                    text: [{
+                                                        text: 'Page ' + page.toString() +
+                                                            ' of ' + pages.toString(),
+                                                        fontSize: 10
+                                                    }]
+                                                }
+                                            ],
+                                            margin: [10, 10]
+                                        };
+                                    };
                                 }
                             },
                             {
                                 "extend": 'print',
-                                'title' : 'Employee-List',
+                                "title": 'List of Employee as of <?= date('F j, Y') ?>',
                                 "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                                    "columns": [0, 1, 2, 3, 4, 5, 6]
+                                },
+                                customize: function(win) {
+                                    $(win.document.body)
+                                        .css('font-size', '10pt')
+                                        .prepend(
+                                            '<div style="text-align:center;">' +
+                                            '<img src="' + base64Logo + '" width="80"/><br/>' +
+                                            '<strong>REVMAN AGENCY</strong><br/>' +
+                                            'Address: 2nd Flr Medical Arts Bldg 1., University Of Perpetual Help System - Laguna Compound,<br/>' +
+                                            'Old 3 National Highway Brgy. Sto Nino Binan City Laguna<br/>' +
+                                            'Email: revman.applicant@gmail.com<br/>' +
+                                            'Cellphone: +639359722646 / +639564729639<br/><br/>' +
+                                            '</div>'
+                                        );
+                                    $(win.document.body).append(
+                                        `<div style="margin-top: 50px; text-align: left;"><strong>Prepared By: ${currentUser}</strong></div>`
+                                    );
                                 }
                             }
                         ],
@@ -244,29 +362,146 @@
                     {
                         "extend": 'collection',
                         "text": 'Export',
-                        "buttons": [
-                            {
-                                "extend": 'csv',
-                                'title' : 'Inactive Employee-List',
-                                "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
-                                }
+                        "buttons": [{
+                            extend: 'csv',
+                            filename: 'List of Inactive Employees as of <?= date('F j, Y') ?>',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
                             },
-                            {
-                                "extend": 'pdf',
-                                'title' : 'Inactive Employee-List',
-                                "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
+                            customize: function(csv) {
+
+                                function centerText(text, width = 80) {
+                                    let pad = Math.floor((width - text.length) / 2);
+                                    if (pad < 0) pad = 0;
+                                    return ' '.repeat(pad) + text;
                                 }
-                            },
-                            {
-                                "extend": 'print',
-                                'title' : 'Inactive Employee-List',
-                                "exportOptions": {
-                                    "columns": [0,1,2,3,4,5,6]
-                                }
+
+                                var headerLines = [
+                                    centerText('REVMAN AGENCY'),
+                                    centerText(
+                                        'Address: 2nd Flr Medical Arts Bldg 1., University Of Perpetual Help System - Laguna Compound,'
+                                    ),
+                                    centerText(
+                                        'Old 3 National Highway Brgy. Sto Nino Binan City Laguna'),
+                                    centerText('Email: revman.applicant@gmail.com'),
+                                    centerText('Cellphone: +639359722646 / +639564729639'),
+                                    '',
+
+                                    'List of Inactive Employees as of <?= date('F j, Y') ?>',
+                                    ''
+                                ].join('\n');
+
+
+                                var footerLines = [
+                                    '',
+                                    'Prepared By: <?= $currentUser ?>',
+                                    ''
+                                ].join('\n');
+
+                                return headerLines + csv + footerLines;
                             }
-                        ],
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: '',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
+                            },
+                            filename: 'List of Inactive Employees as of {{ \Carbon\Carbon::now()->toFormattedDateString() }}',
+                            customize: function(doc) {
+                                doc.pageMargins = [40, 160, 40,
+                                    60
+                                ];
+                                doc.defaultStyle.fontSize = 10;
+                                doc.styles.tableHeader.fontSize = 10;
+                                doc.content.unshift({
+                                    text: 'List of Inactive Employees as of {{ \Carbon\Carbon::now()->toFormattedDateString() }}',
+                                    alignment: 'left',
+                                    fontSize: 12,
+                                    bold: true,
+                                    margin: [0, 0, 0, 10]
+                                });
+
+                                doc['header'] = function() {
+                                    return {
+                                        margin: [40, 20, 40, 0],
+                                        alignment: 'center',
+                                        stack: [{
+                                                image: base64Logo,
+                                                width: 60,
+                                                alignment: 'center',
+                                                margin: [0, 0, 0, 5]
+                                            },
+                                            {
+                                                text: 'REVMAN AGENCY',
+                                                style: 'header',
+                                                fontSize: 14,
+                                                bold: true,
+                                                alignment: 'center',
+                                                margin: [0, 0, 0, 2]
+                                            },
+                                            {
+                                                text: 'Address: 2nd Flr Medical Arts Bldg 1., University Of Perpetual Help System - Laguna Compound,\nOld 3 National Highway Brgy. Sto Nino Binan City Laguna',
+                                                fontSize: 10,
+                                                alignment: 'center',
+                                                margin: [0, 0, 0, 1]
+                                            },
+                                            {
+                                                text: 'Email: revman.applicant@gmail.com | Cellphone: +639359722646 / +639564729639',
+                                                fontSize: 10,
+                                                alignment: 'center',
+                                                margin: [0, 0, 0, 0]
+                                            }
+                                        ]
+                                    };
+                                };
+
+                                doc['footer'] = function(page, pages) {
+                                    return {
+                                        columns: [{
+                                                alignment: 'left',
+                                                text: 'Prepared By: ' + currentUser,
+                                                fontSize: 10
+                                            },
+                                            {
+                                                alignment: 'right',
+                                                text: [{
+                                                    text: 'Page ' + page.toString() +
+                                                        ' of ' + pages.toString(),
+                                                    fontSize: 10
+                                                }]
+                                            }
+                                        ],
+                                        margin: [10, 10]
+                                    };
+                                };
+                            }
+                        },
+                        {
+                            "extend": 'print',
+                            "title": 'List of Inactive Employees as of <?= date('F j, Y') ?>',
+                            "exportOptions": {
+                                "columns": [0, 1, 2, 3, 4, 5, 6]
+                            },
+                            customize: function(win) {
+                                $(win.document.body)
+                                    .css('font-size', '10pt')
+                                    .prepend(
+                                        '<div style="text-align:center;">' +
+                                        '<img src="' + base64Logo + '" width="80"/><br/>' +
+                                        '<strong>REVMAN AGENCY</strong><br/>' +
+                                        'Address: 2nd Flr Medical Arts Bldg 1., University Of Perpetual Help System - Laguna Compound,<br/>' +
+                                        'Old 3 National Highway Brgy. Sto Nino Binan City Laguna<br/>' +
+                                        'Email: revman.applicant@gmail.com<br/>' +
+                                        'Cellphone: +639359722646 / +639564729639<br/><br/>' +
+                                        '</div>'
+                                    );
+                                $(win.document.body).append(
+                                    `<div style="margin-top: 50px; text-align: left;"><strong>Prepared By: ${currentUser}</strong></div>`
+                                );
+                            }
+                        }
+                    ],
                     }
                 ],
                 "columns":[
