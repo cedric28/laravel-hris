@@ -28,6 +28,8 @@ class CreateSalariesTable extends Migration
             $table->decimal('laundry_allowance', 8, 2)->default(0);
             $table->decimal('transportation_allowance', 8, 2)->default(0);
             $table->decimal('cola', 8, 2)->default(150);
+            $table->decimal('thirteen_month_pay_tax', 8, 2)->default(0.1);
+            $table->decimal('thirteen_month_pay_tax_salary_range', 8, 2)->default(90000);
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();
             $table->softDeletes();

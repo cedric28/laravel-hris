@@ -155,6 +155,12 @@ tr:nth-child(even) {
     <td>HOLIDAY PAY</td>
     <td>{{ Config::get('app.currency') }} {{  Str::currency($totalHolidayPay) }}</td>
   </tr>
+  @if (!empty($thirteenthMonthPay) && floatval($thirteenthMonthPay) != 0)
+        <tr>
+          <td>13TH MONTH PAY</td>
+          <td>{{ Config::get('app.currency') }} {{  Str::currency($thirteenthMonthPay) }}</td>
+        </tr>
+    @endif
   <tr>
     <td><b>TOTAL COMPENSATION</b></td>
     <td><b>{{ Config::get('app.currency') }} {{  Str::currency($totalCompensation) }}</b></td>
@@ -181,6 +187,12 @@ tr:nth-child(even) {
     <td>TAX</td>
     <td>{{ Config::get('app.currency') }} {{ Str::currency($tax / 2) }}</td>
   </tr>
+  @if (!empty($thirteenthMonthTax) && floatval($thirteenthMonthTax) != 0)
+    <tr>
+      <td>13th MONTH PAY TAX</td>
+      <td>{{ Config::get('app.currency') }} {{  Str::currency($thirteenthMonthTax) }}</td>
+    </tr>
+  @endif
   @if (!empty($generalDeductions))
       @foreach ($generalDeductions as $deduction)
         <tr>

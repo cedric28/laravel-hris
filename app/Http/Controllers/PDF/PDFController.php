@@ -227,7 +227,6 @@ class PDFController extends Controller
         }
     }
 
-    
     $generalDeductions = GeneralDeduction::all();
     $totalGeneralDeductions = 0;
     // Check if generalDeductions is not empty
@@ -242,19 +241,54 @@ class PDFController extends Controller
     // Additional pay and deductions
     $deMinimisBenefits = ($employeeDetails->salary->meal_allowance ?? 0 ) + ($employeeDetails->salary->laundry_allowance ?? 0 ) + ($employeeDetails->salary->transportation_allowance ?? 0 ) + ($employeeDetails->salary->cola ?? 0 );
     $totalCompensation = floatval($basicSalaryTotal) + $deMinimisBenefits + floatval($overTimeTotal) + (floatval($payslip->other_pay) ?? 0) + floatval($totalHolidayPay);
-    $totalDeduction = (($employeeDetails->salary->sss / 2) ?? 0) + 
-                      (($employeeDetails->salary->philhealth / 2) ?? 0) +
-                      (($employeeDetails->salary->pagibig /2 ) ?? 0) + 
-                      (($employeeDetails->salary->uniform / 2) ?? 0) +
-                      ($tax ?? 0) + 
-                      ($lateTotalDeduction ?? 0) +
-                      ($payslip->other_deduction ?? 0) + $totalGeneralDeductions;
 
-    $netPay =  $totalCompensation - $totalDeduction;
+    // ===== START: 13th Month Pay Computation =====
+    $endDateYear = Carbon::parse($endDate)->year;
+    $deploymentStartDate = Carbon::parse($employeeDetails->start_date);
 
+    // Check if deployment start date is in the same year as end date
+    if ($deploymentStartDate->year !== $endDateYear) {
+        $startFor13thMonth = Carbon::create($endDateYear, 1, 1); // January 1 of endDate's year
+    } else {
+        $startFor13thMonth = $deploymentStartDate;
+    }
+
+    // Calculate total days worked (Present only) within the given range
+    $totalWorkedDaysFor13thMonth = Attendance::where('deployment_id', $payslip->deployment_id)
+    ->where('status', 'Present')
+    ->whereNull('deleted_at')
+    ->whereBetween('attendance_date', [$startFor13thMonth->format('Y-m-d'), $endDate])
+    ->count(); // count = total days worked
+
+    $basicSalary = $employeeDetails->salary->basic_salary ?? 0;
+    $dailySalary = $basicSalary; // As per your given logic: fixed daily salary
+
+    $totalBasicSalaryEarned = $dailySalary * $totalWorkedDaysFor13thMonth;
+    $thirteenthMonthPay = $totalBasicSalaryEarned / 12;
+
+    $thirteenthMonthTaxableThreshold =  $employeeDetails->salary->thirteen_month_pay_tax_salary_range;
+    $thirteenthMonthTax = 0;
+
+    if ($thirteenthMonthPay > $thirteenthMonthTaxableThreshold) {
+        $thirteenthMonthTax = ($thirteenthMonthPay - $thirteenthMonthTaxableThreshold) * ($employeeDetails->salary->thirteen_month_pay_tax ?? 0);
+    }
+
+    $include_13th_month = $payslip->include_thirteen_month_pay ?? false;
+    $totalCompensationWith13thMonthPay = $include_13th_month ? $totalCompensation + $thirteenthMonthPay :  $totalCompensation;
+    $netPay =  $totalCompensationWith13thMonthPay - $totalDeduction;
     $tax = $totalCompensation >= $employeeDetails->salary->tax_salary_range ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
-  //  // return view("pdf.payslip");
-  //   // // view()->share('for_regularization', $user);
+    // ===== END: 13th Month Pay Computation =====
+
+    $totalDeduction = ($employeeDetails->salary->sss / 2 ?? 0) +
+        ($employeeDetails->salary->philhealth / 2 ?? 0) +
+        ($employeeDetails->salary->pagibig / 2 ?? 0) +
+        ($employeeDetails->salary->uniform ?? 0) +
+        ($tax ?? 0) +
+        ($lateTotalDeduction ?? 0) +
+        ($request->other_deduction ?? 0) +
+        $totalGeneralDeductions +
+        $thirteenthMonthTax; // Optional: include 13th month tax in deductions
+
     $pdf = \PDF::loadView('pdf.payslip',[
       'employee' => $employee,
       'company' => $company,
@@ -280,7 +314,9 @@ class PDFController extends Controller
       'totalHolidayPay' =>  $totalHolidayPay,
       'otherDeduction' => $payslip->other_deduction,
       'otherPay' => $payslip->other_pay,
-      'generalDeductions' => $generalDeductions
+      'generalDeductions' => $generalDeductions,
+      'thirteenthMonthPay' => number_format($thirteenthMonthPay,2),
+      'thirteenthMonthTax' => number_format($thirteenthMonthTax, 2)
     ]);
 
 

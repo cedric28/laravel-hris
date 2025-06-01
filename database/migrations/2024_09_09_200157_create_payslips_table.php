@@ -20,6 +20,9 @@ class CreatePayslipsTable extends Migration
             $table->decimal('holiday_pay', 8, 2)->default(0);
             $table->decimal('other_deduction', 8, 2)->default(0);
             $table->decimal('other_pay', 8, 2)->default(0);
+            $table->boolean('include_thirteen_month_pay')->default(false);
+            $table->decimal('thirteen_month_pay_non_taxable', 8, 2)->default(0);
+            $table->decimal('thirteen_month_pay_taxable', 8, 2)->default(0);
             $table->integer('creator_id')->unsigned()->index();
             $table->integer('updater_id')->unsigned()->index();
             $table->softDeletes();

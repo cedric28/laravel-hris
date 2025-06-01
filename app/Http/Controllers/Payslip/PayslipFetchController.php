@@ -20,7 +20,7 @@ class PayslipFetchController extends Controller
 			$deployment_id = $request->deployment_id;
 	
 			//get the total number of data in User table
-			$totalData = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id','payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay')
+			$totalData = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id','payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay', 'payslips.include_thirteen_month_pay')
 			->join('payrolls', 'payslips.payroll_id', '=', 'payrolls.id')->where('payslips.deployment_id', $deployment_id)->count();
 			//total number of data that will show in the datatable default 10
 			$limit = $request->input('length');
@@ -34,7 +34,7 @@ class PayslipFetchController extends Controller
 			//check if user search for a value in the User datatable
 			if (empty($request->input('search.value'))) {
 				//get all the User data
-				$posts = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id', 'payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay')
+				$posts = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id', 'payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay', 'payslips.include_thirteen_month_pay')
 					->join('payrolls', 'payslips.payroll_id', '=', 'payrolls.id')
 					->where('payslips.deployment_id', $deployment_id)
 					->offset($start)
@@ -43,12 +43,12 @@ class PayslipFetchController extends Controller
 					->get();
 	
 				//total number of filtered data
-				$totalFiltered = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id','payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay')
+				$totalFiltered = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id','payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay', 'payslips.include_thirteen_month_pay')
 				->join('payrolls', 'payslips.payroll_id', '=', 'payrolls.id')->where('payslips.deployment_id', $deployment_id)->count();
 			} else {
 				$search = $request->input('search.value');
 	
-				$posts = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id','payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay')
+				$posts = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id','payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay', 'payslips.include_thirteen_month_pay')
 					->join('payrolls', 'payslips.payroll_id', '=', 'payrolls.id')
 					->orWhere(function ($query) use ($search) {
 						$query->whereHas('payroll', function ($query) use ($search) {
@@ -63,7 +63,7 @@ class PayslipFetchController extends Controller
 					->get();
 	
 				//total number of filtered data matching the search value request in the Supplier table	
-				$totalFiltered = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id','payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay')
+				$totalFiltered = Payslip::select('payrolls.start_date','payrolls.end_date','payslips.id as id','payrolls.id as payrollId', 'payslips.other_deduction','payslips.other_pay', 'payslips.include_thirteen_month_pay')
 					->join('payrolls', 'payslips.payroll_id', '=', 'payrolls.id')
 					->orWhere(function ($query) use ($search) {
 						$query->whereHas('payroll', function ($query) use ($search) {
@@ -87,6 +87,7 @@ class PayslipFetchController extends Controller
 							<button name="edit" title="edit" id="edit_payslip" data-id="' . $r->id . '" data-payrollId="' . $r->payrollId.'" 
 							data-otherDeduction="' . $r->other_deduction.'"
 							data-otherPay="' . $r->other_pay.'"
+							data-includeThirteenMonthPay="' . $r->include_thirteen_month_pay.'"
 							class="btn bg-gradient-warning btn-sm"><i class="fas fa-pencil-alt"></i> Edit Payslip</button>
 						';
 				

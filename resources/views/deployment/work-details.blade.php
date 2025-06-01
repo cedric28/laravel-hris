@@ -452,6 +452,20 @@
                                                                 </div>
 
                                                                 <div class="form-group row">
+                                                                    <label class="col-lg-3 col-form-label">13 MONTH PAY TAX (%):</label>
+                                                                    <div class="col-lg-9">	
+                                                                        <input type="text" name="thirteen_month_pay_tax" value="{{ old('tax',$salary->thirteen_month_pay_tax) }}" class="@error('thirteen_month_pay_tax') is-invalid @enderror form-control" placeholder="0.00" >
+                                                                    </div>
+                                                                </div>
+
+                                                                 <div class="form-group row">
+                                                                    <label class="col-lg-3 col-form-label">13 MONTH PAY TAX SALARY RANGE:</label>
+                                                                    <div class="col-lg-9">	
+                                                                        <input type="text" name="thirteen_month_pay_tax_salary_range" value="{{ old('tax',$salary->thirteen_month_pay_tax_salary_range) }}" class="@error('thirteen_month_pay_tax_salary_range') is-invalid @enderror form-control" placeholder="0.00" >
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row">
                                                                     <label class="col-lg-3 col-form-label">TAX (%):</label>
                                                                     <div class="col-lg-9">	
                                                                         <input type="text" name="tax" value="{{ old('tax',$salary->tax) }}" class="@error('tax') is-invalid @enderror form-control" placeholder="0.00" >
@@ -598,6 +612,10 @@
                                                                     <th>HOLIDAY PAY</th>
                                                                     <td id="holiday_pay"></td>
                                                                 </tr>
+                                                                <tr id="thirteenth_month_pay_fields" style="display: none;">
+                                                                    <th>13th MONTH PAY</th>
+                                                                    <td id="thirteenth_month_pay"></td>
+                                                                </tr>
                                                                 <tr>
                                                                     <th>TOTAL COMPENSATION</th>
                                                                     <td id="total_compensation"></td>
@@ -628,6 +646,10 @@
                                                                 <tr>
                                                                     <th>TAX</th>
                                                                     <td id="total_tax"></td>
+                                                                </tr>
+                                                                <tr id="thirteenth_month_pay_fields" style="display: none;">
+                                                                    <th>13th MONTH PAY TAX</th>
+                                                                    <td id="thirteenth_month_pay_taxable"></td>
                                                                 </tr>
                                                                 @if (!empty($generalDeductions))
                                                                     @foreach ($generalDeductions as $deduction)
@@ -664,7 +686,7 @@
                                                 </div>
                                             </div>
                                             <br/>
-                                             <form action="{{ route('payslip.store')}}" method="POST">
+                                            <form action="{{ route('payslip.store')}}" method="POST">
                                                 @csrf
                                                 <input type="hidden" id="deployment_id" name="deployment_id" value="{{ $deployment->id }}"/>
                                                 <div class="form-group row">
@@ -690,6 +712,13 @@
                                                     <label class="col-lg-3 col-form-label">OTHER DEDUCTION:</label>
                                                     <div class="col-lg-9">	
                                                         <input type="text" id="other_deduction" name="other_deduction" value="{{ old('other_deduction') }}" class="@error('other_deduction') is-invalid @enderror form-control" placeholder="0.00" >
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label">Include 13th Month Pay:</label>
+                                                    <div class="col-lg-9">
+                                                        <input type="checkbox" id="include_13th_month" name="include_13th_month"/> Yes
                                                     </div>
                                                 </div>
 
@@ -2064,10 +2093,12 @@
                 let payrollId = $(this).attr('data-payrollId');
                 let otherDeduction = $(this).attr('data-otherDeduction');
                 let otherPay = $(this).attr('data-otherPay');
+                let includeThirteenMonthPay = $(this).attr('data-includeThirteenMonthPay');
                 let deploymentId = $('#deployment_id').val();
-                $('#payroll-id').val(payrollId).trigger('change'); 
+                $('#payroll-id').val(payrollId).trigger('change');
                 $('input[name="other_deduction"]').val(otherDeduction);
                 $('input[name="other_pay"]').val(otherPay);
+                $('#include_13th_month').prop('checked', includeThirteenMonthPay == "1");
                 calculateCompensation();
             })
 
@@ -2082,13 +2113,15 @@
                     calculateCompensation();
                 });
             });
-
+            $('#include_13th_month').on('change', function() {
+                calculateCompensation();
+            });
             function calculateCompensation() {
                 var deploymentId = $('#deployment_id').val();
                 var payrollId = $('#payroll-id').val();
                 var otherPay = $('input[name="other_pay"]').val();
                 var otherDeduction = $('input[name="other_deduction"]').val();
-
+                var include13thMonth = $('#include_13th_month').is(':checked') ? 1 : 0;
                 // Only trigger AJAX if both payrollId and deploymentId are set
                 if (payrollId && deploymentId) {
                     $.ajax({
@@ -2099,7 +2132,8 @@
                             deployment_id: deploymentId,
                             payroll_id: payrollId,
                             other_pay: otherPay,
-                            other_deduction: otherDeduction
+                            other_deduction: otherDeduction,
+                            include_13th_month: include13thMonth
                         },
                         success: function(response) {
                             // Update fields based on response
@@ -2113,6 +2147,13 @@
                             $('#total_tax').text(response.tax);
                             $('#holiday_pay').text(response.totalHolidayPay);
                             $('#net_pay').text(response.netPay);
+                            if (include13thMonth && response.thirteenthMonthPay) {
+                                $('#thirteenth_month_pay_fields').show();
+                                $('#thirteenth_month_pay').text(response.thirteenthMonthPay);
+                                $('#thirteenth_month_pay_taxable').text(response.thirteenthMonthTax);
+                            } else {
+                                $('#thirteenth_month_pay_fields').hide();
+                            }
                         },
                         error: function(error) {
                             $('#payroll-id').val("").trigger('change'); 
