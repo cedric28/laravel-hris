@@ -31,48 +31,72 @@
 						</div>
 						<!-- /.card-header -->
 						<div class="card-body">
-							<form action="{{ route('payroll.store')}}" method="POST">
-								@csrf
+							<form method="POST" action="{{ route('payroll.store') }}">
+											@csrf
 
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Start Date</label>
-									<div class="col-lg-9">	
-											<div class="input-group date" id="start_date" data-target-input="nearest">
-													<input type="text" name="start_date"  value="{{ old('start_date') }}" class="form-control datetimepicker-input" data-target="#start_date"/>
-														<div class="input-group-append" data-target="#start_date" data-toggle="datetimepicker">
-															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-														</div>
-										</div>
-									</div>
-								</div>
+											{{-- Cutoff Mode Toggle --}}
+											<div class="form-group row">
+															<label class="col-lg-3 col-form-label">Cutoff Mode:</label>
+															<div class="col-lg-9">
+																			<select name="mode" id="mode" class="form-control">
+																							<option value="manual" {{ old('mode') == 'manual' ? 'selected' : '' }}>Manual</option>
+																							<option value="auto" {{ old('mode') == 'auto' ? 'selected' : '' }}>Auto Generate (Full Year)</option>
+																			</select>
+															</div>
+											</div>
 
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">End Date</label>
-									<div class="col-lg-9">	
-											<div class="input-group date" id="end_date" data-target-input="nearest">
-													<input type="text" name="end_date"  value="{{ old('end_date') }}" class="form-control datetimepicker-input" data-target="#end_date"/>
-														<div class="input-group-append" data-target="#end_date" data-toggle="datetimepicker">
-															<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-														</div>
-										</div>
-									</div>
-								</div>
+											{{-- Manual Section --}}
+											<div id="manual-section">
+															<div class="form-group row">
+																			<label class="col-lg-3 col-form-label">Start Date:</label>
+																			<div class="col-lg-9">
+																							<input type="date" name="start_date" class="form-control" value="{{ old('start_date') }}" required>
+																			</div>
+															</div>
+															<div class="form-group row">
+																			<label class="col-lg-3 col-form-label">End Date:</label>
+																			<div class="col-lg-9">
+																							<input type="date" name="end_date" class="form-control" value="{{ old('end_date') }}" required>
+																			</div>
+															</div>
+															<div class="form-group row">
+																			<label class="col-lg-3 col-form-label">Description:</label>
+																			<div class="col-lg-9">
+																							<input type="text" name="description" class="form-control" value="{{ old('description') }}" required>
+																			</div>
+															</div>
+											</div>
 
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label">Description:</label>
-									<div class="col-lg-9">	
-										<input type="text" name="description" value="{{ old('description') }}" class="@error('description') is-invalid @enderror form-control" placeholder="Description" >
-									</div>
-								</div>
+											{{-- Auto-Generation Section --}}
+											<div id="auto-section" style="display: none;">
+															<div class="form-group row">
+																			<label class="col-lg-3 col-form-label">Select Year:</label>
+																			<div class="col-lg-9">
+																							<select name="year" class="form-control">
+																											@for($i = now()->year; $i <= now()->year + 5; $i++)
+																															<option value="{{ $i }}" {{ old('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
+																											@endfor
+																							</select>
+																			</div>
+															</div>
+															<div class="form-group row">
+																			<label class="col-lg-3 col-form-label">Cutoff Type:</label>
+																			<div class="col-lg-9">
+																							<select name="cutoff_type" class="form-control">
+																											<option value="1-15">1-15 and 16-end</option>
+																							</select>
+																			</div>
+															</div>
+											</div>
 
-                            
-								<div class="text-right">
-									<button type="submit" class="btn btn-success" style="box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);">Save <i class="icon-paperplane ml-2"></i></button>
-								</div>
+											<div class="form-group row mb-3">
+															<div class="col-lg-12 text-right">
+																			<button type="submit" class="btn btn-primary">Save Payroll</button>
+															</div>
+											</div>
 							</form>
 						</div>
 						<div class="card-footer clearfix">
-							
 						</div>
 					</div>
 				</div>
@@ -93,8 +117,44 @@
 					format: 'L'
 				});
 
-
 			});
+			
 		</script>
-        @endpush('scripts')
+		<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modeSelect = document.getElementById('mode');
+        const manualSection = document.getElementById('manual-section');
+        const autoSection = document.getElementById('auto-section');
+
+        const manualInputs = manualSection.querySelectorAll('input');
+
+        function toggleSections() {
+            if (modeSelect.value === 'auto') {
+                manualSection.style.display = 'none';
+                autoSection.style.display = 'block';
+
+                // Disable manual inputs
+                manualInputs.forEach(input => {
+                    input.disabled = true;
+                    input.removeAttribute('required');
+                });
+
+            } else {
+                manualSection.style.display = 'block';
+                autoSection.style.display = 'none';
+
+                // Enable manual inputs
+                manualInputs.forEach(input => {
+                    input.disabled = false;
+                    input.setAttribute('required', true);
+                });
+            }
+        }
+
+        modeSelect.addEventListener('change', toggleSections);
+        toggleSections();
+    });
+</script>
+
+  @endpush('scripts')
 @endsection

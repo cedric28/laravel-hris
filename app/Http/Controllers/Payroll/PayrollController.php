@@ -52,101 +52,104 @@ class PayrollController extends Controller
      */
     public function store(Request $request)
     {
-        // Prevent other users from accessing this page
         $this->authorize("isHROrAdmin");
-    
-        /*
-        | @Begin Transaction
-        |---------------------------------------------*/
         \DB::beginTransaction();
-    
+
         try {
-            // Parse start_date and end_date from request
-            $startDate = Carbon::parse($request->start_date);
-            $endDate = Carbon::parse($request->end_date);
-    
-            // Validate the basic fields
-            $validator = Validator::make($request->all(), [
-                'description' => [
-                    'required',
-                    'string',
-                    'max:255'
-                ],
-                'start_date' => 'required|date',
-                'end_date' => 'required|date',
-            ]);
-    
-            // Custom validation for payroll dates
-            $validator->after(function ($validator) use ($startDate, $endDate) {
+            $userId = \Auth::id();
+            $mode = $request->mode;
 
-                 // Ensure the start date is before or equal to the end date
-                if ($startDate->gt($endDate)) {
-                    $validator->errors()->add('start_date', 'The start date must be earlier than or equal to the end date.');
-                }
-                 // Ensure the date range is exactly 15 days
-                if ($startDate->diffInDays($endDate) !== 14) { // 14 days between to make it 15 total
-                    $validator->errors()->add('end_date', 'The end date must be exactly 15 days after the start date.');
+            if ($mode === 'manual') {
+                $request->validate([
+                    'description' => 'required|string|max:255',
+                    'start_date' => 'required|date',
+                    'end_date' => 'required|date',
+                ]);
+
+                $startDate = Carbon::parse($request->start_date);
+                $endDate = Carbon::parse($request->end_date);
+
+                // Validate 15-day range
+                if ($startDate->gt($endDate) || $startDate->diffInDays($endDate) !== 14 || $startDate->month !== $endDate->month) {
+                    return back()->withErrors('Invalid date range. Ensure dates are 15 days apart and in the same month.')->withInput();
                 }
 
-                // Ensure both dates are within the same month
-                if ($startDate->month !== $endDate->month) {
-                    $validator->errors()->add('end_date', 'The start and end dates must be within the same month.');
+                // Overlap check
+                if ($this->isOverlapping($startDate, $endDate)) {
+                    return back()->withErrors('Selected date range overlaps with an existing payroll.')->withInput();
                 }
-    
-                // Check for overlapping dates in existing payroll records
-                $conflictingPayroll = Payroll::where(function($query) use ($startDate, $endDate) {
-                    $query->whereBetween('start_date', [$startDate, $endDate])
-                          ->orWhereBetween('end_date', [$startDate, $endDate])
-                          ->orWhere(function ($query) use ($startDate, $endDate) {
-                              $query->where('start_date', '<=', $startDate)
-                                    ->where('end_date', '>=', $endDate);
-                          });
-                })->exists();
-    
-                if ($conflictingPayroll) {
-                    $validator->errors()->add('start_date', 'The selected date range conflicts with an existing payroll.');
-                    $validator->errors()->add('end_date', 'The selected date range conflicts with an existing payroll.');
+
+                Payroll::create([
+                    'description' => $request->description,
+                    'start_date' => $startDate->format('Y-m-d'),
+                    'end_date' => $endDate->format('Y-m-d'),
+                    'creator_id' => $userId,
+                    'updater_id' => $userId,
+                ]);
+
+            } elseif ($mode === 'auto') {
+                $request->validate(['year' => 'required|integer|min:2000']);
+
+                $year = (int) $request->year;
+                $cutoffs = [];
+
+                for ($month = 1; $month <= 12; $month++) {
+                    $start1 = Carbon::create($year, $month, 1);
+                    $end1 = Carbon::create($year, $month, 15);
+                    $start2 = Carbon::create($year, $month, 16);
+                    $end2 = Carbon::create($year, $month, $start2->daysInMonth);
+
+                    $cutoffs[] = [
+                        'desc' => $start1->format('F') . ' 15th Payroll',
+                        'start' => $start1,
+                        'end' => $end1
+                    ];
+                    $cutoffs[] = [
+                        'desc' => $start2->format('F') . ' End of Month Payroll',
+                        'start' => $start2,
+                        'end' => $end2
+                    ];
                 }
-            });
-    
-            // If validation fails, return with errors
-            if ($validator->fails()) {
-                return back()->withErrors($validator->errors())->withInput();
+
+                foreach ($cutoffs as $c) {
+                    if (!$this->isOverlapping($c['start'], $c['end'])) {
+                        Payroll::create([
+                            'description' => $c['desc'],
+                            'start_date' => $c['start']->format('Y-m-d'),
+                            'end_date' => $c['end']->format('Y-m-d'),
+                            'creator_id' => $userId,
+                            'updater_id' => $userId,
+                        ]);
+                    }
+                }
             }
-    
-            // Check current user
-            $user = \Auth::user()->id;
-    
-            // Save payroll data
-            $payroll = new Payroll();
-            $payroll->description = $request->description;
-            $payroll->start_date = $startDate->format('Y-m-d');
-            $payroll->end_date = $endDate->format('Y-m-d');
-            $payroll->creator_id = $user;
-            $payroll->updater_id = $user;
-            $payroll->save();
-    
-            // Log creation
-            $log = new Log();
-            $log->log = "User " . \Auth::user()->email . " created payroll cutoff " . $payroll->id . " at " . Carbon::now();
-            $log->creator_id = \Auth::user()->id;
-            $log->updater_id = \Auth::user()->id;
-            $log->save();
-    
-            /*
-            | @End Transaction
-            |---------------------------------------------*/
+
+            Log::create([
+                'log' => "User " . \Auth::user()->email . " created payroll(s)",
+                'creator_id' => $userId,
+                'updater_id' => $userId,
+            ]);
+
             \DB::commit();
-    
-            return redirect()->route('payroll.create')
-                ->with('successMsg', 'Payroll Setting Cut Off Save Successful');
+            return redirect()->route('payroll.create')->with('successMsg', 'Payroll saved successfully.');
         } catch (\Exception $e) {
-            // If error occurs, rollback the data
-            \DB::rollback();
-            return back()->withErrors($e->getMessage());
+            \DB::rollBack();
+            return back()->withErrors('Error: ' . $e->getMessage())->withInput();
         }
     }
-    
+
+// Helper
+private function isOverlapping($start, $end)
+{
+    return Payroll::where(function($q) use ($start, $end) {
+        $q->whereBetween('start_date', [$start, $end])
+          ->orWhereBetween('end_date', [$start, $end])
+          ->orWhere(function ($query) use ($start, $end) {
+              $query->where('start_date', '<=', $start)
+                    ->where('end_date', '>=', $end);
+          });
+    })->exists();
+}
 
     /**
      * Display the specified resource.
