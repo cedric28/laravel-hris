@@ -251,11 +251,7 @@ class PayslipController extends Controller
                 $thirteenthMonthTax = ($thirteenthMonthPay - $thirteenthMonthTaxableThreshold) * ($employeeDetails->salary->thirteen_month_pay_tax ?? 0);
             }
             $totalCompensationWith13thMonthPay = $include_13th_month ? $totalCompensation + $thirteenthMonthPay :  $totalCompensation;
-            $netPay =  $totalCompensationWith13thMonthPay - $totalDeduction;
-            $tax = $totalCompensation >= $employeeDetails->salary->tax_salary_range ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
-            // ===== END: 13th Month Pay Computation =====
-            $totalDeduction =
-                ($employeeDetails->salary->sss / 2 ?? 0) +
+            $totalDeduction = ($employeeDetails->salary->sss / 2 ?? 0) +
                 ($employeeDetails->salary->philhealth / 2 ?? 0) +
                 ($employeeDetails->salary->pagibig / 2 ?? 0) +
                 ($employeeDetails->salary->uniform ?? 0) +
@@ -264,6 +260,9 @@ class PayslipController extends Controller
                 ($request->other_deduction ?? 0) +
                 $totalGeneralDeductions +
                 $thirteenthMonthTax; // Optional: include 13th month tax in deductions
+            $netPay =  $totalCompensationWith13thMonthPay - $totalDeduction;
+            $tax = $totalCompensation >= $employeeDetails->salary->tax_salary_range ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
+            // ===== END: 13th Month Pay Computation =====
 
             $payslip = Payslip::firstOrNew(
                 ['deployment_id' => $deploymentId, 'payroll_id' => $payrollId]
@@ -281,7 +280,6 @@ class PayslipController extends Controller
 
             // Save the payslip data (either updating or creating)
             $payslip->save();
-    
 
             $log = new Log();
             $log->log = "User " . \Auth::user()->email . " create payslip" . $payslip->id . " at " . Carbon::now();

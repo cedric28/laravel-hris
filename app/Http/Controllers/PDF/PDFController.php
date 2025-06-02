@@ -275,19 +275,18 @@ class PDFController extends Controller
 
     $include_13th_month = $payslip->include_thirteen_month_pay ?? false;
     $totalCompensationWith13thMonthPay = $include_13th_month ? $totalCompensation + $thirteenthMonthPay :  $totalCompensation;
+    $totalDeduction = ($employeeDetails->salary->sss / 2 ?? 0) +
+      ($employeeDetails->salary->philhealth / 2 ?? 0) +
+      ($employeeDetails->salary->pagibig / 2 ?? 0) +
+      ($employeeDetails->salary->uniform ?? 0) +
+      ($tax ?? 0) +
+      ($lateTotalDeduction ?? 0) +
+      ($request->other_deduction ?? 0) +
+      $totalGeneralDeductions +
+      $thirteenthMonthTax; // Optional: include 13th month tax in deductions
     $netPay =  $totalCompensationWith13thMonthPay - $totalDeduction;
     $tax = $totalCompensation >= $employeeDetails->salary->tax_salary_range ? $totalCompensation / $employeeDetails->salary->tax ?? 0 : 0;
     // ===== END: 13th Month Pay Computation =====
-
-    $totalDeduction = ($employeeDetails->salary->sss / 2 ?? 0) +
-        ($employeeDetails->salary->philhealth / 2 ?? 0) +
-        ($employeeDetails->salary->pagibig / 2 ?? 0) +
-        ($employeeDetails->salary->uniform ?? 0) +
-        ($tax ?? 0) +
-        ($lateTotalDeduction ?? 0) +
-        ($request->other_deduction ?? 0) +
-        $totalGeneralDeductions +
-        $thirteenthMonthTax; // Optional: include 13th month tax in deductions
 
     $pdf = \PDF::loadView('pdf.payslip',[
       'employee' => $employee,
